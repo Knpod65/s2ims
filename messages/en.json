@@ -1,0 +1,192 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "scholarships": "Scholarships",
+    "applications": "My Applications",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "followup": "Follow-up",
+    "newAnnouncement": "New Announcement",
+    "ocr": "OCR Queue",
+    "analytics": "Analytics",
+    "users": "User Management",
+    "permissions": "Permissions",
+    "auditLog": "Audit Log",
+    "export": "Export",
+    "settings": "Settings",
+    "insights": "Applicant Insights",
+    "outcomes": "Outcomes"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "approve": "Approve",
+    "reject": "Reject",
+    "requestRevision": "Request Revision",
+    "confirm": "Confirm",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "apply": "Apply",
+    "saveScholarship": "Save Scholarship",
+    "viewDetails": "View Details",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "readMore": "Read more",
+    "back": "Back",
+    "next": "Next",
+    "prev": "Previous",
+    "upload": "Upload",
+    "download": "Download",
+    "preview": "Preview",
+    "generate": "Generate",
+    "sendToESQ": "Submit for ESQ Approval",
+    "loginAs": "Login as"
+  },
+  "status": {
+    "DRAFT": "Draft",
+    "SUBMITTED": "Submitted",
+    "UNDER_REVIEW": "Under Review",
+    "PUBLISHED": "Published",
+    "OPEN": "Open",
+    "CLOSED": "Closed",
+    "AWARDED": "Awarded",
+    "NOT_AWARDED": "Not Awarded",
+    "CONFIRMED": "Confirmed",
+    "NEEDS_DOCS": "Needs Documents",
+    "SHORTLISTED": "Shortlisted",
+    "INTERVIEW_SCHEDULED": "Interview Scheduled",
+    "FINANCE_PENDING": "Finance Docs Needed",
+    "PAYMENT_PROCESSING": "Payment Processing",
+    "COMPLETED": "Completed",
+    "FOLLOW_UP_REQUIRED": "Follow-up Required",
+    "REPORT_OVERDUE": "Report Overdue",
+    "APPROVED": "Approved",
+    "REVISION_REQUESTED": "Revision Requested",
+    "REJECTED": "Rejected"
+  },
+  "scholarship": {
+    "amount": "Amount",
+    "awards": "Number of awards",
+    "deadline": "Deadline",
+    "gpaMin": "Minimum GPA",
+    "provider": "Provider",
+    "matchScore": "Match score",
+    "eligibility": "Eligibility",
+    "hasEssay": "Essay required",
+    "hasInterview": "Interview required",
+    "hasProposal": "Proposal required",
+    "daysLeft": "days left",
+    "closed": "Closed",
+    "saved": "Saved",
+    "type": {
+      "merit": "Merit",
+      "need": "Need-based",
+      "research": "Research",
+      "activity": "Activity",
+      "international": "International"
+    }
+  },
+  "student": {
+    "dashboard": {
+      "title": "Hello",
+      "subtitle": "Here are your recommended scholarships for today",
+      "activeApplications": "Active Applications",
+      "savedScholarships": "Saved Scholarships",
+      "upcomingDeadlines": "Upcoming Deadlines",
+      "profileCompletion": "Profile Completion",
+      "completeProfile": "Complete your profile to get better matches",
+      "recommendedFor": "Recommended for you"
+    },
+    "profile": {
+      "title": "My Profile",
+      "personalInfo": "Personal Information",
+      "academicInfo": "Academic Information",
+      "livingSituation": "Living Situation",
+      "activities": "Activities & Interests",
+      "skills": "Skills & Experience",
+      "workResponsibilities": "Work & Responsibilities",
+      "documents": "Documents",
+      "completion": "Completion",
+      "distanceFromHome": "Distance from home (km)",
+      "housingType": "Housing type",
+      "workPartTime": "Works part-time",
+      "supportFamily": "Supports family members",
+      "firstGen": "First in family to attend university",
+      "housing": {
+        "dorm": "University dormitory",
+        "rent": "Rented room/house",
+        "own": "Own/family home"
+      }
+    },
+    "applications": {
+      "title": "My Applications",
+      "active": "Active",
+      "completed": "Completed",
+      "actionNeeded": "Action Needed"
+    }
+  },
+  "staff": {
+    "dashboard": {
+      "title": "Staff Dashboard",
+      "activeScholarships": "Active Scholarships",
+      "pendingESQ": "Pending ESQ",
+      "ocrQueue": "OCR Queue",
+      "applicationsReview": "Applications to Review",
+      "workloadToday": "Today's Workload"
+    },
+    "ocr": {
+      "title": "OCR Queue",
+      "uploadDoc": "Upload Document",
+      "extractedFields": "Extracted Fields",
+      "confidence": "Confidence",
+      "confirmExtraction": "Confirm Extraction",
+      "highConfidence": "High confidence",
+      "mediumConfidence": "Medium confidence",
+      "lowConfidence": "Low confidence — please verify"
+    },
+    "announcement": {
+      "title": "Create Announcement",
+      "titleTH": "Title (Thai)",
+      "titleEN": "Title (English)",
+      "type": "Announcement type",
+      "academicYear": "Academic year",
+      "semester": "Semester",
+      "eligibility": "Eligibility criteria",
+      "requiredDocs": "Required documents",
+      "generatePreview": "Generate Preview",
+      "submitToESQ": "Submit for ESQ Approval"
+    }
+  },
+  "esq": {
+    "dashboard": {
+      "title": "Approval Dashboard",
+      "pendingApprovals": "Pending Approvals",
+      "slaWarning": "SLA under 24 hours remaining",
+      "approvedThisWeek": "Approved this week",
+      "avgTurnaround": "Avg. turnaround time",
+      "hoursLeft": "hours left"
+    }
+  },
+  "provider": {
+    "dashboard": {
+      "title": "Provider Dashboard",
+      "myScholarships": "My Scholarships",
+      "totalApplicants": "Total Applicants",
+      "privacyNote": "All applicant data is aggregated only — protected under PDPA"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "totalUsers": "Total Users",
+      "activeSessions": "Active Sessions",
+      "systemHealth": "System Health",
+      "auditEvents": "Recent Events"
+    }
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "nav": {
+    "dashboard": "แดชบอร์ด",
+    "scholarships": "ทุนการศึกษา",
+    "applications": "ใบสมัครของฉัน",
+    "profile": "โปรไฟล์",
+    "notifications": "การแจ้งเตือน",
+    "followup": "รายงานผล",
+    "newAnnouncement": "สร้างประกาศ",
+    "ocr": "คิว OCR",
+    "analytics": "วิเคราะห์",
+    "users": "จัดการผู้ใช้",
+    "permissions": "สิทธิ์การเข้าถึง",
+    "auditLog": "ประวัติการใช้งาน",
+    "export": "ส่งออกข้อมูล",
+    "settings": "ตั้งค่าระบบ",
+    "insights": "สถิติผู้สมัคร",
+    "outcomes": "ผลลัพธ์"
+  },
+  "common": {
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "submit": "ส่ง",
+    "approve": "อนุมัติ",
+    "reject": "ไม่อนุมัติ",
+    "requestRevision": "ขอแก้ไข",
+    "confirm": "ยืนยัน",
+    "close": "ปิด",
+    "edit": "แก้ไข",
+    "delete": "ลบ",
+    "search": "ค้นหา",
+    "filter": "กรอง",
+    "export": "ส่งออก",
+    "apply": "สมัคร",
+    "saveScholarship": "บันทึกทุน",
+    "viewDetails": "ดูรายละเอียด",
+    "loading": "กำลังโหลด...",
+    "noData": "ไม่มีข้อมูล",
+    "readMore": "อ่านเพิ่มเติม",
+    "back": "กลับ",
+    "next": "ถัดไป",
+    "prev": "ก่อนหน้า",
+    "upload": "อัปโหลด",
+    "download": "ดาวน์โหลด",
+    "preview": "ตัวอย่าง",
+    "generate": "สร้าง",
+    "sendToESQ": "ส่งให้ ESQ อนุมัติ",
+    "loginAs": "เข้าสู่ระบบในฐานะ"
+  },
+  "status": {
+    "DRAFT": "ร่าง",
+    "SUBMITTED": "ส่งแล้ว",
+    "UNDER_REVIEW": "กำลังพิจารณา",
+    "PUBLISHED": "เผยแพร่แล้ว",
+    "OPEN": "เปิดรับสมัคร",
+    "CLOSED": "ปิดรับแล้ว",
+    "AWARDED": "ได้รับทุน",
+    "NOT_AWARDED": "ไม่ผ่าน",
+    "CONFIRMED": "ยืนยันแล้ว",
+    "NEEDS_DOCS": "ต้องการเอกสาร",
+    "SHORTLISTED": "ผ่านคัดเลือก",
+    "INTERVIEW_SCHEDULED": "นัดสัมภาษณ์แล้ว",
+    "FINANCE_PENDING": "รอเอกสารการเงิน",
+    "PAYMENT_PROCESSING": "กำลังดำเนินการ",
+    "COMPLETED": "เสร็จสิ้น",
+    "FOLLOW_UP_REQUIRED": "ต้องส่งรายงาน",
+    "REPORT_OVERDUE": "รายงานล่าช้า",
+    "APPROVED": "อนุมัติแล้ว",
+    "REVISION_REQUESTED": "ขอแก้ไข",
+    "REJECTED": "ไม่อนุมัติ"
+  },
+  "scholarship": {
+    "amount": "จำนวนเงิน",
+    "awards": "จำนวนทุน",
+    "deadline": "กำหนดส่ง",
+    "gpaMin": "เกรดเฉลี่ยขั้นต่ำ",
+    "provider": "ผู้ให้ทุน",
+    "matchScore": "คะแนนความเข้ากัน",
+    "eligibility": "คุณสมบัติ",
+    "hasEssay": "ต้องมีเรียงความ",
+    "hasInterview": "มีการสัมภาษณ์",
+    "hasProposal": "ต้องมีข้อเสนอโครงการ",
+    "daysLeft": "วัน เหลือเวลา",
+    "closed": "ปิดรับแล้ว",
+    "saved": "บันทึกแล้ว",
+    "type": {
+      "merit": "ผลการเรียน",
+      "need": "ความต้องการ",
+      "research": "วิจัย",
+      "activity": "กิจกรรม",
+      "international": "นานาชาติ"
+    }
+  },
+  "student": {
+    "dashboard": {
+      "title": "สวัสดี",
+      "subtitle": "นี่คือทุนที่แนะนำสำหรับคุณวันนี้",
+      "activeApplications": "ใบสมัครที่ยังดำเนินการอยู่",
+      "savedScholarships": "ทุนที่บันทึกไว้",
+      "upcomingDeadlines": "กำหนดส่งที่ใกล้มาถึง",
+      "profileCompletion": "ความสมบูรณ์ของโปรไฟล์",
+      "completeProfile": "เพิ่มเติมโปรไฟล์เพื่อรับการจับคู่ที่ดีขึ้น",
+      "recommendedFor": "แนะนำสำหรับคุณ"
+    },
+    "profile": {
+      "title": "โปรไฟล์ของฉัน",
+      "personalInfo": "ข้อมูลส่วนตัว",
+      "academicInfo": "ข้อมูลการศึกษา",
+      "livingSituation": "สถานการณ์ที่พัก",
+      "activities": "กิจกรรมและความสนใจ",
+      "skills": "ทักษะและประสบการณ์",
+      "workResponsibilities": "การทำงานและหน้าที่รับผิดชอบ",
+      "documents": "เอกสาร",
+      "completion": "ความสมบูรณ์",
+      "distanceFromHome": "ระยะทางจากบ้าน (กม.)",
+      "housingType": "ประเภทที่พัก",
+      "workPartTime": "มีงานพาร์ทไทม์",
+      "supportFamily": "ช่วยเหลือครอบครัว",
+      "firstGen": "เป็นคนแรกในครอบครัวที่เข้าเรียนมหาวิทยาลัย",
+      "housing": {
+        "dorm": "หอพักมหาวิทยาลัย",
+        "rent": "เช่าห้อง/บ้าน",
+        "own": "บ้านของตัวเอง/ครอบครัว"
+      }
+    },
+    "applications": {
+      "title": "ใบสมัครของฉัน",
+      "active": "ดำเนินการอยู่",
+      "completed": "เสร็จสิ้น",
+      "actionNeeded": "ต้องดำเนินการ"
+    }
+  },
+  "staff": {
+    "dashboard": {
+      "title": "แดชบอร์ดเจ้าหน้าที่",
+      "activeScholarships": "ทุนที่เปิดอยู่",
+      "pendingESQ": "รออนุมัติ ESQ",
+      "ocrQueue": "คิว OCR",
+      "applicationsReview": "ใบสมัครรอตรวจสอบ",
+      "workloadToday": "ภาระงานวันนี้"
+    },
+    "ocr": {
+      "title": "คิว OCR",
+      "uploadDoc": "อัปโหลดเอกสาร",
+      "extractedFields": "ข้อมูลที่ดึงได้",
+      "confidence": "ความมั่นใจ",
+      "confirmExtraction": "ยืนยันการดึงข้อมูล",
+      "highConfidence": "ความมั่นใจสูง",
+      "mediumConfidence": "ความมั่นใจปานกลาง",
+      "lowConfidence": "ความมั่นใจต่ำ — กรุณาตรวจสอบ"
+    },
+    "announcement": {
+      "title": "สร้างประกาศ",
+      "titleTH": "ชื่อประกาศ (ภาษาไทย)",
+      "titleEN": "ชื่อประกาศ (ภาษาอังกฤษ)",
+      "type": "ประเภทประกาศ",
+      "academicYear": "ปีการศึกษา",
+      "semester": "ภาคการศึกษา",
+      "eligibility": "คุณสมบัติผู้สมัคร",
+      "requiredDocs": "เอกสารที่ต้องใช้",
+      "generatePreview": "สร้างตัวอย่าง",
+      "submitToESQ": "ส่งให้ ESQ อนุมัติ"
+    }
+  },
+  "esq": {
+    "dashboard": {
+      "title": "แดชบอร์ดอนุมัติ",
+      "pendingApprovals": "รออนุมัติ",
+      "slaWarning": "SLA เหลือน้อยกว่า 24 ชั่วโมง",
+      "approvedThisWeek": "อนุมัติสัปดาห์นี้",
+      "avgTurnaround": "เวลาเฉลี่ยในการอนุมัติ",
+      "hoursLeft": "ชั่วโมงที่เหลือ"
+    }
+  },
+  "provider": {
+    "dashboard": {
+      "title": "แดชบอร์ดผู้ให้ทุน",
+      "myScholarships": "ทุนของฉัน",
+      "totalApplicants": "ผู้สมัครทั้งหมด",
+      "privacyNote": "ข้อมูลผู้สมัครทั้งหมดเป็นข้อมูลรวม — ปกป้องภายใต้ PDPA"
+    }
+  },
+  "admin": {
+    "dashboard": {
+      "title": "แดชบอร์ดผู้ดูแลระบบ",
+      "totalUsers": "ผู้ใช้ทั้งหมด",
+      "activeSessions": "เซสชันที่ใช้งานอยู่",
+      "systemHealth": "สุขภาพระบบ",
+      "auditEvents": "เหตุการณ์ล่าสุด"
+    }
+  }
+}
