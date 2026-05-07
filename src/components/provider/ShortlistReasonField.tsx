@@ -16,20 +16,20 @@ export default function ShortlistReasonField({ value, onChange, error }: Shortli
   return (
     <div>
       <label className="text-xs font-semibold text-ink-1 block mb-2">
-        {lang === 'th' ? 'เหตุผลในการส่งขอ' : 'Reason for Request'} <span className="text-status-danger">*</span>
+        {lang === 'th' ? 'เหตุผลในการขอคัดเลือก' : 'Shortlist reason'} <span className="text-[#B45309]">*</span>
       </label>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={lang === 'th' ? 'อธิบายว่าเพราะเหตุใดจึงส่งขอให้เจ้าหน้าที่เปิดเผยข้อมูล...' : 'Explain why you are requesting disclosure...'}
+        placeholder={lang === 'th' ? 'อธิบายเหตุผลเชิงทุนว่าทำไมโทเค็นเหล่านี้ควรถูกส่งให้เจ้าหน้าที่พิจารณา...' : 'Explain the scholarship-fit reason for sending these tokens to staff review...'}
         rows={4}
-        className={`w-full input-base resize-none ${error && !isValid ? 'border-status-danger' : ''}`}
+        className={`w-full input-base min-h-[112px] resize-none ${error && !isValid ? 'border-[#F59E0B]' : ''}`}
       />
       <div className="flex items-center justify-between mt-2">
-        <span className={`text-xs ${error && !isValid ? 'text-status-danger' : 'text-ink-3'}`}>
+        <span className={`text-xs ${error && !isValid ? 'text-[#B45309]' : 'text-ink-3'}`}>
           {charCount} {lang === 'th' ? 'ตัวอักษร' : 'characters'} {lang === 'th' ? '(อย่างน้อย 10)' : '(minimum 10)'}
         </span>
-        {error && <span className="text-xs text-status-danger font-semibold">{error}</span>}
+        {error && <span className="text-xs text-[#B45309] font-semibold">{error}</span>}
       </div>
     </div>
   )

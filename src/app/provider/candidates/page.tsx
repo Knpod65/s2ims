@@ -1,106 +1,119 @@
 'use client'
 
 import Link from 'next/link'
+import { ChevronRight, Lock, ShieldCheck, Users } from 'lucide-react'
 import AppShell from '@/components/layout/AppShell'
+import { PageHeader, StatusBadge } from '@/components/ui/index'
 import { useLang } from '@/lib/i18n'
-import { PageHeader } from '@/components/ui/index'
 import { mockProviderScholarships } from '@/data/mock/providerData'
-import { ChevronRight, Lock } from 'lucide-react'
+import ProviderPrivacyNotice from '@/components/provider/ProviderPrivacyNotice'
+import { scholarshipStatusColor, scholarshipStatusLabel } from '@/components/provider/ProviderScholarshipCard'
 
 export default function ProviderCandidateSelectorPage() {
   const { lang } = useLang()
-
-  const scholarships = mockProviderScholarships.filter((s) => s.status === 'OPEN')
-  const draftScholarships = mockProviderScholarships.filter((s) => s.status !== 'OPEN')
+  const readyScholarships = mockProviderScholarships.filter(s => s.candidatePoolStatus === 'ready')
+  const lockedScholarships = mockProviderScholarships.filter(s => s.candidatePoolStatus !== 'ready')
 
   return (
     <AppShell requiredRole="provider">
       <PageHeader
-        title={lang === 'th' ? 'ดูชุมชนผู้สมัคร' : 'View Candidate Pools'}
-        subtitle={lang === 'th' ? 'เลือกทุนเพื่อดูชุมชนผู้สมัครแบบไม่เปิดตัว' : 'Select a scholarship to view the anonymous candidate pool'}
+        roleIndicator
+        title={lang === 'th' ? 'ตัวเลือกชุมชนผู้สมัคร' : 'Candidate Pool Selector'}
+        subtitle={lang === 'th' ? 'เลือกทุนเพื่อดูโทเค็นผู้สมัครและสถิติภาพรวมแบบไม่ระบุตัวตน' : 'Select a scholarship to view anonymous candidate tokens and aggregate pool stats.'}
       />
 
-      {scholarships.length > 0 ? (
-        <div className="space-y-4 mb-8">
-          {scholarships.map((scholarship) => (
-            <Link
-              key={scholarship.id}
-              href={`/provider/scholarships/${scholarship.id}/candidates`}
-              className="card p-4 hover:border-role-border hover:bg-role-tint transition-all cursor-pointer"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-ink-1">
-                    {lang === 'th' ? scholarship.title_th : scholarship.title_en}
-                  </h3>
-                  <p className="text-xs text-ink-3 mt-1 line-clamp-1">
-                    {lang === 'th' ? scholarship.description_th : scholarship.description_en}
-                  </p>
+      <div className="space-y-6">
+        <ProviderPrivacyNotice mode="candidate" />
 
-                  <div className="flex items-center gap-4 mt-3 text-xs">
-                    <span className="text-ink-3">
-                      <span className="font-semibold text-ink-1">฿{scholarship.amount.toLocaleString()}</span> {lang === 'th' ? 'ต่อทุน' : 'per award'}
-                    </span>
-                    <span className="text-ink-3">
-                      <span className="font-semibold text-ink-1">{scholarship.num_awards}</span> {lang === 'th' ? 'ทุน' : 'awards'}
-                    </span>
-                    <span className="text-ink-3">
-                      {lang === 'th' ? 'ปิดรับ:' : 'Deadline:'} <span className="font-semibold text-ink-1">{new Date(scholarship.deadline).toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US')}</span>
-                    </span>
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <Users size={17} className="text-role-primary" />
+            <h2 className="font-semibold text-ink-1">{lang === 'th' ? 'ชุมชนที่พร้อมใช้งาน' : 'Ready candidate pools'}</h2>
+          </div>
+          <div className="grid gap-4 xl:grid-cols-2">
+            {readyScholarships.map(scholarship => (
+              <Link
+                key={scholarship.id}
+                href={`/provider/scholarships/${scholarship.id}/candidates`}
+                className="card card-hover group relative overflow-hidden p-4"
+              >
+                <div className="absolute inset-y-0 left-0 w-1 bg-role-gradient opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-semibold text-ink-1">{lang === 'th' ? scholarship.title_th : scholarship.title_en}</h3>
+                      <StatusBadge label={scholarshipStatusLabel(scholarship.status, lang)} color={scholarshipStatusColor(scholarship.status)} dot />
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-ink-2">
+                      {lang === 'th' ? scholarship.description_th : scholarship.description_en}
+                    </p>
                   </div>
+                  <ChevronRight size={18} className="mt-1 shrink-0 text-ink-3 transition group-hover:text-role-primary" />
                 </div>
-                <ChevronRight size={18} className="text-ink-3 flex-shrink-0 mt-1" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      ) : null}
-
-      {draftScholarships.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-ink-1">
-            {lang === 'th' ? 'ทุนร่าง (ไม่มีผู้สมัคร)' : 'Draft Scholarships (No Candidates)'}
-          </h2>
-          <div className="space-y-2">
-            {draftScholarships.map((scholarship) => (
-              <div key={scholarship.id} className="card p-4 opacity-50">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-ink-1">
-                      {lang === 'th' ? scholarship.title_th : scholarship.title_en}
-                    </h3>
+                {scholarship.candidatePoolStats && (
+                  <div className="grid gap-2 sm:grid-cols-3">
+                    <div className="rounded-lg bg-surface-low p-3">
+                      <p className="text-[11px] text-ink-3">{lang === 'th' ? 'โทเค็นทั้งหมด' : 'Tokens'}</p>
+                      <p className="mt-1 font-mono text-sm font-semibold text-ink-1">{scholarship.candidatePoolStats.totalCandidates}</p>
+                    </div>
+                    <div className="rounded-lg bg-surface-low p-3">
+                      <p className="text-[11px] text-ink-3">{lang === 'th' ? 'กลุ่มบนสุด' : 'Top band'}</p>
+                      <p className="mt-1 font-mono text-sm font-semibold text-role-primary">{scholarship.candidatePoolStats.topBand}</p>
+                    </div>
+                    <div className="rounded-lg bg-surface-low p-3">
+                      <p className="text-[11px] text-ink-3">{lang === 'th' ? 'คะแนนเฉลี่ย' : 'Avg match'}</p>
+                      <p className="mt-1 font-mono text-sm font-semibold text-ink-1">{scholarship.candidatePoolStats.averageMatchScore}%</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-ink-3 flex-shrink-0">
-                    <Lock size={14} />
-                    <span className="text-xs">{scholarship.status}</span>
-                  </div>
-                </div>
-                <p className="text-xs text-ink-3 mt-2">
-                  {lang === 'th' ? 'เผยแพร่ทุนเพื่อดูผู้สมัคร' : 'Publish scholarship to view candidates'}
-                </p>
-              </div>
+                )}
+              </Link>
             ))}
           </div>
-        </div>
-      )}
+        </section>
 
-      {scholarships.length === 0 && draftScholarships.length === 0 && (
-        <div className="card p-8 text-center">
-          <p className="text-ink-3 text-sm mb-4">
-            {lang === 'th' ? 'ยังไม่มีทุนการศึกษา' : 'No scholarships yet'}
+        {lockedScholarships.length > 0 && (
+          <section>
+            <div className="mb-3 flex items-center gap-2">
+              <Lock size={17} className="text-ink-3" />
+              <h2 className="font-semibold text-ink-1">{lang === 'th' ? 'ยังไม่เปิดชุมชนผู้สมัคร' : 'Pools not yet available'}</h2>
+            </div>
+            <div className="space-y-3">
+              {lockedScholarships.map(scholarship => (
+                <div key={scholarship.id} className="rounded-xl border border-line bg-white/70 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-semibold text-ink-1">{lang === 'th' ? scholarship.title_th : scholarship.title_en}</h3>
+                        <StatusBadge label={scholarshipStatusLabel(scholarship.status, lang)} color={scholarshipStatusColor(scholarship.status)} dot />
+                      </div>
+                      <p className="mt-2 text-sm text-ink-2">
+                        {scholarship.status === 'DRAFT'
+                          ? (lang === 'th' ? 'บันทึกหรือส่งร่างให้เจ้าหน้าที่ตรวจสอบก่อนเปิดชุมชนผู้สมัคร' : 'Save or submit the draft for staff review before candidate pools unlock.')
+                          : (lang === 'th' ? 'รอเจ้าหน้าที่ตรวจสอบก่อนเปิดระบบจับคู่' : 'Waiting for staff review before matching opens.')}
+                      </p>
+                    </div>
+                    <div className="flex min-h-11 items-center gap-2 rounded-lg border border-line bg-surface-low px-3 text-xs font-semibold text-ink-3">
+                      <Lock size={14} />
+                      {lang === 'th' ? 'ปิดอยู่' : 'Locked'}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <div className="rounded-xl border border-role-border bg-role-tint p-4 text-role-primary">
+          <div className="mb-1 flex items-center gap-2 text-sm font-semibold">
+            <ShieldCheck size={15} />
+            {lang === 'th' ? 'ขอบเขตความเป็นส่วนตัว' : 'Privacy boundary'}
+          </div>
+          <p className="text-xs leading-relaxed">
+            {lang === 'th'
+              ? 'เส้นทางนี้ไม่แสดงชื่อ รหัสนักศึกษาจริง อีเมล หรือข้อมูลติดต่อของนักศึกษา'
+              : 'This route does not display student names, raw student IDs, emails, or contact details.'}
           </p>
         </div>
-      )}
-
-      {/* Privacy Notice */}
-      <div className="mt-8 p-4 rounded-xl bg-status-info/[0.06] border border-status-info/20">
-        <p className="text-xs text-status-info/80">
-          <span className="font-semibold">🔒 {lang === 'th' ? 'ความเป็นส่วนตัวของผู้สมัคร' : 'Candidate Privacy'}</span>
-          <br />
-          {lang === 'th'
-            ? 'ผู้สมัครได้รับการระบุด้วยโทเค็นที่ปลอดภัยเท่านั้น (Candidate #C-XXXX) ไม่มีชื่อ อีเมล หรืออักษรประจำตัว การจับคู่ขึ้นอยู่กับสถิติที่รวบรวมและคะแนนเท่านั้น'
-            : 'All candidates are anonymized using secure tokens (Candidate #C-XXXX). No names, emails, or IDs. Matching is based on aggregated statistics and scores only.'}
-        </p>
       </div>
     </AppShell>
   )

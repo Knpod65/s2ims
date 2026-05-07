@@ -65,13 +65,13 @@
 [data-role="provider"] {
   --role-primary:       #10B981;
   --role-primary-hex:   #10B981;
-  --role-secondary:     #14B8A6;
+  --role-secondary:     #2DD4BF;
   --role-grad-from:     #10B981;
-  --role-grad-to:       #14B8A6;
+  --role-grad-to:       #2DD4BF;
   --role-gradient-from: #10B981;
-  --role-gradient-to:   #14B8A6;
-  --role-tint:          #DDFBF1;
-  --role-surface:       #DDFBF1;
+  --role-gradient-to:   #2DD4BF;
+  --role-tint:          #E6F7F0;
+  --role-surface:       #E6F7F0;
   --role-border:        rgba(16, 185, 129, 0.20);
   --role-glow:          rgba(16, 185, 129, 0.12);
   --role-text-dim:      rgba(16, 185, 129, 0.55);

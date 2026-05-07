@@ -60,7 +60,7 @@ export default function ShortlistRequestModal({
         {/* Header */}
         <div className="sticky top-0 flex items-center justify-between p-4 md:p-6 border-b border-line bg-white/95 backdrop-blur-xl">
           <h2 className="font-semibold text-ink-1">
-            {lang === 'th' ? 'ส่งขอเปิดเผยข้อมูล' : 'Request Information Disclosure'}
+            {lang === 'th' ? 'ขอคัดเลือกรายชื่อแบบนิรนาม' : 'Request Anonymous Shortlist'}
           </h2>
           <button onClick={handleClose} className="text-ink-3 hover:text-ink-1 hover:bg-surface-low rounded-md p-1 transition-colors">
             <X size={18} />
@@ -84,7 +84,7 @@ export default function ShortlistRequestModal({
               {/* Summary */}
               <div className="bg-surface-low rounded-xl p-3 mb-4 border border-line">
                 <p className="text-xs text-ink-3 mb-1">
-                  {lang === 'th' ? 'จำนวนผู้สมัครที่เลือก:' : 'Selected candidates:'}
+                  {lang === 'th' ? 'จำนวนโทเค็นที่เลือก:' : 'Selected tokens:'}
                 </p>
                 <p className="text-sm font-semibold text-ink-1">{candidateCount}</p>
               </div>
@@ -102,11 +102,11 @@ export default function ShortlistRequestModal({
               </div>
 
               {/* Privacy Notice */}
-              <div className="mb-6 p-3 rounded-lg bg-blue-50 border border-blue-200">
-                <p className="text-xs text-blue-800 leading-relaxed">
+              <div className="mb-6 p-3 rounded-lg bg-[#FFFBEB] border border-[#FDE68A]">
+                <p className="text-xs text-[#78350F] leading-relaxed">
                   {lang === 'th'
-                    ? 'เจ้าหน้าที่จะตรวจสอบเหตุผลของคุณและตัดสินใจว่าจะเปิดเผยข้อมูลส่วนตัวของผู้สมัครหรือไม่'
-                    : 'Staff will review your reason and decide whether to disclose personal information.'}
+                    ? 'เจ้าหน้าที่จะตรวจสอบเหตุผลของคุณก่อนดำเนินการต่อ ไม่มีการเปิดเผยชื่อ รหัสนักศึกษา อีเมล หรือข้อมูลระบุตัวตนในระยะนี้'
+                    : 'Staff will review your reason before any next step. Names, raw student IDs, emails, and identity details are not revealed in this phase.'}
                 </p>
               </div>
 
@@ -123,7 +123,7 @@ export default function ShortlistRequestModal({
                   className="flex-1 btn-primary py-2.5 text-sm disabled:opacity-60"
                   disabled={!reason.trim() || reason.trim().length < 10}
                 >
-                  {lang === 'th' ? 'ส่งขอ' : 'Submit Request'}
+                  {lang === 'th' ? 'ส่งคำขอ' : 'Submit Request'}
                 </button>
               </div>
             </>

@@ -1,26 +1,51 @@
-// Provider-specific mock data
-// Candidate anonymization: ONLY tokens (Candidate #C-XXXX), NO student names/IDs/emails
-// Data shown to provider: Aggregate statistics only (ranges, percentiles, distributions)
+// Provider Phase 4 mock data
+// Privacy boundary: provider candidate data is anonymous, banded, and aggregate-only.
+// Do not add student names, raw student IDs, emails, phone numbers, addresses, exact GPA, or raw financial values here.
+
+export type ProviderScholarshipStatus = 'DRAFT' | 'PENDING_REVIEW' | 'ACTIVE' | 'CLOSED'
+export type CandidatePoolStatus = 'not_available' | 'ready' | 'pending_staff_approval'
+export type ShortlistStatus = 'none' | 'pending_staff_approval' | 'approved' | 'declined'
+export type CandidateRankBand = 'top_band' | 'strong_band' | 'developing_band' | 'watch_band'
+export type ProviderMatchConfidence = 'low' | 'medium' | 'high'
+
+export interface ProviderOrganization {
+  id: string
+  name_en: string
+  name_th: string
+  representativeRole_en: string
+  representativeRole_th: string
+}
+
+export interface ProviderRequiredDocument {
+  id: string
+  label_en: string
+  label_th: string
+  required: boolean
+}
 
 export interface Scholarship {
   id: string
   title_th: string
   title_en: string
-  provider: string // Provider name
+  provider: string
   provider_th: string
+  providerOrganizationId: string
   amount: number
   num_awards: number
-  deadline: string // YYYY-MM-DD
-  status: 'DRAFT' | 'OPEN' | 'CLOSED' | 'ARCHIVED'
+  deadline: string
+  status: ProviderScholarshipStatus
+  candidatePoolStatus: CandidatePoolStatus
+  shortlistStatus: ShortlistStatus
   description_th: string
   description_en: string
   gpa_min: number
   academic_year: number[]
+  departmentBands: string[]
   has_essay: boolean
   has_interview: boolean
   has_proposal: boolean
+  requiredDocuments: ProviderRequiredDocument[]
   created_at: string
-  // Provider Phase 5 - Extended properties
   matchedCandidates?: CandidateMatch[]
   candidatePoolStats?: CandidatePoolStats
   criteriaConfig?: CriteriaConfig
@@ -28,269 +53,82 @@ export interface Scholarship {
 }
 
 export interface CandidateMatch {
-  id: string
-  candidateToken: string // ONLY: Candidate #C-XXXX (no names, IDs, emails)
+  candidateToken: string
   scholarshipId: string
-  matchConfidence: number // 0-1
-  matchRankBand: 'excellent' | 'strong' | 'moderate' | 'weak'
-  scoringDetails: Array<{
-    criterionName: string
-    contribution: number // 0-10
+  matchScore: number
+  confidence: ProviderMatchConfidence
+  rankBand: CandidateRankBand
+  eligibilitySummary_en: string
+  eligibilitySummary_th: string
+  eligibilityPreview: Array<{
+    label_en: string
+    label_th: string
+    status: 'met' | 'review'
   }>
-  aggregateStats: {
-    gpaRange: { min: number; max: number }
-    financialNeedPercentile: number
-  }
+  academicBand_en: string
+  academicBand_th: string
+  needBand_en: string
+  needBand_th: string
+  departmentBand_en: string
+  departmentBand_th: string
+  aggregateNotes_en: string
+  aggregateNotes_th: string
+  shortlistStatus: ShortlistStatus
 }
 
 export interface ShortlistRequest {
   id: string
   scholarshipId: string
-  candidateToken: string
+  candidateTokens: string[]
   reason: string
-  status: 'pending_review' | 'approved' | 'rejected'
+  status: Exclude<ShortlistStatus, 'none'>
   createdAt: string
 }
 
 export interface CandidatePoolStats {
   scholarshipId: string
   totalCandidates: number
-  excellentMatches: number
-  strongMatches: number
-  moderateMatches: number
-  averageConfidence: number
+  topBand: number
+  strongBand: number
+  developingBand: number
+  averageMatchScore: number
+  candidatePoolStatus: CandidatePoolStatus
+  aggregateNeedMix_en: string
+  aggregateNeedMix_th: string
+  aggregateAcademicMix_en: string
+  aggregateAcademicMix_th: string
 }
 
 export interface ProviderImpact {
   provider: string
-  scholarshipsOffered: number
+  activeScholarships: number
+  totalCommittedAmount: number
   awardedCount: number
-  totalAwardAmount: number
-  averageStudentGPA: number
-  studentRetentionRate: number
-  careerOutcomeRate: number
+  fundUtilizationPct: number
+  coveragePct: number
+  cohortBands: Array<{
+    label_en: string
+    label_th: string
+    value: number
+  }>
+  departmentBands: Array<{
+    label_en: string
+    label_th: string
+    value: number
+  }>
+  dataFreshness: {
+    status: 'fresh' | 'stale' | 'failed'
+    syncedAt_en: string
+    syncedAt_th: string
+  }
 }
 
-// Mock Scholarships Base Data (JCC Company Limited)
-const mockProviderScholarshipsBase: Scholarship[] = [
-  {
-    id: 'sch_001',
-    title_th: 'ทุน JCC เพื่อนักศึกษาดีเด่น',
-    title_en: 'JCC Excellence Scholarship',
-    provider: 'JCC Company Limited',
-    provider_th: 'บริษัท เจซีซี จำกัด',
-    amount: 50000,
-    num_awards: 3,
-    deadline: '2025-05-30',
-    status: 'OPEN',
-    description_th: 'เสริมสร้างผู้นำรุ่นใหม่ที่มีความเป็นเลิศทางวิชาการและจิตสาธารณะ',
-    description_en: 'Building next-generation leaders with academic excellence and public spirit',
-    gpa_min: 3.25,
-    academic_year: [2, 3, 4],
-    has_essay: true,
-    has_interview: true,
-    has_proposal: false,
-    created_at: '2025-03-20T08:00:00Z',
-  },
-  {
-    id: 'sch_002',
-    title_th: 'ทุน JCC สำหรับการเรียนต่อต่างประเทศ',
-    title_en: 'JCC International Study Grant',
-    provider: 'JCC Company Limited',
-    provider_th: 'บริษัท เจซีซี จำกัด',
-    amount: 75000,
-    num_awards: 2,
-    deadline: '2025-06-15',
-    status: 'OPEN',
-    description_th: 'สนับสนุนนักศึกษาที่มีแผนศึกษาต่อต่างประเทศ',
-    description_en: 'Supporting students pursuing international education',
-    gpa_min: 3.5,
-    academic_year: [3, 4],
-    has_essay: true,
-    has_interview: true,
-    has_proposal: true,
-    created_at: '2025-04-01T08:00:00Z',
-  },
-  {
-    id: 'sch_003',
-    title_th: 'ทุน JCC ด้านวิทยาศาสตร์และเทคโนโลยี (ร่าง)',
-    title_en: 'JCC Science & Technology Scholarship (Draft)',
-    provider: 'JCC Company Limited',
-    provider_th: 'บริษัท เจซีซี จำกัด',
-    amount: 40000,
-    num_awards: 5,
-    deadline: '2025-07-31',
-    status: 'DRAFT',
-    description_th: 'มุ่งสนับสนุนนักศึกษาวิทยาศาสตร์และเทคโนโลยี',
-    description_en: 'Supporting science and technology students',
-    gpa_min: 3.0,
-    academic_year: [1, 2, 3, 4],
-    has_essay: true,
-    has_interview: false,
-    has_proposal: true,
-    created_at: '2025-04-10T08:00:00Z',
-  },
-]
-
-// Mock Candidate Matches (Anonymous - Tokens ONLY)
-export const mockProviderCandidates: Record<string, CandidateMatch[]> = {
-  'sch_001': [
-    {
-      id: 'match-1',
-      candidateToken: 'Candidate #C-2048',
-      scholarshipId: 'sch_001',
-      matchConfidence: 0.94,
-      matchRankBand: 'excellent',
-      scoringDetails: [
-        { criterionName: 'Academic Excellence', contribution: 28.2 },
-        { criterionName: 'Leadership Experience', contribution: 23.5 },
-        { criterionName: 'Community Contribution', contribution: 21.7 },
-        { criterionName: 'Personal Statement Quality', contribution: 20.6 },
-      ],
-      aggregateStats: {
-        gpaRange: { min: 3.8, max: 4.0 },
-        financialNeedPercentile: 65,
-      },
-    },
-    {
-      id: 'match-2',
-      candidateToken: 'Candidate #C-2049',
-      scholarshipId: 'sch_001',
-      matchConfidence: 0.87,
-      matchRankBand: 'strong',
-      scoringDetails: [
-        { criterionName: 'Academic Excellence', contribution: 26.1 },
-        { criterionName: 'Leadership Experience', contribution: 21.8 },
-        { criterionName: 'Community Contribution', contribution: 19.4 },
-        { criterionName: 'Personal Statement Quality', contribution: 19.7 },
-      ],
-      aggregateStats: {
-        gpaRange: { min: 3.7, max: 3.9 },
-        financialNeedPercentile: 55,
-      },
-    },
-    {
-      id: 'match-3',
-      candidateToken: 'Candidate #C-2050',
-      scholarshipId: 'sch_001',
-      matchConfidence: 0.72,
-      matchRankBand: 'moderate',
-      scoringDetails: [
-        { criterionName: 'Academic Excellence', contribution: 21.6 },
-        { criterionName: 'Leadership Experience', contribution: 18.2 },
-        { criterionName: 'Community Contribution', contribution: 16.8 },
-        { criterionName: 'Personal Statement Quality', contribution: 15.4 },
-      ],
-      aggregateStats: {
-        gpaRange: { min: 3.4, max: 3.6 },
-        financialNeedPercentile: 45,
-      },
-    },
-    {
-      id: 'match-4',
-      candidateToken: 'Candidate #C-2051',
-      scholarshipId: 'sch_001',
-      matchConfidence: 0.58,
-      matchRankBand: 'weak',
-      scoringDetails: [
-        { criterionName: 'Academic Excellence', contribution: 17.4 },
-        { criterionName: 'Leadership Experience', contribution: 14.2 },
-        { criterionName: 'Community Contribution', contribution: 13.5 },
-        { criterionName: 'Personal Statement Quality', contribution: 12.9 },
-      ],
-      aggregateStats: {
-        gpaRange: { min: 3.2, max: 3.4 },
-        financialNeedPercentile: 35,
-      },
-    },
-  ],
-  'sch_002': [
-    {
-      id: 'match-5',
-      candidateToken: 'Candidate #C-3001',
-      scholarshipId: 'sch_002',
-      matchConfidence: 0.91,
-      matchRankBand: 'excellent',
-      scoringDetails: [
-        { criterionName: 'Academic Excellence', contribution: 27.3 },
-        { criterionName: 'International Background', contribution: 25.4 },
-        { criterionName: 'Language Proficiency', contribution: 22.8 },
-        { criterionName: 'Global Outlook', contribution: 19.5 },
-      ],
-      aggregateStats: {
-        gpaRange: { min: 3.8, max: 4.0 },
-        financialNeedPercentile: 72,
-      },
-    },
-    {
-      id: 'match-6',
-      candidateToken: 'Candidate #C-3002',
-      scholarshipId: 'sch_002',
-      matchConfidence: 0.79,
-      matchRankBand: 'strong',
-      scoringDetails: [
-        { criterionName: 'Academic Excellence', contribution: 23.7 },
-        { criterionName: 'International Background', contribution: 21.2 },
-        { criterionName: 'Language Proficiency', contribution: 19.6 },
-        { criterionName: 'Global Outlook', contribution: 16.5 },
-      ],
-      aggregateStats: {
-        gpaRange: { min: 3.6, max: 3.85 },
-        financialNeedPercentile: 62,
-      },
-    },
-  ],
-}
-
-// Shortlist Requests (Status tracking)
-export const mockProviderShortlists: Record<string, ShortlistRequest> = {
-  'req-1': {
-    id: 'req-1',
-    scholarshipId: 'sch_001',
-    candidateToken: 'Candidate #C-2048',
-    reason: 'Exceptional academic performance with strong leadership record in community service initiatives.',
-    status: 'approved',
-    createdAt: '2026-04-20T10:00:00Z',
-  },
-}
-
-// Candidate Pool Statistics
-export const mockProviderPoolStats: Record<string, CandidatePoolStats> = {
-  'sch_001': {
-    scholarshipId: 'sch_001',
-    totalCandidates: 127,
-    excellentMatches: 12,
-    strongMatches: 35,
-    moderateMatches: 58,
-    averageConfidence: 0.76,
-  },
-  'sch_002': {
-    scholarshipId: 'sch_002',
-    totalCandidates: 89,
-    excellentMatches: 8,
-    strongMatches: 22,
-    moderateMatches: 45,
-    averageConfidence: 0.71,
-  },
-}
-
-// Provider Impact Metrics (Aggregate only - NO individual student data)
-export const mockProviderImpactData: ProviderImpact = {
-  provider: 'JCC Company Limited',
-  scholarshipsOffered: 3,
-  awardedCount: 28,
-  totalAwardAmount: 700000,
-  averageStudentGPA: 3.72,
-  studentRetentionRate: 0.92,
-  careerOutcomeRate: 0.88,
-}
-
-// Matching Criteria (for Criteria Builder)
 export interface Criterion {
   id: string
-  name: string
-  type: 'gpa' | 'test_score' | 'essay_quality' | 'financial_need' | 'community_service' | 'other'
-  weight: number // 0-100
+  name_en: string
+  name_th: string
+  type: 'academic' | 'financial_need' | 'essay_quality' | 'community_service' | 'leadership' | 'field_alignment'
+  weight: number
 }
 
 export interface CriteriaConfig {
@@ -298,66 +136,405 @@ export interface CriteriaConfig {
   criteria: Criterion[]
   hardConstraints: Array<{
     id: string
-    name: string
-    description: string
-    type: 'field_of_study' | 'gpa' | 'test_score' | 'other'
+    label_en: string
+    label_th: string
+    value_en: string
+    value_th: string
   }>
+  candidateVolumeEstimate: {
+    eligible: number
+    readyForPool: number
+    note_en: string
+    note_th: string
+  }
+}
+
+export const mockProviderOrganization: ProviderOrganization = {
+  id: 'provider_jcc',
+  name_en: 'JCC Company Limited',
+  name_th: 'บริษัท เจซีซี จำกัด',
+  representativeRole_en: 'Scholarship Program Manager',
+  representativeRole_th: 'ผู้จัดการโครงการทุน',
+}
+
+const defaultDocuments: ProviderRequiredDocument[] = [
+  { id: 'transcript', label_en: 'Transcript', label_th: 'ใบแสดงผลการเรียน', required: true },
+  { id: 'statement', label_en: 'Personal statement', label_th: 'เรียงความแนะนำตัว', required: true },
+  { id: 'activity', label_en: 'Activity evidence', label_th: 'หลักฐานกิจกรรม', required: false },
+  { id: 'portfolio', label_en: 'Portfolio or proposal', label_th: 'แฟ้มผลงานหรือข้อเสนอโครงการ', required: false },
+]
+
+const mockProviderScholarshipsBase: Scholarship[] = [
+  {
+    id: 'sch_001',
+    title_th: 'ทุน JCC เพื่อนักศึกษาดีเด่น',
+    title_en: 'JCC Excellence Scholarship',
+    provider: mockProviderOrganization.name_en,
+    provider_th: mockProviderOrganization.name_th,
+    providerOrganizationId: mockProviderOrganization.id,
+    amount: 50000,
+    num_awards: 3,
+    deadline: '2026-06-30',
+    status: 'ACTIVE',
+    candidatePoolStatus: 'ready',
+    shortlistStatus: 'pending_staff_approval',
+    description_th: 'เสริมสร้างผู้นำรุ่นใหม่ที่มีความเป็นเลิศทางวิชาการและจิตสาธารณะ',
+    description_en: 'Building next-generation leaders with academic strength and public spirit.',
+    gpa_min: 3.25,
+    academic_year: [2, 3, 4],
+    departmentBands: ['Social sciences', 'Business', 'Public administration'],
+    has_essay: true,
+    has_interview: true,
+    has_proposal: false,
+    requiredDocuments: defaultDocuments.slice(0, 3),
+    created_at: '2026-03-20T08:00:00Z',
+  },
+  {
+    id: 'sch_002',
+    title_th: 'ทุน JCC สำหรับการเรียนต่อต่างประเทศ',
+    title_en: 'JCC International Study Grant',
+    provider: mockProviderOrganization.name_en,
+    provider_th: mockProviderOrganization.name_th,
+    providerOrganizationId: mockProviderOrganization.id,
+    amount: 75000,
+    num_awards: 2,
+    deadline: '2026-07-15',
+    status: 'ACTIVE',
+    candidatePoolStatus: 'ready',
+    shortlistStatus: 'none',
+    description_th: 'สนับสนุนนักศึกษาที่มีแผนศึกษาต่อต่างประเทศและพร้อมเป็นตัวแทนมหาวิทยาลัย',
+    description_en: 'Supporting students pursuing international education and university representation.',
+    gpa_min: 3.5,
+    academic_year: [3, 4],
+    departmentBands: ['International programs', 'Language-ready cohorts'],
+    has_essay: true,
+    has_interview: true,
+    has_proposal: true,
+    requiredDocuments: defaultDocuments,
+    created_at: '2026-04-01T08:00:00Z',
+  },
+  {
+    id: 'sch_003',
+    title_th: 'ทุน JCC ด้านวิทยาศาสตร์และเทคโนโลยี',
+    title_en: 'JCC Science & Technology Scholarship',
+    provider: mockProviderOrganization.name_en,
+    provider_th: mockProviderOrganization.name_th,
+    providerOrganizationId: mockProviderOrganization.id,
+    amount: 40000,
+    num_awards: 5,
+    deadline: '2026-08-31',
+    status: 'DRAFT',
+    candidatePoolStatus: 'not_available',
+    shortlistStatus: 'none',
+    description_th: 'มุ่งสนับสนุนนักศึกษาวิทยาศาสตร์และเทคโนโลยี',
+    description_en: 'Supporting science and technology students.',
+    gpa_min: 3.0,
+    academic_year: [1, 2, 3, 4],
+    departmentBands: ['STEM cohorts'],
+    has_essay: true,
+    has_interview: false,
+    has_proposal: true,
+    requiredDocuments: defaultDocuments,
+    created_at: '2026-04-10T08:00:00Z',
+  },
+  {
+    id: 'sch_004',
+    title_th: 'ทุน JCC ชุมชนและนวัตกรรม',
+    title_en: 'JCC Community Innovation Grant',
+    provider: mockProviderOrganization.name_en,
+    provider_th: mockProviderOrganization.name_th,
+    providerOrganizationId: mockProviderOrganization.id,
+    amount: 30000,
+    num_awards: 4,
+    deadline: '2026-09-20',
+    status: 'PENDING_REVIEW',
+    candidatePoolStatus: 'not_available',
+    shortlistStatus: 'none',
+    description_th: 'รอเจ้าหน้าที่ตรวจสอบก่อนเผยแพร่และเปิดระบบจับคู่',
+    description_en: 'Awaiting staff review before publication and candidate matching.',
+    gpa_min: 2.8,
+    academic_year: [2, 3, 4],
+    departmentBands: ['Community projects', 'Social innovation'],
+    has_essay: true,
+    has_interview: false,
+    has_proposal: true,
+    requiredDocuments: defaultDocuments,
+    created_at: '2026-04-22T08:00:00Z',
+  },
+]
+
+export const mockProviderCandidates: Record<string, CandidateMatch[]> = {
+  sch_001: [
+    {
+      candidateToken: 'Candidate #C-2048',
+      scholarshipId: 'sch_001',
+      matchScore: 94,
+      confidence: 'high',
+      rankBand: 'top_band',
+      eligibilitySummary_en: 'Meets all hard gates; strong leadership and service alignment.',
+      eligibilitySummary_th: 'ผ่านเงื่อนไขหลักทั้งหมด และมีแนวโน้มสอดคล้องกับภาวะผู้นำและจิตสาธารณะ',
+      eligibilityPreview: [
+        { label_en: 'Academic gate', label_th: 'เงื่อนไขวิชาการ', status: 'met' },
+        { label_en: 'Year level', label_th: 'ชั้นปี', status: 'met' },
+        { label_en: 'Documents ready', label_th: 'เอกสารพร้อม', status: 'review' },
+      ],
+      academicBand_en: 'High academic band',
+      academicBand_th: 'กลุ่มผลการเรียนสูง',
+      needBand_en: 'Moderate need band',
+      needBand_th: 'กลุ่มความจำเป็นปานกลาง',
+      departmentBand_en: 'Social sciences band',
+      departmentBand_th: 'กลุ่มสังคมศาสตร์',
+      aggregateNotes_en: 'Tokenized profile shows strong fit across academic, service, and essay signals.',
+      aggregateNotes_th: 'โปรไฟล์แบบโทเค็นแสดงความสอดคล้องสูงด้านวิชาการ บริการชุมชน และเรียงความ',
+      shortlistStatus: 'pending_staff_approval',
+    },
+    {
+      candidateToken: 'Candidate #C-2049',
+      scholarshipId: 'sch_001',
+      matchScore: 87,
+      confidence: 'high',
+      rankBand: 'strong_band',
+      eligibilitySummary_en: 'Meets hard gates with balanced academic and service signals.',
+      eligibilitySummary_th: 'ผ่านเงื่อนไขหลักและมีสัญญาณด้านวิชาการกับจิตสาธารณะสมดุล',
+      eligibilityPreview: [
+        { label_en: 'Academic gate', label_th: 'เงื่อนไขวิชาการ', status: 'met' },
+        { label_en: 'Year level', label_th: 'ชั้นปี', status: 'met' },
+        { label_en: 'Documents ready', label_th: 'เอกสารพร้อม', status: 'met' },
+      ],
+      academicBand_en: 'High academic band',
+      academicBand_th: 'กลุ่มผลการเรียนสูง',
+      needBand_en: 'Moderate need band',
+      needBand_th: 'กลุ่มความจำเป็นปานกลาง',
+      departmentBand_en: 'Business and policy band',
+      departmentBand_th: 'กลุ่มธุรกิจและนโยบาย',
+      aggregateNotes_en: 'Strong overall fit; confidence may improve after document verification.',
+      aggregateNotes_th: 'ความสอดคล้องโดยรวมดี และความมั่นใจอาจเพิ่มหลังตรวจเอกสาร',
+      shortlistStatus: 'none',
+    },
+    {
+      candidateToken: 'Candidate #C-2050',
+      scholarshipId: 'sch_001',
+      matchScore: 72,
+      confidence: 'medium',
+      rankBand: 'developing_band',
+      eligibilitySummary_en: 'Meets hard gates; soft-fit evidence is still developing.',
+      eligibilitySummary_th: 'ผ่านเงื่อนไขหลัก แต่หลักฐานด้านความสอดคล้องเชิงคุณภาพยังอยู่ระหว่างพัฒนา',
+      eligibilityPreview: [
+        { label_en: 'Academic gate', label_th: 'เงื่อนไขวิชาการ', status: 'met' },
+        { label_en: 'Year level', label_th: 'ชั้นปี', status: 'met' },
+        { label_en: 'Documents ready', label_th: 'เอกสารพร้อม', status: 'review' },
+      ],
+      academicBand_en: 'Eligible academic band',
+      academicBand_th: 'กลุ่มผลการเรียนที่เข้าเกณฑ์',
+      needBand_en: 'Higher need band',
+      needBand_th: 'กลุ่มความจำเป็นสูง',
+      departmentBand_en: 'Public administration band',
+      departmentBand_th: 'กลุ่มรัฐประศาสนศาสตร์',
+      aggregateNotes_en: 'May be a strong mission-fit candidate if supporting evidence is verified.',
+      aggregateNotes_th: 'อาจสอดคล้องกับเป้าหมายทุนมากขึ้นหากหลักฐานประกอบได้รับการยืนยัน',
+      shortlistStatus: 'none',
+    },
+    {
+      candidateToken: 'Candidate #C-2051',
+      scholarshipId: 'sch_001',
+      matchScore: 58,
+      confidence: 'medium',
+      rankBand: 'watch_band',
+      eligibilitySummary_en: 'Meets basic gates; several fit factors need staff-side validation.',
+      eligibilitySummary_th: 'ผ่านเงื่อนไขพื้นฐาน แต่ปัจจัยความสอดคล้องบางส่วนต้องรอเจ้าหน้าที่ยืนยัน',
+      eligibilityPreview: [
+        { label_en: 'Academic gate', label_th: 'เงื่อนไขวิชาการ', status: 'met' },
+        { label_en: 'Year level', label_th: 'ชั้นปี', status: 'review' },
+        { label_en: 'Documents ready', label_th: 'เอกสารพร้อม', status: 'review' },
+      ],
+      academicBand_en: 'Eligible academic band',
+      academicBand_th: 'กลุ่มผลการเรียนที่เข้าเกณฑ์',
+      needBand_en: 'Moderate need band',
+      needBand_th: 'กลุ่มความจำเป็นปานกลาง',
+      departmentBand_en: 'Cross-disciplinary band',
+      departmentBand_th: 'กลุ่มข้ามสาขา',
+      aggregateNotes_en: 'Useful to monitor if the provider wants a wider shortlist.',
+      aggregateNotes_th: 'เหมาะสำหรับติดตามหากผู้ให้ทุนต้องการรายชื่อสำรองที่กว้างขึ้น',
+      shortlistStatus: 'none',
+    },
+  ],
+  sch_002: [
+    {
+      candidateToken: 'Candidate #C-3001',
+      scholarshipId: 'sch_002',
+      matchScore: 91,
+      confidence: 'high',
+      rankBand: 'top_band',
+      eligibilitySummary_en: 'Meets international-readiness gates with strong language evidence.',
+      eligibilitySummary_th: 'ผ่านเงื่อนไขความพร้อมต่างประเทศและมีหลักฐานด้านภาษาที่แข็งแรง',
+      eligibilityPreview: [
+        { label_en: 'Academic gate', label_th: 'เงื่อนไขวิชาการ', status: 'met' },
+        { label_en: 'Language readiness', label_th: 'ความพร้อมภาษา', status: 'met' },
+        { label_en: 'Proposal ready', label_th: 'ข้อเสนอพร้อม', status: 'review' },
+      ],
+      academicBand_en: 'High academic band',
+      academicBand_th: 'กลุ่มผลการเรียนสูง',
+      needBand_en: 'Higher need band',
+      needBand_th: 'กลุ่มความจำเป็นสูง',
+      departmentBand_en: 'International program band',
+      departmentBand_th: 'กลุ่มหลักสูตรนานาชาติ',
+      aggregateNotes_en: 'Strong international alignment without exposing identity details.',
+      aggregateNotes_th: 'สอดคล้องกับเป้าหมายต่างประเทศโดยไม่เปิดเผยข้อมูลระบุตัวตน',
+      shortlistStatus: 'none',
+    },
+    {
+      candidateToken: 'Candidate #C-3002',
+      scholarshipId: 'sch_002',
+      matchScore: 79,
+      confidence: 'medium',
+      rankBand: 'strong_band',
+      eligibilitySummary_en: 'Meets core gates; global-outlook evidence is still being verified.',
+      eligibilitySummary_th: 'ผ่านเงื่อนไขหลัก และหลักฐานด้านมุมมองสากลอยู่ระหว่างการยืนยัน',
+      eligibilityPreview: [
+        { label_en: 'Academic gate', label_th: 'เงื่อนไขวิชาการ', status: 'met' },
+        { label_en: 'Language readiness', label_th: 'ความพร้อมภาษา', status: 'review' },
+        { label_en: 'Proposal ready', label_th: 'ข้อเสนอพร้อม', status: 'met' },
+      ],
+      academicBand_en: 'Eligible academic band',
+      academicBand_th: 'กลุ่มผลการเรียนที่เข้าเกณฑ์',
+      needBand_en: 'Moderate need band',
+      needBand_th: 'กลุ่มความจำเป็นปานกลาง',
+      departmentBand_en: 'Language-ready cohort band',
+      departmentBand_th: 'กลุ่มที่มีความพร้อมด้านภาษา',
+      aggregateNotes_en: 'Good fit with some evidence pending verification.',
+      aggregateNotes_th: 'มีความสอดคล้องดี และมีบางหลักฐานรอการยืนยัน',
+      shortlistStatus: 'none',
+    },
+  ],
+}
+
+export const mockProviderPoolStats: Record<string, CandidatePoolStats> = {
+  sch_001: {
+    scholarshipId: 'sch_001',
+    totalCandidates: 127,
+    topBand: 12,
+    strongBand: 35,
+    developingBand: 58,
+    averageMatchScore: 76,
+    candidatePoolStatus: 'ready',
+    aggregateNeedMix_en: 'Mostly moderate and higher need bands',
+    aggregateNeedMix_th: 'ส่วนใหญ่เป็นกลุ่มความจำเป็นปานกลางและสูง',
+    aggregateAcademicMix_en: 'Eligible to high academic bands',
+    aggregateAcademicMix_th: 'กลุ่มผลการเรียนเข้าเกณฑ์ถึงสูง',
+  },
+  sch_002: {
+    scholarshipId: 'sch_002',
+    totalCandidates: 89,
+    topBand: 8,
+    strongBand: 22,
+    developingBand: 45,
+    averageMatchScore: 71,
+    candidatePoolStatus: 'ready',
+    aggregateNeedMix_en: 'Balanced need distribution',
+    aggregateNeedMix_th: 'การกระจายความจำเป็นค่อนข้างสมดุล',
+    aggregateAcademicMix_en: 'Mostly high academic and language-ready bands',
+    aggregateAcademicMix_th: 'ส่วนใหญ่เป็นกลุ่มผลการเรียนสูงและพร้อมด้านภาษา',
+  },
+}
+
+export const mockProviderShortlists: Record<string, ShortlistRequest> = {
+  req_001: {
+    id: 'req_001',
+    scholarshipId: 'sch_001',
+    candidateTokens: ['Candidate #C-2048'],
+    reason: 'Requesting staff approval to review this anonymous candidate for shortlist fit.',
+    status: 'pending_staff_approval',
+    createdAt: '2026-05-06T10:00:00Z',
+  },
+}
+
+export const mockProviderImpactData: ProviderImpact = {
+  provider: mockProviderOrganization.name_en,
+  activeScholarships: 2,
+  totalCommittedAmount: 500000,
+  awardedCount: 28,
+  fundUtilizationPct: 84,
+  coveragePct: 67,
+  cohortBands: [
+    { label_en: 'Year 2', label_th: 'ชั้นปี 2', value: 18 },
+    { label_en: 'Year 3', label_th: 'ชั้นปี 3', value: 31 },
+    { label_en: 'Year 4', label_th: 'ชั้นปี 4', value: 24 },
+  ],
+  departmentBands: [
+    { label_en: 'Social sciences', label_th: 'สังคมศาสตร์', value: 34 },
+    { label_en: 'Business and policy', label_th: 'ธุรกิจและนโยบาย', value: 27 },
+    { label_en: 'International programs', label_th: 'หลักสูตรนานาชาติ', value: 16 },
+  ],
+  dataFreshness: {
+    status: 'fresh',
+    syncedAt_en: 'Synced recently',
+    syncedAt_th: 'ซิงก์ล่าสุดเมื่อไม่นานนี้',
+  },
 }
 
 export const mockProviderCriteria: Record<string, CriteriaConfig> = {
-  'sch_001': {
+  sch_001: {
     scholarshipId: 'sch_001',
     criteria: [
-      { id: 'c1', name: 'Academic Excellence', type: 'gpa', weight: 30 },
-      { id: 'c2', name: 'Leadership Experience', type: 'other', weight: 25 },
-      { id: 'c3', name: 'Community Contribution', type: 'community_service', weight: 25 },
-      { id: 'c4', name: 'Personal Statement Quality', type: 'essay_quality', weight: 20 },
+      { id: 'c1', name_en: 'Academic strength band', name_th: 'กลุ่มความแข็งแรงทางวิชาการ', type: 'academic', weight: 30 },
+      { id: 'c2', name_en: 'Leadership evidence', name_th: 'หลักฐานภาวะผู้นำ', type: 'leadership', weight: 25 },
+      { id: 'c3', name_en: 'Community contribution', name_th: 'การมีส่วนร่วมกับชุมชน', type: 'community_service', weight: 25 },
+      { id: 'c4', name_en: 'Statement quality', name_th: 'คุณภาพเรียงความ', type: 'essay_quality', weight: 20 },
     ],
     hardConstraints: [
-      {
-        id: 'h1',
-        name: 'Minimum GPA',
-        description: 'GPA must be at least 3.25',
-        type: 'gpa',
-      },
-      {
-        id: 'h2',
-        name: 'Academic Year',
-        description: 'Must be in year 2, 3, or 4',
-        type: 'other',
-      },
+      { id: 'h1', label_en: 'Minimum academic gate', label_th: 'เงื่อนไขวิชาการขั้นต่ำ', value_en: 'Provider-defined GPA threshold', value_th: 'เกณฑ์ GPA ที่ผู้ให้ทุนกำหนด' },
+      { id: 'h2', label_en: 'Academic year', label_th: 'ชั้นปี', value_en: 'Year 2, 3, or 4', value_th: 'ชั้นปี 2, 3 หรือ 4' },
+      { id: 'h3', label_en: 'Required documents', label_th: 'เอกสารจำเป็น', value_en: 'Transcript and personal statement', value_th: 'ใบแสดงผลการเรียนและเรียงความ' },
     ],
+    candidateVolumeEstimate: {
+      eligible: 127,
+      readyForPool: 105,
+      note_en: 'Volume estimate uses anonymous, banded student data only.',
+      note_th: 'การประมาณจำนวนใช้ข้อมูลนักศึกษาแบบไม่ระบุตัวตนและเป็นกลุ่มเท่านั้น',
+    },
   },
-  'sch_002': {
+  sch_002: {
     scholarshipId: 'sch_002',
     criteria: [
-      { id: 'c5', name: 'Academic Excellence', type: 'gpa', weight: 30 },
-      { id: 'c6', name: 'International Background', type: 'other', weight: 28 },
-      { id: 'c7', name: 'Language Proficiency', type: 'other', weight: 22 },
-      { id: 'c8', name: 'Global Outlook', type: 'essay_quality', weight: 20 },
+      { id: 'c5', name_en: 'Academic strength band', name_th: 'กลุ่มความแข็งแรงทางวิชาการ', type: 'academic', weight: 30 },
+      { id: 'c6', name_en: 'International readiness', name_th: 'ความพร้อมต่างประเทศ', type: 'field_alignment', weight: 28 },
+      { id: 'c7', name_en: 'Language evidence', name_th: 'หลักฐานด้านภาษา', type: 'field_alignment', weight: 22 },
+      { id: 'c8', name_en: 'Global outlook statement', name_th: 'เรียงความมุมมองสากล', type: 'essay_quality', weight: 20 },
     ],
     hardConstraints: [
-      {
-        id: 'h3',
-        name: 'Minimum GPA',
-        description: 'GPA must be at least 3.5',
-        type: 'gpa',
-      },
-      {
-        id: 'h4',
-        name: 'Academic Year',
-        description: 'Must be in year 3 or 4',
-        type: 'other',
-      },
+      { id: 'h4', label_en: 'Minimum academic gate', label_th: 'เงื่อนไขวิชาการขั้นต่ำ', value_en: 'Provider-defined GPA threshold', value_th: 'เกณฑ์ GPA ที่ผู้ให้ทุนกำหนด' },
+      { id: 'h5', label_en: 'Academic year', label_th: 'ชั้นปี', value_en: 'Year 3 or 4', value_th: 'ชั้นปี 3 หรือ 4' },
+      { id: 'h6', label_en: 'International plan', label_th: 'แผนศึกษาต่อต่างประเทศ', value_en: 'Proposal or study plan required', value_th: 'ต้องมีข้อเสนอหรือแผนการศึกษา' },
     ],
+    candidateVolumeEstimate: {
+      eligible: 89,
+      readyForPool: 74,
+      note_en: 'Language and proposal evidence remain anonymized until staff-approved disclosure.',
+      note_th: 'หลักฐานด้านภาษาและข้อเสนอยังคงไม่ระบุตัวตนจนกว่าจะมีการอนุมัติจากเจ้าหน้าที่',
+    },
   },
 }
 
-// Augment scholarships with Phase 5 provider data
-export const mockProviderScholarships: Scholarship[] = mockProviderScholarshipsBase.map((sch) => ({
-  ...sch,
-  matchedCandidates: mockProviderCandidates[sch.id] || [],
-  candidatePoolStats: mockProviderPoolStats[sch.id],
-  criteriaConfig: mockProviderCriteria[sch.id],
+export const mockProviderScholarships: Scholarship[] = mockProviderScholarshipsBase.map((scholarship) => ({
+  ...scholarship,
+  matchedCandidates: mockProviderCandidates[scholarship.id] || [],
+  candidatePoolStats: mockProviderPoolStats[scholarship.id],
+  criteriaConfig: mockProviderCriteria[scholarship.id],
   providerImpact: mockProviderImpactData,
 }))
+
+export function getProviderScholarshipById(scholarshipId: string) {
+  return mockProviderScholarships.find((scholarship) => scholarship.id === scholarshipId)
+}
+
+export function getProviderCandidatesForScholarship(scholarshipId: string) {
+  return mockProviderCandidates[scholarshipId] || []
+}
+
+export function getProviderCriteriaForScholarship(scholarshipId: string) {
+  return mockProviderCriteria[scholarshipId]
+}
+
+export function getProviderPoolStatsForScholarship(scholarshipId: string) {
+  return mockProviderPoolStats[scholarshipId]
+}

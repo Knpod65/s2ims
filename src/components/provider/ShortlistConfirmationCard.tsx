@@ -12,20 +12,21 @@ export default function ShortlistConfirmationCard({ candidateCount, scholarshipN
   const { lang } = useLang()
 
   return (
-    <div className="rounded-2xl p-6 bg-emerald-50 border border-emerald-200 text-center">
-      <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
-        ✓
+    <div className="rounded-2xl border border-role-border bg-role-tint p-6 text-center">
+      <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-role-gradient text-white font-semibold">
+        <span className="sr-only">{lang === 'th' ? 'ส่งแล้ว' : 'Submitted'}</span>
+        <span aria-hidden="true">✓</span>
       </div>
       <h3 className="font-semibold text-ink-1 mb-1">
         {lang === 'th' ? 'ส่งขอแล้ว' : 'Request Submitted'}
       </h3>
       <p className="text-sm text-ink-3 mb-4">
         {lang === 'th'
-          ? `ส่งขอเปิดเผยข้อมูล ${candidateCount} ผู้สมัครแล้ว`
-          : `Requested disclosure for ${candidateCount} ${candidateCount === 1 ? 'candidate' : 'candidates'}`}
+          ? `ส่งคำขอคัดเลือก ${candidateCount} โทเค็นแล้ว`
+          : `Requested shortlist review for ${candidateCount} candidate token${candidateCount === 1 ? '' : 's'}`}
       </p>
 
-      <div className="bg-white rounded-xl p-3 mb-4 text-left border border-emerald-100">
+      <div className="bg-white rounded-xl p-3 mb-4 text-left border border-role-border">
         <p className="text-xs text-ink-3 mb-1">
           {lang === 'th' ? 'ทุน:' : 'Scholarship:'}
         </p>
@@ -33,13 +34,13 @@ export default function ShortlistConfirmationCard({ candidateCount, scholarshipN
       </div>
 
       <div className="flex justify-center">
-        <ShortlistStatusBadge status="pending_review" />
+        <ShortlistStatusBadge status="pending_staff_approval" />
       </div>
 
       <p className="text-xs text-ink-3 mt-4">
         {lang === 'th'
-          ? 'เจ้าหน้าที่จะตรวจสอบและแจ้งผลภายใน 3–5 วันทำการ'
-          : 'Staff will review and respond within 3–5 business days.'}
+          ? 'เจ้าหน้าที่จะตรวจสอบคำขอ ยังไม่มีการเปิดเผยตัวตนนักศึกษาในระยะนี้'
+          : 'Staff will review the request. No student identity is revealed in this phase.'}
       </p>
     </div>
   )
