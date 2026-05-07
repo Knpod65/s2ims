@@ -98,7 +98,7 @@ export default function RecommendationCard({
           <ArrowRight size={13} />
         </Link>
         <Link
-          href={`/scholarships/${recommendation.scholarshipId}`}
+          href={`/student/scholarships/${recommendation.scholarshipId}`}
           className="btn-secondary inline-flex min-h-11 items-center justify-center px-3 py-2 text-xs"
         >
           {lang === 'th' ? 'รายละเอียดทุน' : 'Details'}
