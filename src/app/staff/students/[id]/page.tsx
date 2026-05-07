@@ -31,9 +31,9 @@ export default function StaffStudentPage({ params }: { params: Promise<{ id: str
 
   return (
     <AppShell requiredRole="staff">
-      <div className="flex items-center gap-2 mb-4 p-2.5 bg-brand/[0.06] border border-brand/20 rounded-lg">
-        <Lock size={12} className="text-brand" />
-        <span className="text-xs text-brand">
+      <div className="flex items-center gap-2 mb-4 p-2.5 bg-role-tint border border-role-border rounded-lg">
+        <Lock size={12} className="text-role-primary" />
+        <span className="text-xs text-role-primary">
           {lang === 'th'
             ? 'การเข้าถึงโปรไฟล์นักศึกษาถูกบันทึกใน Audit Log'
             : 'Student profile access is logged in the audit trail'}
@@ -46,7 +46,7 @@ export default function StaffStudentPage({ params }: { params: Promise<{ id: str
       />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <StatCard value={apps.length} label={lang === 'th' ? 'ใบสมัครทั้งหมด' : 'Total Applications'} color="text-brand" />
+        <StatCard value={apps.length} label={lang === 'th' ? 'ใบสมัครทั้งหมด' : 'Total Applications'} color="text-role-primary" />
         <StatCard value="3.25" label="GPA" color="text-status-success" />
         <StatCard value="68%" label={lang === 'th' ? 'โปรไฟล์สมบูรณ์' : 'Profile Complete'} color="text-status-info" />
         <StatCard
@@ -77,13 +77,13 @@ export default function StaffStudentPage({ params }: { params: Promise<{ id: str
                   <Link
                     key={app.id}
                     href={`/staff/applications/${app.id}`}
-                    className="card-sm p-3 flex items-center justify-between hover:border-white/[0.15] transition-all block"
+                    className="card-sm p-3 flex items-center justify-between hover:border-line transition-all block"
                   >
                     <div className="text-xs text-ink-1 flex-1 mr-3">
                       {lang === 'th' ? app.scholarship_title_th : app.scholarship_title_en}
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
-                      <span className="text-xs font-mono text-brand">{app.match_score}%</span>
+                      <span className="text-xs font-mono text-role-primary">{app.match_score}%</span>
                       <span className={`text-[10px] px-2 py-0.5 rounded-full border ${si.color}`}>
                         {si[lang === 'th' ? 'th' : 'en']}
                       </span>

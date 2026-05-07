@@ -61,7 +61,7 @@ export default function StaffApplicationsPage() {
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-bg-200">
+            <tr className="border-b border-line bg-bg-200">
               <th className="text-left p-3 text-xs text-ink-3 font-semibold uppercase tracking-wider">{lang==='th'?'ทุน':'Scholarship'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold uppercase tracking-wider">{lang==='th'?'นักศึกษา':'Student'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold uppercase tracking-wider">{lang==='th'?'สถานะ':'Status'}</th>
@@ -81,7 +81,7 @@ export default function StaffApplicationsPage() {
               const actionNeeded = ['NEEDS_DOCS','FOLLOW_UP_REQUIRED','REPORT_OVERDUE'].includes(app.status)
               const docStatus = getDocumentStatus(app.id)
               return (
-                <tr key={app.id} className={`border-b border-white/[0.04] hover:bg-white/[0.02] transition-all ${i%2===1?'bg-white/[0.01]':''} ${actionNeeded?'border-l-2 border-l-status-danger':''}`}>
+                <tr key={app.id} className={`border-b border-line hover:bg-surface-low transition-all ${i%2===1?'bg-surface-low/60':''} ${actionNeeded?'border-l-2 border-l-status-danger':''}`}>
                   <td className="p-3">
                     <div className="text-xs font-medium text-ink-1 line-clamp-1 max-w-[180px]">{title}</div>
                   </td>
@@ -101,7 +101,7 @@ export default function StaffApplicationsPage() {
                           </div>
                         )}
                         {docStatus.pending > 0 && (
-                          <div className="flex items-center gap-0.5 text-xs bg-brand/10 text-brand px-2 py-1 rounded">
+                          <div className="flex items-center gap-0.5 text-xs bg-role-tint text-role-primary px-2 py-1 rounded">
                             <Clock size={12} />
                             {docStatus.pending}
                           </div>
@@ -118,13 +118,13 @@ export default function StaffApplicationsPage() {
                     )}
                   </td>
                   <td className="p-3">
-                    <span className="font-mono text-xs font-bold text-brand">{app.match_score}%</span>
+                    <span className="font-mono text-xs font-bold text-role-primary">{app.match_score}%</span>
                   </td>
                   <td className="p-3 text-xs text-ink-3 font-mono whitespace-nowrap">
                     {app.updated_at.split('T')[0]}
                   </td>
                   <td className="p-3">
-                    <Link href={`/staff/applications/${app.id}`} className="text-xs text-brand hover:text-brand-light transition-colors">
+                    <Link href={`/staff/applications/${app.id}`} className="text-xs text-role-primary hover:text-role-primary transition-colors">
                       {lang==='th'?'ดู':'View'} →
                     </Link>
                   </td>

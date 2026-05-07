@@ -43,12 +43,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             className={`flex items-center gap-3 pl-4 pr-3 py-3 rounded-xl border shadow-lifted pointer-events-auto animate-toast-in ${
               t.type === 'success' ? 'bg-bg-200 border-status-success/30' :
               t.type === 'error'   ? 'bg-bg-200 border-status-danger/30' :
-                                     'bg-bg-200 border-brand/30'
+                                     'bg-bg-200 border-role-border'
             }`}
           >
             {t.type === 'success' && <CheckCircle2 size={16} className="text-status-success flex-shrink-0" />}
             {t.type === 'error'   && <AlertCircle  size={16} className="text-status-danger flex-shrink-0" />}
-            {t.type === 'info'    && <Info         size={16} className="text-brand flex-shrink-0" />}
+            {t.type === 'info'    && <Info         size={16} className="text-role-primary flex-shrink-0" />}
             <span className="text-sm text-ink-1 flex-1">{t.message}</span>
             <button
               onClick={() => remove(t.id)}

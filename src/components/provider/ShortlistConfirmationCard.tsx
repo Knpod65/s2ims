@@ -12,8 +12,10 @@ export default function ShortlistConfirmationCard({ candidateCount, scholarshipN
   const { lang } = useLang()
 
   return (
-    <div className="rounded-2xl p-6 bg-status-success/[0.08] border border-status-success/20 text-center">
-      <div className="text-4xl mb-4">✓</div>
+    <div className="rounded-2xl p-6 bg-emerald-50 border border-emerald-200 text-center">
+      <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
+        ✓
+      </div>
       <h3 className="font-semibold text-ink-1 mb-1">
         {lang === 'th' ? 'ส่งขอแล้ว' : 'Request Submitted'}
       </h3>
@@ -23,7 +25,7 @@ export default function ShortlistConfirmationCard({ candidateCount, scholarshipN
           : `Requested disclosure for ${candidateCount} ${candidateCount === 1 ? 'candidate' : 'candidates'}`}
       </p>
 
-      <div className="bg-white rounded-xl p-3 mb-4 text-left">
+      <div className="bg-white rounded-xl p-3 mb-4 text-left border border-emerald-100">
         <p className="text-xs text-ink-3 mb-1">
           {lang === 'th' ? 'ทุน:' : 'Scholarship:'}
         </p>

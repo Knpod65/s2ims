@@ -26,7 +26,7 @@ export default function ProviderCandidateSelectorPage() {
             <Link
               key={scholarship.id}
               href={`/provider/scholarships/${scholarship.id}/candidates`}
-              className="card p-4 hover:border-brand/30 hover:bg-brand/[0.04] transition-all cursor-pointer"
+              className="card p-4 hover:border-role-border hover:bg-role-tint transition-all cursor-pointer"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">

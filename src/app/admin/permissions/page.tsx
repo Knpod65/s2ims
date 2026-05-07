@@ -26,14 +26,14 @@ export default function PermissionsPage() {
       <div className="card overflow-x-auto">
         <table className="w-full text-xs min-w-[600px]">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-bg-200">
+            <tr className="border-b border-line bg-bg-200">
               <th className="text-left p-3 text-ink-3 font-semibold min-w-[160px]">{lang==='th'?'ฟีเจอร์':'Feature'}</th>
               {roles.map(r => <th key={r} className="p-3 text-center text-ink-3 font-semibold whitespace-nowrap">{r}</th>)}
             </tr>
           </thead>
           <tbody>
             {features.map((feature, fi) => (
-              <tr key={fi} className={`border-b border-white/[0.04] ${fi%2===1?'bg-white/[0.01]':''}`}>
+              <tr key={fi} className={`border-b border-line ${fi%2===1?'bg-surface-low/60':''}`}>
                 <td className="p-3 text-ink-1">{feature}</td>
                 {MATRIX.map((row, ri) => (
                   <td key={ri} className="p-3 text-center">

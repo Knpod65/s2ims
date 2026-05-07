@@ -17,13 +17,13 @@ export default function AuditLogEventCard({ log }: AuditLogEventCardProps) {
     if (action.includes('role')) return 'text-status-warning'
     if (action.includes('permission')) return 'text-status-danger'
     if (action.includes('delete')) return 'text-status-danger'
-    if (action.includes('user')) return 'text-brand'
+    if (action.includes('user')) return 'text-role-primary'
     if (action.includes('approved')) return 'text-status-success'
     return 'text-ink-1'
   }
 
   return (
-    <div className="rounded-lg border border-white/[0.08] p-4 hover:border-white/20 transition-all">
+    <div className="rounded-lg border border-line p-4 hover:border-line-strong transition-all">
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full text-left"
@@ -48,7 +48,7 @@ export default function AuditLogEventCard({ log }: AuditLogEventCardProps) {
       </button>
 
       {expanded && (
-        <div className="mt-3 pt-3 border-t border-white/[0.08] space-y-2 text-xs">
+        <div className="mt-3 pt-3 border-t border-line space-y-2 text-xs">
           <div className="flex justify-between">
             <span className="text-ink-3">{lang === 'th' ? 'ผู้กระทำการ' : 'Actor'}</span>
             <span className="text-ink-1 font-medium">{log.actor_name} ({log.actor_id})</span>
@@ -65,7 +65,7 @@ export default function AuditLogEventCard({ log }: AuditLogEventCardProps) {
           </div>
 
           {(log.before || log.after) && (
-            <div className="mt-2 p-2 rounded bg-bg-100 border border-white/[0.08]">
+            <div className="mt-2 p-2 rounded bg-bg-100 border border-line">
               {log.before && (
                 <div className="mb-2">
                   <p className="text-ink-3 font-semibold mb-1">

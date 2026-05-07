@@ -19,13 +19,13 @@ export default function MatchReviewCard({ review, onRequestManualOverride }: Mat
     switch (band) {
       case 'excellent':
       case 'strong':
-        return 'bg-status-success/10 text-status-success'
+        return 'bg-emerald-50 text-emerald-700 border border-emerald-200'
       case 'moderate':
-        return 'bg-status-warning/10 text-status-warning'
+        return 'bg-[#FFFBEB] text-[#78350F] border border-[#FDE68A]'
       case 'weak':
-        return 'bg-status-danger/10 text-status-danger'
+        return 'bg-red-50 text-red-700 border border-red-200'
       default:
-        return 'bg-brand/10 text-brand'
+        return 'bg-role-tint text-role border border-role'
     }
   }
 
@@ -41,20 +41,22 @@ export default function MatchReviewCard({ review, onRequestManualOverride }: Mat
 
   return (
     <div
-      className={`rounded-lg border transition-all ${
-        expanded ? 'border-brand/30 bg-brand/[0.02]' : 'border-white/[0.08]'
+      className={`rounded-xl border bg-white shadow-card transition-all ${
+        expanded ? 'border-amber-200' : 'border-line'
       }`}
     >
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-start justify-between gap-3 hover:bg-white/[0.02] transition-colors"
+        className="w-full p-4 flex items-start justify-between gap-3 hover:bg-surface-low transition-colors"
       >
         <div className="flex items-start gap-3 flex-1 text-left">
-          <TrendingUp size={16} className="text-brand mt-0.5" />
+          <TrendingUp size={16} className="text-role mt-0.5" />
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-medium text-sm text-ink-1">{review.studentToken}</span>
+              <span className="rounded-md border border-dashed border-slate-300 bg-slate-50 px-2 py-1 font-mono text-[11px] font-semibold text-slate-700">
+                {review.studentToken}
+              </span>
               {review.hardEligibilityPass && (
                 <CheckCircle2 size={12} className="text-status-success" />
               )}
@@ -74,25 +76,25 @@ export default function MatchReviewCard({ review, onRequestManualOverride }: Mat
 
       {/* Expanded Details */}
       {expanded && (
-        <div className="border-t border-white/[0.08] p-4 bg-bg-200/50 space-y-3">
+        <div className="border-t border-line p-4 bg-surface-low/60 space-y-3">
           {/* Match Score & Confidence */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-bg-100 rounded-lg p-3">
+            <div className="bg-white rounded-lg p-3 border border-line">
               <p className="text-xs text-ink-3 mb-1">{lang === 'th' ? 'คะแนนการจับคู่' : 'Match Score'}</p>
               <p className="font-semibold text-ink-1">{review.matchScore}%</p>
             </div>
-            <div className="bg-bg-100 rounded-lg p-3">
+            <div className="bg-white rounded-lg p-3 border border-line">
               <p className="text-xs text-ink-3 mb-1">{lang === 'th' ? 'ความเชื่อมั่น' : 'Confidence'}</p>
               <p className="font-semibold text-ink-1">{(review.confidence * 100).toFixed(0)}%</p>
             </div>
           </div>
 
           {/* Eligibility Status */}
-          <div className="p-3 rounded bg-brand/10 border border-brand/20">
-            <p className="text-xs text-brand font-semibold mb-1">
+          <div className="p-3 rounded-lg bg-role-tint border border-role">
+            <p className="text-xs text-role font-semibold mb-1">
               {lang === 'th' ? 'สถานะความสามารถ' : 'Eligibility Status'}
             </p>
-            <p className="text-xs text-brand/90">
+            <p className="text-xs text-ink-2 leading-relaxed">
               {review.hardEligibilityPass
                 ? lang === 'th'
                   ? '✓ ผ่านเงื่อนไขอย่างเข้มงวด'
@@ -104,7 +106,7 @@ export default function MatchReviewCard({ review, onRequestManualOverride }: Mat
           </div>
 
           {/* Soft Match Breakdown */}
-          <div className="p-3 rounded bg-bg-100 border border-white/[0.08]">
+          <div className="p-3 rounded-lg bg-white border border-line">
             <p className="text-xs text-ink-3 font-semibold mb-2">
               {lang === 'th' ? 'การแยกตัวชี้วัดการจับคู่' : 'Soft Match Breakdown'}
             </p>
@@ -139,11 +141,11 @@ export default function MatchReviewCard({ review, onRequestManualOverride }: Mat
           </p>
 
           {/* Actions */}
-          <div className="pt-3 border-t border-white/[0.08]">
+          <div className="pt-3 border-t border-line">
             {onRequestManualOverride && (
               <button
                 onClick={() => onRequestManualOverride(review.id)}
-                className="w-full text-xs py-2 px-3 bg-status-warning/10 text-status-warning rounded hover:bg-status-warning/20 transition-colors flex items-center justify-center gap-1"
+                className="w-full text-xs py-2 px-3 bg-[#FFFBEB] text-[#78350F] border border-[#FDE68A] rounded hover:bg-amber-100 transition-colors flex items-center justify-center gap-1"
               >
                 <Zap size={12} />
                 {lang === 'th' ? 'ขอแทนที่ด้วยตนเอง' : 'Request Manual Override'}

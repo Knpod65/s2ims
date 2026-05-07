@@ -47,16 +47,16 @@ export default function MatchOverrideModal({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-bg-100 rounded-lg max-w-md w-full mx-4 shadow-lg">
+    <div className="fixed inset-0 bg-slate-950/35 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl max-w-md w-full mx-4 shadow-[0_28px_80px_rgba(15,23,42,.18)] border border-line">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/[0.08]">
+        <div className="flex items-center justify-between p-4 border-b border-line">
           <h2 className="font-semibold text-ink-1">
             {lang === 'th' ? 'ขอแทนที่การจับคู่' : 'Manual Match Override'}
           </h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-white/[0.08] rounded transition-colors"
+            className="p-1 hover:bg-surface-low rounded transition-colors"
             disabled={isSubmitting}
           >
             <X size={16} className="text-ink-3" />
@@ -67,21 +67,21 @@ export default function MatchOverrideModal({
         <div className="p-4 space-y-4">
           {/* Current vs Proposed */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-bg-200 rounded-lg p-3">
+            <div className="bg-surface-low rounded-lg p-3 border border-line">
               <p className="text-xs text-ink-3 mb-1">{lang === 'th' ? 'การตัดสินใจปัจจุบัน' : 'Current Decision'}</p>
               <p className="font-semibold text-sm text-ink-1">{getDecisionLabel(originalDecision)}</p>
             </div>
-            <div className="bg-brand/10 rounded-lg p-3 border border-brand/20">
-              <p className="text-xs text-brand mb-1">{lang === 'th' ? 'การตัดสินใจที่เสนอ' : 'Proposed Decision'}</p>
-              <p className="font-semibold text-sm text-brand">{getDecisionLabel(proposedDecision)}</p>
+            <div className="bg-role-tint rounded-lg p-3 border border-role">
+              <p className="text-xs text-role mb-1">{lang === 'th' ? 'การตัดสินใจที่เสนอ' : 'Proposed Decision'}</p>
+              <p className="font-semibold text-sm text-role">{getDecisionLabel(proposedDecision)}</p>
             </div>
           </div>
 
           {/* Student & Match Info */}
-          <div className="bg-bg-200 rounded-lg p-3 space-y-2">
+          <div className="bg-surface-low rounded-lg p-3 space-y-2 border border-line">
             <div className="flex items-center justify-between text-xs">
               <span className="text-ink-3">{lang === 'th' ? 'นักเรียน' : 'Student'}</span>
-              <span className="font-medium text-ink-1">{studentToken}</span>
+              <span className="font-mono font-medium text-ink-1">{studentToken}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-ink-3">{lang === 'th' ? 'คะแนนการจับคู่' : 'Match Score'}</span>
@@ -120,10 +120,10 @@ export default function MatchOverrideModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 p-4 border-t border-white/[0.08] bg-bg-200/50">
+        <div className="flex items-center gap-2 p-4 border-t border-line bg-surface-low/70">
           <button
             onClick={onClose}
-            className="flex-1 text-xs py-2 px-3 bg-white/[0.08] text-ink-1 rounded hover:bg-white/[0.12] transition-colors disabled:opacity-50"
+            className="flex-1 text-xs py-2 px-3 bg-white border border-line text-ink-1 rounded hover:bg-surface-muted transition-colors disabled:opacity-50"
             disabled={isSubmitting}
           >
             {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
@@ -131,7 +131,7 @@ export default function MatchOverrideModal({
           <button
             onClick={handleSubmit}
             disabled={!reason.trim() || reason.length < 20 || isSubmitting}
-            className="flex-1 text-xs py-2 px-3 bg-status-danger/10 text-status-danger rounded hover:bg-status-danger/20 transition-colors disabled:opacity-50"
+            className="flex-1 text-xs py-2 px-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50"
           >
             {isSubmitting ? (lang === 'th' ? 'กำลังส่ง...' : 'Submitting...') : lang === 'th' ? 'ส่งการแทนที่' : 'Submit Override'}
           </button>

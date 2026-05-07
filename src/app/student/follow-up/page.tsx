@@ -33,10 +33,10 @@ export default function StudentFollowUpPage() {
       ) : (
         <div className="max-w-2xl space-y-4">
           {/* Deadline notice */}
-          <div className={`flex items-center gap-3 p-3 rounded-xl border ${daysLeft <= 7 ? 'bg-status-danger/[0.06] border-status-danger/25' : 'bg-brand/[0.06] border-brand/20'}`}>
-            <Clock size={15} className={daysLeft <= 7 ? 'text-status-danger' : 'text-brand'}/>
+          <div className={`flex items-center gap-3 p-3 rounded-xl border ${daysLeft <= 7 ? 'bg-status-danger/[0.06] border-status-danger/25' : 'bg-role-tint border-role-border'}`}>
+            <Clock size={15} className={daysLeft <= 7 ? 'text-status-danger' : 'text-role-primary'}/>
             <div className="text-sm">
-              <span className={`font-semibold ${daysLeft <= 7 ? 'text-status-danger' : 'text-brand'}`}>
+              <span className={`font-semibold ${daysLeft <= 7 ? 'text-status-danger' : 'text-role-primary'}`}>
                 {daysLeft} {lang==='th'?'วัน':'days'}
               </span>
               <span className="text-ink-3 ml-1">
@@ -47,8 +47,8 @@ export default function StudentFollowUpPage() {
 
           {/* Scholarship context */}
           <div className="card p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-brand/20 flex items-center justify-center flex-shrink-0">
-              <FileText size={16} className="text-brand"/>
+            <div className="w-8 h-8 rounded-lg bg-role-tint flex items-center justify-center flex-shrink-0">
+              <FileText size={16} className="text-role-primary"/>
             </div>
             <div>
               <div className="text-sm font-medium text-ink-1">{lang==='th'?'ทุน JCC เพื่อนักศึกษาดีเด่น':'JCC Excellence Scholarship'}</div>
@@ -89,11 +89,11 @@ export default function StudentFollowUpPage() {
           <div className="card p-5">
             <h3 className="font-semibold text-sm text-ink-1 mb-4">{lang==='th'?'เอกสารและรูปภาพ':'Documents & Photos'}</h3>
             <div className="grid grid-cols-2 gap-3">
-              <div className="card-sm p-4 border-dashed border-white/20 text-center cursor-pointer hover:border-brand/30 transition-all">
+              <div className="card-sm p-4 border-dashed border-line text-center cursor-pointer hover:border-role-border transition-all">
                 <FileText size={20} className="mx-auto text-ink-3 mb-2"/>
                 <div className="text-xs text-ink-2">{lang==='th'?'แนบรายงาน (PDF)':'Attach Report (PDF)'}</div>
               </div>
-              <div className="card-sm p-4 border-dashed border-white/20 text-center cursor-pointer hover:border-brand/30 transition-all">
+              <div className="card-sm p-4 border-dashed border-line text-center cursor-pointer hover:border-role-border transition-all">
                 <Image size={20} className="mx-auto text-ink-3 mb-2"/>
                 <div className="text-xs text-ink-2">{lang==='th'?'ภาพถ่ายกิจกรรม':'Activity Photos'}</div>
               </div>
@@ -103,7 +103,7 @@ export default function StudentFollowUpPage() {
           <button
             onClick={() => { if(text && achievements) setSubmitted(true) }}
             disabled={!text || !achievements}
-            className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${text && achievements ? 'btn-primary' : 'bg-white/[0.06] text-ink-3 cursor-not-allowed'}`}
+            className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${text && achievements ? 'btn-primary' : 'bg-white border border-line text-ink-3 cursor-not-allowed'}`}
           >
             <Send size={14}/>{lang==='th'?'ส่งรายงาน':'Submit Report'}
           </button>

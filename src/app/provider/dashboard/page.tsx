@@ -42,7 +42,7 @@ export default function ProviderDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <StatCard value={myApps.length} label={lang === 'th' ? 'ผู้สมัครทั้งหมด' : 'Total Applicants'} color="text-brand" />
+        <StatCard value={myApps.length} label={lang === 'th' ? 'ผู้สมัครทั้งหมด' : 'Total Applicants'} color="text-role-primary" />
         <StatCard value={shortlisted.length} label={lang === 'th' ? 'ผ่านคัดเลือก' : 'Shortlisted'} color="text-status-info" />
         <StatCard value={awarded.length} label={lang === 'th' ? 'ได้รับทุน' : 'Awarded'} color="text-status-success" />
         <StatCard value={`${confirmedPct}%`} label={lang === 'th' ? 'ยืนยันแล้ว' : 'Confirmed'} color="text-status-track" />
@@ -68,7 +68,7 @@ export default function ProviderDashboard() {
                   </div>
                 </div>
                 <div className="flex gap-4 text-center flex-shrink-0">
-                  <div><div className="text-sm font-bold text-brand">{apps.length}</div><div className="text-[10px] text-ink-3">{lang === 'th' ? 'สมัคร' : 'Applied'}</div></div>
+                  <div><div className="text-sm font-bold text-role-primary">{apps.length}</div><div className="text-[10px] text-ink-3">{lang === 'th' ? 'สมัคร' : 'Applied'}</div></div>
                   <div><div className="text-sm font-bold text-status-success">{awd.length}</div><div className="text-[10px] text-ink-3">{lang === 'th' ? 'ได้รับทุน' : 'Awarded'}</div></div>
                 </div>
               </div>
@@ -91,8 +91,8 @@ export default function ProviderDashboard() {
           { href: '/provider/insights', icon: TrendingUp, th: 'สถิติผู้สมัคร', en: 'Applicant Insights', sub_th: 'GPA รวม, ชั้นปี, แนวโน้ม', sub_en: 'Aggregate GPA, year, trends' },
           { href: '/provider/outcomes', icon: ChevronRight, th: 'ผลลัพธ์ทุน', en: 'Scholarship Outcomes', sub_th: 'อัตราสำเร็จการศึกษา, ผลระยะยาว', sub_en: 'Graduation rates, long-term impact' },
         ].map(({ href, icon: Icon, th, en, sub_th, sub_en }) => (
-          <Link key={href} href={href} className="card p-4 flex items-center gap-3 hover:border-white/[0.2] transition-all">
-            <div className="p-2 rounded-lg bg-brand/[0.08]"><Icon size={16} className="text-brand" /></div>
+          <Link key={href} href={href} className="card p-4 flex items-center gap-3 hover:border-line transition-all">
+            <div className="p-2 rounded-lg bg-role-tint"><Icon size={16} className="text-role-primary" /></div>
             <div className="flex-1"><div className="text-sm font-medium text-ink-1">{lang === 'th' ? th : en}</div><div className="text-xs text-ink-3">{lang === 'th' ? sub_th : sub_en}</div></div>
             <ChevronRight size={14} className="text-ink-3" />
           </Link>

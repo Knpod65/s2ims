@@ -130,7 +130,7 @@ export default function CandidatesPage() {
 
         {/* Selection Summary */}
         {selectedCandidates.size > 0 && (
-          <div className="card p-4 bg-brand/[0.06] border border-brand/30">
+          <div className="card p-4 bg-role-tint border border-role-border">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-semibold text-ink-1">
@@ -158,14 +158,14 @@ export default function CandidatesPage() {
               return (
                 <div
                   key={candidate.candidateToken}
-                  className="card p-4 hover:border-brand/30 transition-colors cursor-pointer"
+                  className="card p-4 hover:border-role-border transition-colors cursor-pointer"
                   onClick={() => toggleCandidateSelection(candidate.candidateToken)}
                 >
                   <div className="flex items-start gap-3">
                     {/* Checkbox */}
                     <div className="flex-shrink-0 mt-1">
                       {isSelected ? (
-                        <CheckCircle2 size={20} className="text-brand" />
+                        <CheckCircle2 size={20} className="text-role-primary" />
                       ) : (
                         <Circle size={20} className="text-ink-3" />
                       )}
@@ -193,11 +193,11 @@ export default function CandidatesPage() {
                           <span className="text-xs text-ink-3">
                             {lang === 'th' ? 'ตรงกัน' : 'Match Confidence'}
                           </span>
-                          <span className="text-xs font-semibold text-brand">{Math.round(candidate.matchConfidence * 100)}%</span>
+                          <span className="text-xs font-semibold text-role-primary">{Math.round(candidate.matchConfidence * 100)}%</span>
                         </div>
                         <div className="h-2 bg-bg-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-brand transition-all"
+                            className="h-full bg-role-primary transition-all"
                             style={{ width: `${candidate.matchConfidence * 100}%` }}
                           />
                         </div>

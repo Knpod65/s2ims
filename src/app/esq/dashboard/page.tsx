@@ -25,7 +25,7 @@ export default function ESQDashboard() {
           value={pending.length}
           label={lang==='th'?'รออนุมัติ':'Pending Approvals'}
           icon={<Clock size={16}/>}
-          color="text-brand"
+          color="text-role-primary"
           delta={urgent.length > 0 ? `${urgent.length} ด่วน · ต่ำกว่า 24h` : undefined}
           deltaUp={false}
         />
@@ -79,7 +79,7 @@ export default function ESQDashboard() {
                         <span>ID: <span className="font-mono">{ann.id}</span></span>
                         <span>สร้าง: {ann.created_at.split('T')[0]}</span>
                         {ann.sla_hours !== undefined && (
-                          <span className={`flex items-center gap-1 font-medium ${isUrgent?'text-status-danger':'text-brand'}`}>
+                          <span className={`flex items-center gap-1 font-medium ${isUrgent?'text-status-danger':'text-role-primary'}`}>
                             <Clock size={10}/>
                             {ann.sla_hours}{lang==='th'?'ชม.':'h'} {lang==='th'?'ที่เหลือ':'remaining'}
                             {isUrgent && ' ⚠️'}
@@ -112,7 +112,7 @@ export default function ESQDashboard() {
           {mockAnnouncements.filter(a=>a.status==='APPROVED').map(ann => (
             <div key={ann.id} className="card-sm p-3 flex items-center justify-between gap-3">
               <div className="text-xs text-ink-2 line-clamp-1 flex-1">{lang==='th'?ann.title_th:ann.title_en}</div>
-              <StatusBadge label={lang==='th'?'อนุมัติแล้ว':'Approved'} color="bg-status-success/15 text-green-300 border-status-success/25"/>
+              <StatusBadge label={lang==='th'?'อนุมัติแล้ว':'Approved'} color="bg-emerald-50 text-emerald-700 border-emerald-200"/>
             </div>
           ))}
           {mockAnnouncements.filter(a=>a.status==='APPROVED').length === 0 && (

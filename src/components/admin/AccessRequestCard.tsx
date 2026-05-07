@@ -22,7 +22,7 @@ export default function AccessRequestCard({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Clock size={14} className="text-brand" />
+        return <Clock size={14} className="text-role-primary" />
       case 'approved':
         return <CheckCircle2 size={14} className="text-status-success" />
       case 'denied':
@@ -44,7 +44,7 @@ export default function AccessRequestCard({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending':
-        return 'bg-brand/10 border-brand/20'
+        return 'bg-role-tint border-role-border'
       case 'approved':
         return 'bg-status-success/10 border-status-success/20'
       case 'denied':
@@ -58,7 +58,7 @@ export default function AccessRequestCard({
     <div className={`rounded-lg border transition-all ${getStatusColor(request.status)}`}>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-start gap-3 hover:bg-white/[0.02] transition-colors text-left"
+        className="w-full p-4 flex items-start gap-3 hover:bg-surface-low transition-colors text-left"
       >
         <div className="mt-0.5">{getStatusIcon(request.status)}</div>
         <div className="flex-1 min-w-0">
@@ -79,7 +79,7 @@ export default function AccessRequestCard({
       </button>
 
       {expanded && (
-        <div className="border-t border-white/[0.08] p-4 bg-bg-200/50 space-y-3">
+        <div className="border-t border-line p-4 bg-bg-200/50 space-y-3">
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
               <span className="text-ink-3">{lang === 'th' ? 'ผู้ใช้' : 'User'}</span>
@@ -99,7 +99,7 @@ export default function AccessRequestCard({
             </div>
           </div>
 
-          <div className="p-3 rounded bg-bg-100 border border-white/[0.08]">
+          <div className="p-3 rounded bg-bg-100 border border-line">
             <p className="text-xs text-ink-3 font-semibold mb-1">
               {lang === 'th' ? 'เหตุผลการร้องขอ' : 'Request Reason'}
             </p>
@@ -109,16 +109,16 @@ export default function AccessRequestCard({
           {request.reviewReason && (
             <div className={`p-3 rounded border ${
               request.status === 'approved'
-                ? 'bg-status-success/10 border-status-success/20'
-                : 'bg-status-danger/10 border-status-danger/20'
+                ? 'bg-emerald-50 border-emerald-200'
+                : 'bg-red-50 border-red-200'
             }`}>
               <p className={`text-xs font-semibold mb-1 ${
-                request.status === 'approved' ? 'text-status-success' : 'text-status-danger'
+                request.status === 'approved' ? 'text-emerald-700' : 'text-red-700'
               }`}>
                 {lang === 'th' ? 'บันทึกการตรวจสอบ' : 'Review Notes'}
               </p>
               <p className={`text-xs ${
-                request.status === 'approved' ? 'text-status-success/90' : 'text-status-danger/90'
+                request.status === 'approved' ? 'text-emerald-700' : 'text-red-700'
               }`}>
                 {request.reviewReason}
               </p>
@@ -126,7 +126,7 @@ export default function AccessRequestCard({
           )}
 
           {request.status === 'pending' && (
-            <div className="pt-3 border-t border-white/[0.08] space-y-2">
+            <div className="pt-3 border-t border-line space-y-2">
               {onApprove && (
                 <button
                   onClick={() => onApprove(request.id)}

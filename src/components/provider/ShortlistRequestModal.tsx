@@ -53,16 +53,16 @@ export default function ShortlistRequestModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
+      <div className="absolute inset-0 bg-slate-950/35 backdrop-blur-sm" onClick={handleClose} />
 
       {/* Modal */}
-      <div className="relative w-full md:max-w-md bg-bg-000 rounded-t-3xl md:rounded-2xl md:shadow-lg max-h-[90vh] md:max-h-none overflow-y-auto">
+      <div className="relative w-full md:max-w-md bg-white rounded-t-3xl md:rounded-2xl shadow-[0_28px_80px_rgba(15,23,42,.18)] border border-line max-h-[90vh] md:max-h-none overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 flex items-center justify-between p-4 md:p-6 border-b border-bg-100 bg-bg-000">
+        <div className="sticky top-0 flex items-center justify-between p-4 md:p-6 border-b border-line bg-white/95 backdrop-blur-xl">
           <h2 className="font-semibold text-ink-1">
             {lang === 'th' ? 'ส่งขอเปิดเผยข้อมูล' : 'Request Information Disclosure'}
           </h2>
-          <button onClick={handleClose} className="text-ink-3 hover:text-ink-1 transition-colors">
+          <button onClick={handleClose} className="text-ink-3 hover:text-ink-1 hover:bg-surface-low rounded-md p-1 transition-colors">
             <X size={18} />
           </button>
         </div>
@@ -82,14 +82,14 @@ export default function ShortlistRequestModal({
           ) : (
             <>
               {/* Summary */}
-              <div className="bg-bg-100 rounded-xl p-3 mb-4">
+              <div className="bg-surface-low rounded-xl p-3 mb-4 border border-line">
                 <p className="text-xs text-ink-3 mb-1">
                   {lang === 'th' ? 'จำนวนผู้สมัครที่เลือก:' : 'Selected candidates:'}
                 </p>
                 <p className="text-sm font-semibold text-ink-1">{candidateCount}</p>
               </div>
 
-              <div className="bg-bg-100 rounded-xl p-3 mb-4">
+              <div className="bg-surface-low rounded-xl p-3 mb-4 border border-line">
                 <p className="text-xs text-ink-3 mb-1">
                   {lang === 'th' ? 'ทุน:' : 'Scholarship:'}
                 </p>
@@ -102,11 +102,11 @@ export default function ShortlistRequestModal({
               </div>
 
               {/* Privacy Notice */}
-              <div className="mb-6 p-3 rounded-lg bg-status-info/[0.08] border border-status-info/20">
-                <p className="text-xs text-status-info/80">
+              <div className="mb-6 p-3 rounded-lg bg-blue-50 border border-blue-200">
+                <p className="text-xs text-blue-800 leading-relaxed">
                   {lang === 'th'
-                    ? '🔒 เจ้าหน้าที่จะตรวจสอบเหตุผลของคุณและตัดสินใจว่าจะเปิดเผยข้อมูลส่วนตัวของผู้สมัครหรือไม่'
-                    : '🔒 Staff will review your reason and decide whether to disclose personal information.'}
+                    ? 'เจ้าหน้าที่จะตรวจสอบเหตุผลของคุณและตัดสินใจว่าจะเปิดเผยข้อมูลส่วนตัวของผู้สมัครหรือไม่'
+                    : 'Staff will review your reason and decide whether to disclose personal information.'}
                 </p>
               </div>
 

@@ -90,7 +90,7 @@ export default function AnnouncementPreviewPage({ params }: { params: Promise<{ 
           <h2 className="font-display font-bold text-base text-ink-1">{ann.title_th}</h2>
           <p className="text-sm text-ink-2 leading-relaxed">{ann.body_th}</p>
           {ann.deadline && (
-            <div className="pt-3 border-t border-white/[0.06] text-xs text-ink-3">
+            <div className="pt-3 border-t border-line text-xs text-ink-3">
               📅 กำหนดส่ง: <span className="text-ink-1">{ann.deadline}</span>
             </div>
           )}
@@ -102,7 +102,7 @@ export default function AnnouncementPreviewPage({ params }: { params: Promise<{ 
           <h2 className="font-display font-bold text-base text-ink-1">{ann.title_en}</h2>
           <p className="text-sm text-ink-2 leading-relaxed">{ann.body_en}</p>
           {ann.deadline && (
-            <div className="pt-3 border-t border-white/[0.06] text-xs text-ink-3">
+            <div className="pt-3 border-t border-line text-xs text-ink-3">
               📅 Deadline: <span className="text-ink-1">{ann.deadline}</span>
             </div>
           )}

@@ -67,7 +67,7 @@ export default function ScholarshipCard({ scholarship: s, showMatch = false, onS
               <Trophy size={10} />
               {lang === 'th' ? 'จำนวนเงิน' : 'Amount'}
             </div>
-            <div className="text-xs font-semibold text-brand">{amount}</div>
+            <div className="text-xs font-semibold text-role-primary">{amount}</div>
           </div>
           <div className="card-sm p-2">
             <div className="text-[10px] text-ink-3 flex items-center gap-1 mb-0.5">
@@ -94,17 +94,17 @@ export default function ScholarshipCard({ scholarship: s, showMatch = false, onS
         {/* Tags */}
         <div className="flex flex-wrap gap-1.5 mt-3">
           {s.has_essay && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-white/[0.06] text-ink-3 rounded border border-white/[0.08]">
+            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded border border-line">
               {lang === 'th' ? 'เรียงความ' : 'Essay'}
             </span>
           )}
           {s.has_interview && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-white/[0.06] text-ink-3 rounded border border-white/[0.08]">
+            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded border border-line">
               {lang === 'th' ? 'สัมภาษณ์' : 'Interview'}
             </span>
           )}
           {s.has_proposal && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-white/[0.06] text-ink-3 rounded border border-white/[0.08]">
+            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded border border-line">
               {lang === 'th' ? 'ข้อเสนอ' : 'Proposal'}
             </span>
           )}
@@ -112,7 +112,7 @@ export default function ScholarshipCard({ scholarship: s, showMatch = false, onS
       </div>
 
       {/* Actions */}
-      <div className="border-t border-white/[0.06] p-3 flex gap-2">
+      <div className="border-t border-line p-3 flex gap-2">
         <Link
           href={`/scholarships/${s.id}`}
           className="btn-primary flex-1 text-center text-xs py-2"
@@ -123,8 +123,8 @@ export default function ScholarshipCard({ scholarship: s, showMatch = false, onS
           onClick={() => onSave?.(s.id)}
           className={`p-2 rounded-lg border transition-all ${
             s.is_saved
-              ? 'border-brand/30 bg-brand/10 text-brand'
-              : 'border-white/[0.1] bg-white/[0.04] text-ink-3 hover:text-brand hover:border-brand/20'
+              ? 'border-role-border bg-role-tint text-role-primary'
+              : 'border-line bg-surface-low text-ink-3 hover:text-role-primary hover:border-role-border'
           }`}
           title={lang === 'th' ? 'บันทึก' : 'Save'}
         >

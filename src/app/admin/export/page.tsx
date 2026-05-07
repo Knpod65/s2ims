@@ -106,7 +106,7 @@ export default function AdminExportPage() {
         {EXPORTS.map(({ id, icon: Icon, th, en, formats }) => (
           <div key={id} className="card p-5">
             <div className="flex items-start gap-3 mb-4">
-              <div className="p-2 rounded-lg bg-white/[0.06]">
+              <div className="p-2 rounded-lg bg-white border border-line">
                 <Icon size={18} className="text-ink-2" />
               </div>
               <div>

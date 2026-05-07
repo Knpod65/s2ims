@@ -16,10 +16,10 @@ export default function ElevatedAccessWarning({
 }: ElevatedAccessWarningProps) {
   const { lang } = useLang()
 
-  const bgColor = riskLevel === 'high' ? 'bg-status-danger/[0.08]' : 'bg-status-warning/[0.08]'
-  const borderColor = riskLevel === 'high' ? 'border-status-danger/20' : 'border-status-warning/20'
-  const textColor = riskLevel === 'high' ? 'text-status-danger' : 'text-status-warning'
-  const iconColor = riskLevel === 'high' ? 'text-status-danger' : 'text-status-warning'
+  const bgColor = riskLevel === 'high' ? 'bg-red-50' : 'bg-[#FFFBEB]'
+  const borderColor = riskLevel === 'high' ? 'border-red-200' : 'border-[#FDE68A]'
+  const textColor = riskLevel === 'high' ? 'text-red-700' : 'text-[#78350F]'
+  const iconColor = riskLevel === 'high' ? 'text-red-700' : 'text-[#B45309]'
 
   return (
     <div className={`flex items-start gap-3 p-4 rounded-lg ${bgColor} border ${borderColor}`}>
@@ -28,7 +28,7 @@ export default function ElevatedAccessWarning({
         <p className={`font-semibold text-xs ${textColor} mb-1`}>
           {lang === 'th' ? 'การเข้าถึงระดับสูง' : 'Elevated Access'}
         </p>
-        <p className={`text-xs ${textColor}/90`}>
+        <p className={`text-xs ${textColor}`}>
           {lang === 'th' ? message_th : message_en}
         </p>
       </div>

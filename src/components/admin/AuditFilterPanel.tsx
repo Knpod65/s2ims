@@ -67,7 +67,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
             {lang === 'th' ? 'ตัวกรอง' : 'Filters'}
           </h3>
           {hasActiveFilters && (
-            <span className="text-[10px] px-2 py-0.5 rounded bg-brand/20 text-brand">
+            <span className="text-[10px] px-2 py-0.5 rounded bg-role-tint text-role-primary">
               {Object.entries(filters).filter(([, val]) => (typeof val === 'string' ? val : val !== false)).length}
             </span>
           )}
@@ -76,7 +76,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
       </button>
 
       {isExpanded && (
-        <div className="mt-4 space-y-3 pt-4 border-t border-white/[0.08]">
+        <div className="mt-4 space-y-3 pt-4 border-t border-line">
           {/* Action Filter */}
           <div>
             <label className="text-xs text-ink-3 font-semibold block mb-1">
@@ -87,7 +87,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
               placeholder={lang === 'th' ? 'ค้นหาการกระทำ...' : 'Search actions...'}
               value={filters.action || ''}
               onChange={(e) => handleFilterChange('action', e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 placeholder-ink-3 focus:outline-none focus:border-brand/50"
+              className="w-full px-3 py-1.5 text-xs rounded border border-line bg-bg-200 text-ink-1 placeholder-ink-3 focus:outline-none focus:border-role-border"
             />
           </div>
 
@@ -99,7 +99,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
             <select
               value={filters.actorRole || ''}
               onChange={(e) => handleFilterChange('actorRole', e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 focus:outline-none focus:border-brand/50"
+              className="w-full px-3 py-1.5 text-xs rounded border border-line bg-bg-200 text-ink-1 focus:outline-none focus:border-role-border"
             >
               <option value="">{lang === 'th' ? 'ทั้งหมด' : 'All'}</option>
               <option value="student">{lang === 'th' ? 'นักศึกษา' : 'Student'}</option>
@@ -118,7 +118,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
             <select
               value={filters.entityType || ''}
               onChange={(e) => handleFilterChange('entityType', e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 focus:outline-none focus:border-brand/50"
+              className="w-full px-3 py-1.5 text-xs rounded border border-line bg-bg-200 text-ink-1 focus:outline-none focus:border-role-border"
             >
               <option value="">{lang === 'th' ? 'ทั้งหมด' : 'All'}</option>
               <option value="User">{lang === 'th' ? 'ผู้ใช้' : 'User'}</option>
@@ -138,7 +138,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
                 type="date"
                 value={filters.dateFrom || ''}
                 onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-                className="w-full px-3 py-1.5 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 focus:outline-none focus:border-brand/50"
+                className="w-full px-3 py-1.5 text-xs rounded border border-line bg-bg-200 text-ink-1 focus:outline-none focus:border-role-border"
               />
             </div>
             <div>
@@ -149,7 +149,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
                 type="date"
                 value={filters.dateTo || ''}
                 onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-                className="w-full px-3 py-1.5 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 focus:outline-none focus:border-brand/50"
+                className="w-full px-3 py-1.5 text-xs rounded border border-line bg-bg-200 text-ink-1 focus:outline-none focus:border-role-border"
               />
             </div>
           </div>
@@ -162,7 +162,7 @@ export default function AuditFilterPanel({ onFilterChange }: AuditFilterPanelPro
             <select
               value={filters.riskLevel || ''}
               onChange={(e) => handleFilterChange('riskLevel', e.target.value)}
-              className="w-full px-3 py-1.5 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 focus:outline-none focus:border-brand/50"
+              className="w-full px-3 py-1.5 text-xs rounded border border-line bg-bg-200 text-ink-1 focus:outline-none focus:border-role-border"
             >
               <option value="">{lang === 'th' ? 'ทั้งหมด' : 'All'}</option>
               <option value="high">{lang === 'th' ? 'สูง' : 'High'}</option>

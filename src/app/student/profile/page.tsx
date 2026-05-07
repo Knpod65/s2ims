@@ -49,7 +49,7 @@ export default function StudentProfilePage() {
         {/* Completion ring sidebar */}
         <div className="card p-5">
           <ProfileCompletionRing pct={pct} missing={missing} />
-          <div className="mt-4 border-t border-white/[0.06] pt-4 space-y-1 text-xs text-ink-3">
+          <div className="mt-4 border-t border-line pt-4 space-y-1 text-xs text-ink-3">
             <div>ID: {user?.student_id ?? '650912345'}</div>
             <div>{lang === 'th' ? 'สาขา' : 'Major'}: {lang === 'th' ? 'รัฐศาสตร์' : 'Political Science'}</div>
           </div>
@@ -92,7 +92,7 @@ export default function StudentProfilePage() {
               ] as [string, string][]).map(([v, l]) => (
                 <label key={v} className="flex items-center gap-3 cursor-pointer">
                   <input type="radio" name="housing" value={v} checked={housing === v}
-                    onChange={() => setHousing(v)} className="accent-brand" />
+                    onChange={() => setHousing(v)} className="accent-role-primary" />
                   <span className="text-sm text-ink-1">{l}</span>
                 </label>
               ))}
@@ -122,7 +122,7 @@ export default function StudentProfilePage() {
             </p>
             <div className="space-y-4">
               <label className="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" checked={works} onChange={e => setWorks(e.target.checked)} className="accent-brand" />
+                <input type="checkbox" checked={works} onChange={e => setWorks(e.target.checked)} className="accent-role-primary" />
                 <span className="text-sm text-ink-1">
                   {lang === 'th' ? 'มีงานพาร์ทไทม์ / ช่วยเหลือค่าใช้จ่ายของตัวเอง' : 'Works part-time / covers own expenses'}
                 </span>

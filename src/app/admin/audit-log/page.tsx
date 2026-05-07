@@ -20,8 +20,8 @@ function exportAuditCSV() {
 }
 
 const ROLE_COLOR: Record<string, string> = {
-  student: 'text-blue-300', staff: 'text-green-300',
-  esq: 'text-purple-300', provider: 'text-brand', admin: 'text-red-300',
+  student: 'text-blue-700', staff: 'text-amber-700',
+  esq: 'text-violet-700', provider: 'text-emerald-700', admin: 'text-slate-700',
 }
 
 export default function AuditLogPage() {
@@ -40,7 +40,7 @@ export default function AuditLogPage() {
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-bg-200">
+            <tr className="border-b border-line bg-bg-200">
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'เวลา':'Time'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'ผู้ดำเนินการ':'Actor'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'บทบาท':'Role'}</th>
@@ -50,7 +50,7 @@ export default function AuditLogPage() {
           </thead>
           <tbody>
             {mockAuditLogs.map((log, i) => (
-              <tr key={log.id} className={`border-b border-white/[0.04] ${i%2===1?'bg-white/[0.01]':''}`}>
+              <tr key={log.id} className={`border-b border-line ${i%2===1?'bg-surface-low/60':''}`}>
                 <td className="p-3 text-xs text-ink-3 font-mono whitespace-nowrap">
                   {new Date(log.created_at).toLocaleString(lang==='th'?'th-TH':'en-US',{dateStyle:'short',timeStyle:'short'})}
                 </td>
@@ -58,7 +58,7 @@ export default function AuditLogPage() {
                 <td className="p-3">
                   <span className={`text-xs font-mono ${ROLE_COLOR[log.actor_role]||'text-ink-3'}`}>{log.actor_role}</span>
                 </td>
-                <td className="p-3"><span className="font-mono text-xs text-brand">{log.action}</span></td>
+                <td className="p-3"><span className="font-mono text-xs text-role-primary">{log.action}</span></td>
                 <td className="p-3 text-xs text-ink-3">{log.entity_type}</td>
               </tr>
             ))}

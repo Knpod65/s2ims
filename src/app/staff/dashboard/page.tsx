@@ -41,7 +41,7 @@ export default function StaffDashboard() {
           value={pendingMatches}
           label={lang === 'th' ? 'การจับคู่ที่รอ' : 'Pending Matches'}
           icon={<TrendingUp size={16} />}
-          color="text-brand"
+          color="text-role-primary"
         />
         <StatCard
           value={pendingDisclosures}
@@ -66,7 +66,7 @@ export default function StaffDashboard() {
               ? 'ตรวจสอบและอนุมัติการจับคู่'
               : 'Review and approve candidate matches',
             href: '/staff/matching-review',
-            color: 'text-brand',
+            color: 'text-role-primary',
             badge: flaggedMatches > 0 ? flaggedMatches : null,
           },
           {
@@ -91,7 +91,7 @@ export default function StaffDashboard() {
           <Link
             key={item.href}
             href={item.href}
-            className="card p-5 hover:border-white/20 transition-all relative"
+            className="card p-5 hover:border-line-strong transition-all relative"
           >
             {item.badge && (
               <div className="absolute top-3 right-3 bg-status-danger text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
@@ -114,7 +114,7 @@ export default function StaffDashboard() {
             title: lang === 'th' ? 'สร้างประกาศ' : 'New Announcement',
             desc: lang === 'th' ? 'สร้างประกาศพร้อมตัวอย่าง TH/EN' : 'Create structured announcement',
             href: '/staff/announcements/new',
-            color: 'text-brand',
+            color: 'text-role-primary',
           },
           {
             title: lang === 'th' ? 'คิว OCR' : 'OCR Queue',
@@ -132,7 +132,7 @@ export default function StaffDashboard() {
           <Link
             key={item.href}
             href={item.href}
-            className="card p-5 hover:border-white/20 transition-all"
+            className="card p-5 hover:border-line-strong transition-all"
           >
             <div className={`font-semibold text-sm mb-1 ${item.color}`}>{item.title}</div>
             <div className="text-xs text-ink-3">{item.desc}</div>

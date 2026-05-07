@@ -17,7 +17,7 @@ export default function ESQHistoryPage() {
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-bg-200">
+            <tr className="border-b border-line bg-bg-200">
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'ประกาศ':'Announcement'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'สถานะ':'Status'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'อัปเดต':'Updated'}</th>
@@ -28,7 +28,7 @@ export default function ESQHistoryPage() {
             {allAnn.map((ann, i) => {
               const si = ANN_STATUS_MAP[ann.status]
               return (
-                <tr key={ann.id} className={`border-b border-white/[0.04] ${i%2===1?'bg-white/[0.01]':''}`}>
+                <tr key={ann.id} className={`border-b border-line ${i%2===1?'bg-surface-low/60':''}`}>
                   <td className="p-3">
                     <div className="text-xs font-medium text-ink-1 line-clamp-1 max-w-[220px]">
                       {lang==='th'?ann.title_th:ann.title_en}

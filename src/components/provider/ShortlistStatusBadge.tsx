@@ -7,20 +7,20 @@ interface ShortlistStatusBadgeProps {
 export default function ShortlistStatusBadge({ status }: ShortlistStatusBadgeProps) {
   const statusConfig = {
     pending_review: {
-      bg: 'bg-status-info/[0.12]',
-      text: 'text-status-info',
-      icon: '⏳',
+      bg: 'bg-blue-50 border border-blue-200',
+      text: 'text-blue-700',
+      icon: '•',
       label: 'Pending Staff Approval',
     },
     approved: {
-      bg: 'bg-status-success/[0.12]',
-      text: 'text-status-success',
+      bg: 'bg-emerald-50 border border-emerald-200',
+      text: 'text-emerald-700',
       icon: '✓',
       label: 'Approved',
     },
     rejected: {
-      bg: 'bg-status-danger/[0.12]',
-      text: 'text-status-danger',
+      bg: 'bg-red-50 border border-red-200',
+      text: 'text-red-700',
       icon: '✕',
       label: 'Rejected',
     },

@@ -21,21 +21,21 @@ export default function AdminAuditWarningCard({
   const { lang } = useLang()
 
   return (
-    <div className="p-4 rounded-lg bg-status-danger/[0.08] border border-status-danger/20">
+    <div className="p-4 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#78350F]">
       <div className="flex gap-3 mb-3">
-        <AlertTriangle size={16} className="text-status-danger flex-shrink-0 mt-0.5" />
+        <AlertTriangle size={16} className="text-[#B45309] flex-shrink-0 mt-0.5" />
         <div className="flex-1">
-          <p className="font-semibold text-xs text-status-danger mb-1">
+          <p className="font-semibold text-xs mb-1">
             {lang === 'th' ? 'บันทึกการตรวจสอบปลอดภัย' : 'Audit Trail Alert'}
           </p>
-          <p className="text-xs text-status-danger/90">
+          <p className="text-xs">
             {lang === 'th' ? action_th : action_en}
           </p>
         </div>
       </div>
 
       <div className="ml-6 space-y-2">
-        <div className="p-2 rounded bg-bg-100 border border-white/[0.08]">
+        <div className="p-2 rounded bg-bg-100 border border-line">
           <p className="text-xs text-ink-3 font-semibold mb-1">
             {lang === 'th' ? 'ผลที่ตามมา' : 'Consequences'}
           </p>

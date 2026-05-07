@@ -21,7 +21,7 @@ export default function AdminKpiCard({
   icon,
   trend,
   trendValue,
-  color = 'text-brand',
+  color = 'text-role-primary',
   onClick,
 }: AdminKpiCardProps) {
   const { lang } = useLang()
@@ -29,7 +29,7 @@ export default function AdminKpiCard({
   return (
     <div
       onClick={onClick}
-      className={`card p-4 ${onClick ? 'cursor-pointer hover:border-white/20' : ''} transition-all`}
+      className={`card p-4 ${onClick ? 'cursor-pointer hover:border-line-strong' : ''} transition-all`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">

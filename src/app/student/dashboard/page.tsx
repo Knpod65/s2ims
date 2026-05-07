@@ -43,7 +43,7 @@ export default function StudentDashboard() {
           value={mockScholarships.filter(s => s.is_saved).length}
           label={lang === 'th' ? 'ทุนที่บันทึก' : 'Saved Scholarships'}
           icon={<BookOpen size={16} />}
-          color="text-brand"
+          color="text-role-primary"
         />
         <StatCard
           value={unread.length}
@@ -78,7 +78,7 @@ export default function StudentDashboard() {
               <h2 className="font-display font-semibold text-base text-ink-1">
                 {lang === 'th' ? '✨ แนะนำสำหรับคุณ' : '✨ Recommended for you'}
               </h2>
-              <Link href="/scholarships" className="text-brand text-xs hover:text-brand-light">
+              <Link href="/scholarships" className="text-role-primary text-xs hover:text-role-primary">
                 {lang === 'th' ? 'ดูทั้งหมด' : 'View all'} →
               </Link>
             </div>
@@ -98,7 +98,7 @@ export default function StudentDashboard() {
               <h3 className="font-semibold text-sm text-ink-1">
                 {lang === 'th' ? '📋 ใบสมัครที่ดำเนินการ' : '📋 Active Applications'}
               </h3>
-              <Link href="/student/applications" className="text-xs text-brand hover:text-brand-light">
+              <Link href="/student/applications" className="text-xs text-role-primary hover:text-role-primary">
                 {lang === 'th' ? 'ทั้งหมด' : 'All'}
               </Link>
             </div>
@@ -107,7 +107,7 @@ export default function StudentDashboard() {
                 const statusInfo = APP_STATUS_MAP[app.status]
                 const title = lang === 'th' ? app.scholarship_title_th : app.scholarship_title_en
                 return (
-                  <Link key={app.id} href={`/student/applications/${app.id}`} className="block card-sm p-3 hover:border-white/[0.15] transition-all">
+                  <Link key={app.id} href={`/student/applications/${app.id}`} className="block card-sm p-3 hover:border-line transition-all">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className="text-xs font-medium text-ink-1 line-clamp-2 flex-1">{title}</div>
                       <StatusBadge label={statusInfo[lang === 'th' ? 'th' : 'en']} color={statusInfo.color} />
@@ -125,14 +125,14 @@ export default function StudentDashboard() {
               <h3 className="font-semibold text-sm text-ink-1">
                 {lang === 'th' ? '🔔 การแจ้งเตือน' : '🔔 Notifications'}
               </h3>
-              <Link href="/student/notifications" className="text-xs text-brand hover:text-brand-light">
+              <Link href="/student/notifications" className="text-xs text-role-primary hover:text-role-primary">
                 {lang === 'th' ? 'ทั้งหมด' : 'All'}
               </Link>
             </div>
             <div className="space-y-2">
               {unread.slice(0,3).map(n => (
-                <div key={n.id} className="flex gap-2 p-2 rounded-lg bg-white/[0.03] border border-white/[0.05]">
-                  <div className="w-1.5 h-1.5 bg-brand rounded-full mt-1.5 flex-shrink-0" />
+                <div key={n.id} className="flex gap-2 p-2 rounded-lg bg-surface-low border border-line">
+                  <div className="w-1.5 h-1.5 bg-role-primary rounded-full mt-1.5 flex-shrink-0" />
                   <div>
                     <div className="text-xs font-medium text-ink-1">
                       {lang === 'th' ? n.title_th : n.title_en}

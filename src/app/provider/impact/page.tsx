@@ -44,8 +44,8 @@ export default function ProviderImpactPage() {
       label_en: 'Scholarships Offered',
       label_th: 'ทุนที่เสนอ',
       value: totalScholarshipsOffered.toString(),
-      color: 'text-brand',
-      bgColor: 'bg-brand/[0.12]',
+      color: 'text-role-primary',
+      bgColor: 'bg-role-tint',
     },
     {
       icon: TrendingUp,
@@ -128,11 +128,11 @@ export default function ProviderImpactPage() {
                   <span className="text-xs text-ink-3">
                     {lang === 'th' ? 'อัตรา' : 'Rate'}
                   </span>
-                  <span className="text-2xl font-semibold text-brand">{avgCareerOutcomeRate}%</span>
+                  <span className="text-2xl font-semibold text-role-primary">{avgCareerOutcomeRate}%</span>
                 </div>
                 <div className="h-3 bg-bg-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-brand transition-all"
+                    className="h-full bg-role-primary transition-all"
                     style={{ width: `${avgCareerOutcomeRate}%` }}
                   />
                 </div>
@@ -164,7 +164,7 @@ export default function ProviderImpactPage() {
                       {lang === 'th' ? 'ผู้ได้รับ:' : 'Recipients:'} {impact?.awardedCount} | {lang === 'th' ? 'จำหน่าย:' : 'Distributed:'} ฿{impact?.totalAwardAmount?.toLocaleString()}
                     </p>
                   </div>
-                  <span className="text-sm font-semibold text-brand">
+                  <span className="text-sm font-semibold text-role-primary">
                     {impact?.averageStudentGPA?.toFixed(2)} {lang === 'th' ? 'GPA' : ''}
                   </span>
                 </div>
@@ -185,7 +185,7 @@ export default function ProviderImpactPage() {
         </div>
 
         {/* Call to Action */}
-        <div className="card p-6 bg-brand/[0.06] border border-brand/20">
+        <div className="card p-6 bg-role-tint border border-role-border">
           <h3 className="font-semibold text-ink-1 mb-2">
             {lang === 'th' ? 'ดูรายละเอียดเพิ่มเติม' : 'View More Details'}
           </h3>

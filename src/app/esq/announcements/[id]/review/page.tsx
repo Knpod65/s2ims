@@ -22,7 +22,7 @@ export default function ESQReviewPage({ params }: { params: Promise<{id:string}>
   }
 
   if (confirmed && decision) {
-    const colors = { approved: 'status-success', revision: 'brand', rejected: 'status-danger' }
+    const colors = { approved: 'status-success', revision: 'role-primary', rejected: 'status-danger' }
     const icons = { approved: '✅', revision: '✏️', rejected: '❌' }
     const labels_th = { approved: 'อนุมัติแล้ว', revision: 'ส่งกลับเพื่อแก้ไข', rejected: 'ไม่อนุมัติ' }
     const labels_en = { approved: 'Approved', revision: 'Revision Requested', rejected: 'Rejected' }
@@ -36,7 +36,7 @@ export default function ESQReviewPage({ params }: { params: Promise<{id:string}>
             </div>
             <div className="text-sm text-ink-3 mb-6">
               {lang==='th'?'การตัดสินใจถูกบันทึกใน Audit Log แล้ว':'Decision logged in audit trail.'}
-              {comment && <div className="mt-2 p-2 bg-white/[0.04] rounded text-xs">{comment}</div>}
+              {comment && <div className="mt-2 p-2 bg-surface-low rounded text-xs">{comment}</div>}
             </div>
             <Link href="/esq/dashboard" className="btn-primary text-xs py-2 px-4 inline-block">
               {lang==='th'?'กลับแดชบอร์ด':'Back to Dashboard'}
@@ -60,9 +60,9 @@ export default function ESQReviewPage({ params }: { params: Promise<{id:string}>
       />
 
       {ann.sla_hours !== undefined && (
-        <div className={`flex items-center gap-2 p-3 rounded-xl border mb-5 ${ann.sla_hours < 24 ? 'bg-status-danger/[0.06] border-status-danger/25' : 'bg-brand/[0.06] border-brand/20'}`}>
-          <Clock size={14} className={ann.sla_hours < 24 ? 'text-status-danger' : 'text-brand'}/>
-          <span className={`text-sm font-medium ${ann.sla_hours < 24 ? 'text-status-danger' : 'text-brand'}`}>
+        <div className={`flex items-center gap-2 p-3 rounded-xl border mb-5 ${ann.sla_hours < 24 ? 'bg-status-danger/[0.06] border-status-danger/25' : 'bg-role-tint border-role-border'}`}>
+          <Clock size={14} className={ann.sla_hours < 24 ? 'text-status-danger' : 'text-role-primary'}/>
+          <span className={`text-sm font-medium ${ann.sla_hours < 24 ? 'text-status-danger' : 'text-role-primary'}`}>
             SLA: {ann.sla_hours} {lang==='th'?'ชั่วโมงที่เหลือ':'hours remaining'}
             {ann.sla_hours < 24 && (lang==='th'?' — ด่วน!':' — Urgent!')}
           </span>
@@ -73,14 +73,14 @@ export default function ESQReviewPage({ params }: { params: Promise<{id:string}>
         {/* Content preview */}
         <div className="lg:col-span-2 space-y-4">
           <div className="card p-6">
-            <div className="text-[10px] text-ink-3 uppercase tracking-widest mb-3 pb-2 border-b border-white/[0.06]">
+            <div className="text-[10px] text-ink-3 uppercase tracking-widest mb-3 pb-2 border-b border-line">
               🇹🇭 ภาษาไทย
             </div>
             <h2 className="font-display font-bold text-lg text-ink-1 mb-3">{ann.title_th}</h2>
             <p className="text-sm text-ink-2 leading-relaxed">{ann.body_th}</p>
           </div>
-          <div className="card p-6 border-white/[0.06]">
-            <div className="text-[10px] text-ink-3 uppercase tracking-widest mb-3 pb-2 border-b border-white/[0.06]">
+          <div className="card p-6 border-line">
+            <div className="text-[10px] text-ink-3 uppercase tracking-widest mb-3 pb-2 border-b border-line">
               🇺🇸 English Version
             </div>
             <h2 className="font-display font-bold text-lg text-ink-1 mb-3">{ann.title_en}</h2>
@@ -102,13 +102,13 @@ export default function ESQReviewPage({ params }: { params: Promise<{id:string}>
               </button>
               <button
                 onClick={() => setDecision(decision === 'revision' ? null : 'revision')}
-                className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl border transition-all ${decision==='revision'?'border-brand/40 bg-brand/10 text-brand':'btn-secondary'}`}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl border transition-all ${decision==='revision'?'border-role-border bg-role-tint text-role-primary':'btn-secondary'}`}
               >
                 <MessageSquare size={15}/>{lang==='th'?'ขอแก้ไข':'Request Revision'}
               </button>
               <button
                 onClick={() => setDecision(decision === 'rejected' ? null : 'rejected')}
-                className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl border transition-all ${decision==='rejected'?'border-status-danger/40 bg-status-danger/10 text-red-300':'btn-danger'}`}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl border transition-all ${decision==='rejected'?'border-red-300 bg-red-50 text-red-700':'btn-danger'}`}
               >
                 <XCircle size={15}/>{lang==='th'?'ไม่อนุมัติ':'Reject'}
               </button>
@@ -130,7 +130,7 @@ export default function ESQReviewPage({ params }: { params: Promise<{id:string}>
                 <button
                   onClick={() => handleDecision(decision)}
                   disabled={!comment}
-                  className={`w-full py-2.5 text-sm rounded-xl font-semibold transition-all ${comment ? 'btn-primary' : 'bg-white/[0.06] text-ink-3 cursor-not-allowed'}`}
+                  className={`w-full py-2.5 text-sm rounded-xl font-semibold transition-all ${comment ? 'btn-primary' : 'bg-white border border-line text-ink-3 cursor-not-allowed'}`}
                 >
                   {lang==='th'?'ยืนยันการตัดสินใจ':'Confirm Decision'}
                 </button>

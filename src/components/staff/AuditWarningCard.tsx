@@ -13,16 +13,16 @@ export default function AuditWarningCard({ title, message, requiresReason }: Aud
   const { lang } = useLang()
 
   return (
-    <div className="flex items-start gap-3 p-4 rounded-lg bg-status-danger/[0.08] border border-status-danger/20">
-      <AlertTriangle size={16} className="text-status-danger flex-shrink-0 mt-0.5" />
+    <div className="flex items-start gap-3 p-4 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#78350F] shadow-[0_12px_30px_rgba(120,53,15,.08)]">
+      <AlertTriangle size={16} className="text-[#B45309] flex-shrink-0 mt-0.5" />
       <div className="flex-1">
-        {title && <p className="font-semibold text-sm text-status-danger mb-1">{title}</p>}
-        <p className="text-xs text-status-danger/90">{message}</p>
+        {title && <p className="font-semibold text-sm mb-1">{title}</p>}
+        <p className="text-xs leading-relaxed">{message}</p>
         {requiresReason && (
-          <p className="text-xs text-status-danger/80 mt-2">
+          <p className="text-xs mt-2 font-medium">
             {lang === 'th'
-              ? '⚠️ การกระทำนี้จะถูกบันทึกไว้และตรวจสอบได้'
-              : '⚠️ This action is logged and auditable'}
+              ? 'การกระทำนี้จะถูกบันทึกไว้และตรวจสอบย้อนหลังได้'
+              : 'This action is logged and auditable'}
           </p>
         )}
       </div>

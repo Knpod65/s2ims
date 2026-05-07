@@ -23,7 +23,7 @@ export default function AdminUsersPage() {
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-white/[0.08] bg-bg-200">
+            <tr className="border-b border-line bg-bg-200">
               <th className="text-left p-3 text-xs text-ink-3">{lang==='th'?'ชื่อ':'Name'}</th>
               <th className="text-left p-3 text-xs text-ink-3">{lang==='th'?'อีเมล':'Email'}</th>
               <th className="text-left p-3 text-xs text-ink-3">{lang==='th'?'บทบาท':'Role'}</th>
@@ -36,10 +36,10 @@ export default function AdminUsersPage() {
             {mockUsers.map((user, i) => {
               const rl = ROLE_LABELS[user.role]
               return (
-                <tr key={user.id} className={`border-b border-white/[0.04] ${i%2===1?'bg-white/[0.01]':''}`}>
+                <tr key={user.id} className={`border-b border-line ${i%2===1?'bg-surface-low/60':''}`}>
                   <td className="p-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-brand/20 border border-brand/30 flex items-center justify-center text-brand text-xs font-bold flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-role-tint border border-role-border flex items-center justify-center text-role-primary text-xs font-bold flex-shrink-0">
                         {(lang==='th'?user.name_th:user.name_en)[0]}
                       </div>
                       <span className="text-xs text-ink-1">{lang==='th'?user.name_th:user.name_en}</span>
@@ -52,7 +52,7 @@ export default function AdminUsersPage() {
                     </span>
                   </td>
                   <td className="p-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${user.is_active?'bg-status-success/15 text-green-300 border border-status-success/25':'bg-white/[0.06] text-ink-3 border border-white/[0.1]'}`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-full border ${user.is_active?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-white text-ink-3 border-line'}`}>
                       {user.is_active?(lang==='th'?'ใช้งาน':'Active'):(lang==='th'?'ปิดใช้':'Inactive')}
                     </span>
                   </td>
@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
                     {user.last_login ? new Date(user.last_login).toLocaleDateString(lang==='th'?'th-TH':'en-US') : '-'}
                   </td>
                   <td className="p-3">
-                    <button className="text-xs text-brand hover:text-brand-light">{lang==='th'?'แก้ไข':'Edit'}</button>
+                    <button className="text-xs text-role-primary hover:text-role-primary">{lang==='th'?'แก้ไข':'Edit'}</button>
                   </td>
                 </tr>
               )

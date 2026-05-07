@@ -57,11 +57,11 @@ export default function DataQualityPage() {
             </p>
             <p className="text-2xl font-bold text-status-warning">{warningIssues.length}</p>
           </div>
-          <div className="card p-4 border-brand/20">
-            <p className="text-xs text-brand font-medium mb-1">
+          <div className="card p-4 border-role-border">
+            <p className="text-xs text-role-primary font-medium mb-1">
               {lang === 'th' ? 'ข้อมูล' : 'Info'}
             </p>
-            <p className="text-2xl font-bold text-brand">{infoIssues.length}</p>
+            <p className="text-2xl font-bold text-role-primary">{infoIssues.length}</p>
           </div>
         </div>
 
@@ -126,7 +126,7 @@ export default function DataQualityPage() {
         {/* Info Issues */}
         {infoIssues.length > 0 && (
           <div className="space-y-3">
-            <h2 className="font-semibold text-sm text-brand mb-4">
+            <h2 className="font-semibold text-sm text-role-primary mb-4">
               {lang === 'th' ? 'ปัญหาข้อมูล' : 'Info Issues'}
             </h2>
             <div className="space-y-3">

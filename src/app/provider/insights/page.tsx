@@ -41,8 +41,8 @@ export default function ProviderInsightsPage() {
             {[['< 2.5','5','8%'],['2.5–2.99','14','22%'],['3.0–3.49','28','44%'],['3.5+','17','27%']].map(([band,n,pct]) => (
               <div key={band} className="flex items-center gap-3">
                 <div className="text-xs text-ink-3 font-mono w-16">{band}</div>
-                <div className="flex-1 bg-white/[0.04] rounded-full h-4 relative overflow-hidden">
-                  <div className="h-full bg-brand/60 rounded-full" style={{width:pct}}/>
+                <div className="flex-1 bg-surface-low rounded-full h-4 relative overflow-hidden">
+                  <div className="h-full bg-role-primary rounded-full" style={{width:pct}}/>
                 </div>
                 <div className="text-xs text-ink-2 font-mono w-6">{n}</div>
               </div>

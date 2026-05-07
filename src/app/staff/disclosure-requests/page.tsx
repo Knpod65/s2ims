@@ -65,7 +65,7 @@ export default function DisclosureRequestsPage() {
             <p className="text-xs text-ink-3 mb-1">
               {lang === 'th' ? 'รอตรวจสอบ' : 'Pending'}
             </p>
-            <p className="text-2xl font-bold text-brand">{pendingRequests.length}</p>
+            <p className="text-2xl font-bold text-role-primary">{pendingRequests.length}</p>
           </div>
           <div className="card p-4">
             <p className="text-xs text-ink-3 mb-1">

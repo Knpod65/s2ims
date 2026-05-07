@@ -26,7 +26,7 @@ export default function SecurityAlertCard({
       case 'medium':
         return <AlertCircle size={14} className="text-status-warning" />
       default:
-        return <AlertCircle size={14} className="text-brand" />
+        return <AlertCircle size={14} className="text-role-primary" />
     }
   }
 
@@ -37,7 +37,7 @@ export default function SecurityAlertCard({
       case 'medium':
         return 'bg-status-warning/10 border-status-warning/20'
       default:
-        return 'bg-brand/10 border-brand/20'
+        return 'bg-role-tint border-role-border'
     }
   }
 
@@ -56,7 +56,7 @@ export default function SecurityAlertCard({
     <div className={`rounded-lg border transition-all ${getSeverityColor(alert.severity)}`}>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-start gap-3 hover:bg-white/[0.02] transition-colors text-left"
+        className="w-full p-4 flex items-start gap-3 hover:bg-surface-low transition-colors text-left"
       >
         <div className="mt-0.5">{getSeverityIcon(alert.severity)}</div>
         <div className="flex-1">
@@ -76,8 +76,8 @@ export default function SecurityAlertCard({
       </button>
 
       {expanded && (
-        <div className="border-t border-white/[0.08] p-4 bg-bg-200/50 space-y-3">
-          <div className="p-3 rounded bg-bg-100 border border-white/[0.08]">
+        <div className="border-t border-line p-4 bg-bg-200/50 space-y-3">
+          <div className="p-3 rounded bg-bg-100 border border-line">
             <p className="text-xs text-ink-3 font-semibold mb-1">
               {lang === 'th' ? 'รายละเอียด' : 'Details'}
             </p>
@@ -91,28 +91,28 @@ export default function SecurityAlertCard({
             </div>
           </div>
 
-          <div className="p-3 rounded bg-status-warning/[0.08] border border-status-warning/20">
-            <p className="text-xs text-status-warning font-semibold mb-1">
+          <div className="p-3 rounded bg-[#FFFBEB] border border-[#FDE68A] text-[#78350F]">
+            <p className="text-xs font-semibold mb-1">
               {lang === 'th' ? 'คำแนะนำ' : 'Recommendation'}
             </p>
-            <p className="text-xs text-status-warning/90">
+            <p className="text-xs">
               {lang === 'th' ? alert.recommendation_th : alert.recommendation_en}
             </p>
           </div>
 
           {alert.reviewedBy && (
-            <div className="p-3 rounded bg-status-success/10 border border-status-success/20">
-              <p className="text-xs text-status-success font-semibold mb-1">
+            <div className="p-3 rounded bg-emerald-50 border border-emerald-200">
+              <p className="text-xs text-emerald-700 font-semibold mb-1">
                 {lang === 'th' ? 'บันทึกการตรวจสอบ' : 'Review Notes'}
               </p>
-              <p className="text-xs text-status-success/90">
+              <p className="text-xs text-emerald-700">
                 {lang === 'th' ? 'ตรวจสอบโดย:' : 'Reviewed by:'} {alert.reviewedBy}
               </p>
             </div>
           )}
 
           {alert.status === 'open' && (
-            <div className="pt-3 border-t border-white/[0.08] space-y-2 flex gap-2">
+            <div className="pt-3 border-t border-line space-y-2 flex gap-2">
               {onMarkReviewed && (
                 <button
                   onClick={() => onMarkReviewed(alert.id)}

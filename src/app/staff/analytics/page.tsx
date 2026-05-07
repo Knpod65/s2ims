@@ -60,7 +60,7 @@ export default function StaffAnalyticsPage() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         <StatCard value="342" label={lang==='th'?'เข้าชมประกาศ':'Announcement Views'} icon={<FileText size={16}/>} color="text-status-info" delta="+12% vs last month" deltaUp/>
-        <StatCard value="64" label={lang==='th'?'ใบสมัครที่ส่งแล้ว':'Submitted Applications'} icon={<Users size={16}/>} color="text-brand" delta="+8%" deltaUp/>
+        <StatCard value="64" label={lang==='th'?'ใบสมัครที่ส่งแล้ว':'Submitted Applications'} icon={<Users size={16}/>} color="text-role-primary" delta="+8%" deltaUp/>
         <StatCard value="10" label={lang==='th'?'ได้รับทุน':'Awarded'} icon={<Trophy size={16}/>} color="text-status-success"/>
         <StatCard value="3" label={lang==='th'?'รายงานค้างส่ง':'Overdue Reports'} icon={<AlertCircle size={16}/>} color="text-status-danger" delta="-2 vs last week" deltaUp={false}/>
       </div>
@@ -77,13 +77,13 @@ export default function StaffAnalyticsPage() {
                   <div className="text-[10px] text-ink-3 w-24 text-right leading-tight">
                     {lang==='th'?f.stage_th:f.stage_en}
                   </div>
-                  <div className="flex-1 bg-white/[0.04] rounded-full h-5 relative overflow-hidden">
+                  <div className="flex-1 bg-surface-low rounded-full h-5 relative overflow-hidden">
                     <div
-                      className="h-full bg-brand/70 rounded-full transition-all duration-700"
+                      className="h-full bg-role-primary rounded-full transition-all duration-700"
                       style={{ width: `${pct}%` }}
                     />
                     <div className="absolute inset-0 flex items-center justify-end pr-1.5">
-                      <span className="text-[9px] font-mono text-brand/80">{pct}%</span>
+                      <span className="text-[9px] font-mono text-role-primary">{pct}%</span>
                     </div>
                   </div>
                   <div className="font-mono text-xs text-ink-2 w-7 text-right">{f.value}</div>
@@ -119,7 +119,7 @@ export default function StaffAnalyticsPage() {
             { th: 'เอกสารที่ยืนยัน', en: 'Documents verified', value: 24 },
           ].map(item => (
             <div key={item.th} className="card-sm p-3 text-center">
-              <div className="font-display font-bold text-xl text-brand">{item.value}</div>
+              <div className="font-display font-bold text-xl text-role-primary">{item.value}</div>
               <div className="text-[10px] text-ink-3 mt-1">{lang==='th'?item.th:item.en}</div>
             </div>
           ))}

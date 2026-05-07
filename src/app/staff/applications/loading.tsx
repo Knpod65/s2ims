@@ -12,11 +12,11 @@ export default function Loading() {
         <Skeleton className="h-10 w-36" />
       </div>
       <div className="card overflow-hidden">
-        <div className="border-b border-white/[0.08] p-3 flex gap-4">
+        <div className="border-b border-line p-3 flex gap-4">
           {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-4 flex-1" />)}
         </div>
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="border-b border-white/[0.04] p-3 flex gap-4">
+          <div key={i} className="border-b border-line p-3 flex gap-4">
             {[...Array(5)].map((_, j) => <Skeleton key={j} className="h-3 flex-1" />)}
           </div>
         ))}

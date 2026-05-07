@@ -109,7 +109,7 @@ export default function NewAnnouncementPage() {
                 [hasProposal, setHasProposal, lang==='th'?'ต้องมีข้อเสนอโครงการ':'Project proposal required'],
               ].map(([val, set, label], i) => (
                 <label key={i} className="flex items-center gap-3 cursor-pointer group">
-                  <input type="checkbox" checked={val as boolean} onChange={e=>(set as (v:boolean)=>void)(e.target.checked)} className="accent-brand w-4 h-4"/>
+                  <input type="checkbox" checked={val as boolean} onChange={e=>(set as (v:boolean)=>void)(e.target.checked)} className="accent-role-primary w-4 h-4"/>
                   <span className="text-sm text-ink-1 group-hover:text-ink-1">{label as string}</span>
                 </label>
               ))}
@@ -121,18 +121,18 @@ export default function NewAnnouncementPage() {
             <div className="space-y-2 text-xs text-ink-3">
               {['ใบสมัคร / Application Form','สำเนาบัตรนักศึกษา / Student ID Copy','Transcript (ใบรับรองผลการเรียน)'].map(d => (
                 <div key={d} className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-brand rounded-full flex-shrink-0"/>
+                  <div className="w-1.5 h-1.5 bg-role-primary rounded-full flex-shrink-0"/>
                   {d}
                 </div>
               ))}
-              {hasEssay && <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-brand rounded-full flex-shrink-0"/>เรียงความ / Essay</div>}
-              {hasProposal && <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-brand rounded-full flex-shrink-0"/>ข้อเสนอโครงการ / Project Proposal</div>}
+              {hasEssay && <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-role-primary rounded-full flex-shrink-0"/>เรียงความ / Essay</div>}
+              {hasProposal && <div className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-role-primary rounded-full flex-shrink-0"/>ข้อเสนอโครงการ / Project Proposal</div>}
             </div>
           </div>
         </div>
 
         {/* Live Preview */}
-        <div className="card p-5 border-white/[0.12]">
+        <div className="card p-5 border-line">
           <div className="text-[10px] text-ink-3 uppercase tracking-widest mb-4 flex items-center gap-2">
             <Eye size={11}/>{lang==='th'?'ตัวอย่างประกาศ (Live Preview)':'Announcement Preview (Live)'}
           </div>
@@ -151,7 +151,7 @@ export default function NewAnnouncementPage() {
                   {hasProposal && <div>📋 ต้องมีข้อเสนอโครงการ</div>}
                 </div>
               </div>
-              <hr className="border-white/[0.06]"/>
+              <hr className="border-line"/>
               {/* EN Preview */}
               <div>
                 <div className="text-[10px] text-ink-3 mb-2">🇺🇸 English</div>

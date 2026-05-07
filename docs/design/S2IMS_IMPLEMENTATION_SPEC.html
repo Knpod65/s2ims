@@ -1,0 +1,1684 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>S²IMS Design Implementation Spec — v12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface: #faf8ff;
+    --surface-bright: #ffffff;
+    --surface-low: #f3f2ff;
+    --surface-container: #ededfb;
+    --surface-high: #e7e7f5;
+    --ink: #0f172a;
+    --ink-2: #434656;
+    --ink-3: #737688;
+    --line: #d9d9e6;
+    --line-2: #c3c5d9;
+    --aurora: #0055ff;
+    --aurora-2: #22d3ee;
+    --emerald: #10b981;
+    --emerald-2: #2dd4bf;
+    --amber: #f59e0b;
+    --amber-2: #fb923c;
+    --violet: #8b5cf6;
+    --violet-2: #6366f1;
+    --graphite: #4b5563;
+    --graphite-2: #64748b;
+    --danger: #ba1a1a;
+    --warn: #b45309;
+    --ok: #047857;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+    --display: 'Space Grotesk', 'Inter', sans-serif;
+  }
+  html, body { margin: 0; padding: 0; background: var(--surface); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: var(--aurora); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Layout */
+  .layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh; }
+  aside.toc {
+    position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+    border-right: 1px solid var(--line); padding: 28px 22px; background: var(--surface-bright);
+  }
+  aside.toc .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  aside.toc .brand-mark {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--aurora), var(--violet));
+    display:grid; place-items: center; color: white; font-family: var(--display); font-weight: 700; font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,85,255,.25);
+  }
+  aside.toc .brand-name { font-family: var(--display); font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+  aside.toc .brand-sub { font-size: 11px; color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
+  aside.toc .meta { margin-top: 18px; padding: 10px 12px; border-radius: 10px; background: var(--surface-low); font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+  aside.toc .meta strong { color: var(--ink); }
+  aside.toc nav { margin-top: 22px; display: flex; flex-direction: column; gap: 1px; }
+  aside.toc nav a {
+    display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 7px;
+    color: var(--ink-2); font-size: 13.5px; font-weight: 500;
+  }
+  aside.toc nav a:hover { background: var(--surface-low); color: var(--ink); text-decoration: none; }
+  aside.toc nav a .num { font-family: var(--mono); font-size: 11px; color: var(--ink-3); width: 18px; }
+  aside.toc nav .group-title { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); padding: 16px 10px 6px; }
+
+  main { padding: 56px 64px 120px; max-width: 1100px; }
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: 240px 1fr; }
+    main { padding: 40px 36px 80px; }
+  }
+  @media (max-width: 820px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.toc { position: static; height: auto; }
+    main { padding: 28px 20px 60px; }
+  }
+
+  /* Header */
+  .doc-head { margin-bottom: 48px; padding-bottom: 28px; border-bottom: 1px solid var(--line); }
+  .doc-head .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .doc-head h1 { font-family: var(--display); font-size: 44px; line-height: 1.05; font-weight: 700; letter-spacing: -.02em; margin: 12px 0 14px; }
+  .doc-head .lede { font-size: 17px; line-height: 1.55; color: var(--ink-2); max-width: 70ch; }
+  .doc-head .pill-row { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--surface-low); color: var(--ink-2); border: 1px solid var(--line); }
+  .pill.ok { background: #ecfdf5; color: var(--ok); border-color: #a7f3d0; }
+  .pill.warn { background: #fef3c7; color: var(--warn); border-color: #fde68a; }
+
+  /* Sections */
+  section { padding-top: 64px; scroll-margin-top: 16px; }
+  section > h2 { font-family: var(--display); font-size: 28px; font-weight: 700; letter-spacing: -.015em; margin: 0 0 6px; }
+  section > .h2-sub { font-size: 14px; color: var(--ink-3); margin-bottom: 28px; font-family: var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+  h3 { font-family: var(--display); font-size: 19px; font-weight: 600; margin: 36px 0 12px; letter-spacing: -.005em; }
+  h4 { font-size: 14px; font-weight: 700; margin: 20px 0 8px; color: var(--ink); letter-spacing: .01em; }
+  p { margin: 8px 0 12px; color: var(--ink-2); }
+  p strong { color: var(--ink); font-weight: 600; }
+  ul, ol { margin: 8px 0 14px; padding-left: 22px; color: var(--ink-2); }
+  li { margin: 4px 0; }
+  code { font-family: var(--mono); font-size: 12.5px; background: var(--surface-container); padding: 1px 6px; border-radius: 4px; color: var(--ink); }
+
+  /* Callouts */
+  .callout { border-radius: 12px; padding: 14px 18px; border: 1px solid; margin: 16px 0; display: flex; gap: 12px; }
+  .callout .ic { flex: 0 0 auto; width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+  .callout.rule { background: #fffbeb; border-color: #fde68a; color: #78350f; }
+  .callout.rule .ic { background: #f59e0b; color: white; }
+  .callout.law { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+  .callout.law .ic { background: #b91c1c; color: white; }
+  .callout.note { background: var(--surface-low); border-color: var(--line); color: var(--ink-2); }
+  .callout.note .ic { background: var(--graphite); color: white; }
+  .callout-body { font-size: 14px; line-height: 1.55; }
+  .callout-body strong { color: inherit; }
+
+  /* Tables */
+  .table-wrap { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 16px 0; background: var(--surface-bright); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--surface-low); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); }
+  tr:last-child td { border-bottom: 0; }
+  td code { font-size: 12px; }
+
+  /* Token grid */
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 16px 0; }
+  .swatch { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface-bright); }
+  .swatch .chip { height: 64px; }
+  .swatch .meta { padding: 10px 12px; }
+  .swatch .name { font-weight: 600; font-size: 13px; }
+  .swatch .hex { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); margin-top: 2px; }
+
+  /* Role cards */
+  .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0; }
+  .role-card { border-radius: 16px; border: 1px solid var(--line); padding: 18px; background: var(--surface-bright); position: relative; overflow: hidden; }
+  .role-card .gradient-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .role-card .role-name { font-family: var(--display); font-size: 18px; font-weight: 700; margin-top: 6px; letter-spacing: -.01em;}
+  .role-card .role-tag { font-size: 11px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-3); }
+  .role-card .row { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12.5px; color: var(--ink-2); }
+  .role-card .dot { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto; }
+  .role-card .badge-demo { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 12px;}
+  .role-card .btn-demo { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; margin-top: 12px; margin-left: 8px; }
+  .role-card .tone { font-size: 12.5px; color: var(--ink-2); margin-top: 12px; line-height: 1.5; }
+  .role-card .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; font-size: 12px; }
+  .role-card .do-dont .col { padding: 8px 10px; border-radius: 8px; }
+  .role-card .do-dont .do { background: #ecfdf5; color: #064e3b; }
+  .role-card .do-dont .dont { background: #fef2f2; color: #7f1d1d; }
+  .role-card .do-dont .col strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 2px; }
+
+  /* Component preview boxes */
+  .cmp { border: 1px solid var(--line); border-radius: 14px; background: var(--surface-bright); overflow: hidden; margin: 18px 0; }
+  .cmp .cmp-head { padding: 12px 16px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; background: var(--surface-low); }
+  .cmp .cmp-name { font-weight: 600; font-size: 14px; }
+  .cmp .cmp-tag { font-size: 11px; font-family: var(--mono); color: var(--ink-3); }
+  .cmp .cmp-body { padding: 22px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; background: linear-gradient(180deg, var(--surface-bright), var(--surface)); }
+  .cmp .cmp-spec { padding: 12px 16px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); background: var(--surface-low); }
+  .cmp .cmp-spec code { background: var(--surface-bright); border: 1px solid var(--line); }
+
+  /* Demo elements */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; border: 1px solid transparent; cursor: pointer; font-family: var(--sans);}
+  .btn.primary { color: white; box-shadow: 0 1px 2px rgba(15,23,42,.08), 0 6px 20px -8px rgba(15,23,42,.18); }
+  .btn.aurora { background: linear-gradient(135deg, #0055ff, #22d3ee); }
+  .btn.emerald { background: linear-gradient(135deg, #10b981, #2dd4bf); }
+  .btn.amber { background: linear-gradient(135deg, #f59e0b, #fb923c); }
+  .btn.violet { background: linear-gradient(135deg, #8b5cf6, #6366f1); }
+  .btn.graphite { background: linear-gradient(135deg, #4b5563, #64748b); }
+  .btn.ghost { background: rgba(255,255,255,.6); border: 1px solid var(--line-2); color: var(--ink); backdrop-filter: blur(8px); }
+  .btn.danger { background: var(--danger); color: white;}
+
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+  .badge .d { width: 6px; height: 6px; border-radius: 50%;}
+  .badge.draft { background: var(--surface-container); color: var(--ink-2); }
+  .badge.draft .d { background: var(--graphite-2); }
+  .badge.submitted { background: #dbeafe; color: #1e40af; }
+  .badge.submitted .d { background: #2563eb;}
+  .badge.review { background: #fef3c7; color: #78350f; }
+  .badge.review .d { background: #f59e0b; }
+  .badge.recommended { background: #ede9fe; color: #5b21b6; }
+  .badge.recommended .d { background: #8b5cf6; }
+  .badge.awarded { background: #d1fae5; color: #065f46; }
+  .badge.awarded .d { background: #10b981; }
+  .badge.rejected { background: #fee2e2; color: #991b1b; }
+  .badge.rejected .d { background: #dc2626; }
+
+  .badge.risk-critical { background: #fee2e2; color: #7f1d1d; border: 1px solid #fecaca; }
+  .badge.risk-high { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+  .badge.risk-medium { background: #fef3c7; color: #78350f; border: 1px solid #fde68a; }
+  .badge.risk-low { background: var(--surface-container); color: var(--ink-2); border: 1px solid var(--line); }
+
+  .badge.privacy { background: rgba(15, 23, 42, .04); color: var(--ink); border: 1px solid rgba(15, 23, 42, .1); padding: 4px 10px;}
+  .badge.privacy .d { background: var(--ink); }
+  .badge.aggregate { background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe; }
+  .badge.aggregate .d { background: var(--violet); }
+
+  /* Glass card */
+  .glass {
+    background: rgba(255,255,255,.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,.6);
+    box-shadow: 8px 8px 24px rgba(143, 149, 178, .18), -8px -8px 24px rgba(255,255,255,.9);
+    border-radius: 24px;
+    padding: 22px;
+  }
+  .glass.kpi { min-width: 220px; }
+  .glass-bg { background: linear-gradient(135deg, #e0e7ff 0%, #faf5ff 50%, #ecfeff 100%); }
+
+  /* KPI demo */
+  .kpi-label { font-size: 11px; font-family: var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  .kpi-value { font-family: var(--display); font-size: 36px; font-weight: 700; letter-spacing: -.02em; line-height: 1; margin-top: 8px;}
+  .kpi-delta { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--ok); margin-top: 10px;}
+  .kpi-bar { height: 4px; border-radius: 2px; background: var(--surface-container); margin-top: 14px; overflow: hidden; }
+  .kpi-bar > div { height: 100%; }
+
+  /* Masked id chip */
+  .masked-id {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 10px;
+    background: rgba(15,23,42,.04); border: 1px dashed rgba(15,23,42,.18); font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+  }
+  .masked-id .lock { width: 14px; height: 14px; }
+
+  /* Audit warning */
+  .audit-card {
+    display: flex; gap: 12px; padding: 14px 16px; background: #fffbeb;
+    border: 1px solid #fde68a; border-radius: 12px; max-width: 480px;
+  }
+  .audit-card .ic { width: 28px; height: 28px; border-radius: 8px; background: #f59e0b; color: white; display: grid; place-items: center; flex: 0 0 auto; font-weight: 700;}
+  .audit-card .t { font-weight: 700; color: #78350f; font-size: 13.5px; }
+  .audit-card .b { font-size: 12.5px; color: #78350f; opacity: .85; margin-top: 2px;}
+
+  /* Two col content */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .two-col { grid-template-columns: 1fr; } }
+  .col-card { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; background: var(--surface-bright); }
+  .col-card h4 { margin-top: 0; }
+
+  /* Phase blocks */
+  .phase { display: grid; grid-template-columns: 90px 1fr; gap: 18px; padding: 18px 0; border-bottom: 1px dashed var(--line); align-items: start;}
+  .phase:last-child { border-bottom: 0; }
+  .phase .label { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); padding-top: 4px;}
+  .phase h4 { margin: 0 0 4px; font-family: var(--display); font-size: 16px; font-weight: 600; }
+  .phase ul { margin: 6px 0 0; }
+  .phase .pri { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--surface-container); color: var(--ink-2); letter-spacing: .04em;}
+  .phase.p1 .pri { background: #fee2e2; color: #991b1b;}
+  .phase.p2 .pri { background: #fed7aa; color: #9a3412;}
+  .phase.p3 .pri { background: #fde68a; color: #78350f;}
+  .phase.p4 .pri { background: #d9f99d; color: #3f6212;}
+  .phase.p5 .pri { background: #a7f3d0; color: #065f46;}
+  .phase.p6 .pri { background: #bae6fd; color: #075985;}
+  .phase.p7 .pri { background: #ddd6fe; color: #5b21b6;}
+  .phase.p8 .pri { background: var(--surface-container); color: var(--ink-2); }
+
+  /* Checklist */
+  .checklist { list-style: none; padding: 0; margin: 12px 0; }
+  .checklist li { display: flex; gap: 10px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-bright); margin-bottom: 6px; align-items: flex-start; font-size: 13px; color: var(--ink); }
+  .checklist li::before {
+    content: ""; flex: 0 0 auto; width: 16px; height: 16px; border: 2px solid var(--line-2); border-radius: 4px; margin-top: 2px;
+    background: white;
+  }
+  .checklist.governance li::before { border-color: #b91c1c;}
+
+  /* Token list */
+  .token-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 720px) { .token-grid { grid-template-columns: 1fr; } }
+  .token-block { border: 1px solid var(--line); border-radius: 12px; padding: 16px; background: var(--surface-bright); font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); }
+  .token-block h4 { font-family: var(--sans); font-size: 12px; margin-top: 0; margin-bottom: 10px; color: var(--ink); text-transform: uppercase; letter-spacing: .06em;}
+  .token-block .row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+  .token-block .row:last-child { border-bottom: 0; }
+  .token-block .key { color: var(--ink); }
+  .token-block .val { color: var(--ink-3); }
+
+  /* Number marker on section headings */
+  .secnum { font-family: var(--mono); font-size: 13px; color: var(--ink-3); letter-spacing: .08em; }
+
+  /* Reason modal demo */
+  .modal-demo { max-width: 480px; background: white; border-radius: 16px; border: 1px solid var(--line); padding: 20px; box-shadow: 0 20px 60px -20px rgba(15,23,42,.25); }
+  .modal-demo h4 { margin: 0 0 4px; font-family: var(--display); }
+  .modal-demo .sub { font-size: 12.5px; color: var(--ink-3); margin-bottom: 14px; }
+  .modal-demo textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 80px; font-family: var(--sans); resize: vertical; }
+  .modal-demo .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); margin-bottom: 6px; display: block;}
+  .modal-demo .actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;}
+  .modal-demo .req { color: var(--danger); }
+
+  /* Disclosure card demo */
+  .disclosure {
+    border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: var(--surface-bright); max-width: 460px;
+    border-left: 3px solid var(--emerald);
+  }
+  .disclosure .t { font-weight: 700; font-size: 14px; }
+  .disclosure .row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 13px;}
+  .disclosure .row .k { color: var(--ink-3); font-size: 12px;}
+  .disclosure .actions { display: flex; gap: 8px; margin-top: 14px; }
+
+  /* Fairness alert */
+  .fairness {
+    display: flex; gap: 12px; padding: 12px 14px; border-radius: 12px; max-width: 480px;
+    background: linear-gradient(135deg, #fef3c7, #fff7ed); border: 1px solid #fde68a;
+  }
+  .fairness .ic { width: 32px; height: 32px; border-radius: 10px; background: white; display: grid; place-items: center; flex: 0 0 auto; }
+  .fairness .t { font-weight: 700; font-size: 13.5px; color: #78350f;}
+  .fairness .b { font-size: 12.5px; color: #92400e; margin-top: 2px;}
+
+  /* Freshness indicator */
+  .freshness {
+    display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 999px;
+    font-size: 11.5px; font-family: var(--mono); background: var(--surface-low); border: 1px solid var(--line); color: var(--ink-2);
+  }
+  .freshness .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); position: relative; }
+  .freshness .pulse::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; background: var(--ok); opacity: .35; animation: pulse 2s infinite;}
+  @keyframes pulse { 0%{transform: scale(1); opacity: .35;} 100% { transform: scale(2); opacity: 0;} }
+
+  /* Permission denied demo */
+  .denied {
+    border-radius: 16px; padding: 28px 24px; text-align: center; max-width: 420px;
+    background: linear-gradient(180deg, var(--surface-bright), var(--surface-low)); border: 1px solid var(--line);
+  }
+  .denied .lock { width: 48px; height: 48px; border-radius: 14px; margin: 0 auto 12px; background: var(--surface-container); display: grid; place-items: center; }
+  .denied h4 { font-family: var(--display); font-size: 18px; margin: 6px 0 4px;}
+  .denied p { margin: 0 0 12px; font-size: 13px;}
+
+  /* Empty/loading/error blocks */
+  .state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .state-grid { grid-template-columns: 1fr; } }
+  .state {
+    border: 1px solid var(--line); border-radius: 12px; padding: 22px 16px; text-align: center; background: var(--surface-bright);
+  }
+  .state .ic { width: 36px; height: 36px; border-radius: 10px; margin: 0 auto 10px; display: grid; place-items: center;}
+  .state.empty .ic { background: var(--surface-container); color: var(--ink-2); }
+  .state.loading .ic { background: #e0e7ff; color: var(--aurora); }
+  .state.error .ic { background: #fee2e2; color: var(--danger); }
+  .state .t { font-weight: 600; font-size: 13.5px; }
+  .state .s { font-size: 12px; color: var(--ink-3); margin-top: 4px;}
+
+  /* Loading skeleton */
+  .skeleton { height: 8px; background: linear-gradient(90deg, var(--surface-container), var(--surface-low), var(--surface-container)); background-size: 200% 100%; border-radius: 4px; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0%{ background-position: 100% 0;} 100% { background-position: -100% 0;} }
+
+  /* table/card demo */
+  .demo-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+  .demo-table th, .demo-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+  .demo-table th { font-size: 11px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; background: var(--surface-low);}
+  .demo-card-row {
+    border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; background: var(--surface-bright);
+    display: flex; flex-direction: column; gap: 6px; max-width: 320px;
+  }
+  .demo-card-row .top { display: flex; justify-content: space-between; align-items: center; }
+  .demo-card-row .name { font-weight: 600; font-size: 13.5px;}
+  .demo-card-row .meta { font-size: 12px; color: var(--ink-3); }
+
+  /* Mobile-table compare row */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 720px) { .compare { grid-template-columns: 1fr; } }
+  .compare .label { font-size: 10.5px; font-family: var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+
+  /* Bullet do-dont */
+  .do-dont-list { list-style: none; padding: 0; margin: 8px 0; }
+  .do-dont-list li { display: flex; gap: 8px; padding: 6px 0; align-items: flex-start; font-size: 13px;}
+  .do-dont-list li::before { font-family: var(--mono); font-weight: 700; flex: 0 0 auto; width: 22px;}
+  .do-dont-list li.do::before { content: "DO"; color: var(--ok);}
+  .do-dont-list li.dont::before { content: "DON'T"; color: var(--danger); width: 44px;}
+
+  /* Topbar/sidebar/bottomnav demo */
+  .shell-demo {
+    border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--surface);
+    display: grid; grid-template-rows: 56px 1fr; min-height: 320px;
+  }
+  .shell-demo .topbar {
+    background: rgba(255,255,255,.85); backdrop-filter: blur(10px); padding: 0 16px;
+    display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line);
+  }
+  .shell-demo .topbar .left { display: flex; align-items: center; gap: 14px; }
+  .shell-demo .topbar .right { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--ink-2);}
+  .shell-demo .body { display: grid; grid-template-columns: 200px 1fr; }
+  .shell-demo .sidebar { background: rgba(255,255,255,.6); border-right: 1px solid var(--line); padding: 14px 10px; }
+  .shell-demo .sidebar .item { padding: 8px 12px; border-radius: 8px; font-size: 12.5px; color: var(--ink-2); display: flex; align-items: center; gap: 8px; cursor: pointer;}
+  .shell-demo .sidebar .item.active { background: rgba(0,85,255,.08); color: var(--aurora); font-weight: 600;}
+  .shell-demo .content { padding: 18px; }
+
+  .mobile-shell { width: 240px; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; background: var(--surface); margin: 0 auto;}
+  .mobile-shell .topbar { padding: 8px 12px; background: rgba(255,255,255,.85); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); font-size: 11px;}
+  .mobile-shell .body { padding: 14px; min-height: 200px; font-size: 11px; color: var(--ink-3);}
+  .mobile-shell .bottombar {
+    height: 56px; background: rgba(255,255,255,.95); border-top: 1px solid var(--line);
+    display: grid; grid-template-columns: repeat(4,1fr); align-items: center; padding-bottom: 6px;
+  }
+  .mobile-shell .bottombar .nav { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: var(--ink-3);}
+  .mobile-shell .bottombar .nav.active { color: var(--aurora);}
+  .mobile-shell .bottombar .nav .ic { width: 18px; height: 18px; border-radius: 5px; background: var(--surface-container);}
+  .mobile-shell .bottombar .nav.active .ic { background: var(--aurora);}
+
+  /* Footer */
+  footer.docfoot {
+    margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--ink-3); display: flex; justify-content: space-between; align-items: center;
+  }
+  footer.docfoot .v { font-family: var(--mono); }
+
+  /* Print */
+  @media print {
+    aside.toc { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    main { padding: 24px; max-width: 100%; }
+    section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<aside class="toc">
+  <div class="brand">
+    <div class="brand-mark">S²</div>
+    <div>
+      <div class="brand-name">S²IMS Spec</div>
+      <div class="brand-sub">v12 · Implementation</div>
+    </div>
+  </div>
+  <div class="meta">
+    <strong>Audience:</strong> Claude Code (frontend implementation)<br>
+    <strong>Source of truth:</strong> v11 spec + Stitch export<br>
+    <strong>Type:</strong> Design Implementation Spec — not production code
+  </div>
+  <nav>
+    <div class="group-title">Foundations</div>
+    <a href="#vision"><span class="num">01</span> Design vision</a>
+    <a href="#tokens"><span class="num">02</span> Tokens</a>
+    <a href="#roles"><span class="num">03</span> Role visual system</a>
+
+    <div class="group-title">Frame</div>
+    <a href="#shell"><span class="num">04</span> AppShell</a>
+    <a href="#components"><span class="num">05</span> Core components</a>
+    <a href="#governance"><span class="num">06</span> Governance UX</a>
+
+    <div class="group-title">Behavior</div>
+    <a href="#responsive"><span class="num">07</span> Responsive rules</a>
+    <a href="#i18n"><span class="num">08</span> Thai/English UI</a>
+
+    <div class="group-title">Build</div>
+    <a href="#priority"><span class="num">09</span> Screen priority</a>
+    <a href="#handoff"><span class="num">10</span> Handoff to Claude Code</a>
+    <a href="#qa"><span class="num">11</span> QA checklist</a>
+  </nav>
+</aside>
+
+<main>
+
+<header class="doc-head">
+  <div class="eyebrow">S²IMS — Scholarship-Student Intelligent Matching System</div>
+  <h1>Design Implementation Spec</h1>
+  <p class="lede">A practical, build-ready handoff. This document refines the v11 design system and prepares it for Claude Code to implement the real web app — focused on tokens, role identity, components, governance UX, responsive behavior, and screen priority. No new features. No production code.</p>
+  <div class="pill-row">
+    <span class="pill ok">Source of truth</span>
+    <span class="pill">Stitch export referenced</span>
+    <span class="pill">v11 → v12</span>
+    <span class="pill warn">Governance is non-negotiable</span>
+  </div>
+</header>
+
+<!-- 01 VISION -->
+<section id="vision">
+  <div class="secnum">01</div>
+  <h2>Design vision</h2>
+  <div class="h2-sub">What the product must feel like — and what it must never feel like</div>
+
+  <p>S²IMS is an institutional matching platform that handles sensitive student data, scholarship money, and provider relationships. The interface is the trust layer. It must feel premium and futuristic, but never theatrical. It must feel intelligent, but never opaque. It must feel safe, but never bureaucratic.</p>
+
+  <h3>The "Tactile Future" aesthetic</h3>
+  <p>Hybrid of <strong>Glassmorphism</strong> (transparency, lightness, modernity) and a soft <strong>Neumorphic lift</strong> (light upper-left + cool lower-right shadows on critical surfaces) on a soft, warm-cool off-white canvas. The result is a "gallery" feel — quiet, premium, considered. Role color is wayfinding, not decoration.</p>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4>It should feel</h4>
+      <ul>
+        <li><strong>Premium</strong> — generous whitespace, restrained color, considered type</li>
+        <li><strong>Futuristic</strong> — glass, blur, soft depth, pulsing freshness indicators</li>
+        <li><strong>Human-centered</strong> — rounded shapes, plain language, friendly empty states</li>
+        <li><strong>University-grade</strong> — institutional weight, AA+ contrast, audit-aware</li>
+        <li><strong>Privacy-aware</strong> — masking is visible, identity is earned not assumed</li>
+        <li><strong>Data/AI platform</strong> — match scores, fairness, freshness, confidence as first-class UI</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>It must not feel</h4>
+      <ul>
+        <li><strong>Like a generic admin dashboard</strong> — no SaaS-template purple gradients on white cards</li>
+        <li><strong>Childish</strong> — no emojis as UI, no playful illustrations in core flows</li>
+        <li><strong>Cyberpunk / over-dark</strong> — no neon-on-black; this is a daylight system</li>
+        <li><strong>Bureaucratic</strong> — no compliance-form aesthetic, no hostile dense forms</li>
+        <li><strong>Toy-like</strong> — no oversized rounded corners on functional elements, no bouncy springs</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Three principles, in order</h3>
+  <ol>
+    <li><strong>Trust before delight.</strong> If a delight choice (animation, gradient, micro-interaction) competes with audit clarity or identity protection, drop the delight.</li>
+    <li><strong>Role identity is wayfinding.</strong> A user must know which role they are operating as within 1 second of any screen, without reading a label. Color, gradient direction, and badge anchor this.</li>
+    <li><strong>Governance is part of the product, not a layer on top.</strong> Audit warnings, reason fields, masked identities, and disclosure approvals are first-class components with the same polish as KPIs and tables.</li>
+  </ol>
+</section>
+
+<!-- 02 TOKENS -->
+<section id="tokens">
+  <div class="secnum">02</div>
+  <h2>Tokens</h2>
+  <div class="h2-sub">The complete, normalized token list — single source for Claude Code</div>
+
+  <h3>Surface &amp; ink</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="chip" style="background:#faf8ff"></div><div class="meta"><div class="name">surface</div><div class="hex">#faf8ff</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#ffffff;border-bottom:1px solid var(--line)"></div><div class="meta"><div class="name">surface-bright</div><div class="hex">#ffffff</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#f3f2ff"></div><div class="meta"><div class="name">surface-low</div><div class="hex">#f3f2ff</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#ededfb"></div><div class="meta"><div class="name">surface-container</div><div class="hex">#ededfb</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#e7e7f5"></div><div class="meta"><div class="name">surface-high</div><div class="hex">#e7e7f5</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#0f172a"></div><div class="meta"><div class="name">ink (text-primary)</div><div class="hex">#0f172a</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#434656"></div><div class="meta"><div class="name">ink-2 (text-secondary)</div><div class="hex">#434656</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#737688"></div><div class="meta"><div class="name">ink-3 (text-muted)</div><div class="hex">#737688</div></div></div>
+  </div>
+
+  <h3>Role primaries</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#0055ff,#22d3ee)"></div><div class="meta"><div class="name">aurora (Student)</div><div class="hex">#0055ff → #22d3ee</div></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#10b981,#2dd4bf)"></div><div class="meta"><div class="name">emerald (Provider)</div><div class="hex">#10b981 → #2dd4bf</div></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#f59e0b,#fb923c)"></div><div class="meta"><div class="name">amber (Staff)</div><div class="hex">#f59e0b → #fb923c</div></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#8b5cf6,#6366f1)"></div><div class="meta"><div class="name">violet (Executive)</div><div class="hex">#8b5cf6 → #6366f1</div></div></div>
+    <div class="swatch"><div class="chip" style="background:linear-gradient(135deg,#4b5563,#64748b)"></div><div class="meta"><div class="name">graphite (Admin)</div><div class="hex">#4b5563 → #64748b</div></div></div>
+  </div>
+
+  <h3>Semantic</h3>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="chip" style="background:#047857"></div><div class="meta"><div class="name">success</div><div class="hex">#047857</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#b45309"></div><div class="meta"><div class="name">warn (audit)</div><div class="hex">#b45309</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#ba1a1a"></div><div class="meta"><div class="name">danger / destructive</div><div class="hex">#ba1a1a</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#1e40af"></div><div class="meta"><div class="name">info</div><div class="hex">#1e40af</div></div></div>
+  </div>
+
+  <div class="token-grid">
+    <div class="token-block">
+      <h4>Type scale</h4>
+      <div class="row"><span class="key">display</span><span class="val">Space Grotesk · 48 / 1.1 / -.02em / 700</span></div>
+      <div class="row"><span class="key">h1</span><span class="val">Space Grotesk · 32 / 1.2 / 600</span></div>
+      <div class="row"><span class="key">h2</span><span class="val">Space Grotesk · 24 / 1.3 / 600</span></div>
+      <div class="row"><span class="key">title</span><span class="val">Space Grotesk · 20 / 1.3 / 600</span></div>
+      <div class="row"><span class="key">body-lg</span><span class="val">Inter · 18 / 1.6 / 400</span></div>
+      <div class="row"><span class="key">body-md</span><span class="val">Inter · 16 / 1.5 / 400</span></div>
+      <div class="row"><span class="key">body-sm</span><span class="val">Inter · 14 / 1.4 / 400</span></div>
+      <div class="row"><span class="key">label-caps</span><span class="val">Inter · 12 / 1 / .05em / 700 UPPER</span></div>
+      <div class="row"><span class="key">mono</span><span class="val">JetBrains Mono · 12.5 / 1.4 (IDs, codes)</span></div>
+    </div>
+    <div class="token-block">
+      <h4>Spacing &amp; radii</h4>
+      <div class="row"><span class="key">space-xs</span><span class="val">4px</span></div>
+      <div class="row"><span class="key">space-sm</span><span class="val">12px</span></div>
+      <div class="row"><span class="key">space-md</span><span class="val">24px (gutter)</span></div>
+      <div class="row"><span class="key">space-lg</span><span class="val">40px</span></div>
+      <div class="row"><span class="key">space-xl</span><span class="val">64px</span></div>
+      <div class="row"><span class="key">radius-sm</span><span class="val">4px (mask blocks)</span></div>
+      <div class="row"><span class="key">radius-md</span><span class="val">12px (inputs, badges-rect)</span></div>
+      <div class="row"><span class="key">radius-lg</span><span class="val">16px (buttons)</span></div>
+      <div class="row"><span class="key">radius-xl</span><span class="val">24px (cards)</span></div>
+      <div class="row"><span class="key">radius-full</span><span class="val">9999px (pills)</span></div>
+      <div class="row"><span class="key">sidebar-w</span><span class="val">280px</span></div>
+    </div>
+    <div class="token-block">
+      <h4>Elevation</h4>
+      <div class="row"><span class="key">glass-blur</span><span class="val">backdrop-filter: blur(20px)</span></div>
+      <div class="row"><span class="key">glass-fill</span><span class="val">rgba(255,255,255,0.7)</span></div>
+      <div class="row"><span class="key">glass-border</span><span class="val">1px rgba(255,255,255,0.6)</span></div>
+      <div class="row"><span class="key">elev-soft</span><span class="val">8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff</span></div>
+      <div class="row"><span class="key">elev-hover</span><span class="val">contracts to 4/4 — pressed-into-glass</span></div>
+      <div class="row"><span class="key">elev-modal</span><span class="val">0 20px 60px -20px rgba(15,23,42,.25)</span></div>
+    </div>
+    <div class="token-block">
+      <h4>Motion</h4>
+      <div class="row"><span class="key">dur-fast</span><span class="val">120ms (hover, focus)</span></div>
+      <div class="row"><span class="key">dur-base</span><span class="val">220ms (most transitions)</span></div>
+      <div class="row"><span class="key">dur-slow</span><span class="val">360ms (drawer, modal)</span></div>
+      <div class="row"><span class="key">ease-out</span><span class="val">cubic-bezier(0.2, 0.7, 0.2, 1)</span></div>
+      <div class="row"><span class="key">ease-spring</span><span class="val">cubic-bezier(0.34, 1.4, 0.64, 1) — sparingly</span></div>
+      <div class="row"><span class="key">freshness-pulse</span><span class="val">2s ease-in-out infinite (data-fresh dot)</span></div>
+    </div>
+  </div>
+
+  <div class="callout note">
+    <div class="ic">i</div>
+    <div class="callout-body"><strong>Implementation note.</strong> Ship tokens as CSS custom properties on <code>:root</code> with a <code>[data-role="student|provider|staff|exec|admin"]</code> attribute on the AppShell that swaps four runtime-bound vars: <code>--role-primary</code>, <code>--role-primary-2</code>, <code>--role-gradient</code>, <code>--role-tint</code>. Components reference these vars only — never hard-coded role hexes.</div>
+  </div>
+</section>
+
+<!-- 03 ROLES -->
+<section id="roles">
+  <div class="secnum">03</div>
+  <h2>Role-based visual system</h2>
+  <div class="h2-sub">Five themes — each a complete visual identity, not just a color</div>
+
+  <p>Every screen in S²IMS belongs to exactly one role at a time. Role identity is set at the AppShell level via the <code>data-role</code> attribute and propagates through CSS variables. Role color is wayfinding — used for sidebar active state, primary buttons, KPI accents, role badge, progress rings, and selection states. It is <strong>never</strong> used for full backgrounds, large surface fills, or hero panels.</p>
+
+  <div class="roles">
+    <!-- Student / Aurora Blue -->
+    <div class="role-card">
+      <div class="gradient-bar" style="background: linear-gradient(90deg,#0055ff,#22d3ee);"></div>
+      <div class="role-tag">role · student</div>
+      <div class="role-name">Aurora Blue</div>
+      <div class="row"><span class="dot" style="background:#0055ff"></span><strong style="color:var(--ink)">Primary</strong> #0055FF</div>
+      <div class="row"><span class="dot" style="background:#22d3ee"></span><strong style="color:var(--ink)">Secondary</strong> #22D3EE</div>
+      <div class="row"><span class="dot" style="background:#a5f3fc"></span><strong style="color:var(--ink)">Accent</strong> #A5F3FC (soft cyan tint)</div>
+      <div class="row"><strong style="color:var(--ink)">Gradient</strong> 135° Blue 500 → Cyan 400</div>
+      <span class="badge-demo" style="background:#dbeafe; color:#1e40af;"><span class="d" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#2563eb;margin-right:2px;"></span>Student</span>
+      <span class="btn-demo aurora" style="background:linear-gradient(135deg,#0055ff,#22d3ee);">Apply</span>
+      <div class="tone"><strong style="color:var(--ink)">Emotional tone:</strong> hopeful, forward, opportunity, possibility. The "sky-on-the-horizon" feeling — never melancholic blue, never corporate Facebook blue.</div>
+      <div class="tone"><strong style="color:var(--ink)">Card accent:</strong> 3px gradient bar at card top OR left-edge accent on selected match cards.</div>
+      <div class="do-dont">
+        <div class="col do"><strong>Do</strong>Use cyan accent in match-score rings and "next step" CTAs.</div>
+        <div class="col dont"><strong>Don't</strong>Saturate dashboards in blue — primary is for action, not background.</div>
+      </div>
+    </div>
+
+    <!-- Provider / Trust Emerald -->
+    <div class="role-card">
+      <div class="gradient-bar" style="background: linear-gradient(90deg,#10b981,#2dd4bf);"></div>
+      <div class="role-tag">role · provider</div>
+      <div class="role-name">Trust Emerald</div>
+      <div class="row"><span class="dot" style="background:#10b981"></span><strong style="color:var(--ink)">Primary</strong> #10B981</div>
+      <div class="row"><span class="dot" style="background:#2dd4bf"></span><strong style="color:var(--ink)">Secondary</strong> #2DD4BF</div>
+      <div class="row"><span class="dot" style="background:#a7f3d0"></span><strong style="color:var(--ink)">Accent</strong> #A7F3D0</div>
+      <div class="row"><strong style="color:var(--ink)">Gradient</strong> 135° Emerald 500 → Teal 400</div>
+      <span class="badge-demo" style="background:#d1fae5; color:#065f46;"><span class="d" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:2px;"></span>Provider</span>
+      <span class="btn-demo emerald" style="background:linear-gradient(135deg,#10b981,#2dd4bf);">Approve</span>
+      <div class="tone"><strong style="color:var(--ink)">Emotional tone:</strong> stewardship, fiduciary trust, careful generosity. "We are entrusted with this." Not eco-green, not finance-green.</div>
+      <div class="tone"><strong style="color:var(--ink)">Card accent:</strong> Emerald left-border on candidate cards (which always show Token IDs only — see §6).</div>
+      <div class="do-dont">
+        <div class="col do"><strong>Do</strong>Pair with masked identity styling — emerald is the trust signal.</div>
+        <div class="col dont"><strong>Don't</strong>Use emerald to signal "approved match" — that's recommended (violet-600 in status badges).</div>
+      </div>
+    </div>
+
+    <!-- Staff / Operational Amber -->
+    <div class="role-card">
+      <div class="gradient-bar" style="background: linear-gradient(90deg,#f59e0b,#fb923c);"></div>
+      <div class="role-tag">role · staff</div>
+      <div class="role-name">Operational Amber</div>
+      <div class="row"><span class="dot" style="background:#f59e0b"></span><strong style="color:var(--ink)">Primary</strong> #F59E0B</div>
+      <div class="row"><span class="dot" style="background:#fb923c"></span><strong style="color:var(--ink)">Secondary</strong> #FB923C</div>
+      <div class="row"><span class="dot" style="background:#fde68a"></span><strong style="color:var(--ink)">Accent</strong> #FDE68A</div>
+      <div class="row"><strong style="color:var(--ink)">Gradient</strong> 135° Amber 500 → Orange 400</div>
+      <span class="badge-demo" style="background:#fef3c7; color:#78350f;"><span class="d" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#f59e0b;margin-right:2px;"></span>Staff</span>
+      <span class="btn-demo amber" style="background:linear-gradient(135deg,#f59e0b,#fb923c);">Override</span>
+      <div class="tone"><strong style="color:var(--ink)">Emotional tone:</strong> active, alert, mid-process. "Hands on the work." A working amber, not a warning amber.</div>
+      <div class="tone"><strong style="color:var(--ink)">Card accent:</strong> Amber accent on review-queue rows; amber progress on application stage.</div>
+      <div class="do-dont">
+        <div class="col do"><strong>Do</strong>Reserve amber gradient for "in progress" / "needs review" states.</div>
+        <div class="col dont"><strong>Don't</strong>Confuse amber with the audit-warning amber — audit uses dedicated warn token #B45309 with explicit icon.</div>
+      </div>
+    </div>
+
+    <!-- Executive / Strategic Violet -->
+    <div class="role-card">
+      <div class="gradient-bar" style="background: linear-gradient(90deg,#8b5cf6,#6366f1);"></div>
+      <div class="role-tag">role · executive</div>
+      <div class="role-name">Strategic Violet</div>
+      <div class="row"><span class="dot" style="background:#8b5cf6"></span><strong style="color:var(--ink)">Primary</strong> #8B5CF6</div>
+      <div class="row"><span class="dot" style="background:#6366f1"></span><strong style="color:var(--ink)">Secondary</strong> #6366F1</div>
+      <div class="row"><span class="dot" style="background:#ddd6fe"></span><strong style="color:var(--ink)">Accent</strong> #DDD6FE</div>
+      <div class="row"><strong style="color:var(--ink)">Gradient</strong> 135° Violet 500 → Indigo 600</div>
+      <span class="badge-demo" style="background:#ede9fe; color:#5b21b6;"><span class="d" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#8b5cf6;margin-right:2px;"></span>Executive</span>
+      <span class="btn-demo violet" style="background:linear-gradient(135deg,#8b5cf6,#6366f1);">Run report</span>
+      <div class="tone"><strong style="color:var(--ink)">Emotional tone:</strong> strategic altitude, considered authority, "the long view." Sophisticated, never gamer-purple.</div>
+      <div class="tone"><strong style="color:var(--ink)">Card accent:</strong> Violet on KPI numbers and chart series; aggregate-only badge always visible.</div>
+      <div class="do-dont">
+        <div class="col do"><strong>Do</strong>Pair with the "Aggregate-only dashboard" badge on every executive page.</div>
+        <div class="col dont"><strong>Don't</strong>Show any individual student token to executives — ever. If you need it, you're in the wrong role.</div>
+      </div>
+    </div>
+
+    <!-- Admin / Control Graphite -->
+    <div class="role-card">
+      <div class="gradient-bar" style="background: linear-gradient(90deg,#4b5563,#64748b);"></div>
+      <div class="role-tag">role · admin</div>
+      <div class="role-name">Control Graphite</div>
+      <div class="row"><span class="dot" style="background:#4b5563"></span><strong style="color:var(--ink)">Primary</strong> #4B5563</div>
+      <div class="row"><span class="dot" style="background:#64748b"></span><strong style="color:var(--ink)">Secondary</strong> #64748B</div>
+      <div class="row"><span class="dot" style="background:#cbd5e1"></span><strong style="color:var(--ink)">Accent</strong> #CBD5E1</div>
+      <div class="row"><strong style="color:var(--ink)">Gradient</strong> 135° Graphite 600 → Slate 500</div>
+      <span class="badge-demo" style="background:var(--surface-container); color:var(--ink);"><span class="d" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#4b5563;margin-right:2px;"></span>Admin</span>
+      <span class="btn-demo graphite" style="background:linear-gradient(135deg,#4b5563,#64748b);">Run audit</span>
+      <div class="tone"><strong style="color:var(--ink)">Emotional tone:</strong> steady, accountable, system-level. Reads as "control plane" — not aggressive, never destructive-by-default.</div>
+      <div class="tone"><strong style="color:var(--ink)">Card accent:</strong> Graphite on permission matrix headers; mono font (JetBrains) for IDs and SQL-ish filters.</div>
+      <div class="do-dont">
+        <div class="col do"><strong>Do</strong>Use mono type for permissions, role names, and audit log fields.</div>
+        <div class="col dont"><strong>Don't</strong>Mistake admin for danger — destructive actions still use the red danger token plus a reason-required modal.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Role swap mechanics</h3>
+  <ul>
+    <li>Role is set on the <code>&lt;html data-role="..."&gt;</code> element on login.</li>
+    <li>All theme-bound vars resolve via attribute selector cascade — no React context for visuals (only for permission gating).</li>
+    <li>When an Admin impersonates / inspects another role's view (audit only), show a persistent banner in graphite: <code>"Viewing as Student S-2024-0481 · Read-only · Logged"</code>.</li>
+  </ul>
+</section>
+
+<!-- 04 SHELL -->
+<section id="shell">
+  <div class="secnum">04</div>
+  <h2>Shared AppShell</h2>
+  <div class="h2-sub">One shell, five role themes — built once, reused everywhere</div>
+
+  <h3>Desktop frame</h3>
+  <div class="shell-demo">
+    <div class="topbar">
+      <div class="left">
+        <div style="width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg,#0055ff,#22d3ee); display:grid;place-items:center;color:white;font-family:var(--display);font-weight:700;font-size:12px;">S²</div>
+        <span style="font-family:var(--display); font-weight:600;">S²IMS</span>
+        <span class="badge-demo" style="background:#dbeafe; color:#1e40af; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight:600;">● Student</span>
+      </div>
+      <div class="right">
+        <span class="freshness"><span class="pulse"></span>Synced 2m ago</span>
+        <span style="padding: 4px 10px; border-radius: 8px; background:var(--surface-low); font-family:var(--mono);">TH / EN</span>
+        <span style="position:relative;">🔔<span style="position:absolute;top:-4px;right:-6px;width:14px;height:14px;border-radius:50%;background:var(--danger);color:white;font-size:9px;display:grid;place-items:center;">3</span></span>
+        <span style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#dbeafe,#a5f3fc);display:inline-block"></span>
+      </div>
+    </div>
+    <div class="body">
+      <div class="sidebar">
+        <div class="item active">▣ Dashboard</div>
+        <div class="item">◇ Recommendations</div>
+        <div class="item">◫ Applications</div>
+        <div class="item">📄 Documents</div>
+        <div class="item">⚙ Profile</div>
+      </div>
+      <div class="content">
+        <div class="kpi-label">DASHBOARD CONTENT</div>
+        <div style="margin-top:6px; font-size:12.5px; color:var(--ink-3);">Active scholarships · matches · deadlines</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="col-card">
+      <h4>Topbar (64px)</h4>
+      <ul>
+        <li>Glass fill, sticky, no shadow at scroll-top</li>
+        <li>Left: brand mark · product name · <strong>role badge</strong> (always visible)</li>
+        <li>Right: <strong>data freshness</strong> · <strong>TH/EN toggle</strong> · notifications · profile menu</li>
+        <li>Adds <code>0 1px 0 var(--line)</code> bottom border on scroll &gt; 8px</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>Sidebar (280px desktop, collapsible to 72px)</h4>
+      <ul>
+        <li>Glass panel, scrollable independently of content</li>
+        <li>Active state: <code>--role-tint</code> background + <code>--role-primary</code> text + 3px left bar in <code>--role-gradient</code></li>
+        <li>Hover: 6% role-tint overlay only — never full color fill</li>
+        <li>Sections labeled with <code>label-caps</code>; nested children indent 16px</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Mobile frame</h3>
+  <div style="display:flex; gap: 24px; flex-wrap:wrap; align-items: flex-start; margin: 16px 0;">
+    <div class="mobile-shell">
+      <div class="topbar"><span style="font-weight:600;">S²IMS</span><span style="display:flex;gap:4px;align-items:center;"><span style="font-family:var(--mono);">TH</span> 🔔</span></div>
+      <div class="body">
+        <div style="font-family:var(--display);font-weight:700;color:var(--ink);font-size:14px;">Hi, S-2024-0481</div>
+        <div style="margin-top:4px;">3 new matches</div>
+        <div style="margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:8px;background:white;">
+          <div style="font-size:10px; color:var(--ink);font-weight:600;">Excellence Scholarship</div>
+          <div style="margin-top:4px;height:4px;border-radius:2px;background:var(--surface-container);"><div style="width:78%;height:100%;background:linear-gradient(90deg,#0055ff,#22d3ee);border-radius:2px;"></div></div>
+        </div>
+      </div>
+      <div class="bottombar">
+        <div class="nav active"><div class="ic"></div>Home</div>
+        <div class="nav"><div class="ic"></div>Matches</div>
+        <div class="nav"><div class="ic"></div>Tasks</div>
+        <div class="nav"><div class="ic"></div>Profile</div>
+      </div>
+    </div>
+
+    <div style="flex:1; min-width: 260px;">
+      <h4 style="margin-top:0;">Bottom navigation (per-role)</h4>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Role</th><th>Slot 1</th><th>Slot 2</th><th>Slot 3</th><th>Slot 4</th></tr></thead>
+          <tbody>
+            <tr><td>Student</td><td>Home</td><td>Matches</td><td>Tasks</td><td>Profile</td></tr>
+            <tr><td>Provider</td><td>Home</td><td>Grants</td><td>Candidates</td><td>Profile</td></tr>
+            <tr><td>Staff</td><td>Home</td><td>Queue</td><td>Audit</td><td>Profile</td></tr>
+            <tr><td>Executive</td><td>Overview</td><td>Reports</td><td>Equity</td><td>Profile</td></tr>
+            <tr><td>Admin</td><td>Home</td><td>Users</td><td>Audit</td><td>System</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h4>Active nav state</h4>
+      <ul>
+        <li>Icon fills with <code>--role-gradient</code></li>
+        <li>Label color: <code>--role-primary</code></li>
+        <li>Inactive: <code>--ink-3</code> icon outline + label</li>
+        <li>4px top indicator bar only on desktop sidebar — bottom nav uses fill, not bar (avoids cropping under safe-area)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Sub-components in the shell</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4>Role badge</h4>
+      <p>Always visible in topbar. Pill, role-tint background, role-primary dot + label. <strong>Never replaceable</strong> — even when shell is collapsed.</p>
+    </div>
+    <div class="col-card">
+      <h4>Language toggle (TH / EN)</h4>
+      <p>Segmented control. Mono font. Toggle persists per user (server-side preference). <strong>Switching reflows immediately</strong> — never reload. Both labels always visible (so user can find back).</p>
+    </div>
+    <div class="col-card">
+      <h4>Notification dropdown</h4>
+      <p>360px wide on desktop, full-width sheet on mobile. Sections: <em>Action required</em> · <em>Updates</em> · <em>System</em>. Each item shows priority badge, title, role-aware timestamp (TH/EN locale). Footer link: "Open notification center."</p>
+    </div>
+    <div class="col-card">
+      <h4>Profile menu</h4>
+      <p>Avatar + display name + role label. Items: <em>My profile</em>, <em>Preferences</em>, <em>Switch role</em> (if multi-role), <em>Sign out</em>. Sign out is plain — no destructive red unless confirming.</p>
+    </div>
+    <div class="col-card">
+      <h4>Active navigation state</h4>
+      <p>Sidebar: 3px left bar gradient + tint background + primary text. Bottom nav: filled icon + primary label. Pages also set <code>document.title</code> to <em>Page · Role · S²IMS</em>.</p>
+    </div>
+    <div class="col-card">
+      <h4>Safe-area behavior</h4>
+      <p>Use <code>padding-bottom: env(safe-area-inset-bottom)</code> on bottom nav. Sticky CTAs <strong>must</strong> sit 48px above the bottom nav (not 0). Modal sheets snap above the safe area.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 COMPONENTS -->
+<section id="components">
+  <div class="secnum">05</div>
+  <h2>Core components</h2>
+  <div class="h2-sub">Specs, demos, and the rules behind them</div>
+
+  <!-- Button -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Button</div><div class="cmp-tag">primitive · interactive</div></div>
+    <div class="cmp-body">
+      <button class="btn primary aurora">Apply now</button>
+      <button class="btn primary emerald">Approve</button>
+      <button class="btn primary amber">Override</button>
+      <button class="btn primary violet">Run report</button>
+      <button class="btn primary graphite">Audit</button>
+      <button class="btn ghost">Secondary</button>
+      <button class="btn danger">Delete account</button>
+    </div>
+    <div class="cmp-spec">
+      Sizes: <code>sm 32 / md 40 / lg 48</code>. Padding 10/16. Radius <code>radius-lg</code> (16px). Primary: <code>--role-gradient</code> bg, white text, <code>elev-soft</code>. Hover contracts shadow. Active scales 0.98. Focus ring: 2px <code>--role-primary</code> @ 40% offset 2px. Disabled: 40% opacity, no shadow, cursor not-allowed. <strong>Destructive</strong>: solid <code>danger</code>, never gradient.
+    </div>
+  </div>
+
+  <!-- Card -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Card</div><div class="cmp-tag">primitive · container</div></div>
+    <div class="cmp-body" style="background:linear-gradient(135deg,#e0e7ff,#ecfeff);">
+      <div style="background:white; border-radius:24px; padding:18px; border:1px solid var(--line); width: 280px; box-shadow: 8px 8px 24px rgba(143,149,178,.18), -8px -8px 24px rgba(255,255,255,.9);">
+        <div class="kpi-label">SCHOLARSHIP</div>
+        <div style="font-family:var(--display); font-weight:700; font-size:18px; margin-top:6px;">Excellence in Engineering</div>
+        <div style="font-size:13px; color:var(--ink-2); margin-top:6px;">Tuition · ฿180,000 · Closes May 30</div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Radius <code>radius-xl</code> (24px). Bg <code>surface-bright</code>. Border 1px <code>line</code>. Optional <code>elev-soft</code> for elevated cards. Inner padding 18–24. Header uses <code>label-caps</code>. Cards never carry full role-color backgrounds; accent via top bar or left edge only.
+    </div>
+  </div>
+
+  <!-- Glass panel -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Glass panel</div><div class="cmp-tag">primitive · level-1</div></div>
+    <div class="cmp-body glass-bg">
+      <div class="glass" style="width: 320px;">
+        <div class="kpi-label">PROFILE COMPLETENESS</div>
+        <div style="margin-top:6px; font-family:var(--display); font-size: 28px; font-weight:700;">86%</div>
+        <div class="kpi-bar" style="margin-top:14px;"><div style="width:86%;background:linear-gradient(90deg,#0055ff,#22d3ee);"></div></div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      <code>background: rgba(255,255,255,.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,.6); border-radius: 24px;</code> + neumorphic dual shadow. Use for primary content panels on tinted page backgrounds. <strong>Never stack glass on glass</strong> — child cards drop to <code>surface-bright</code>.
+    </div>
+  </div>
+
+  <!-- KPI Card -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">KPI Card</div><div class="cmp-tag">data</div></div>
+    <div class="cmp-body">
+      <div class="glass kpi" style="width: 220px;">
+        <div class="kpi-label">ACTIVE MATCHES</div>
+        <div class="kpi-value">14</div>
+        <div class="kpi-delta">▲ 3 since last week</div>
+        <div class="kpi-bar"><div style="width: 60%; background: linear-gradient(90deg,#0055ff,#22d3ee);"></div></div>
+      </div>
+      <div class="glass kpi" style="width: 220px;">
+        <div class="kpi-label">REVIEW QUEUE</div>
+        <div class="kpi-value">42</div>
+        <div class="kpi-delta" style="color: var(--warn);">▲ 12 awaiting</div>
+        <div class="kpi-bar"><div style="width: 78%; background: linear-gradient(90deg,#f59e0b,#fb923c);"></div></div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Layout: label · value (display 32–48) · delta · sparkline OR progress. Delta uses <code>success</code> / <code>warn</code> / <code>danger</code>. Always include a freshness footer when source is integrated (SIS, SSO).
+    </div>
+  </div>
+
+  <!-- Data table -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Data table</div><div class="cmp-tag">desktop only — collapses to Mobile data card</div></div>
+    <div class="cmp-body" style="display:block;">
+      <table class="demo-table">
+        <thead><tr><th>Token</th><th>Match</th><th>Status</th><th>Risk</th><th>Updated</th></tr></thead>
+        <tbody>
+          <tr><td><span class="masked-id">C-2024-1837</span></td><td><strong>92%</strong></td><td><span class="badge recommended"><span class="d"></span>Recommended</span></td><td><span class="badge risk-low">Low</span></td><td>2m ago</td></tr>
+          <tr><td><span class="masked-id">C-2024-2014</span></td><td><strong>87%</strong></td><td><span class="badge review"><span class="d"></span>Under review</span></td><td><span class="badge risk-medium">Medium</span></td><td>14m ago</td></tr>
+          <tr><td><span class="masked-id">C-2024-1129</span></td><td><strong>74%</strong></td><td><span class="badge submitted"><span class="d"></span>Submitted</span></td><td><span class="badge risk-low">Low</span></td><td>1h ago</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cmp-spec">
+      Sticky header. Row hover: 4% role-tint overlay (no color shift). Selected row: 8% tint + 3px <code>--role-primary</code> left border. Sortable header click swaps icon. <strong>Token IDs are mono.</strong> Provider tables show <code>C-XXXX</code>. Staff tables show <code>S-XXXX</code> by default.
+    </div>
+  </div>
+
+  <!-- Mobile data card -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Mobile data card</div><div class="cmp-tag">mobile · stacked from data table</div></div>
+    <div class="cmp-body">
+      <div class="demo-card-row">
+        <div class="top">
+          <span class="masked-id">C-2024-1837</span>
+          <span class="badge recommended"><span class="d"></span>Recommended</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span class="meta">Match</span><strong>92%</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span class="meta">Risk</span><span class="badge risk-low">Low</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;">
+          <span class="meta">Updated</span><span style="color:var(--ink-2)">2m ago</span>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      One row of the table → one card. Primary identifier on top-left; primary status on top-right. Body is a 2-column key/value grid. Tap → row drawer (desktop) becomes full-screen page (mobile).
+    </div>
+  </div>
+
+  <!-- Filter panel + bottom sheet -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Filter panel → bottom sheet</div><div class="cmp-tag">desktop sidebar 320px → mobile sheet 70vh</div></div>
+    <div class="cmp-body">
+      <div style="background:white; border:1px solid var(--line); border-radius:14px; padding:14px; width: 260px;">
+        <div class="kpi-label">FILTERS</div>
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="badge submitted"><span class="d"></span>Submitted</span>
+          <span class="badge review"><span class="d"></span>Under review</span>
+          <span class="badge recommended"><span class="d"></span>Recommended</span>
+        </div>
+        <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="badge risk-low">Low</span>
+          <span class="badge risk-medium">Medium</span>
+          <span class="badge risk-high">High</span>
+        </div>
+      </div>
+      <div style="background: white; border:1px solid var(--line); border-radius: 18px 18px 0 0; padding: 16px; width: 220px;">
+        <div style="width:36px;height:4px;border-radius:2px;background:var(--line-2);margin:0 auto 12px;"></div>
+        <div class="kpi-label">FILTERS</div>
+        <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="badge submitted"><span class="d"></span>Submitted</span>
+          <span class="badge review"><span class="d"></span>Review</span>
+        </div>
+        <button class="btn primary aurora" style="width:100%;margin-top:14px;">Apply 12 filters</button>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Apply button always visible at panel/sheet bottom. Active count in CTA label. Bottom sheet has drag handle + dismiss-on-scrim-tap. Multi-select chips toggle directly without modal. <strong>Reset</strong> link top-right; pluralization in TH+EN.
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Modal</div><div class="cmp-tag">structural · 480 / 640 / 800px</div></div>
+    <div class="cmp-body" style="background: rgba(15,23,42,.4);">
+      <div class="modal-demo">
+        <h4>Confirm award</h4>
+        <div class="sub">This will release ฿180,000 to S-2024-0481.</div>
+        <span class="label">Reason <span class="req">*</span></span>
+        <textarea placeholder="Documented justification — visible in audit log"></textarea>
+        <div class="audit-card" style="margin-top:14px;">
+          <div class="ic">!</div>
+          <div><div class="t">This action will be recorded</div><div class="b">Visible to Admin and Executive in audit logs.</div></div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost">Cancel</button>
+          <button class="btn primary emerald">Confirm award</button>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Three sizes: 480 (confirm), 640 (form), 800 (review). Scrim <code>rgba(15,23,42,.4)</code>. Esc + scrim-tap close <strong>except</strong> when audit-required (force button). Title in <code>display</code>; body in <code>body-md</code>. Reason field is <code>required</code> when shown.
+    </div>
+  </div>
+
+  <!-- Drawer -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Drawer</div><div class="cmp-tag">desktop right · 480px → mobile full-screen page</div></div>
+    <div class="cmp-body">
+      <div style="display:flex; gap:8px;">
+        <div style="width:160px; height:200px; background:var(--surface-low); border:1px solid var(--line); border-radius:10px; padding:8px; font-size:11px;">page content (dimmed)</div>
+        <div style="width:200px; height:200px; background:white; border:1px solid var(--line); border-radius:14px 0 0 14px; padding:14px; box-shadow:-12px 0 30px -10px rgba(15,23,42,.18); font-size: 11px;">
+          <div class="kpi-label">CANDIDATE C-2024-1837</div>
+          <div style="margin-top:8px; font-family:var(--display); font-weight:700;">Match 92%</div>
+          <div style="margin-top:8px; color:var(--ink-2);">Eligibility 100%<br>Fit 88%<br>Need 90%</div>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Slides from right, 480px desktop. <strong>Mobile</strong>: drawer becomes a full-screen route with back-button breadcrumb, not a sheet. Header sticky. Footer sticky for primary action with safe-area padding.
+    </div>
+  </div>
+
+  <!-- Bottom sheet -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Bottom sheet</div><div class="cmp-tag">mobile · 25% / 50% / 90% snap points</div></div>
+    <div class="cmp-body">
+      <div style="background:white; border-radius:18px 18px 0 0; padding: 16px; width: 240px;">
+        <div style="width:36px;height:4px;border-radius:2px;background:var(--line-2);margin:0 auto 12px;"></div>
+        <div style="font-weight:700;font-size:14px;">Sort by</div>
+        <div style="margin-top:10px;font-size:12.5px;color:var(--ink-2);">○ Match score (high → low)<br>● Deadline (soonest)<br>○ Newest</div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Drag-to-dismiss. 3 snap points. Title sticky. Items 44px min height. Used for: filters, sort, action menu, lightweight forms. Heavier flows escalate to full-screen page.
+    </div>
+  </div>
+
+  <!-- Badge / Status / Risk / Privacy -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Badge family</div><div class="cmp-tag">status · risk · privacy</div></div>
+    <div class="cmp-body" style="flex-direction: column; align-items:flex-start; gap: 14px;">
+      <div>
+        <div class="kpi-label" style="margin-bottom:8px;">STATUS</div>
+        <span class="badge draft"><span class="d"></span>Draft</span>
+        <span class="badge submitted"><span class="d"></span>Submitted</span>
+        <span class="badge review"><span class="d"></span>Under review</span>
+        <span class="badge recommended"><span class="d"></span>Recommended</span>
+        <span class="badge awarded"><span class="d"></span>Awarded</span>
+        <span class="badge rejected"><span class="d"></span>Rejected</span>
+      </div>
+      <div>
+        <div class="kpi-label" style="margin-bottom:8px;">RISK</div>
+        <span class="badge risk-critical">Critical</span>
+        <span class="badge risk-high">High</span>
+        <span class="badge risk-medium">Medium</span>
+        <span class="badge risk-low">Low</span>
+      </div>
+      <div>
+        <div class="kpi-label" style="margin-bottom:8px;">PRIVACY</div>
+        <span class="badge privacy"><span class="d"></span>Masked Identity Protected</span>
+        <span class="badge aggregate"><span class="d"></span>Aggregate-Only Dashboard</span>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      All badges: pill, 11.5px / 600 / dot indicator. <strong>Status</strong>: solid name (Draft, Submitted, Under review, Recommended, Awarded, Rejected). <strong>Risk</strong>: 1px border, fill = risk-tint. <strong>Privacy</strong>: graphite fill (masked) or violet fill (aggregate); always paired with a tooltip explaining what is hidden.
+    </div>
+  </div>
+
+  <!-- Audit warning, Permission denied, States -->
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Audit warning card</div><div class="cmp-tag">governance</div></div>
+    <div class="cmp-body">
+      <div class="audit-card">
+        <div class="ic">!</div>
+        <div><div class="t">This action will be recorded</div><div class="b">Visible to Admin and Executive in audit logs.</div></div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Warm fill <code>#FFFBEB</code>, border <code>#FDE68A</code>. Always inline above sensitive actions, never as a global toast. Title is the rule, body is the audience.
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Permission denied</div><div class="cmp-tag">governance · empty state</div></div>
+    <div class="cmp-body">
+      <div class="denied">
+        <div class="lock"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+        <h4>Permission denied</h4>
+        <p>Your role <strong>(Provider)</strong> can't view this resource. Contact your institution admin if you believe this is in error.</p>
+        <button class="btn ghost">Request access</button>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Single shared component used at every RBAC failure. Shows current role, the denied resource type, and the contact path. <strong>Never reveals the resource's existence beyond type.</strong> Logs view to audit.
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Empty / Loading / Error states</div><div class="cmp-tag">universal</div></div>
+    <div class="cmp-body" style="display:block;">
+      <div class="state-grid">
+        <div class="state empty">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M3 12h18M3 17h12"/></svg></div>
+          <div class="t">No applications yet</div>
+          <div class="s">Once you apply, they'll show here.</div>
+        </div>
+        <div class="state loading">
+          <div class="ic">
+            <div class="skeleton" style="width:18px; height:18px; border-radius:50%;"></div>
+          </div>
+          <div class="t">Loading matches</div>
+          <div class="s">Computing fit · need · eligibility</div>
+        </div>
+        <div class="state error">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4M12 16h.01"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <div class="t">Couldn't load</div>
+          <div class="s">Retry — or check freshness indicator.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      All three share the same vertical structure (icon · title · short helper · optional CTA). Loading uses skeleton bars matching the layout it replaces — never a spinner alone. Errors include a retry button and a link to system status.
+    </div>
+  </div>
+</section>
+
+<!-- 06 GOVERNANCE -->
+<section id="governance">
+  <div class="secnum">06</div>
+  <h2>Governance UX</h2>
+  <div class="h2-sub">Non-negotiable. The trust layer of the product.</div>
+
+  <div class="callout law">
+    <div class="ic">⚖</div>
+    <div class="callout-body">
+      <strong>Inviolable rules.</strong> These are visual and behavioral commitments Claude Code must enforce at the component level — not as comments, not as toggles. Violations are bugs.
+      <ol style="margin-top:8px;">
+        <li>Provider <strong>never</strong> sees student identity (name, photo, email, ID number) before disclosure approval.</li>
+        <li>Provider candidate pool uses <strong>Candidate #C-XXXX</strong> tokens only.</li>
+        <li>Staff sees <strong>Student #S-XXXX</strong> by default; reveal requires explicit reason + audit entry.</li>
+        <li>Executive views are <strong>aggregate-only</strong>. No row-level student data, ever.</li>
+        <li>Admin audit views show student <strong>tokens by default</strong>; un-masking requires reason + 2-step.</li>
+        <li>Sensitive actions (export, override, role change, manual match) require a <strong>typed reason</strong>.</li>
+        <li>Matching override requires a reason — and writes both before/after match scores to audit.</li>
+        <li>Role changes require a reason and a confirmation step naming both old and new role.</li>
+        <li>Export actions surface the audit-warning card <strong>before</strong> the export button is enabled.</li>
+        <li>Sync retry writes an audit log entry with operator, target system, and timestamp.</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3>Reusable governance components</h3>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Masked identity card</div><div class="cmp-tag">privacy</div></div>
+    <div class="cmp-body">
+      <div style="background:white; border:1px solid var(--line); border-radius:14px; padding:14px; width: 280px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:repeating-linear-gradient(45deg,var(--surface-container) 0 4px,var(--surface-high) 4px 8px); filter: blur(0.5px);"></div>
+          <div>
+            <div class="masked-id"><svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg> S-2024-0481</div>
+            <div style="margin-top:4px; font-size:11.5px; color:var(--ink-3);">Identity protected · disclosure not approved</div>
+          </div>
+        </div>
+        <span class="badge privacy" style="margin-top:10px;display:inline-flex;"><span class="d"></span>Masked Identity Protected</span>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Replaces a "Student card" anywhere identity is not yet authorized. Avatar uses tessellated placeholder, never an initial. ID is mono. <strong>Reveal</strong> requires reason modal + role permission.
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Candidate token label</div><div class="cmp-tag">provider context</div></div>
+    <div class="cmp-body">
+      <span class="masked-id" style="background:#ecfdf5;border-color:#a7f3d0;color:#065f46;">C-2024-1837</span>
+      <span style="font-size:12.5px;color:var(--ink-2);">No name. No school. No photo. Until disclosure approved.</span>
+    </div>
+    <div class="cmp-spec">
+      Used only in provider screens. Format <code>C-YYYY-NNNN</code>. Mono. Emerald accent (Provider role). Tooltip explains: "Candidate token. Personal identity is disclosed only after the institution approves disclosure."
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Aggregate-only badge</div><div class="cmp-tag">executive · permanent header</div></div>
+    <div class="cmp-body">
+      <span class="badge aggregate"><span class="d"></span>Aggregate-Only Dashboard · Min cell size 5</span>
+    </div>
+    <div class="cmp-spec">
+      Persistent above every executive page. States the aggregation floor (e.g. min cell size 5) so suppression is visible. Clicking opens "Why aggregate?" explainer — links to PDPA policy.
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Reason-required modal</div><div class="cmp-tag">universal · sensitive action gateway</div></div>
+    <div class="cmp-body" style="background:rgba(15,23,42,.35);">
+      <div class="modal-demo">
+        <h4>Override match recommendation</h4>
+        <div class="sub">Current match: <strong>S-2024-0481 → SCH-ENG-04 (92%)</strong>. New: <strong>SCH-ENG-07 (78%)</strong>.</div>
+        <span class="label">Reason for override <span class="req">*</span></span>
+        <textarea placeholder="Documented justification — required, min 20 characters"></textarea>
+        <div class="audit-card" style="margin-top:14px;">
+          <div class="ic">!</div>
+          <div><div class="t">This override will be logged</div><div class="b">Before/after match scores recorded. Visible to Admin & Executive.</div></div>
+        </div>
+        <div class="actions">
+          <button class="btn ghost">Cancel</button>
+          <button class="btn primary amber">Override</button>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Single component. Min 20 chars. Submit disabled until valid. Audit warning always visible. Returns <code>{ reason, ts, actor, before, after }</code> to the audit log on confirm. <strong>Cannot be dismissed without explicit Cancel.</strong>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Disclosure approval notice</div><div class="cmp-tag">staff → provider handoff</div></div>
+    <div class="cmp-body">
+      <div class="disclosure">
+        <div class="t">Disclose S-2024-0481 to Provider PRV-104?</div>
+        <div class="row"><span class="k">Scholarship</span><strong>SCH-ENG-04</strong></div>
+        <div class="row"><span class="k">Disclosed fields</span><strong>Name · Email · Transcript</strong></div>
+        <div class="row"><span class="k">Reason</span><span style="font-size:12px;">Top-3 candidate confirmed by review</span></div>
+        <div class="actions">
+          <button class="btn ghost">Reject</button>
+          <button class="btn primary emerald">Approve disclosure</button>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Lists exact fields being disclosed. Approver must select fields explicitly — no "all by default." Approval writes audit entry and triggers a notification to the provider that token C-XXXX has resolved to identifiable data.
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Fairness alert</div><div class="cmp-tag">staff & executive · matching pipeline</div></div>
+    <div class="cmp-body">
+      <div class="fairness">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></div>
+        <div>
+          <div class="t">Disparity detected — Region: South</div>
+          <div class="b">Awarded rate is 18 pts below cohort average. Review override patterns.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-spec">
+      Triggers on demographic disparity threshold breach. Always names the dimension and offers "Review overrides" deeplink. <strong>Never names individuals.</strong>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <div class="cmp-head"><div class="cmp-name">Data freshness indicator</div><div class="cmp-tag">universal · header / KPI footer</div></div>
+    <div class="cmp-body">
+      <span class="freshness"><span class="pulse"></span>SIS · Synced 2m ago</span>
+      <span class="freshness" style="background:#fef3c7;border-color:#fde68a;color:#78350f;"><span class="pulse" style="background:#b45309;"></span>SSO · 47m ago — stale</span>
+      <span class="freshness" style="background:#fee2e2;border-color:#fecaca;color:#991b1b;"><span class="pulse" style="background:#b91c1c;"></span>Provider sync · failed</span>
+    </div>
+    <div class="cmp-spec">
+      Three states: <strong>fresh</strong> (green pulse, &lt;15m), <strong>stale</strong> (amber, 15m–4h), <strong>failed</strong> (red, no sync or error). Click → integration center. Sync retry writes audit log.
+    </div>
+  </div>
+</section>
+
+<!-- 07 RESPONSIVE -->
+<section id="responsive">
+  <div class="secnum">07</div>
+  <h2>Responsive rules</h2>
+  <div class="h2-sub">Three breakpoints, deterministic transformations</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Breakpoint</th><th>Range</th><th>Grid</th><th>Gutter</th><th>Sidebar</th><th>Container</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mobile</strong></td><td>≤ 767</td><td>4-col</td><td>16px</td><td>Bottom nav (4 slots)</td><td>100% − 32 padding</td></tr>
+        <tr><td><strong>Tablet</strong></td><td>768–1199</td><td>8-col</td><td>20px</td><td>Collapsible (72 / 280)</td><td>fluid</td></tr>
+        <tr><td><strong>Desktop</strong></td><td>≥ 1200</td><td>12-col</td><td>24px</td><td>Persistent 280</td><td>max 1440</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Component transformations (hard rules)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Desktop</th><th>Tablet</th><th>Mobile</th></tr></thead>
+      <tbody>
+        <tr><td>Data table</td><td>Compressed table (hide tertiary cols)</td><td>Stacked card list (1 row → 1 card)</td></tr>
+        <tr><td>Right drawer (480)</td><td>Right drawer (420)</td><td>Full-screen route with back nav</td></tr>
+        <tr><td>Filter sidebar (320)</td><td>Inline collapsible</td><td>Bottom sheet (3 snap points)</td></tr>
+        <tr><td>Modal (640)</td><td>Modal (90vw)</td><td>Full-screen route OR bottom sheet</td></tr>
+        <tr><td>Multi-column dashboard</td><td>2-col</td><td>Single-column feed</td></tr>
+        <tr><td>KPI row of 4</td><td>2 × 2 grid</td><td>Carousel — first KPI sticky</td></tr>
+        <tr><td>Sticky CTA in footer of card</td><td>Same</td><td>Sticky bottom bar 48px above bottom nav</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout rule">
+    <div class="ic">!</div>
+    <div class="callout-body"><strong>Touch target rule:</strong> any tappable surface on mobile or tablet ≥ <code>44px × 44px</code>. Spacing between adjacent tappable surfaces ≥ <code>8px</code>. Status badges and risk pills are <strong>not</strong> tappable on mobile — wrap the whole card row.</div>
+  </div>
+
+  <div class="callout rule">
+    <div class="ic">!</div>
+    <div class="callout-body"><strong>Safe-area rule:</strong> sticky CTAs sit <code>48px</code> above the bottom nav on mobile (computed: <code>56 nav + env(safe-area-inset-bottom) + 48</code>). Modal sheets always pad bottom by <code>env(safe-area-inset-bottom)</code>.</div>
+  </div>
+
+  <h3>Single-column feed (mobile)</h3>
+  <ul>
+    <li>Page is a vertical scroll of self-contained cards. No horizontal scrolling regions except KPI carousel.</li>
+    <li>Card max width = viewport − 32. Card border-radius = <code>radius-lg</code> (16) on mobile, <code>radius-xl</code> (24) on desktop.</li>
+    <li>Section dividers: <code>label-caps</code> + 1px <code>line</code> rule, never a colored band.</li>
+  </ul>
+</section>
+
+<!-- 08 i18n -->
+<section id="i18n">
+  <div class="secnum">08</div>
+  <h2>Thai-English UI rules</h2>
+  <div class="h2-sub">Bilingual is a first-class concern, not an afterthought</div>
+
+  <h3>Typography</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Token</th><th>EN family</th><th>TH family</th><th>EN line-height</th><th>TH line-height</th></tr></thead>
+      <tbody>
+        <tr><td>display / h1 / h2</td><td>Space Grotesk</td><td>IBM Plex Sans Thai Looped</td><td>1.1–1.3</td><td>1.35–1.5</td></tr>
+        <tr><td>body-md / body-sm</td><td>Inter</td><td>Noto Sans Thai</td><td>1.5</td><td>1.7</td></tr>
+        <tr><td>label-caps</td><td>Inter UPPER</td><td>Noto Sans Thai (no UPPER — keep regular)</td><td>1</td><td>1.4</td></tr>
+        <tr><td>mono (IDs)</td><td>JetBrains Mono</td><td>JetBrains Mono (IDs are ASCII only)</td><td>1.4</td><td>1.4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p style="font-family:'Noto Sans Thai',var(--sans); line-height:1.7; font-size:15px;"><strong>ตัวอย่างภาษาไทย:</strong> ระบบจับคู่ทุนการศึกษาอัจฉริยะ — บรรทัดความสูง 1.7 ทำให้สระและวรรณยุกต์ไม่ทับกัน</p>
+
+  <h3>Button labels</h3>
+  <ul>
+    <li><strong>Min button width:</strong> 88px desktop, 64px mobile — Thai labels frequently 1.6× English. Buttons may grow but never wrap to two lines on desktop.</li>
+    <li><strong>Mobile wrapping:</strong> if Thai label exceeds button width, allow 2-line wrap with <code>line-height: 1.3</code> and reduce button radius to keep tap target geometry. Never truncate with ellipsis on primary actions.</li>
+    <li><strong>EN ↔ TH lengths:</strong> design every screen with the longer of <code>EN × 1.6</code> or <code>TH</code>. Never lock widths to EN copy.</li>
+  </ul>
+
+  <h3>Tables &amp; cards with Thai text</h3>
+  <ul>
+    <li>Table cells use <code>line-height: 1.7</code> when any cell contains Thai. Apply at the row level, not the column.</li>
+    <li>Numeric and ID columns stay LTR; Thai labels in headers respect normal reading flow (Thai is LTR but visually denser).</li>
+    <li>Cards: title font-size unchanged across languages; <strong>card height grows</strong> rather than truncating.</li>
+    <li>Truncation is never on critical info (student name, scholarship name, deadline). Truncate only on description/preview.</li>
+  </ul>
+
+  <h3>TH/EN toggle behavior</h3>
+  <ul>
+    <li>Segmented control in topbar; both labels always visible (no current-language hiding).</li>
+    <li>Toggle is <strong>instant</strong> — no full reload. Only language strings rebind. Persisted server-side.</li>
+    <li>Numbers: Thai locale uses Thai digits only when explicitly set; default is Arabic numerals for clarity in financial contexts.</li>
+    <li>Dates: <code>DD MMM YYYY</code> format — month name localized, year is BE (พ.ศ.) when locale = TH, AD when EN. Show both on first hover for ambiguous dates.</li>
+  </ul>
+
+  <div class="callout note">
+    <div class="ic">i</div>
+    <div class="callout-body"><strong>Mixed-script lines:</strong> when Thai and English mix in one paragraph, set <code>font-family</code> to a stack starting with the EN family — browsers fall back to TH for Thai codepoints automatically. Don't force per-span swaps.</div>
+  </div>
+</section>
+
+<!-- 09 PRIORITY -->
+<section id="priority">
+  <div class="secnum">09</div>
+  <h2>Screen priority</h2>
+  <div class="h2-sub">Ship Phase 1 before any feature work — it unlocks every other phase</div>
+
+  <div class="phase p1">
+    <div class="label"><span class="pri">Phase 1</span></div>
+    <div>
+      <h4>Foundation — AppShell &amp; gating</h4>
+      <p>Without this phase, no other phase is testable. Build the shell, login, role select, and shared error states first.</p>
+      <ul>
+        <li>AppShell (topbar, sidebar, bottom nav, role badge, TH/EN toggle, freshness, notification dropdown, profile menu)</li>
+        <li>Login (SSO + email fallback)</li>
+        <li>Role select (multi-role users)</li>
+        <li>Permission denied (shared, role-aware)</li>
+        <li>Placeholder dashboards (one per role) with role theme proof</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p2">
+    <div class="label"><span class="pri">Phase 2</span></div>
+    <div>
+      <h4>Student core — Aurora Blue</h4>
+      <ul>
+        <li>Student dashboard</li>
+        <li>Profile (with completeness ring + missing-data prompts)</li>
+        <li>Recommendations</li>
+        <li>Matching explanation (eligibility / fit / need breakdown)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p3">
+    <div class="label"><span class="pri">Phase 3</span></div>
+    <div>
+      <h4>Student application flow</h4>
+      <ul>
+        <li>Scholarship detail</li>
+        <li>Application tracker (timeline + status badges)</li>
+        <li>Document upload (mobile-optimized, validation messages)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p4">
+    <div class="label"><span class="pri">Phase 4</span></div>
+    <div>
+      <h4>Provider — Trust Emerald</h4>
+      <ul>
+        <li>Provider dashboard</li>
+        <li>Scholarship management (create, edit criteria)</li>
+        <li>Candidate pool (token-only, masked identity throughout)</li>
+        <li>Shortlist request (triggers staff disclosure flow)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p5">
+    <div class="label"><span class="pri">Phase 5</span></div>
+    <div>
+      <h4>Staff — Operational Amber</h4>
+      <ul>
+        <li>Staff review queue + detail</li>
+        <li>Matching override (reason-required modal first)</li>
+        <li>Disclosure approval (per-field selection)</li>
+        <li>Data quality review</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p6">
+    <div class="label"><span class="pri">Phase 6</span></div>
+    <div>
+      <h4>Admin — Control Graphite</h4>
+      <ul>
+        <li>RBAC / Permission matrix / Role assignment</li>
+        <li>Audit log explorer (token-default, reason-required reveal)</li>
+        <li>Security command center</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p7">
+    <div class="label"><span class="pri">Phase 7</span></div>
+    <div>
+      <h4>Executive — Strategic Violet</h4>
+      <ul>
+        <li>Strategic overview / KPI dashboard</li>
+        <li>Equity &amp; fairness (with fairness alerts)</li>
+        <li>Report builder</li>
+        <li>Policy simulation preview</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="phase p8">
+    <div class="label"><span class="pri">Phase 8</span></div>
+    <div>
+      <h4>Cross-role surfaces</h4>
+      <ul>
+        <li>Notification center (unified, role-aware)</li>
+        <li>Integration center (sync, retry, freshness — writes audit on retry)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 10 HANDOFF -->
+<section id="handoff">
+  <div class="secnum">10</div>
+  <h2>Handoff to Claude Code</h2>
+  <div class="h2-sub">The exact, actionable rules. Implement in this order. Skip nothing.</div>
+
+  <h3>Implementation rules</h3>
+  <ol>
+    <li><strong>Tokens first.</strong> Generate <code>tokens.css</code> from §02 before any component. Never hard-code colors, radii, or shadows in components.</li>
+    <li><strong>Role theming via attribute selector.</strong> One <code>data-role</code> on the shell rebinds <code>--role-primary</code>, <code>--role-primary-2</code>, <code>--role-gradient</code>, <code>--role-tint</code>. Components reference these vars only.</li>
+    <li><strong>Build the shell before any screen.</strong> AppShell is the integration test for tokens, theming, language, freshness, and permissions.</li>
+    <li><strong>Build governance components before dashboards.</strong> <code>MaskedIdentityCard</code>, <code>CandidateTokenLabel</code>, <code>AggregateOnlyBadge</code>, <code>AuditWarningCard</code>, <code>ReasonRequiredModal</code>, <code>DisclosureApprovalNotice</code>, <code>FairnessAlert</code>, <code>DataFreshnessIndicator</code>, <code>PermissionDenied</code>.</li>
+    <li><strong>Identity gates are component-level, not page-level.</strong> A provider screen cannot import an unmasked student card — make this a TypeScript boundary.</li>
+    <li><strong>Reason fields are validated.</strong> Min 20 chars, trimmed, persisted with action audit entry. Submit disabled until valid.</li>
+    <li><strong>One <code>PermissionDenied</code> component.</strong> Used for every RBAC failure. Reveals only the resource type.</li>
+    <li><strong>Mobile-first transformations.</strong> Implement the desktop ↔ mobile pairs from §07 as discriminated UI variants, not separate pages.</li>
+    <li><strong>TH locale is wired from day one</strong>, even if strings are placeholders. Line-height swaps and IBM Plex Sans Thai Looped (display) + Noto Sans Thai (body) are loaded by the shell.</li>
+    <li><strong>Accessibility: AA+ contrast, 44px tap target, focus-visible rings, prefers-reduced-motion respected for the freshness pulse and modal entrances.</strong></li>
+  </ol>
+
+  <h3>Component inventory</h3>
+  <div class="two-col">
+    <div class="col-card">
+      <h4>Primitives</h4>
+      <ul>
+        <li>Button (primary / ghost / danger / icon)</li>
+        <li>Input (text / textarea / number / select / date)</li>
+        <li>Checkbox · Radio · Switch · Slider</li>
+        <li>Card · GlassPanel · KPI Card</li>
+        <li>Badge (Status / Risk / Privacy / Aggregate)</li>
+        <li>Avatar (real / masked tessellation)</li>
+        <li>Skeleton · Spinner</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>Patterns</h4>
+      <ul>
+        <li>DataTable (desktop)</li>
+        <li>MobileDataCard (mobile)</li>
+        <li>FilterPanel (desktop) / FilterSheet (mobile)</li>
+        <li>Drawer (desktop) / FullScreenRoute (mobile)</li>
+        <li>Modal · BottomSheet</li>
+        <li>NotificationDropdown · NotificationCenter</li>
+        <li>EmptyState · LoadingState · ErrorState</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>Shell</h4>
+      <ul>
+        <li>AppShell (composer)</li>
+        <li>TopBar · SideNav · BottomNav</li>
+        <li>RoleBadge · LanguageToggle</li>
+        <li>NotificationDropdown · ProfileMenu</li>
+        <li>DataFreshnessIndicator</li>
+      </ul>
+    </div>
+    <div class="col-card">
+      <h4>Governance (build first after primitives)</h4>
+      <ul>
+        <li>MaskedIdentityCard</li>
+        <li>CandidateTokenLabel</li>
+        <li>AggregateOnlyBadge</li>
+        <li>AuditWarningCard</li>
+        <li>ReasonRequiredModal</li>
+        <li>DisclosureApprovalNotice</li>
+        <li>FairnessAlert</li>
+        <li>PermissionDenied</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Token list (machine-readable summary)</h3>
+  <div class="token-grid">
+    <div class="token-block">
+      <h4>Color (semantic)</h4>
+      <div class="row"><span class="key">--surface</span><span class="val">#faf8ff</span></div>
+      <div class="row"><span class="key">--surface-bright</span><span class="val">#ffffff</span></div>
+      <div class="row"><span class="key">--surface-low</span><span class="val">#f3f2ff</span></div>
+      <div class="row"><span class="key">--surface-container</span><span class="val">#ededfb</span></div>
+      <div class="row"><span class="key">--ink</span><span class="val">#0f172a</span></div>
+      <div class="row"><span class="key">--ink-2</span><span class="val">#434656</span></div>
+      <div class="row"><span class="key">--ink-3</span><span class="val">#737688</span></div>
+      <div class="row"><span class="key">--line</span><span class="val">#d9d9e6</span></div>
+      <div class="row"><span class="key">--line-2</span><span class="val">#c3c5d9</span></div>
+      <div class="row"><span class="key">--success</span><span class="val">#047857</span></div>
+      <div class="row"><span class="key">--warn</span><span class="val">#b45309</span></div>
+      <div class="row"><span class="key">--danger</span><span class="val">#ba1a1a</span></div>
+      <div class="row"><span class="key">--info</span><span class="val">#1e40af</span></div>
+    </div>
+    <div class="token-block">
+      <h4>Color (role · runtime)</h4>
+      <div class="row"><span class="key">[data-role="student"]</span><span class="val">aurora · #0055ff / #22d3ee</span></div>
+      <div class="row"><span class="key">[data-role="provider"]</span><span class="val">emerald · #10b981 / #2dd4bf</span></div>
+      <div class="row"><span class="key">[data-role="staff"]</span><span class="val">amber · #f59e0b / #fb923c</span></div>
+      <div class="row"><span class="key">[data-role="executive"]</span><span class="val">violet · #8b5cf6 / #6366f1</span></div>
+      <div class="row"><span class="key">[data-role="admin"]</span><span class="val">graphite · #4b5563 / #64748b</span></div>
+      <div class="row"><span class="key">--role-primary</span><span class="val">runtime · per role</span></div>
+      <div class="row"><span class="key">--role-primary-2</span><span class="val">runtime · per role</span></div>
+      <div class="row"><span class="key">--role-gradient</span><span class="val">linear-gradient(135deg, p, p2)</span></div>
+      <div class="row"><span class="key">--role-tint</span><span class="val">color-mix(p, white 92%)</span></div>
+    </div>
+    <div class="token-block">
+      <h4>Type</h4>
+      <div class="row"><span class="key">--font-display</span><span class="val">"Space Grotesk", sans</span></div>
+      <div class="row"><span class="key">--font-display-th</span><span class="val">"IBM Plex Sans Thai Looped"</span></div>
+      <div class="row"><span class="key">--font-body</span><span class="val">"Inter", sans</span></div>
+      <div class="row"><span class="key">--font-body-th</span><span class="val">"Noto Sans Thai"</span></div>
+      <div class="row"><span class="key">--font-mono</span><span class="val">"JetBrains Mono"</span></div>
+      <div class="row"><span class="key">--lh-en</span><span class="val">1.5</span></div>
+      <div class="row"><span class="key">--lh-th</span><span class="val">1.7</span></div>
+    </div>
+    <div class="token-block">
+      <h4>Layout / motion</h4>
+      <div class="row"><span class="key">--space</span><span class="val">4 / 12 / 24 / 40 / 64</span></div>
+      <div class="row"><span class="key">--radius</span><span class="val">4 / 12 / 16 / 24 / full</span></div>
+      <div class="row"><span class="key">--sidebar-w</span><span class="val">280px</span></div>
+      <div class="row"><span class="key">--topbar-h</span><span class="val">64px</span></div>
+      <div class="row"><span class="key">--bottomnav-h</span><span class="val">56px</span></div>
+      <div class="row"><span class="key">--glass-blur</span><span class="val">20px</span></div>
+      <div class="row"><span class="key">--elev-soft</span><span class="val">8 8 16 #d1d9e6, -8 -8 16 #fff</span></div>
+      <div class="row"><span class="key">--dur</span><span class="val">120 / 220 / 360</span></div>
+      <div class="row"><span class="key">--ease-out</span><span class="val">cubic-bezier(.2,.7,.2,1)</span></div>
+    </div>
+  </div>
+
+  <h3>Notes Claude Code must follow</h3>
+  <ul>
+    <li>Use Tailwind <em>only</em> as a utility convenience layer — all design tokens come from CSS variables. No <code>tailwind.config</code> color extends; reference vars via <code>theme('colors.role.primary')</code> alias if needed.</li>
+    <li>Every component file lives next to a <code>.stories.tsx</code> (or equivalent) covering: empty / loading / error / role-themed (5 variants) / TH locale.</li>
+    <li>Governance components are <strong>not</strong> generic — they are a separate folder with a CODEOWNER. Changes here require a paired audit-spec entry.</li>
+    <li>Mock data must use real Token formats (<code>S-YYYY-NNNN</code>, <code>C-YYYY-NNNN</code>, <code>SCH-XXX-NN</code>, <code>PRV-NNN</code>). Never use names like "John Doe" outside disclosed contexts.</li>
+    <li>Loading: skeleton-first, no spinners on dashboards. Skeletons mirror the layout they replace.</li>
+    <li>Animations respect <code>prefers-reduced-motion</code> — disable freshness pulse and reduce modal slide to a fade.</li>
+    <li>Focus-visible rings use <code>--role-primary</code>; never browser default.</li>
+    <li>Errors never reveal sensitive data. "Couldn't load" + retry — never the underlying record name.</li>
+  </ul>
+</section>
+
+<!-- 11 QA -->
+<section id="qa">
+  <div class="secnum">11</div>
+  <h2>Visual QA checklist</h2>
+  <div class="h2-sub">A reviewer should walk through this for every screen before merge</div>
+
+  <h3>Identity &amp; theme</h3>
+  <ul class="checklist">
+    <li>Role badge visible in topbar; matches <code>data-role</code> on shell.</li>
+    <li>Sidebar active item uses <code>--role-tint</code> bg + <code>--role-primary</code> text + 3px gradient bar.</li>
+    <li>Primary buttons use <code>--role-gradient</code>; no hard-coded role hexes anywhere.</li>
+    <li>No role color appears as a full background fill or large hero panel.</li>
+    <li>Page title set to <em>Page · Role · S²IMS</em>.</li>
+  </ul>
+
+  <h3>Governance</h3>
+  <ul class="checklist governance">
+    <li>Provider screens: zero student names, photos, or emails. Tokens only (<code>C-YYYY-NNNN</code>).</li>
+    <li>Staff screens: Student tokens (<code>S-YYYY-NNNN</code>) shown by default.</li>
+    <li>Executive screens: <em>Aggregate-Only Dashboard</em> badge present at the top.</li>
+    <li>Admin audit: tokens by default; reveal requires reason and writes audit entry.</li>
+    <li>All sensitive actions (override, export, role change, disclosure) gate behind <code>ReasonRequiredModal</code> with min-20-char validation.</li>
+    <li>Audit warning card precedes every destructive or recorded action.</li>
+    <li>Sync retry writes audit log (verify with mock audit trail).</li>
+  </ul>
+
+  <h3>Responsive</h3>
+  <ul class="checklist">
+    <li>Tested at 375 / 768 / 1280 / 1920 widths.</li>
+    <li>Tables collapse to mobile data cards below 768.</li>
+    <li>Drawers become full-screen routes on mobile.</li>
+    <li>Filter panel becomes bottom sheet on mobile, with apply count in CTA.</li>
+    <li>Touch targets ≥ 44px on every tappable element on mobile.</li>
+    <li>Sticky CTA sits ≥ 48px above bottom nav and respects safe-area inset.</li>
+  </ul>
+
+  <h3>Internationalization</h3>
+  <ul class="checklist">
+    <li>TH/EN toggle is in topbar, both labels visible, no reload on switch.</li>
+    <li>Tested with Thai labels at 1.6× English length — no critical truncation.</li>
+    <li>Thai body text uses 1.7 line-height; row heights grow as needed.</li>
+    <li>Dates show BE year for TH, AD for EN.</li>
+    <li>IDs (<code>S-…</code>, <code>C-…</code>) remain ASCII mono in both locales.</li>
+  </ul>
+
+  <h3>States</h3>
+  <ul class="checklist">
+    <li>Empty / loading / error states use the shared component, not bespoke text.</li>
+    <li>Skeletons mirror layout — no spinner-only loads on dashboards.</li>
+    <li>Permission denied uses the shared component and never reveals beyond resource type.</li>
+    <li>Freshness indicator shows on every integrated KPI / list (SIS, SSO, Provider sync).</li>
+  </ul>
+
+  <h3>Accessibility</h3>
+  <ul class="checklist">
+    <li>AA+ contrast on all text against glass surfaces.</li>
+    <li>Focus-visible ring uses <code>--role-primary</code>, 2px offset.</li>
+    <li><code>prefers-reduced-motion</code>: pulse disabled, modal entrance simplified.</li>
+    <li>All interactive elements reachable by keyboard in DOM order.</li>
+    <li>Screen-reader labels on icon-only buttons (notifications, profile, sort).</li>
+  </ul>
+</section>
+
+<footer class="docfoot">
+  <div>S²IMS — Design Implementation Spec</div>
+  <div class="v">v12 · supersedes v11 · 2026-05</div>
+</footer>
+
+</main>
+</div>
+</body>
+</html>

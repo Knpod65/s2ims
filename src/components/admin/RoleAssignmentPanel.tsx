@@ -66,7 +66,7 @@ export default function RoleAssignmentPanel({
           </h3>
           <button
             onClick={() => setMode('assign')}
-            className="text-xs py-1 px-2 rounded bg-brand/10 text-brand hover:bg-brand/20 transition-colors"
+            className="text-xs py-1 px-2 rounded bg-role-tint text-role-primary hover:bg-role-tint transition-colors"
           >
             {lang === 'th' ? '+ เพิ่มบทบาท' : '+ Add Role'}
           </button>
@@ -81,7 +81,7 @@ export default function RoleAssignmentPanel({
             {currentRoleDetails.map(role => (
               <div
                 key={role.id}
-                className="flex items-start justify-between p-3 rounded bg-bg-100 border border-white/[0.08]"
+                className="flex items-start justify-between p-3 rounded bg-bg-100 border border-line"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -144,7 +144,7 @@ export default function RoleAssignmentPanel({
           <select
             value={selectedRole || ''}
             onChange={(e) => setSelectedRole(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 focus:outline-none focus:border-brand/50"
+            className="w-full px-3 py-2 text-xs rounded border border-line bg-bg-200 text-ink-1 focus:outline-none focus:border-role-border"
           >
             <option value="">{lang === 'th' ? 'เลือกบทบาท...' : 'Select a role...'}</option>
             {availableToAssign.map(role => (
@@ -156,7 +156,7 @@ export default function RoleAssignmentPanel({
         </div>
 
         {selectedRoleDetails && (
-          <div className="p-3 rounded bg-bg-100 border border-white/[0.08]">
+          <div className="p-3 rounded bg-bg-100 border border-line">
             <p className="text-xs text-ink-3 font-semibold mb-1">
               {lang === 'th' ? 'รายละเอียดบทบาท' : 'Role Details'}
             </p>
@@ -177,7 +177,7 @@ export default function RoleAssignmentPanel({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder={lang === 'th' ? 'อธิบายเหตุผลในการมอบหมายบทบาทนี้...' : 'Explain the reason for assigning this role...'}
-            className="w-full px-3 py-2 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 placeholder-ink-3 focus:outline-none focus:border-brand/50 resize-none h-20"
+            className="w-full px-3 py-2 text-xs rounded border border-line bg-bg-200 text-ink-1 placeholder-ink-3 focus:outline-none focus:border-role-border resize-none h-20"
           />
           <p className={`text-xs mt-1 ${reason.length < 20 ? 'text-status-danger' : 'text-status-success'}`}>
             {reason.length}/20
@@ -191,14 +191,14 @@ export default function RoleAssignmentPanel({
               setSelectedRole(null)
               setReason('')
             }}
-            className="flex-1 text-xs py-2 px-3 rounded border border-white/[0.08] text-ink-1 hover:bg-white/[0.05] transition-colors"
+            className="flex-1 text-xs py-2 px-3 rounded border border-line text-ink-1 hover:bg-role-tint transition-colors"
           >
             {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
           </button>
           <button
             onClick={handleAssignClick}
             disabled={!selectedRole || reason.length < 20}
-            className="flex-1 text-xs py-2 px-3 rounded bg-brand text-white hover:bg-brand/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 text-xs py-2 px-3 rounded bg-role-primary text-white hover:brightness-105 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {lang === 'th' ? 'มอบหมาย' : 'Assign'}
           </button>
@@ -241,7 +241,7 @@ export default function RoleAssignmentPanel({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder={lang === 'th' ? 'อธิบายเหตุผลในการนำออกบทบาทนี้...' : 'Explain the reason for removing this role...'}
-            className="w-full px-3 py-2 text-xs rounded border border-white/[0.08] bg-bg-200 text-ink-1 placeholder-ink-3 focus:outline-none focus:border-brand/50 resize-none h-20"
+            className="w-full px-3 py-2 text-xs rounded border border-line bg-bg-200 text-ink-1 placeholder-ink-3 focus:outline-none focus:border-role-border resize-none h-20"
           />
           <p className={`text-xs mt-1 ${reason.length < 20 ? 'text-status-danger' : 'text-status-success'}`}>
             {reason.length}/20
@@ -255,7 +255,7 @@ export default function RoleAssignmentPanel({
               setSelectedRole(null)
               setReason('')
             }}
-            className="flex-1 text-xs py-2 px-3 rounded border border-white/[0.08] text-ink-1 hover:bg-white/[0.05] transition-colors"
+            className="flex-1 text-xs py-2 px-3 rounded border border-line text-ink-1 hover:bg-role-tint transition-colors"
           >
             {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
           </button>

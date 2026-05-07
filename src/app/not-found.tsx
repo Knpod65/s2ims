@@ -10,7 +10,7 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen bg-bg-000 flex flex-col items-center justify-center p-6 text-center">
-      <div className="font-display font-bold text-[120px] leading-none text-white/[0.04] mb-2 select-none">
+      <div className="font-display font-bold text-[120px] leading-none text-ink-3/10 mb-2 select-none">
         404
       </div>
       <h1 className="font-display font-bold text-2xl text-ink-1 mb-2 -mt-6">

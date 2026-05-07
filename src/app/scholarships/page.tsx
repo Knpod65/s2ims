@@ -34,12 +34,12 @@ export default function ScholarshipsPage() {
 
   return (
     <div className="min-h-screen bg-bg-000">
-      <header className="border-b border-white/[0.08] px-5 h-14 flex items-center gap-4 sticky top-0 bg-bg-000/95 backdrop-blur z-10">
+      <header className="border-b border-line px-5 h-14 flex items-center gap-4 sticky top-0 bg-bg-000/95 backdrop-blur z-10">
         <Link href="/" className="font-display font-bold text-base text-ink-1">S²IMS</Link>
         <div className="ml-auto flex gap-2">
           <button
             onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
-            className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md bg-white/[0.06] border border-white/[0.1] text-ink-2 hover:text-ink-1 transition-all"
+            className="flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md bg-white border border-line text-ink-2 hover:text-ink-1 transition-all"
           >
             <Globe size={12} />{lang === 'th' ? 'EN' : 'TH'}
           </button>
@@ -57,7 +57,7 @@ export default function ScholarshipsPage() {
         <p className="text-ink-3 text-sm mb-6">
           {filtered.length} {lang === 'th' ? 'รายการ' : 'scholarships found'}
           {saved.size > 0 && (
-            <span className="ml-3 text-brand">· {saved.size} {lang === 'th' ? 'บันทึกแล้ว' : 'saved'}</span>
+            <span className="ml-3 text-role-primary">· {saved.size} {lang === 'th' ? 'บันทึกแล้ว' : 'saved'}</span>
           )}
         </p>
 

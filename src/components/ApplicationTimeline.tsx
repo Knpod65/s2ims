@@ -24,18 +24,18 @@ export default function ApplicationTimeline({ steps, compact }: Props) {
               <div className={`
                 w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all
                 ${step.status === 'done' ? 'bg-status-success/20 border-status-success' : ''}
-                ${step.status === 'active' ? 'bg-brand/20 border-brand animate-pulse-soft' : ''}
+                ${step.status === 'active' ? 'bg-role-tint border-role-primary animate-pulse-soft' : ''}
                 ${step.status === 'error' ? 'bg-status-danger/20 border-status-danger' : ''}
-                ${step.status === 'pending' ? 'bg-bg-300 border-white/[0.12]' : ''}
+                ${step.status === 'pending' ? 'bg-bg-300 border-line' : ''}
               `}>
                 {step.status === 'done' && <Check size={12} className="text-status-success" />}
-                {step.status === 'active' && <div className="w-2 h-2 bg-brand rounded-full" />}
+                {step.status === 'active' && <div className="w-2 h-2 bg-role-primary rounded-full" />}
                 {step.status === 'error' && <AlertCircle size={12} className="text-status-danger" />}
                 {step.status === 'pending' && <div className="w-1.5 h-1.5 bg-ink-3 rounded-full" />}
               </div>
               {!isLast && (
                 <div className={`w-0.5 flex-1 min-h-[20px] mt-1 ${
-                  step.status === 'done' ? 'bg-status-success/30' : 'bg-white/[0.06]'
+                  step.status === 'done' ? 'bg-status-success/30' : 'bg-white border border-line'
                 }`} />
               )}
             </div>
@@ -46,7 +46,7 @@ export default function ApplicationTimeline({ steps, compact }: Props) {
                 <span className={`text-sm font-medium ${
                   step.status === 'pending' ? 'text-ink-3' :
                   step.status === 'error' ? 'text-status-danger' :
-                  step.status === 'active' ? 'text-brand' :
+                  step.status === 'active' ? 'text-role-primary' :
                   'text-ink-1'
                 }`}>{label}</span>
                 {step.date && !compact && (
@@ -57,7 +57,7 @@ export default function ApplicationTimeline({ steps, compact }: Props) {
                 )}
               </div>
               {step.note && !compact && (
-                <div className={`mt-1 text-xs ${step.status === 'error' ? 'text-status-danger/80' : step.status === 'active' ? 'text-brand/70' : 'text-ink-3'}`}>
+                <div className={`mt-1 text-xs ${step.status === 'error' ? 'text-status-danger/80' : step.status === 'active' ? 'text-role-primary' : 'text-ink-3'}`}>
                   {step.note}
                 </div>
               )}

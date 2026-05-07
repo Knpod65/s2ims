@@ -53,7 +53,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
 
       {/* Confirm acceptance banner */}
       {status === 'AWARDED' && (
-        <div className="mb-6 p-4 rounded-xl bg-status-success/[0.08] border border-status-success/30 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex-1">
             <div className="font-semibold text-sm text-status-success flex items-center gap-2 mb-1">
               <ThumbsUp size={16} />
@@ -109,7 +109,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
                     doc.status === 'verified' ? 'border-status-success/20 bg-status-success/[0.04]' :
                     doc.status === 'missing'  ? 'border-status-danger/30 bg-status-danger/[0.04]' :
                     doc.status === 'uploaded' ? 'border-status-info/20 bg-status-info/[0.04]' :
-                    'border-white/[0.08] bg-bg-200'
+                    'border-line bg-bg-200'
                   }`}
                 >
                   <div className="flex-shrink-0">
@@ -130,7 +130,7 @@ export default function ApplicationDetailPage({ params }: { params: Promise<{ id
                     )}
                   </div>
                   {(doc.status === 'missing' || doc.status === 'pending') && (
-                    <label className="flex items-center gap-1 text-[10px] px-2 py-1 bg-brand/10 text-brand rounded border border-brand/20 cursor-pointer hover:bg-brand/20 transition-colors">
+                    <label className="flex items-center gap-1 text-[10px] px-2 py-1 bg-role-tint text-role-primary rounded border border-role-border cursor-pointer hover:bg-role-tint transition-colors">
                       <Upload size={10} />
                       {lang === 'th' ? 'อัปโหลด' : 'Upload'}
                       <input

@@ -24,7 +24,7 @@ export default function ScholarshipDetailPage({ params }: { params: Promise<{id:
 
   return (
     <div className="min-h-screen bg-bg-000">
-      <header className="border-b border-white/[0.08] px-5 h-14 flex items-center gap-4">
+      <header className="border-b border-line px-5 h-14 flex items-center gap-4">
         <Link href="/scholarships" className="flex items-center gap-2 text-ink-3 hover:text-ink-1 text-sm"><ArrowLeft size={14}/>{lang==='th'?'กลับ':'Back'}</Link>
       </header>
       <div className="max-w-3xl mx-auto px-5 py-8 page-animate">
@@ -42,7 +42,7 @@ export default function ScholarshipDetailPage({ params }: { params: Promise<{id:
           <p className="text-ink-2 text-sm leading-relaxed">{philosophy}</p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="card-sm p-3 text-center"><div className="text-brand font-bold text-lg">{lang==='th'?formatAmount(s.amount):formatAmountEn(s.amount)}</div><div className="text-xs text-ink-3">{lang==='th'?'จำนวนเงิน':'Amount'}</div></div>
+          <div className="card-sm p-3 text-center"><div className="text-role-primary font-bold text-lg">{lang==='th'?formatAmount(s.amount):formatAmountEn(s.amount)}</div><div className="text-xs text-ink-3">{lang==='th'?'จำนวนเงิน':'Amount'}</div></div>
           <div className="card-sm p-3 text-center"><div className="text-ink-1 font-bold text-lg">{s.num_awards}</div><div className="text-xs text-ink-3">{lang==='th'?'จำนวนทุน':'Awards'}</div></div>
           <div className="card-sm p-3 text-center"><div className="text-ink-1 font-bold text-lg">≥{s.gpa_min}</div><div className="text-xs text-ink-3">GPA {lang==='th'?'ขั้นต่ำ':'minimum'}</div></div>
           <div className={`card-sm p-3 text-center ${days <= 3 && days >= 0 ? 'border-status-danger/30' : ''}`}><div className={`font-bold text-lg ${deadlineColor(days)}`}>{days < 0 ? '-' : days}</div><div className="text-xs text-ink-3">{lang==='th'?'วัน เหลือ':'days left'}</div></div>

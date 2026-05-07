@@ -30,7 +30,7 @@ export default function MatchDetailPage() {
           </p>
           <Link
             href="/staff/matching-review"
-            className="text-xs text-brand hover:text-brand-light mt-4 inline-block"
+            className="text-xs text-role-primary hover:text-role-primary mt-4 inline-block"
           >
             {lang === 'th' ? '← กลับไปตรวจสอบการจับคู่' : '← Back to Matching Review'}
           </Link>
@@ -51,7 +51,7 @@ export default function MatchDetailPage() {
         <div className="flex items-center gap-2 mb-6">
           <button
             onClick={() => router.back()}
-            className="p-2 hover:bg-white/[0.08] rounded transition-colors"
+            className="p-2 hover:bg-surface-low rounded transition-colors"
           >
             <ChevronLeft size={20} className="text-ink-3" />
           </button>
@@ -87,7 +87,7 @@ export default function MatchDetailPage() {
             />
 
             {/* Application Details */}
-            <div className="card p-5 border-brand/20 space-y-4">
+            <div className="card p-5 border-role-border space-y-4">
               <h3 className="font-semibold text-sm text-ink-1">
                 {lang === 'th' ? 'รายละเอียดการสมัคร' : 'Application Details'}
               </h3>
@@ -121,7 +121,7 @@ export default function MatchDetailPage() {
             </div>
 
             {/* Decision Support */}
-            <div className="card p-5 border-brand/20">
+            <div className="card p-5 border-role-border">
               <h3 className="font-semibold text-sm text-ink-1 mb-3">
                 {lang === 'th' ? 'การสนับสนุนการตัดสินใจ' : 'Decision Support'}
               </h3>

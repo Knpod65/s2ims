@@ -128,7 +128,7 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
 
             {/* Existing Notes */}
             {appNotes.length > 0 && (
-              <div className="space-y-2 mb-4 pb-4 border-b border-white/[0.08]">
+              <div className="space-y-2 mb-4 pb-4 border-b border-line">
                 {appNotes.map((note) => (
                   <div key={note.id} className="p-3 rounded bg-bg-200">
                     <p className="text-xs text-ink-1 mb-1">{note.content}</p>
@@ -154,7 +154,7 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
             <button
               onClick={handleAddStaffNote}
               disabled={!staffNote.trim()}
-              className="w-full text-xs py-1.5 px-3 bg-brand/10 text-brand rounded hover:bg-brand/20 transition-colors disabled:opacity-50"
+              className="w-full text-xs py-1.5 px-3 bg-role-tint text-role-primary rounded hover:bg-role-tint transition-colors disabled:opacity-50"
             >
               {lang === 'th' ? 'เพิ่มหมายเหตุ' : 'Add Note'}
             </button>
@@ -168,7 +168,7 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
                 <button
                   key={s}
                   onClick={() => handleStatusChange(s)}
-                  className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${currentStatus===s?'border-brand/40 bg-brand/10 text-brand':'border-white/[0.1] text-ink-3 hover:border-white/20 hover:text-ink-2'}`}
+                  className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${currentStatus===s?'border-role-border bg-role-tint text-role-primary':'border-line text-ink-3 hover:border-line-strong hover:text-ink-2'}`}
                 >
                   {APP_STATUS_MAP[s][lang==='th'?'th':'en']}
                 </button>
@@ -183,9 +183,9 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
           <div className="card p-5">
             <h3 className="font-semibold text-sm text-ink-1 mb-4">{lang==='th'?'ขั้นตอน':'Timeline'}</h3>
             <ApplicationTimeline steps={app.steps}/>
-            <div className="mt-4 pt-4 border-t border-white/[0.06]">
+            <div className="mt-4 pt-4 border-t border-line">
               <div className="text-xs text-ink-3 mb-1">{lang==='th'?'คะแนนจับคู่':'Match Score'}</div>
-              <div className="text-2xl font-display font-bold text-brand">{app.match_score}%</div>
+              <div className="text-2xl font-display font-bold text-role-primary">{app.match_score}%</div>
             </div>
           </div>
 
@@ -197,7 +197,7 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
               </h3>
               <div className="space-y-2 text-xs">
                 {appAuditEvents.slice(0, 5).map((event) => (
-                  <div key={event.id} className="p-2 rounded bg-bg-200 border border-white/[0.04]">
+                  <div key={event.id} className="p-2 rounded bg-bg-200 border border-line">
                     <p className="text-ink-3 font-mono">
                       {new Date(event.timestamp).toLocaleString(
                         lang === 'th' ? 'th-TH' : 'en-US'
@@ -217,8 +217,8 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
 
       {/* Reveal Identity Modal */}
       {revealModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-bg-100 rounded-lg max-w-md w-full mx-4 shadow-lg p-6 space-y-4">
+        <div className="fixed inset-0 bg-slate-950/35 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl max-w-md w-full mx-4 shadow-[0_28px_80px_rgba(15,23,42,.18)] border border-line p-6 space-y-4">
             <h2 className="font-semibold text-ink-1">
               {lang === 'th' ? 'เปิดเผยตัวตนนักศึกษา' : 'Reveal Student Identity'}
             </h2>
@@ -250,14 +250,14 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
                   setRevealModal(false)
                   setRevealReason('')
                 }}
-                className="flex-1 text-xs py-2 px-3 bg-white/[0.08] text-ink-1 rounded hover:bg-white/[0.12] transition-colors"
+                className="flex-1 text-xs py-2 px-3 bg-white border border-line text-ink-1 rounded hover:bg-surface-muted transition-colors"
               >
                 {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
               </button>
               <button
                 onClick={handleConfirmReveal}
                 disabled={!revealReason.trim()}
-                className="flex-1 text-xs py-2 px-3 bg-status-danger/10 text-status-danger rounded hover:bg-status-danger/20 transition-colors disabled:opacity-50"
+                className="flex-1 text-xs py-2 px-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50"
               >
                 {lang === 'th' ? 'เปิดเผย' : 'Reveal'}
               </button>

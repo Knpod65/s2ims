@@ -153,7 +153,7 @@ export default function CriteriaPage() {
                     <label className="text-sm font-medium text-ink-1">
                       {lang === 'th' ? label_th : label_en}
                     </label>
-                    <span className="text-sm font-semibold text-brand">{weights[typedKey]}%</span>
+                    <span className="text-sm font-semibold text-role-primary">{weights[typedKey]}%</span>
                   </div>
                   <input
                     type="range"

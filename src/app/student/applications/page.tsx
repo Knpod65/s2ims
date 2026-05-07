@@ -21,7 +21,7 @@ export default function StudentApplicationsPage() {
           const title = lang==='th' ? app.scholarship_title_th : app.scholarship_title_en
           const actionNeeded = ['NEEDS_DOCS','CONFIRMED','FOLLOW_UP_REQUIRED'].includes(app.status)
           return (
-            <Link key={app.id} href={`/student/applications/${app.id}`} className={`card block p-4 hover:border-white/20 transition-all ${actionNeeded ? 'border-status-danger/30' : ''}`}>
+            <Link key={app.id} href={`/student/applications/${app.id}`} className={`card block p-4 hover:border-line-strong transition-all ${actionNeeded ? 'border-status-danger/30' : ''}`}>
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div><div className="text-xs text-ink-3 mb-0.5">{lang==='th'?'ทุน':'Scholarship'}</div><div className="font-semibold text-sm text-ink-1">{title}</div></div>
                 <StatusBadge label={si[lang==='th'?'th':'en']} color={si.color}/>

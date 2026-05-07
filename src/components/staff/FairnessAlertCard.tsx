@@ -30,11 +30,11 @@ export default function FairnessAlertCard({ type, message }: FairnessAlertCardPr
   }
 
   return (
-    <div className="flex items-start gap-3 p-3 rounded-lg bg-status-warning/[0.08] border border-status-warning/20">
-      <AlertTriangle size={14} className="text-status-warning flex-shrink-0 mt-0.5" />
+    <div className="flex items-start gap-3 p-3 rounded-lg bg-gradient-to-br from-[#FEF3C7] to-[#FFF7ED] border border-amber-200 text-[#78350F]">
+      <AlertTriangle size={14} className="text-amber-700 flex-shrink-0 mt-0.5" />
       <div className="flex-1">
-        <p className="font-semibold text-xs text-status-warning mb-1">{getTypeLabel(type)}</p>
-        <p className="text-xs text-status-warning/90">{message}</p>
+        <p className="font-semibold text-xs mb-1">{getTypeLabel(type)}</p>
+        <p className="text-xs leading-relaxed">{message}</p>
       </div>
     </div>
   )

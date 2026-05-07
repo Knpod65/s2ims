@@ -69,7 +69,7 @@ export default function NotificationsPage() {
               <button
                 key={n.id}
                 onClick={() => handleClick(n)}
-                className="w-full text-left card p-4 border-brand/10 hover:border-brand/25 transition-all cursor-pointer"
+                className="w-full text-left card p-4 border-line hover:border-role-border transition-all cursor-pointer"
               >
                 <div className="flex gap-3">
                   <div className="text-lg leading-none flex-shrink-0 mt-0.5">
@@ -80,7 +80,7 @@ export default function NotificationsPage() {
                       <div className="font-semibold text-sm text-ink-1">
                         {lang === 'th' ? n.title_th : n.title_en}
                       </div>
-                      <div className="w-2 h-2 bg-brand rounded-full flex-shrink-0 mt-1.5" />
+                      <div className="w-2 h-2 bg-role-primary rounded-full flex-shrink-0 mt-1.5" />
                     </div>
                     <div className="text-xs text-ink-3 mt-1 line-clamp-2">
                       {lang === 'th' ? n.body_th : n.body_en}
@@ -91,7 +91,7 @@ export default function NotificationsPage() {
                         { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }
                       )}
                       {n.action_url && (
-                        <span className="ml-2 text-brand">{lang === 'th' ? '→ ดูรายละเอียด' : '→ View details'}</span>
+                        <span className="ml-2 text-role-primary">{lang === 'th' ? '→ ดูรายละเอียด' : '→ View details'}</span>
                       )}
                     </div>
                   </div>

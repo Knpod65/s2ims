@@ -48,10 +48,10 @@ export default function OcrPage() {
         <div className="max-w-lg">
           <div
             onClick={handleUpload}
-            className="card p-10 border-dashed border-white/[0.2] text-center cursor-pointer hover:border-brand/40 hover:bg-brand/[0.02] transition-all group"
+            className="card p-10 border-dashed border-line text-center cursor-pointer hover:border-role-border hover:bg-role-tint transition-all group"
           >
-            <div className="w-14 h-14 rounded-2xl bg-brand/10 border border-brand/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform">
-              <Upload size={24} className="text-brand"/>
+            <div className="w-14 h-14 rounded-2xl bg-role-tint border border-role-border flex items-center justify-center mx-auto mb-4 group-hover:scale-105 transition-transform">
+              <Upload size={24} className="text-role-primary"/>
             </div>
             <div className="font-semibold text-sm text-ink-1 mb-1">{lang==='th'?'อัปโหลดเอกสาร':'Upload Document'}</div>
             <div className="text-xs text-ink-3 mb-4">{lang==='th'?'รองรับ PDF, JPG, PNG (ไทย + อังกฤษ)':'Supports PDF, JPG, PNG (Thai + English OCR)'}</div>
@@ -64,7 +64,7 @@ export default function OcrPage() {
 
       {(jobStatus === 'uploading' || jobStatus === 'extracting') && (
         <div className="card p-8 max-w-lg text-center">
-          <div className="w-12 h-12 rounded-full border-2 border-brand border-t-transparent animate-spin mx-auto mb-4"/>
+          <div className="w-12 h-12 rounded-full border-2 border-role-primary border-t-transparent animate-spin mx-auto mb-4"/>
           <div className="font-semibold text-sm text-ink-1 mb-1">
             {jobStatus === 'uploading' ? (lang==='th'?'กำลังอัปโหลด...':'Uploading...') : (lang==='th'?'กำลังดึงข้อมูล...':'Extracting fields...')}
           </div>
@@ -77,7 +77,7 @@ export default function OcrPage() {
           {/* Document viewer */}
           <div className="lg:col-span-2 card p-4">
             <div className="text-xs text-ink-3 uppercase tracking-widest mb-3">{lang==='th'?'ไฟล์ต้นฉบับ':'Original Document'}</div>
-            <div className="bg-bg-300 rounded-xl h-72 flex flex-col items-center justify-center border border-white/[0.06]">
+            <div className="bg-bg-300 rounded-xl h-72 flex flex-col items-center justify-center border border-line">
               <div className="text-5xl mb-3">📄</div>
               <div className="text-sm text-ink-2 font-medium">scholarship_announcement.pdf</div>
               <div className="text-xs text-ink-3 mt-1">2.3 MB · 4 pages</div>
@@ -88,7 +88,7 @@ export default function OcrPage() {
                 <div className="text-ink-3">{lang==='th'?'สูง':'High'}</div>
               </div>
               <div className="card-sm p-2">
-                <div className="font-bold text-brand">{midConf}</div>
+                <div className="font-bold text-role-primary">{midConf}</div>
                 <div className="text-ink-3">{lang==='th'?'ปานกลาง':'Medium'}</div>
               </div>
               <div className="card-sm p-2">
@@ -127,14 +127,14 @@ export default function OcrPage() {
                     key={f.key}
                     className={`p-3 rounded-xl border transition-all ${
                       isHigh ? 'border-status-success/20 bg-status-success/[0.03]' :
-                      isMid  ? 'border-brand/20 bg-brand/[0.03]' :
+                      isMid  ? 'border-role-border bg-role-tint' :
                                'border-status-danger/30 bg-status-danger/[0.04]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-1.5">
                         {isHigh && <CheckCircle2 size={11} className="text-status-success"/>}
-                        {isMid  && <AlertTriangle size={11} className="text-brand"/>}
+                        {isMid  && <AlertTriangle size={11} className="text-role-primary"/>}
                         {isLow  && <AlertTriangle size={11} className="text-status-danger"/>}
                         <span className="text-[10px] text-ink-3">{label}</span>
                       </div>

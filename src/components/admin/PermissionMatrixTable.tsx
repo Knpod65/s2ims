@@ -62,7 +62,7 @@ export default function PermissionMatrixTable({ roles, permissions }: Permission
           <div key={category}>
             <button
               onClick={() => setExpandedCategory(isExpanded ? null : category)}
-              className="flex items-center gap-2 w-full text-left mb-3 p-2 rounded hover:bg-white/[0.02] transition-colors"
+              className="flex items-center gap-2 w-full text-left mb-3 p-2 rounded hover:bg-surface-low transition-colors"
             >
               <div className="text-sm font-semibold text-ink-1 capitalize">{category}</div>
               <div className="text-xs text-ink-3">{isExpanded ? '▼' : '▶'}</div>
@@ -72,7 +72,7 @@ export default function PermissionMatrixTable({ roles, permissions }: Permission
               <div className="overflow-x-auto">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="border-b border-white/[0.08]">
+                    <tr className="border-b border-line">
                       <th className="text-left px-3 py-2 text-ink-3 font-semibold">
                         {lang === 'th' ? 'สิทธิ์' : 'Permission'}
                       </th>
@@ -87,7 +87,7 @@ export default function PermissionMatrixTable({ roles, permissions }: Permission
                   </thead>
                   <tbody>
                     {categoryPermissions.map((perm, idx) => (
-                      <tr key={perm.id} className={idx % 2 === 0 ? 'bg-white/[0.02]' : ''}>
+                      <tr key={perm.id} className={idx % 2 === 0 ? 'bg-surface-low' : ''}>
                         <td className="px-3 py-2 text-ink-1">
                           <div className="max-w-[150px]">
                             <div className="font-medium">{lang === 'th' ? perm.label_th : perm.label_en}</div>
@@ -114,7 +114,7 @@ export default function PermissionMatrixTable({ roles, permissions }: Permission
         )
       })}
 
-      <div className="mt-6 p-4 rounded-lg bg-bg-100 border border-white/[0.08]">
+      <div className="mt-6 p-4 rounded-lg bg-bg-100 border border-line">
         <p className="text-xs font-semibold text-ink-1 mb-2">
           {lang === 'th' ? 'คำอธิบายสัญลักษณ์' : 'Legend'}
         </p>

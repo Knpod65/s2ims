@@ -60,7 +60,7 @@ export default function ExportEventCard({ event }: ExportEventCardProps) {
       case 'medium':
         return 'bg-status-warning/10 border-status-warning/20'
       default:
-        return 'bg-brand/10 border-brand/20'
+        return 'bg-role-tint border-role-border'
     }
   }
 
@@ -77,7 +77,7 @@ export default function ExportEventCard({ event }: ExportEventCardProps) {
     <div className={`rounded-lg border transition-all ${getRiskColor(event.riskLevel)}`}>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-start gap-3 hover:bg-white/[0.02] transition-colors text-left"
+        className="w-full p-4 flex items-start gap-3 hover:bg-surface-low transition-colors text-left"
       >
         <div className="mt-0.5 text-lg">{getDataLevelIcon(event.dataLevel)}</div>
         <div className="flex-1 min-w-0">
@@ -98,7 +98,7 @@ export default function ExportEventCard({ event }: ExportEventCardProps) {
       </button>
 
       {expanded && (
-        <div className="border-t border-white/[0.08] p-4 bg-bg-200/50 space-y-3">
+        <div className="border-t border-line p-4 bg-bg-200/50 space-y-3">
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
               <span className="text-ink-3">{lang === 'th' ? 'ส่งออกโดย' : 'Exported By'}</span>
@@ -126,7 +126,7 @@ export default function ExportEventCard({ event }: ExportEventCardProps) {
           </div>
 
           {Object.keys(event.filters || {}).length > 0 && (
-            <div className="p-3 rounded bg-bg-100 border border-white/[0.08]">
+            <div className="p-3 rounded bg-bg-100 border border-line">
               <p className="text-xs text-ink-3 font-semibold mb-2">
                 {lang === 'th' ? 'ตัวกรอง' : 'Filters'}
               </p>

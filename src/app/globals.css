@@ -1,178 +1,461 @@
+/* ── Google Fonts ──────────────────────────────────────────────────────────
+   Order: display first, then @tailwind directives.
+   Space Grotesk → display headings
+   Inter         → body / UI copy
+   JetBrains Mono→ code / mono
+   Noto Sans Thai → Thai script support
+────────────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&family=Noto+Sans+Thai:wght@300;400;500;600&display=swap');
-
+/* ── CSS Custom Properties ─────────────────────────────────────────────────
+   Role theme tokens are set per [data-role="..."] below.
+   Defaults = staff / Operational Amber (the most common dev view).
+────────────────────────────────────────────────────────────────────────── */
 :root {
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', 'Noto Sans Thai', sans-serif;
-  --font-mono: 'DM Mono', monospace;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body:    'Inter', 'Noto Sans Thai', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  --surface:        #FAF8FF;
+  --surface-bright: #FFFFFF;
+  --surface-low:    #F4F1FB;
+  --ink:            #0F172A;
+  --ink-2:          #434656;
+  --ink-3:          #737688;
+  --line:           #D9D9E6;
+
+  /* ── Default role theme: Operational Amber (staff) ── */
+  --role-primary:       #F59E0B;
+  --role-primary-hex:   #F59E0B;
+  --role-secondary:     #FCD34D;
+  --role-grad-from:     #F59E0B;
+  --role-grad-to:       #F97316;
+  --role-gradient-from: #F59E0B;
+  --role-gradient-to:   #F97316;
+  --role-tint:          #FEF3C7;
+  --role-surface:       #FEF3C7;
+  --role-border:        rgba(245, 158, 11, 0.20);
+  --role-glow:          rgba(245, 158, 11, 0.15);
+  --role-text-dim:      rgba(245, 158, 11, 0.55);
+  --role-btn-text:      #FFFFFF;
 }
 
-* { box-sizing: border-box; }
+/* ── Aurora Blue — Student ───────────────────────────────────────────────── */
+[data-role="student"] {
+  --role-primary:       #0055FF;
+  --role-primary-hex:   #0055FF;
+  --role-secondary:     #22D3EE;
+  --role-grad-from:     #0055FF;
+  --role-grad-to:       #22D3EE;
+  --role-gradient-from: #0055FF;
+  --role-gradient-to:   #22D3EE;
+  --role-tint:          #E5EDFF;
+  --role-surface:       #E5EDFF;
+  --role-border:        rgba(0, 85, 255, 0.20);
+  --role-glow:          rgba(0, 85, 255, 0.14);
+  --role-text-dim:      rgba(0, 85, 255, 0.55);
+  --role-btn-text:      #FFFFFF;
+}
 
-html { scroll-behavior: smooth; }
+/* ── Trust Emerald — Provider ───────────────────────────────────────────── */
+[data-role="provider"] {
+  --role-primary:       #10B981;
+  --role-primary-hex:   #10B981;
+  --role-secondary:     #14B8A6;
+  --role-grad-from:     #10B981;
+  --role-grad-to:       #14B8A6;
+  --role-gradient-from: #10B981;
+  --role-gradient-to:   #14B8A6;
+  --role-tint:          #DDFBF1;
+  --role-surface:       #DDFBF1;
+  --role-border:        rgba(16, 185, 129, 0.20);
+  --role-glow:          rgba(16, 185, 129, 0.12);
+  --role-text-dim:      rgba(16, 185, 129, 0.55);
+  --role-btn-text:      #FFFFFF;
+}
+
+/* ── Operational Amber — Staff (explicit, mirrors :root defaults) ────────── */
+[data-role="staff"] {
+  --role-primary:       #F59E0B;
+  --role-primary-hex:   #F59E0B;
+  --role-secondary:     #FCD34D;
+  --role-grad-from:     #F59E0B;
+  --role-grad-to:       #F97316;
+  --role-gradient-from: #F59E0B;
+  --role-gradient-to:   #F97316;
+  --role-tint:          #FEF3C7;
+  --role-surface:       #FEF3C7;
+  --role-border:        rgba(245, 158, 11, 0.20);
+  --role-glow:          rgba(245, 158, 11, 0.15);
+  --role-text-dim:      rgba(245, 158, 11, 0.55);
+  --role-btn-text:      #FFFFFF;
+}
+
+/* ── Strategic Violet — ESQ ─────────────────────────────────────────────── */
+[data-role="esq"] {
+  --role-primary:       #8B5CF6;
+  --role-primary-hex:   #8B5CF6;
+  --role-secondary:     #6366F1;
+  --role-grad-from:     #8B5CF6;
+  --role-grad-to:       #6366F1;
+  --role-gradient-from: #8B5CF6;
+  --role-gradient-to:   #6366F1;
+  --role-tint:          #F0E9FF;
+  --role-surface:       #F0E9FF;
+  --role-border:        rgba(139, 92, 246, 0.20);
+  --role-glow:          rgba(139, 92, 246, 0.12);
+  --role-text-dim:      rgba(139, 92, 246, 0.55);
+  --role-btn-text:      #FFFFFF;
+}
+
+/* ── Control Graphite — Admin ───────────────────────────────────────────── */
+[data-role="admin"] {
+  --role-primary:       #4B5563;
+  --role-primary-hex:   #4B5563;
+  --role-secondary:     #64748B;
+  --role-grad-from:     #4B5563;
+  --role-grad-to:       #64748B;
+  --role-gradient-from: #4B5563;
+  --role-gradient-to:   #64748B;
+  --role-tint:          #E7EAEE;
+  --role-surface:       #E7EAEE;
+  --role-border:        rgba(75, 85, 99, 0.22);
+  --role-glow:          rgba(75, 85, 99, 0.10);
+  --role-text-dim:      rgba(75, 85, 99, 0.55);
+  --role-btn-text:      #FFFFFF;
+}
+
+/* ── Base reset ────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
 
 body {
-  background: #06080F;
-  color: #E2E8F5;
-  font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
+  background:                var(--surface);
+  color:                     var(--ink);
+  font-family:               var(--font-body);
+  -webkit-font-smoothing:    antialiased;
+  -moz-osx-font-smoothing:   grayscale;
+  line-height:               1.55;
 }
 
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+/* Thai script: needs extra line-height for legibility */
+:lang(th), .lang-th { line-height: 1.65; }
 
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar            { width: 4px; height: 4px; }
+::-webkit-scrollbar-track      { background: transparent; }
+::-webkit-scrollbar-thumb      { background: rgba(15,23,42,0.18); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover{ background: rgba(15,23,42,0.28); }
+
+/* ── Utilities ─────────────────────────────────────────────────────────── */
 @layer utilities {
+
+  /* ── Typography ── */
   .font-display { font-family: var(--font-display); }
-  .font-mono { font-family: var(--font-mono); }
+  .font-mono    { font-family: var(--font-mono); }
+
+  /* ── Role-adaptive colour helpers ── */
+  /* Use these in shell components (Sidebar, Topbar, BottomNav, StatCard icons) */
+  .text-role         { color: var(--role-primary-hex); }
+  .bg-role           { background-color: var(--role-primary-hex); }
+  .bg-role-gradient  { background: linear-gradient(135deg, var(--role-grad-from), var(--role-grad-to)); }
+  .bg-role-tint      { background: var(--role-tint); }
+  .bg-role-surface   { background: var(--role-surface); }
+  .border-role       { border-color: var(--role-border); }
+  .ring-role         { box-shadow: 0 0 0 3px var(--role-surface); }
+
+  /* ── Gradient utilities ── */
+  /* Thin horizontal accent bar (e.g. Topbar bottom edge, Sidebar top) */
+  .role-gradient-line {
+    background: linear-gradient(90deg, var(--role-grad-from), var(--role-grad-to));
+  }
+  /* Gradient text — for the S²IMS logotype */
+  .role-gradient-text {
+    background:              linear-gradient(135deg, var(--role-grad-from), var(--role-grad-to));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip:         text;
+  }
+
+  .glass-card {
+    background:              rgba(255,255,255,.7);
+    backdrop-filter:         blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border:                  1px solid rgba(255,255,255,.6);
+    border-radius:           12px;
+    box-shadow:              0 18px 45px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.85);
+  }
+  .glass-card-md {
+    background:              rgba(255,255,255,.74);
+    backdrop-filter:         blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border:                  1px solid rgba(255,255,255,.62);
+    border-radius:           16px;
+    box-shadow:              0 18px 45px rgba(15,23,42,.08), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .glass-card-role {
+    background:              color-mix(in srgb, var(--role-tint) 42%, rgba(255,255,255,.82));
+    backdrop-filter:         blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border:                  1px solid var(--role-border);
+    border-radius:           12px;
+    box-shadow:              0 18px 45px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.85);
+  }
 
   .card {
-    background: #111827;
-    border: 1px solid rgba(255,255,255,0.08);
+    background:   rgba(255,255,255,.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border:       1px solid rgba(255,255,255,.6);
     border-radius: 12px;
+    box-shadow:   0 18px 45px rgba(15,23,42,.07), inset 0 1px 0 rgba(255,255,255,.85);
   }
-
   .card-sm {
-    background: #131825;
-    border: 1px solid rgba(255,255,255,0.08);
+    background:   rgba(255,255,255,.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border:       1px solid rgba(255,255,255,.6);
     border-radius: 8px;
+    box-shadow:   0 10px 28px rgba(15,23,42,.05), inset 0 1px 0 rgba(255,255,255,.82);
   }
-
   .card-hover {
     transition: transform 200ms cubic-bezier(0.4,0,0.2,1),
                 box-shadow 200ms cubic-bezier(0.4,0,0.2,1),
                 border-color 150ms ease;
   }
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(245,158,11,.15);
-    border-color: rgba(245,158,11, 0.25);
+    transform:    translateY(-2px);
+    box-shadow:   0 22px 48px rgba(15,23,42,.10), 0 0 0 1px var(--role-border);
+    border-color: var(--role-border);
   }
 
+  /* ── Form inputs ── */
   .input-base {
-    background: #131825;
-    border: 1px solid rgba(255,255,255,0.12);
+    background:   #FFFFFF;
+    border:       1px solid var(--line);
     border-radius: 8px;
-    padding: 0.5rem 0.75rem;
-    color: #E2E8F5;
-    font-size: 14px;
-    transition: border-color 150ms ease;
-    width: 100%;
+    padding:      0.5rem 0.75rem;
+    color:        var(--ink);
+    font-size:    14px;
+    transition:   border-color 150ms ease;
+    width:        100%;
   }
   .input-base:focus {
-    outline: none;
-    border-color: rgba(245,158,11,0.5);
-    box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+    outline:    none;
+    border-color: var(--role-border);
+    box-shadow: 0 0 0 3px var(--role-surface);
   }
-  .input-base::placeholder { color: #4A5568; }
+  .input-base::placeholder { color: var(--ink-3); }
 
+  /* ── Buttons ──
+     btn-primary uses the role primary colour as background.
+     --role-btn-text keeps role CTAs on the required white text treatment.
+  ── */
   .btn-primary {
-    background: #F59E0B;
-    color: #000;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
+    background:   var(--role-primary-hex);
+    color:        var(--role-btn-text);
+    font-weight:  600;
+    padding:      0.5rem 1rem;
     border-radius: 8px;
-    font-size: 14px;
-    transition: all 150ms ease;
-    border: none;
-    cursor: pointer;
+    font-size:    14px;
+    transition:   all 150ms ease;
+    border:       none;
+    cursor:       pointer;
+    display:      inline-flex;
+    align-items:  center;
+    gap:          0.375rem;
+    font-family:  inherit;
   }
-  .btn-primary:hover { background: #FCD34D; transform: translateY(-1px); }
+  .btn-primary:hover  { filter: brightness(1.10); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
   .btn-secondary {
-    background: rgba(255,255,255,0.06);
-    color: #E2E8F5;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
+    background:   #FFFFFF;
+    color:        var(--ink);
+    font-weight:  500;
+    padding:      0.5rem 1rem;
     border-radius: 8px;
-    font-size: 14px;
-    border: 1px solid rgba(255,255,255,0.12);
-    transition: all 150ms ease;
-    cursor: pointer;
+    font-size:    14px;
+    border:       1px solid var(--line);
+    transition:   all 150ms ease;
+    cursor:       pointer;
+    display:      inline-flex;
+    align-items:  center;
+    gap:          0.375rem;
+    font-family:  inherit;
   }
-  .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+  .btn-secondary:hover { background: var(--surface-low); border-color: var(--line); }
 
   .btn-ghost {
-    background: transparent;
-    color: #7B88A0;
-    padding: 0.4rem 0.75rem;
+    background:   transparent;
+    color:        var(--ink-2);
+    padding:      0.4rem 0.75rem;
     border-radius: 6px;
-    font-size: 13px;
-    border: none;
-    transition: all 150ms ease;
-    cursor: pointer;
+    font-size:    13px;
+    border:       none;
+    transition:   all 150ms ease;
+    cursor:       pointer;
+    display:      inline-flex;
+    align-items:  center;
+    gap:          0.375rem;
+    font-family:  inherit;
   }
-  .btn-ghost:hover { background: rgba(255,255,255,0.06); color: #E2E8F5; }
+  .btn-ghost:hover { background: var(--role-tint); color: var(--role-primary-hex); }
 
   .btn-danger {
-    background: rgba(239,68,68,0.15);
-    color: #FCA5A5;
-    border: 1px solid rgba(239,68,68,0.25);
-    font-weight: 600;
-    padding: 0.5rem 1rem;
+    background:   rgba(239,68,68,0.12);
+    color:        #991B1B;
+    border:       1px solid rgba(239,68,68,0.22);
+    font-weight:  600;
+    padding:      0.5rem 1rem;
     border-radius: 8px;
-    font-size: 14px;
-    transition: all 150ms ease;
-    cursor: pointer;
+    font-size:    14px;
+    transition:   all 150ms ease;
+    cursor:       pointer;
+    display:      inline-flex;
+    align-items:  center;
+    gap:          0.375rem;
+    font-family:  inherit;
   }
-  .btn-danger:hover { background: rgba(239,68,68,0.25); }
+  .btn-danger:hover { background: rgba(239,68,68,0.22); }
 
   .btn-success {
-    background: rgba(16,185,129,0.15);
-    color: #34D399;
-    border: 1px solid rgba(16,185,129,0.25);
-    font-weight: 600;
-    padding: 0.5rem 1rem;
+    background:   rgba(16,185,129,0.12);
+    color:        #047857;
+    border:       1px solid rgba(16,185,129,0.22);
+    font-weight:  600;
+    padding:      0.5rem 1rem;
     border-radius: 8px;
-    font-size: 14px;
-    transition: all 150ms ease;
-    cursor: pointer;
+    font-size:    14px;
+    transition:   all 150ms ease;
+    cursor:       pointer;
+    display:      inline-flex;
+    align-items:  center;
+    gap:          0.375rem;
+    font-family:  inherit;
   }
-  .btn-success:hover { background: rgba(16,185,129,0.25); }
+  .btn-success:hover { background: rgba(16,185,129,0.22); }
 
+  /* ── Sidebar nav items ──
+     Active state inherits role colour via CSS vars — no hardcoded amber.
+  ── */
   .sidebar-item {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    padding: 0.45rem 1.25rem;
-    font-size: 13px;
-    color: #7B88A0;
-    border-left: 2px solid transparent;
-    transition: all 150ms ease;
-    cursor: pointer;
+    display:        flex;
+    align-items:    center;
+    gap:            0.625rem;
+    padding:        0.45rem 1.25rem;
+    font-size:      13px;
+    color:          var(--ink-2);
+    border-left:    3px solid transparent;
+    transition:     all 150ms ease;
+    cursor:         pointer;
     text-decoration: none;
-    border-radius: 0;
+    border-radius:  0;
+    letter-spacing: 0.005em;
+    position:       relative;
   }
-  .sidebar-item:hover { color: #E2E8F5; background: rgba(255,255,255,0.04); }
+  .sidebar-item::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 0 999px 999px 0;
+    background: transparent;
+  }
+  .sidebar-item:hover {
+    color:      var(--role-primary-hex);
+    background: var(--role-tint);
+  }
   .sidebar-item.active {
-    color: #F59E0B;
-    border-left-color: #F59E0B;
-    background: rgba(245,158,11,0.06);
+    color:             var(--role-primary-hex);
+    border-left-color: transparent;
+    background:        var(--role-tint);
+    font-weight:       500;
+  }
+  .sidebar-item.active::before {
+    background: linear-gradient(180deg, var(--role-grad-from), var(--role-grad-to));
   }
 
+  /* ── Safe area (iOS bottom bar) ── */
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .pt-safe { padding-top:    env(safe-area-inset-top,    0px); }
+
+  /* ── Page entrance animation ── */
   .page-animate { animation: fade-in 200ms ease forwards; }
 
+  /* ── Urgency pulse ── */
   .deadline-pulse { animation: pulse-soft 2s ease-in-out infinite; }
+
+  /* ── Shimmer skeleton ── */
+  .shimmer {
+    background: linear-gradient(90deg,
+      rgba(217,217,230,0.45) 25%,
+      rgba(255,255,255,0.92) 50%,
+      rgba(217,217,230,0.45) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  .data-role-loading {
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--role-tint) 45%, #FFFFFF) 25%,
+      #FFFFFF 50%,
+      color-mix(in srgb, var(--role-tint) 45%, #FFFFFF) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
 }
 
+*:focus-visible {
+  outline: 2px solid var(--role-primary-hex);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ── Keyframes ─────────────────────────────────────────────────────────── */
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: none; }
+  to   { opacity: 1; transform: none; }
 }
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50%       { opacity: 0.5; }
 }
 @keyframes ring-draw {
   from { stroke-dashoffset: 251; }
-  to { stroke-dashoffset: var(--target-offset, 0); }
+  to   { stroke-dashoffset: var(--target-offset, 0); }
 }
 @keyframes toast-in {
   from { opacity: 0; transform: translateX(100%); }
-  to { opacity: 1; transform: none; }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }

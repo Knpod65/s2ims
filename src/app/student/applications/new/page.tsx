@@ -120,14 +120,14 @@ function ApplyForm() {
     <AppShell requiredRole="student">
       {/* Scholarship header */}
       <div className="card p-4 mb-6 flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-brand/10 border border-brand/20 flex items-center justify-center flex-shrink-0">
-          <Trophy size={18} className="text-brand" />
+        <div className="w-10 h-10 rounded-xl bg-role-tint border border-role-border flex items-center justify-center flex-shrink-0">
+          <Trophy size={18} className="text-role-primary" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-sm text-ink-1 truncate">{title}</div>
           <div className="text-xs text-ink-3">{amount} · {scholarship.num_awards} {lang === 'th' ? 'ทุน' : 'awards'}</div>
         </div>
-        <Link href={`/scholarships/${scholarship.id}`} className="text-xs text-brand hover:text-brand-light">
+        <Link href={`/scholarships/${scholarship.id}`} className="text-xs text-role-primary hover:text-role-primary">
           {lang === 'th' ? 'ดูรายละเอียด' : 'View details'} →
         </Link>
       </div>
@@ -140,8 +140,8 @@ function ApplyForm() {
               i < stepIndex
                 ? 'bg-status-success/10 border-status-success/30 text-status-success'
                 : i === stepIndex
-                ? 'bg-brand/10 border-brand/30 text-brand'
-                : 'border-white/[0.08] text-ink-3'
+                ? 'bg-role-tint border-role-border text-role-primary'
+                : 'border-line text-ink-3'
             }`}>
               {i < stepIndex ? <CheckCircle2 size={11} /> : <span>{i + 1}</span>}
               {lang === 'th' ? s.label_th : s.label_en}
@@ -221,10 +221,10 @@ function ApplyForm() {
           </p>
           <div className="space-y-2 mb-6">
             {requiredDocs.map(doc => (
-              <label key={doc.id} className={`flex items-center gap-3 card p-3 cursor-pointer hover:border-white/[0.15] transition-all ${checkedDocs.has(doc.id) ? 'border-status-success/20 bg-status-success/[0.03]' : ''}`}>
+              <label key={doc.id} className={`flex items-center gap-3 card p-3 cursor-pointer hover:border-line transition-all ${checkedDocs.has(doc.id) ? 'border-status-success/20 bg-status-success/[0.03]' : ''}`}>
                 <input
                   type="checkbox"
-                  className="accent-brand"
+                  className="accent-role-primary"
                   checked={checkedDocs.has(doc.id)}
                   onChange={e => {
                     const next = new Set(checkedDocs)
@@ -257,7 +257,7 @@ function ApplyForm() {
       {step === 'essay' && scholarship.has_essay && (
         <div className="max-w-lg">
           <h2 className="font-display font-semibold text-lg text-ink-1 mb-2 flex items-center gap-2">
-            <MessageSquare size={18} className="text-brand" />
+            <MessageSquare size={18} className="text-role-primary" />
             {lang === 'th' ? 'เรียงความ' : 'Essay'}
           </h2>
           <p className="text-xs text-ink-3 mb-5">
@@ -303,7 +303,7 @@ function ApplyForm() {
             </div>
             <div className="flex justify-between">
               <span className="text-ink-3">{lang === 'th' ? 'จำนวนเงิน' : 'Amount'}</span>
-              <span className="text-brand font-semibold">{amount}</span>
+              <span className="text-role-primary font-semibold">{amount}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-ink-3">{lang === 'th' ? 'เอกสาร' : 'Documents'}</span>

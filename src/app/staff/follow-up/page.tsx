@@ -38,7 +38,7 @@ export default function StaffFollowUpPage() {
                 <div>
                   <div className="font-medium text-sm text-ink-1">{lang==='th'?f.name_th:f.name_en}</div>
                   <div className="text-xs text-ink-3 mt-0.5">{lang==='th'?f.scholarship_th:f.scholarship_en} · ID: {f.student}</div>
-                  <div className={`flex items-center gap-1 text-xs mt-1.5 ${isOverdue?'text-status-danger':'text-brand'}`}>
+                  <div className={`flex items-center gap-1 text-xs mt-1.5 ${isOverdue?'text-status-danger':'text-role-primary'}`}>
                     {isOverdue && <AlertTriangle size={11}/>}
                     {isOverdue
                       ? `${lang==='th'?'ล่าช้า':'Overdue'} ${Math.abs(days)} ${lang==='th'?'วัน':'days'}`
@@ -49,12 +49,12 @@ export default function StaffFollowUpPage() {
                 <div className="flex items-center gap-2">
                   <StatusBadge
                     label={isOverdue?(lang==='th'?'รายงานล่าช้า':'Report Overdue'):(lang==='th'?'ต้องส่งรายงาน':'Report Required')}
-                    color={isOverdue?'bg-status-danger/15 text-red-300 border-status-danger/25':'bg-brand/15 text-brand-light border-brand/25'}
+                    color={isOverdue?'bg-red-50 text-red-700 border-red-200':'bg-role-tint text-role-primary-2 border-role-border'}
                   />
                   <button
                     onClick={() => handleRemind(i, lang==='th'?f.name_th:f.name_en)}
                     disabled={isSent}
-                    className={`text-xs flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all ${isSent?'bg-status-success/10 text-green-300 border-status-success/25 cursor-default':'btn-secondary'}`}
+                    className={`text-xs flex items-center gap-1.5 py-1.5 px-3 rounded-lg border transition-all ${isSent?'bg-emerald-50 text-emerald-700 border-emerald-200 cursor-default':'btn-secondary'}`}
                   >
                     {isSent ? <CheckCircle2 size={11}/> : <Send size={11}/>}
                     {isSent ? (lang==='th'?'ส่งแล้ว':'Sent') : (lang==='th'?'แจ้งเตือน':'Remind')}

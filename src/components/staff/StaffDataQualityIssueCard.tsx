@@ -21,7 +21,7 @@ export default function StaffDataQualityIssueCard({ issue, onResolve }: StaffDat
       case 'warning':
         return <AlertCircle size={16} className="text-status-warning" />
       case 'info':
-        return <Zap size={16} className="text-brand" />
+        return <Zap size={16} className="text-role-primary" />
       default:
         return <AlertCircle size={16} className="text-ink-3" />
     }
@@ -39,13 +39,13 @@ export default function StaffDataQualityIssueCard({ issue, onResolve }: StaffDat
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical':
-        return 'bg-status-danger/10 text-status-danger'
+        return 'bg-red-50 text-red-700 border border-red-200'
       case 'warning':
-        return 'bg-status-warning/10 text-status-warning'
+        return 'bg-[#FFFBEB] text-[#78350F] border border-[#FDE68A]'
       case 'info':
-        return 'bg-brand/10 text-brand'
+        return 'bg-blue-50 text-blue-700 border border-blue-200'
       default:
-        return 'bg-bg-100 text-ink-3'
+        return 'bg-surface-low text-ink-3 border border-line'
     }
   }
 
@@ -85,14 +85,14 @@ export default function StaffDataQualityIssueCard({ issue, onResolve }: StaffDat
 
   return (
     <div
-      className={`rounded-lg border transition-all ${
-        expanded ? 'border-brand/30 bg-brand/[0.02]' : 'border-white/[0.08]'
+      className={`rounded-xl border bg-white shadow-card transition-all ${
+        expanded ? 'border-amber-200' : 'border-line'
       }`}
     >
       {/* Header */}
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full p-4 flex items-start justify-between gap-3 hover:bg-white/[0.02] transition-colors"
+        className="w-full p-4 flex items-start justify-between gap-3 hover:bg-surface-low transition-colors"
       >
         <div className="flex items-start gap-3 flex-1 text-left">
           <div className="mt-0.5">{getSeverityIcon(issue.severity)}</div>
@@ -123,7 +123,7 @@ export default function StaffDataQualityIssueCard({ issue, onResolve }: StaffDat
 
       {/* Expanded Details */}
       {expanded && (
-        <div className="border-t border-white/[0.08] p-4 bg-bg-200/50 space-y-3">
+        <div className="border-t border-line p-4 bg-surface-low/60 space-y-3">
           {/* Issue Details */}
           <div className="space-y-2 text-xs">
             <div className="flex justify-between">
@@ -147,7 +147,7 @@ export default function StaffDataQualityIssueCard({ issue, onResolve }: StaffDat
           </div>
 
           {/* Suggested Fix */}
-          <div className="p-3 rounded bg-bg-100 border border-white/[0.08]">
+          <div className="p-3 rounded-lg bg-white border border-line">
             <p className="text-xs text-ink-3 font-semibold mb-1">
               {lang === 'th' ? 'การแก้ไขที่แนะนำ' : 'Suggested Fix'}
             </p>
@@ -176,10 +176,10 @@ export default function StaffDataQualityIssueCard({ issue, onResolve }: StaffDat
 
           {/* Action */}
           {issue.status === 'open' && onResolve && (
-            <div className="pt-3 border-t border-white/[0.08]">
+            <div className="pt-3 border-t border-line">
               <button
                 onClick={() => onResolve(issue.id)}
-                className="w-full text-xs py-2 px-3 bg-brand/10 text-brand rounded hover:bg-brand/20 transition-colors"
+                className="w-full text-xs py-2 px-3 bg-role-tint text-role rounded hover:bg-white transition-colors border border-role"
               >
                 {lang === 'th' ? 'ทำเครื่องหมายว่าดำเนินการอยู่' : 'Mark In Progress'}
               </button>

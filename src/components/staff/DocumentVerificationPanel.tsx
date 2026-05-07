@@ -29,7 +29,7 @@ export default function DocumentVerificationPanel({
       case 'verified':
         return <CheckCircle2 size={14} className="text-status-success" />
       case 'pending':
-        return <Clock size={14} className="text-brand" />
+        return <Clock size={14} className="text-role-primary" />
       case 'rejected':
       case 'invalid_file_type':
         return <AlertCircle size={14} className="text-status-danger" />
@@ -59,7 +59,7 @@ export default function DocumentVerificationPanel({
         return 'bg-status-success/10 text-status-success'
       case 'pending':
       case 'uploaded':
-        return 'bg-brand/10 text-brand'
+        return 'bg-role-tint text-role-primary'
       case 'rejected':
       case 'invalid_file_type':
       case 'missing':
@@ -67,7 +67,7 @@ export default function DocumentVerificationPanel({
       case 'needs_replacement':
         return 'bg-status-warning/10 text-status-warning'
       default:
-        return 'bg-bg-100 text-ink-3'
+        return 'bg-surface-low text-ink-3 border border-line'
     }
   }
 
@@ -78,11 +78,11 @@ export default function DocumentVerificationPanel({
       </h3>
 
       {documents.map((doc) => (
-        <div key={doc.id} className={`rounded-lg border transition-all ${expandedDoc === doc.id ? 'border-brand/30 bg-brand/[0.02]' : 'border-white/[0.08]'}`}>
+        <div key={doc.id} className={`rounded-lg border transition-all bg-white ${expandedDoc === doc.id ? 'border-amber-200' : 'border-line'}`}>
           {/* Header */}
           <button
             onClick={() => setExpandedDoc(expandedDoc === doc.id ? null : doc.id)}
-            className="w-full p-4 flex items-start justify-between gap-3 hover:bg-white/[0.02] transition-colors"
+            className="w-full p-4 flex items-start justify-between gap-3 hover:bg-surface-low transition-colors"
           >
             <div className="flex items-start gap-3 flex-1 text-left">
               <div className="mt-0.5">{getStatusIcon(doc.status)}</div>
@@ -105,7 +105,7 @@ export default function DocumentVerificationPanel({
 
           {/* Expanded Details */}
           {expandedDoc === doc.id && (
-            <div className="border-t border-white/[0.08] p-4 bg-bg-200/50">
+            <div className="border-t border-line p-4 bg-surface-low/60">
               <div className="space-y-3">
                 {/* Basic Info */}
                 {doc.fileName && (
@@ -127,7 +127,7 @@ export default function DocumentVerificationPanel({
                     <p className="text-xs text-status-danger font-semibold mb-1">
                       {lang === 'th' ? 'เหตุผลการปฏิเสธ' : 'Rejection Reason'}
                     </p>
-                    <p className="text-xs text-status-danger/90">{doc.rejectionReason}</p>
+                    <p className="text-xs text-red-700">{doc.rejectionReason}</p>
                   </div>
                 )}
 
@@ -137,23 +137,23 @@ export default function DocumentVerificationPanel({
                     <p className="text-xs text-status-warning font-semibold mb-1">
                       {lang === 'th' ? 'ข้อความขอส่งแทน' : 'Replacement Request'}
                     </p>
-                    <p className="text-xs text-status-warning/90">{doc.replacementMessage}</p>
+                    <p className="text-xs text-[#78350F]">{doc.replacementMessage}</p>
                   </div>
                 )}
 
                 {/* Staff Note */}
                 {doc.staffNote && (
-                  <div className="p-3 rounded bg-brand/10 border border-brand/20">
-                    <p className="text-xs text-brand font-semibold mb-1">
+                  <div className="p-3 rounded bg-role-tint border border-role-border">
+                    <p className="text-xs text-role-primary font-semibold mb-1">
                       {lang === 'th' ? 'หมายเหตุของเจ้าหน้าที่' : 'Staff Note'}
                     </p>
-                    <p className="text-xs text-brand/90">{doc.staffNote}</p>
+                    <p className="text-xs text-ink-2">{doc.staffNote}</p>
                   </div>
                 )}
 
                 {/* Actions */}
                 {doc.status !== 'verified' && (
-                  <div className="pt-3 border-t border-white/[0.08] space-y-2">
+                  <div className="pt-3 border-t border-line space-y-2">
                     {doc.status !== 'rejected' && doc.status !== 'needs_replacement' && (
                       <>
                         {onVerify && (

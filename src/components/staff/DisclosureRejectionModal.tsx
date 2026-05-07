@@ -35,16 +35,16 @@ export default function DisclosureRejectionModal({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-bg-100 rounded-lg max-w-md w-full mx-4 shadow-lg">
+    <div className="fixed inset-0 bg-slate-950/35 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl max-w-md w-full mx-4 shadow-[0_28px_80px_rgba(15,23,42,.18)] border border-line">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/[0.08]">
+        <div className="flex items-center justify-between p-4 border-b border-line">
           <h2 className="font-semibold text-ink-1">
             {lang === 'th' ? 'ปฏิเสธการเปิดเผยตัวตน' : 'Reject Disclosure'}
           </h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-white/[0.08] rounded transition-colors"
+            className="p-1 hover:bg-surface-low rounded transition-colors"
             disabled={isSubmitting}
           >
             <X size={16} className="text-ink-3" />
@@ -54,10 +54,10 @@ export default function DisclosureRejectionModal({
         {/* Body */}
         <div className="p-4 space-y-4">
           {/* Info */}
-          <div className="bg-bg-200 rounded-lg p-3 space-y-2">
+          <div className="bg-surface-low rounded-lg p-3 space-y-2 border border-line">
             <div className="flex items-center justify-between text-xs">
               <span className="text-ink-3">{lang === 'th' ? 'ผู้สมัคร' : 'Candidate'}</span>
-              <span className="font-medium text-ink-1">{candidateToken}</span>
+              <span className="font-mono font-medium text-ink-1">{candidateToken}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className="text-ink-3">{lang === 'th' ? 'ผู้ให้โครงการ' : 'Provider'}</span>
@@ -96,10 +96,10 @@ export default function DisclosureRejectionModal({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center gap-2 p-4 border-t border-white/[0.08] bg-bg-200/50">
+        <div className="flex items-center gap-2 p-4 border-t border-line bg-surface-low/70">
           <button
             onClick={onClose}
-            className="flex-1 text-xs py-2 px-3 bg-white/[0.08] text-ink-1 rounded hover:bg-white/[0.12] transition-colors disabled:opacity-50"
+            className="flex-1 text-xs py-2 px-3 bg-white border border-line text-ink-1 rounded hover:bg-surface-muted transition-colors disabled:opacity-50"
             disabled={isSubmitting}
           >
             {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
@@ -107,7 +107,7 @@ export default function DisclosureRejectionModal({
           <button
             onClick={handleSubmit}
             disabled={!reason.trim() || reason.length < 15 || isSubmitting}
-            className="flex-1 text-xs py-2 px-3 bg-status-danger/10 text-status-danger rounded hover:bg-status-danger/20 transition-colors disabled:opacity-50"
+            className="flex-1 text-xs py-2 px-3 bg-red-600 text-white rounded hover:bg-red-700 transition-colors disabled:opacity-50"
           >
             {isSubmitting
               ? lang === 'th'
