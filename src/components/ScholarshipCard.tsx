@@ -6,6 +6,7 @@ import { daysUntil, deadlineColor, formatAmount, formatAmountEn } from '@/lib/ut
 import { StatusBadge } from './ui/index'
 import { SCH_STATUS_MAP } from '@/lib/utils'
 import type { Scholarship } from '@/lib/types'
+import StudentMatchScoreRing from './student/MatchScoreRing'
 
 interface Props {
   scholarship: Scholarship
@@ -14,25 +15,7 @@ interface Props {
 }
 
 export function MatchScoreRing({ pct }: { pct: number }) {
-  const r = 20
-  const circ = 2 * Math.PI * r
-  const offset = circ * (1 - pct / 100)
-  const color = pct >= 80 ? '#10B981' : pct >= 60 ? '#F59E0B' : '#4A5568'
-
-  return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: 52, height: 52 }}>
-      <svg width="52" height="52" viewBox="0 0 52 52" className="absolute inset-0" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="26" cy="26" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="4" />
-        <circle
-          cx="26" cy="26" r={r} fill="none" stroke={color} strokeWidth="4"
-          strokeDasharray={circ} strokeDashoffset={offset}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.7s cubic-bezier(0.4,0,0.2,1)' }}
-        />
-      </svg>
-      <span className="text-xs font-bold" style={{ color }}>{pct}%</span>
-    </div>
-  )
+  return <StudentMatchScoreRing score={pct} size="sm" showConfidenceLabel={false} />
 }
 
 export default function ScholarshipCard({ scholarship: s, showMatch = false, onSave }: Props) {
@@ -94,17 +77,17 @@ export default function ScholarshipCard({ scholarship: s, showMatch = false, onS
         {/* Tags */}
         <div className="flex flex-wrap gap-1.5 mt-3">
           {s.has_essay && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded border border-line">
+            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded">
               {lang === 'th' ? 'เรียงความ' : 'Essay'}
             </span>
           )}
           {s.has_interview && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded border border-line">
+            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded">
               {lang === 'th' ? 'สัมภาษณ์' : 'Interview'}
             </span>
           )}
           {s.has_proposal && (
-            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded border border-line">
+            <span className="text-[10px] px-1.5 py-0.5 bg-white border border-line text-ink-3 rounded">
               {lang === 'th' ? 'ข้อเสนอ' : 'Proposal'}
             </span>
           )}

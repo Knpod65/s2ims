@@ -7,7 +7,7 @@ import type { NavItem, Role } from './types'
 export const NAV_CONFIG: Record<Role, NavItem[]> = {
   student: [
     { label_th: 'แดชบอร์ด',       label_en: 'Dashboard',       href: '/student/dashboard',        icon: 'LayoutDashboard' },
-    { label_th: 'ทุนการศึกษา',     label_en: 'Scholarships',    href: '/scholarships',              icon: 'BookOpen' },
+    { label_th: 'ทุนที่แนะนำ',     label_en: 'Recommendations', href: '/student/recommendations',  icon: 'BookOpen' },
     { label_th: 'ใบสมัครของฉัน',   label_en: 'My Applications', href: '/student/applications',      icon: 'FileText' },
     { label_th: 'โปรไฟล์',         label_en: 'My Profile',      href: '/student/profile',           icon: 'User' },
     { label_th: 'การแจ้งเตือน',    label_en: 'Notifications',   href: '/student/notifications',     icon: 'Bell' },
@@ -48,7 +48,7 @@ export const NAV_CONFIG: Record<Role, NavItem[]> = {
 export const MOBILE_NAV: Record<Role, NavItem[]> = {
   student: [
     { label_th: 'หน้าแรก', label_en: 'Home',    href: '/student/dashboard',     icon: 'Home' },
-    { label_th: 'จับคู่',   label_en: 'Matches', href: '/scholarships',           icon: 'BookOpen' },
+    { label_th: 'จับคู่',   label_en: 'Matches', href: '/student/recommendations', icon: 'BookOpen' },
     { label_th: 'งาน',      label_en: 'Tasks',   href: '/student/applications',   icon: 'ClipboardList' },
     { label_th: 'โปรไฟล์', label_en: 'Profile', href: '/student/profile',        icon: 'User' },
   ],
