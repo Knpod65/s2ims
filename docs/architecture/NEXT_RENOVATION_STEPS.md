@@ -189,3 +189,31 @@ Why:
 
 Do not implement Phase 2A until approved.
 
+## Phase 2D Result (Token Formatting Policy & Lightweight Checks)
+
+Completed in this branch:
+
+- Added token formatting policy document: `docs/architecture/TOKEN_FORMATTING_POLICY_PHASE_2D.md`.
+- Added lightweight token output checks: `scripts/check-token-formats.mjs`.
+- Added npm script: `npm run check:tokens`.
+
+Phase 2D intent was guardrails only:
+
+- No route changes.
+- No auth/role-guard changes.
+- No status label/color changes.
+- No disclosure/export behavior changes.
+
+## Recommended Next Phase After 2D
+
+Recommended: Option A
+
+Phase 2E — Sensitive action reason rule inventory + policy doc only.
+
+Why Option A is safest now:
+
+- It is documentation and policy-first, with no UI behavior changes.
+- It reduces compliance/audit ambiguity before any additional formatter/config migration.
+- It clarifies which actions must require explicit reason capture before broader refactors.
+- It helps avoid accidental regression in disclosure/export or admin audit workflows.
+
