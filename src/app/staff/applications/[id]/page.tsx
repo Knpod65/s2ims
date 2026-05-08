@@ -6,6 +6,7 @@ import { mockApplications } from '@/data/mock/applications'
 import { mockDocumentStates, mockStaffNotes, mockAuditEvents } from '@/data/mock/staffData'
 import { PageHeader, StatusBadge } from '@/components/ui/index'
 import { APP_STATUS_MAP } from '@/lib/utils'
+import { formatStudentToken } from '@/config/tokenFormats'
 import ApplicationTimeline from '@/components/ApplicationTimeline'
 import MaskedStudentProfileCard from '@/components/staff/MaskedStudentProfileCard'
 import DocumentVerificationPanel from '@/components/staff/DocumentVerificationPanel'
@@ -30,6 +31,7 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
   const appDocs = mockDocumentStates[id] || []
   const appNotes = mockStaffNotes[id] || []
   const appAuditEvents = mockAuditEvents.filter((e) => e.applicationId === id)
+  const studentToken = formatStudentToken(app.student_id)
 
   const handleStatusChange = (s: ApplicationStatus) => {
     setCurrentStatus(s)
@@ -83,7 +85,7 @@ export default function StaffApplicationDetailPage({ params }: { params: Promise
           {/* Masked Student Profile */}
           <MaskedStudentProfileCard
             profile={{
-              token: `Student #S-${app.student_id.slice(-4)}`,
+              token: studentToken,
               gpaRange: { min: 3.6, max: 3.8 },
               financialNeedPercentile: 75,
               academicYear: 4,
