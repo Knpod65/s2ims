@@ -217,3 +217,32 @@ Why Option A is safest now:
 - It clarifies which actions must require explicit reason capture before broader refactors.
 - It helps avoid accidental regression in disclosure/export or admin audit workflows.
 
+## Phase 2E Result (Sensitive Action Reason Inventory & Policy)
+
+Completed in this branch:
+
+- Added sensitive action inventory:
+	- `docs/architecture/SENSITIVE_ACTION_REASON_INVENTORY_PHASE_2E.md`
+- Added sensitive action policy:
+	- `docs/architecture/SENSITIVE_ACTION_POLICY_PHASE_2E.md`
+- Added ReasonRequiredModal proposal:
+	- `docs/architecture/REASON_REQUIRED_MODAL_PROPOSAL_PHASE_2E.md`
+
+Phase 2E constraints honored:
+
+- Documentation/inventory only.
+- No route/auth/role/nav/status/disclosure/export behavior changes.
+- No wiring of `src/config/sensitiveActions.ts` into existing modals yet.
+
+## Recommended Phase 2F
+
+Recommended: Option A
+
+Phase 2F — Status config migration plan only.
+
+Why Option A is safest next:
+
+- It remains plan-first and low-risk after a governance-heavy inventory phase.
+- It avoids immediate behavior changes in sensitive reason-required modals.
+- It prepares a clearer baseline before implementing shared modal behavior.
+
