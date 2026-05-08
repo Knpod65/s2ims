@@ -234,15 +234,50 @@ Phase 2E constraints honored:
 - No route/auth/role/nav/status/disclosure/export behavior changes.
 - No wiring of `src/config/sensitiveActions.ts` into existing modals yet.
 
-## Recommended Phase 2F
+## Phase 2F Result (Status Config Migration Plan)
 
-Recommended: Option A
+Completed in this branch:
 
-Phase 2F — Status config migration plan only.
+- Added status usage inventory:
+	- `docs/architecture/STATUS_USAGE_INVENTORY_PHASE_2F.md`
+- Added status migration plan:
+	- `docs/architecture/STATUS_MIGRATION_PLAN_PHASE_2F.md`
 
-Why Option A is safest next:
+Phase 2F constraints honored:
 
-- It remains plan-first and low-risk after a governance-heavy inventory phase.
-- It avoids immediate behavior changes in sensitive reason-required modals.
-- It prepares a clearer baseline before implementing shared modal behavior.
+- Documentation and inventory only.
+- No runtime status logic changed.
+- No components wired to `src/config/statuses.ts`.
+- No route/auth/role/nav/disclosure/export behavior changes.
+
+Key findings:
+
+- 15 significant status inconsistencies found across 8 active domains.
+- Two parallel application status systems exist with incompatible key conventions (`UNDER_REVIEW` vs `in_review`).
+- Document `rejected` label and tone differ by role (intentional privacy distinction — must be preserved).
+- Audit/risk `critical` level is absent from all three admin components — governance gap.
+- `staffData.ts` uses `current` for freshness; every other source uses `fresh`.
+- Announcement statuses are entirely absent from `statuses.ts`.
+
+## Recommended Phase 2G
+
+Recommended: Stage 1 of the Status Config Migration Plan — Data Freshness domain only.
+
+Why data freshness is safest first:
+
+- Only 3 status keys: `fresh`, `stale`, `failed`.
+- Only one naming fix required before wiring: `staffData.ts` `current` → `fresh` (mock data only).
+- Affects at most 2 indicator components (`ProviderDataFreshnessIndicator`, student `DataFreshnessIndicator`).
+- Not connected to governance flows, reason-required modals, disclosure, or export behavior.
+- No audit implications.
+- Blast radius: 2–3 files maximum.
+- No label or tone mismatches to resolve (config and active components already agree).
+
+Phase 2G should remain small:
+
+- Implement `getStatusConfig`, `getStatusLabel`, `getStatusTone`, `badgeToneToClass` as pure functions.
+- Wire only the data freshness domain.
+- Confirm build passes and visual output is unchanged.
+- Do not expand scope to application or document statuses in the same phase.
+- One domain per phase until migration pattern is proven stable.
 
