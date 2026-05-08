@@ -143,3 +143,4 @@ Current architecture audit and renovation planning:
 - [PDPA Data Exposure Map](docs/architecture/PDPA_DATA_EXPOSURE_MAP.md)
 - [Data Access Map](docs/architecture/DATA_ACCESS_MAP.md)
 - [Next Renovation Steps](docs/architecture/NEXT_RENOVATION_STEPS.md)
+- [Config Centralization Phase 2A](docs/architecture/CONFIG_CENTRALIZATION_PHASE_2A.md)
