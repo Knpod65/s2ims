@@ -128,3 +128,18 @@ messages/
 ├── th.json                 # Thai translations
 └── en.json                 # English translations
 ```
+
+---
+
+## Architecture & Renovation Docs
+
+Current architecture audit and renovation planning:
+
+- [Architecture Renovation Audit](ARCHITECTURE_RENOVATION_AUDIT.md)
+- [Renovation Plan](RENOVATION_PLAN.md)
+- [Route Map](docs/architecture/ROUTE_MAP.md)
+- [Component Inventory](docs/architecture/COMPONENT_INVENTORY.md)
+- [Role / Permission Map](docs/architecture/ROLE_PERMISSION_MAP.md)
+- [PDPA Data Exposure Map](docs/architecture/PDPA_DATA_EXPOSURE_MAP.md)
+- [Data Access Map](docs/architecture/DATA_ACCESS_MAP.md)
+- [Next Renovation Steps](docs/architecture/NEXT_RENOVATION_STEPS.md)
