@@ -12,8 +12,10 @@ import {
 import { studentDataFreshness } from '@/data/mock/studentMatchingData'
 import {
   DataFreshnessIndicator,
-  DocumentUploadChecklist,
+  DocumentRecoveryPanel,
+  NextBestActionPanel,
   StudentPrivacyNotice,
+  StudentReadinessPath,
 } from '@/components/student'
 
 export default function StudentApplicationDocumentsPage({
@@ -50,24 +52,10 @@ export default function StudentApplicationDocumentsPage({
       />
 
       <div className="mx-auto max-w-4xl space-y-6">
-        <section className="card p-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 className="font-display text-lg font-bold text-ink-1">
-                {lang === 'th' ? 'สรุปใบสมัคร' : 'Application summary'}
-              </h2>
-              <p className="mt-1 text-sm leading-relaxed text-ink-2">
-                {lang === 'th'
-                  ? 'หน้านี้เป็นการอัปโหลดแบบจำลอง ไม่มีการจัดเก็บไฟล์จริง'
-                  : 'This is a mock upload page. No real file storage is performed.'}
-              </p>
-            </div>
-            <div className="rounded-xl border border-[#0055FF]/15 bg-[#E5EDFF] p-3 text-center text-role-primary">
-              <div className="font-display text-xl font-bold">{application.readinessPct}%</div>
-              <div className="text-[10px] font-semibold">{lang === 'th' ? 'พร้อม' : 'ready'}</div>
-            </div>
-          </div>
-        </section>
+        <StudentReadinessPath
+          readinessPct={application.readinessPct}
+          documents={application.documents}
+        />
 
         {needsAttention.length > 0 && (
           <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] p-4 text-[#78350F]">
@@ -82,30 +70,40 @@ export default function StudentApplicationDocumentsPage({
           </div>
         )}
 
-        <DocumentUploadChecklist documents={application.documents} />
+        <DocumentRecoveryPanel documents={application.documents} />
 
-        <StudentPrivacyNotice />
-
-        <div className="sticky bottom-[calc(48px+env(safe-area-inset-bottom))] z-20 rounded-2xl border border-line bg-white/90 p-3 shadow-floating backdrop-blur-xl md:bottom-4">
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Link href={`/student/applications/${application.id}`} className="btn-secondary inline-flex min-h-11 flex-1 items-center justify-center gap-2 px-4 py-3 text-sm">
-              <ArrowLeft size={14} />
-              {lang === 'th' ? 'กลับรายละเอียด' : 'Back to detail'}
-            </Link>
-            <button
-              type="button"
-              onClick={() => addToast(lang === 'th' ? 'บันทึกเอกสารแบบจำลองแล้ว' : 'Mock document draft saved', 'success')}
-              className="btn-secondary inline-flex min-h-11 flex-1 items-center justify-center gap-2 px-4 py-3 text-sm"
-            >
-              <Save size={14} />
-              {lang === 'th' ? 'บันทึกแบบร่าง' : 'Save draft'}
-            </button>
-            <button type="button" className="btn-primary inline-flex min-h-11 flex-1 items-center justify-center gap-2 px-4 py-3 text-sm">
+        <NextBestActionPanel
+          title={needsAttention.length > 0
+            ? (lang === 'th' ? 'เพิ่มไฟล์ที่ช่วยให้ใบสมัครเดินต่อได้' : 'Add the files that help this application move forward')
+            : (lang === 'th' ? 'เอกสารพร้อมแล้ว ตรวจรายละเอียดใบสมัครต่อได้' : 'Documents are ready; review the application detail next')}
+          description={lang === 'th'
+            ? 'หน้านี้เป็นการอัปโหลดแบบจำลอง ไม่มีการจัดเก็บไฟล์จริง และปุ่มเดิมยังทำงานเหมือนเดิม'
+            : 'This remains a mock upload page. No real file storage is performed, and the existing actions behave the same way.'}
+          primaryAction={(
+            <button type="button" className="btn-primary inline-flex min-h-11 items-center justify-center gap-2 px-4 py-3 text-sm">
               <UploadCloud size={14} />
               {lang === 'th' ? 'เพิ่มไฟล์แบบจำลอง' : 'Mock upload'}
             </button>
-          </div>
-        </div>
+          )}
+          secondaryActions={(
+            <>
+              <button
+                type="button"
+                onClick={() => addToast(lang === 'th' ? 'บันทึกเอกสารแบบจำลองแล้ว' : 'Mock document draft saved', 'success')}
+                className="btn-secondary inline-flex min-h-11 items-center justify-center gap-2 px-4 py-3 text-sm"
+              >
+                <Save size={14} />
+                {lang === 'th' ? 'บันทึกแบบร่าง' : 'Save draft'}
+              </button>
+              <Link href={`/student/applications/${application.id}`} className="btn-secondary inline-flex min-h-11 items-center justify-center gap-2 px-4 py-3 text-sm">
+                <ArrowLeft size={14} />
+                {lang === 'th' ? 'กลับรายละเอียด' : 'Back to detail'}
+              </Link>
+            </>
+          )}
+        />
+
+        <StudentPrivacyNotice />
       </div>
     </AppShell>
   )

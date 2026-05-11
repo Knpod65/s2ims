@@ -11,12 +11,13 @@ import {
 } from '@/data/mock/studentApplicationData'
 import { getRecommendationByScholarshipId, studentDataFreshness } from '@/data/mock/studentMatchingData'
 import {
-  ApplicationReadinessCard,
   DataFreshnessIndicator,
   EligibilityChecklist,
+  NextBestActionPanel,
   RequiredDocumentsList,
   ScholarshipDetailCard,
   StudentPrivacyNotice,
+  StudentReadinessPath,
 } from '@/components/student'
 
 export default function StudentScholarshipApplyPage({
@@ -56,13 +57,10 @@ export default function StudentScholarshipApplyPage({
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
           <main className="space-y-6">
-            <ApplicationReadinessCard
+            <StudentReadinessPath
               readinessPct={readiness.readinessPct}
-              readyDocs={readiness.readyDocs}
-              requiredDocs={readiness.requiredDocs}
-              missingDocuments={readiness.missingDocuments}
+              documents={documents}
               missingData={readiness.missingData}
-              improveHref="/student/profile/improve"
             />
 
             <section className="card p-5">
@@ -87,16 +85,19 @@ export default function StudentScholarshipApplyPage({
 
           <aside className="space-y-6">
             {readiness.missingDocuments.length > 0 && (
-              <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] p-4 text-[#78350F]">
-                <div className="font-semibold">
-                  {lang === 'th' ? 'ยังมีข้อมูลที่ช่วยให้ใบสมัครพร้อมขึ้น' : 'A few details can make this stronger'}
-                </div>
-                <p className="mt-1 text-sm leading-relaxed">
-                  {lang === 'th'
-                    ? 'คุณเริ่มร่างได้เลย และกลับมาเพิ่มเอกสารก่อนส่งจริง'
-                    : 'You can start a draft now and return to add documents before final submission.'}
-                </p>
-              </div>
+              <NextBestActionPanel
+                title={lang === 'th' ? 'เริ่มร่างได้ แล้วค่อยเติมเอกสารให้ครบ' : 'Start the draft, then return to strengthen documents'}
+                description={lang === 'th'
+                  ? 'คุณเริ่มร่างได้เลย และกลับมาเพิ่มเอกสารก่อนส่งจริง'
+                  : 'You can start a draft now and return to add documents before final submission.'}
+                primaryAction={(
+                  <Link href={readiness.application ? `/student/applications/${readiness.application.id}/edit` : '/student/applications/app_003/edit'} className="btn-primary inline-flex min-h-11 items-center justify-center gap-2 px-4 py-3 text-sm">
+                    <CheckCircle2 size={14} />
+                    {lang === 'th' ? 'สร้างหรือเปิดร่างใบสมัคร' : 'Start draft'}
+                    <ArrowRight size={14} />
+                  </Link>
+                )}
+              />
             )}
 
             <div className="card p-5">
