@@ -3,33 +3,64 @@
 import Link from 'next/link'
 import { Edit3, Lock, Target, Users } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/index'
+import { getStatusLabel, getStatusTone } from '@/config/statusHelpers'
 import { useLang } from '@/lib/i18n'
-import type { Scholarship } from '@/data/mock/providerData'
+import type { CandidatePoolStatus, Scholarship } from '@/data/mock/providerData'
 
 type ProviderScholarshipCardProps = {
   scholarship: Scholarship
 }
 
 export function scholarshipStatusLabel(status: Scholarship['status'], lang: 'th' | 'en') {
-  const labels = {
-    DRAFT: { en: 'Draft', th: 'ร่าง' },
-    ACTIVE: { en: 'Active', th: 'เปิดใช้งาน' },
-    PENDING_REVIEW: { en: 'Pending review', th: 'รอตรวจสอบ' },
-    CLOSED: { en: 'Closed', th: 'ปิดแล้ว' },
+  const providerLabelOverrides: Partial<Record<Scholarship['status'], { th?: string; en?: string }>> = {
+    DRAFT: { th: 'ร่าง' },
+    ACTIVE: { th: 'เปิดใช้งาน' },
+    CLOSED: { th: 'ปิดแล้ว' },
   }
-  return labels[status][lang]
+
+  return providerLabelOverrides[status]?.[lang] ?? getStatusLabel('scholarship', status, lang)
 }
 
 export function scholarshipStatusColor(status: Scholarship['status']) {
   if (status === 'ACTIVE') return 'bg-role-tint text-role-primary border-role-border'
-  if (status === 'PENDING_REVIEW') return 'bg-[#FFFBEB] text-[#78350F] border-[#FDE68A]'
+  const tone = getStatusTone('scholarship', status)
+  if (tone === 'amber') return 'bg-[#FFFBEB] text-[#78350F] border-[#FDE68A]'
+  if (tone === 'success' || tone === 'emerald') return 'bg-emerald-50 text-emerald-700 border-emerald-200'
   if (status === 'CLOSED') return 'bg-surface-low text-ink-2 border-line'
   return 'bg-white text-ink-3 border-line'
+}
+
+function candidatePoolStatusLabel(status: CandidatePoolStatus, lang: 'th' | 'en') {
+  return getStatusLabel('candidatePool', status, lang)
+}
+
+function candidatePoolStatusColor(status: CandidatePoolStatus) {
+  const tone = getStatusTone('candidatePool', status)
+  if (tone === 'emerald' || tone === 'success') {
+    return {
+      container: 'bg-role-tint',
+      label: 'text-role-primary',
+      value: 'text-role-primary',
+    }
+  }
+  if (tone === 'amber') {
+    return {
+      container: 'bg-[#FFFBEB]',
+      label: 'text-[#78350F]/70',
+      value: 'text-[#78350F]',
+    }
+  }
+  return {
+    container: 'bg-surface-low',
+    label: 'text-ink-3',
+    value: 'text-ink-2',
+  }
 }
 
 export default function ProviderScholarshipCard({ scholarship }: ProviderScholarshipCardProps) {
   const { lang } = useLang()
   const isPoolReady = scholarship.candidatePoolStatus === 'ready'
+  const candidatePoolColor = candidatePoolStatusColor(scholarship.candidatePoolStatus)
 
   return (
     <article className="group card card-hover relative overflow-hidden p-4">
@@ -60,10 +91,10 @@ export default function ProviderScholarshipCard({ scholarship }: ProviderScholar
                 {new Date(scholarship.deadline).toLocaleDateString(lang === 'th' ? 'th-TH' : 'en-US')}
               </p>
             </div>
-            <div className="rounded-lg bg-role-tint p-3">
-              <p className="text-[11px] text-role-primary">{lang === 'th' ? 'ชุมชนผู้สมัคร' : 'Candidate pool'}</p>
-              <p className="mt-1 text-xs font-semibold text-role-primary">
-                {isPoolReady ? (lang === 'th' ? 'พร้อม' : 'Ready') : (lang === 'th' ? 'ยังไม่พร้อม' : 'Locked')}
+            <div className={`rounded-lg p-3 ${candidatePoolColor.container}`}>
+              <p className={`text-[11px] ${candidatePoolColor.label}`}>{lang === 'th' ? 'ชุมชนผู้สมัคร' : 'Candidate pool'}</p>
+              <p className={`mt-1 text-xs font-semibold ${candidatePoolColor.value}`}>
+                {candidatePoolStatusLabel(scholarship.candidatePoolStatus, lang)}
               </p>
             </div>
           </div>
