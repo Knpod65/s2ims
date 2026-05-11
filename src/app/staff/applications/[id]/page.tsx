@@ -11,6 +11,7 @@ import ApplicationTimeline from '@/components/ApplicationTimeline'
 import MaskedStudentProfileCard from '@/components/staff/MaskedStudentProfileCard'
 import DocumentVerificationPanel from '@/components/staff/DocumentVerificationPanel'
 import AuditWarningCard from '@/components/staff/AuditWarningCard'
+import StaffDocumentEvidenceWorkbench from '@/components/staff/StaffDocumentEvidenceWorkbench'
 import { useToast } from '@/components/ui/Toast'
 import { CheckCircle2, AlertCircle, Eye, MessageSquare } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/types'
@@ -32,6 +33,8 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
   const appNotes = mockStaffNotes[id] || []
   const appAuditEvents = mockAuditEvents.filter((e) => e.applicationId === id)
   const studentToken = formatStudentToken(app.student_id)
+  const verifiedDocs = appDocs.filter((doc) => doc.status === 'verified').length
+  const actionDocs = appDocs.filter((doc) => ['rejected', 'needs_replacement', 'missing', 'invalid_file_type'].includes(doc.status)).length
 
   const handleStatusChange = (s: ApplicationStatus) => {
     setCurrentStatus(s)
@@ -79,22 +82,16 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
         badge={<StatusBadge label={si[lang === 'th' ? 'th' : 'en']} color={si.color}/>}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-4">
-          {/* Masked Student Profile */}
-          <MaskedStudentProfileCard
-            profile={{
-              token: studentToken,
-              gpaRange: { min: 3.6, max: 3.8 },
-              financialNeedPercentile: 75,
-              academicYear: 4,
-              department: 'Computer Science',
-            }}
-            onRevealIdentity={handleRevealIdentity}
-          />
-
-          {/* Document Verification Panel */}
+      <StaffDocumentEvidenceWorkbench
+        studentToken={studentToken}
+        scholarshipTitle={lang === 'th' ? app.scholarship_title_th : app.scholarship_title_en}
+        statusBadge={<StatusBadge label={si[lang === 'th' ? 'th' : 'en']} color={si.color} />}
+        metrics={[
+          { label: lang === 'th' ? 'เอกสาร' : 'Documents', value: `${verifiedDocs}/${appDocs.length}` },
+          { label: lang === 'th' ? 'ต้องดูแล' : 'Needs review', value: actionDocs },
+          { label: lang === 'th' ? 'คะแนนจับคู่' : 'Match score', value: `${app.match_score}%` },
+        ]}
+        evidence={(
           <DocumentVerificationPanel
             documents={appDocs}
             onVerify={(docId) => {
@@ -120,102 +117,109 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
               )
             }}
           />
+        )}
+        reviewContext={(
+          <div className="space-y-4">
+            <MaskedStudentProfileCard
+              profile={{
+                token: studentToken,
+                gpaRange: { min: 3.6, max: 3.8 },
+                financialNeedPercentile: 75,
+                academicYear: 4,
+                department: 'Computer Science',
+              }}
+              onRevealIdentity={handleRevealIdentity}
+            />
 
-          {/* Staff Notes */}
-          <div className="card p-5">
-            <h3 className="font-semibold text-sm text-ink-1 mb-4 flex items-center gap-2">
-              <MessageSquare size={14} />
-              {lang === 'th' ? 'หมายเหตุของเจ้าหน้าที่' : 'Staff Notes'}
-            </h3>
+            <div className="rounded-xl border border-line bg-surface-low p-4">
+              <h4 className="mb-4 text-sm font-semibold text-ink-1">{lang==='th'?'ขั้นตอน':'Timeline'}</h4>
+              <ApplicationTimeline steps={app.steps}/>
+              <div className="mt-4 border-t border-line pt-4">
+                <div className="mb-1 text-xs text-ink-3">{lang==='th'?'คะแนนจับคู่':'Match Score'}</div>
+                <div className="font-display text-2xl font-bold text-role-primary">{app.match_score}%</div>
+              </div>
+            </div>
+          </div>
+        )}
+        operations={(
+          <>
+            <div>
+              <h4 className="mb-4 flex items-center gap-2 text-sm font-semibold text-ink-1">
+                <MessageSquare size={14} />
+                {lang === 'th' ? 'หมายเหตุของเจ้าหน้าที่' : 'Staff Notes'}
+              </h4>
 
-            {/* Existing Notes */}
-            {appNotes.length > 0 && (
-              <div className="space-y-2 mb-4 pb-4 border-b border-line">
-                {appNotes.map((note) => (
-                  <div key={note.id} className="p-3 rounded bg-bg-200">
-                    <p className="text-xs text-ink-1 mb-1">{note.content}</p>
-                    <p className="text-xs text-ink-3">
-                      {note.createdBy} •{' '}
-                      {new Date(note.createdAt).toLocaleDateString(
-                        lang === 'th' ? 'th-TH' : 'en-US'
-                      )}
-                    </p>
-                  </div>
+              {appNotes.length > 0 && (
+                <div className="mb-4 space-y-2 border-b border-line pb-4">
+                  {appNotes.map((note) => (
+                    <div key={note.id} className="rounded bg-bg-200 p-3">
+                      <p className="mb-1 text-xs text-ink-1">{note.content}</p>
+                      <p className="text-xs text-ink-3">
+                        {note.createdBy} •{' '}
+                        {new Date(note.createdAt).toLocaleDateString(
+                          lang === 'th' ? 'th-TH' : 'en-US'
+                        )}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <textarea
+                placeholder={lang === 'th' ? 'เพิ่มหมายเหตุ...' : 'Add a note...'}
+                value={staffNote}
+                onChange={(e) => setStaffNote(e.target.value)}
+                className="input-base mb-2 w-full py-2 text-xs"
+                rows={2}
+              />
+              <button
+                onClick={handleAddStaffNote}
+                disabled={!staffNote.trim()}
+                className="w-full rounded bg-role-tint px-3 py-1.5 text-xs text-role-primary transition-colors hover:bg-role-tint disabled:opacity-50"
+              >
+                {lang === 'th' ? 'เพิ่มหมายเหตุ' : 'Add Note'}
+              </button>
+            </div>
+
+            <div className="border-t border-line pt-5">
+              <h4 className="mb-4 text-sm font-semibold text-ink-1">{lang==='th'?'เปลี่ยนสถานะ':'Update Status'}</h4>
+              <div className="flex flex-wrap gap-2">
+                {(['UNDER_REVIEW','SHORTLISTED','NEEDS_DOCS','INTERVIEW_SCHEDULED','AWARDED','NOT_AWARDED'] as ApplicationStatus[]).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => handleStatusChange(s)}
+                    className={`rounded-lg border px-3 py-1.5 text-xs transition-all ${currentStatus===s?'border-role-border bg-role-tint text-role-primary':'border-line text-ink-3 hover:border-line-strong hover:text-ink-2'}`}
+                  >
+                    {APP_STATUS_MAP[s][lang==='th'?'th':'en']}
+                  </button>
                 ))}
               </div>
-            )}
-
-            {/* Add Note */}
-            <textarea
-              placeholder={lang === 'th' ? 'เพิ่มหมายเหตุ...' : 'Add a note...'}
-              value={staffNote}
-              onChange={(e) => setStaffNote(e.target.value)}
-              className="input-base w-full text-xs py-2 mb-2"
-              rows={2}
-            />
-            <button
-              onClick={handleAddStaffNote}
-              disabled={!staffNote.trim()}
-              className="w-full text-xs py-1.5 px-3 bg-role-tint text-role-primary rounded hover:bg-role-tint transition-colors disabled:opacity-50"
-            >
-              {lang === 'th' ? 'เพิ่มหมายเหตุ' : 'Add Note'}
-            </button>
-          </div>
-
-          {/* Status Update */}
-          <div className="card p-5">
-            <h3 className="font-semibold text-sm text-ink-1 mb-4">{lang==='th'?'เปลี่ยนสถานะ':'Update Status'}</h3>
-            <div className="flex gap-2 flex-wrap">
-              {(['UNDER_REVIEW','SHORTLISTED','NEEDS_DOCS','INTERVIEW_SCHEDULED','AWARDED','NOT_AWARDED'] as ApplicationStatus[]).map(s => (
-                <button
-                  key={s}
-                  onClick={() => handleStatusChange(s)}
-                  className={`text-xs px-3 py-1.5 rounded-lg border transition-all ${currentStatus===s?'border-role-border bg-role-tint text-role-primary':'border-line text-ink-3 hover:border-line-strong hover:text-ink-2'}`}
-                >
-                  {APP_STATUS_MAP[s][lang==='th'?'th':'en']}
-                </button>
+            </div>
+          </>
+        )}
+        auditTrail={appAuditEvents.length > 0 ? (
+          <div>
+            <h3 className="mb-3 font-display text-lg font-bold text-ink-1">
+              {lang === 'th' ? 'ประวัติการตรวจสอบ' : 'Audit Trail'}
+            </h3>
+            <div className="space-y-2 text-xs">
+              {appAuditEvents.slice(0, 5).map((event) => (
+                <div key={event.id} className="rounded border border-line bg-bg-200 p-2">
+                  <p className="font-mono text-ink-3">
+                    {new Date(event.timestamp).toLocaleString(
+                      lang === 'th' ? 'th-TH' : 'en-US'
+                    )}
+                  </p>
+                  <p className="mt-0.5 text-ink-1">{event.action}</p>
+                  {event.reason && (
+                    <p className="mt-1 text-ink-3">{event.reason}</p>
+                  )}
+                </div>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Timeline & Score */}
-          <div className="card p-5">
-            <h3 className="font-semibold text-sm text-ink-1 mb-4">{lang==='th'?'ขั้นตอน':'Timeline'}</h3>
-            <ApplicationTimeline steps={app.steps}/>
-            <div className="mt-4 pt-4 border-t border-line">
-              <div className="text-xs text-ink-3 mb-1">{lang==='th'?'คะแนนจับคู่':'Match Score'}</div>
-              <div className="text-2xl font-display font-bold text-role-primary">{app.match_score}%</div>
-            </div>
-          </div>
-
-          {/* Audit Timeline */}
-          {appAuditEvents.length > 0 && (
-            <div className="card p-5">
-              <h3 className="font-semibold text-sm text-ink-1 mb-3">
-                {lang === 'th' ? 'ประวัติการตรวจสอบ' : 'Audit Trail'}
-              </h3>
-              <div className="space-y-2 text-xs">
-                {appAuditEvents.slice(0, 5).map((event) => (
-                  <div key={event.id} className="p-2 rounded bg-bg-200 border border-line">
-                    <p className="text-ink-3 font-mono">
-                      {new Date(event.timestamp).toLocaleString(
-                        lang === 'th' ? 'th-TH' : 'en-US'
-                      )}
-                    </p>
-                    <p className="text-ink-1 mt-0.5">{event.action}</p>
-                    {event.reason && (
-                      <p className="text-ink-3 mt-1">{event.reason}</p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+        ) : undefined}
+      />
 
       {/* Reveal Identity Modal */}
       {revealModal && (
