@@ -15,6 +15,7 @@ type StaffDocumentEvidenceWorkbenchProps = {
   statusBadge: ReactNode
   metrics: WorkbenchMetric[]
   evidence: ReactNode
+  actionRail?: ReactNode
   reviewContext: ReactNode
   operations: ReactNode
   auditTrail?: ReactNode
@@ -27,6 +28,7 @@ export default function StaffDocumentEvidenceWorkbench({
   statusBadge,
   metrics,
   evidence,
+  actionRail,
   reviewContext,
   operations,
   auditTrail,
@@ -111,6 +113,11 @@ export default function StaffDocumentEvidenceWorkbench({
                 </p>
               </div>
             </div>
+            {actionRail && (
+              <div className="mb-4">
+                {actionRail}
+              </div>
+            )}
             {evidence}
           </section>
 
