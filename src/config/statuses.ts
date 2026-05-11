@@ -327,7 +327,7 @@ export const SCHOLARSHIP_STATUSES = [
 export const SHORTLIST_REQUEST_STATUSES = [
   {
     key: 'none',
-    label: { en: 'No request', th: 'ยังไม่มีคำขอ' },
+    label: { en: 'Not requested', th: 'ยังไม่ขอ' },
     semanticIntent: 'No shortlist request has been made.',
     recommendedBadgeTone: 'neutral',
     terminal: false,
@@ -345,7 +345,7 @@ export const SHORTLIST_REQUEST_STATUSES = [
   },
   {
     key: 'pending_staff_approval',
-    label: { en: 'Pending staff approval', th: 'รอเจ้าหน้าที่อนุมัติ' },
+    label: { en: 'Pending Staff Approval', th: 'รออนุมัติจากเจ้าหน้าที่' },
     semanticIntent: 'Shortlist request is waiting for staff governance review.',
     recommendedBadgeTone: 'amber',
     terminal: false,
