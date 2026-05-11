@@ -372,6 +372,36 @@ export const SHORTLIST_REQUEST_STATUSES = [
   },
 ] as const satisfies readonly StatusConfig[]
 
+export const CANDIDATE_POOL_STATUSES = [
+  {
+    key: 'not_available',
+    label: { en: 'Not available', th: 'ยังไม่พร้อม' },
+    semanticIntent: 'Candidate pool is not available for provider access yet.',
+    recommendedBadgeTone: 'neutral',
+    terminal: false,
+    requiresAction: false,
+    sensitiveAuditable: false,
+  },
+  {
+    key: 'ready',
+    label: { en: 'Ready', th: 'พร้อมใช้งาน' },
+    semanticIntent: 'Candidate pool is available with tokenized and banded candidate data.',
+    recommendedBadgeTone: 'emerald',
+    terminal: false,
+    requiresAction: false,
+    sensitiveAuditable: false,
+  },
+  {
+    key: 'pending_staff_approval',
+    label: { en: 'Pending staff review', th: 'รอเจ้าหน้าที่ตรวจสอบ' },
+    semanticIntent: 'Candidate pool availability is waiting for staff review.',
+    recommendedBadgeTone: 'amber',
+    terminal: false,
+    requiresAction: false,
+    sensitiveAuditable: true,
+  },
+] as const satisfies readonly StatusConfig[]
+
 export const REVIEW_STATUSES = [
   {
     key: 'pending',
@@ -557,6 +587,11 @@ export const STATUS_GROUPS = {
     group: 'shortlistRequest',
     description: 'Provider shortlist request governance states.',
     statuses: SHORTLIST_REQUEST_STATUSES,
+  },
+  candidatePool: {
+    group: 'candidatePool',
+    description: 'Provider candidate pool availability states.',
+    statuses: CANDIDATE_POOL_STATUSES,
   },
   review: {
     group: 'review',
