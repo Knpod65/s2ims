@@ -23,6 +23,7 @@ export default function DocumentVerificationPanel({
   const [expandedDoc, setExpandedDoc] = useState<string | null>(null)
   const [rejectReason, setRejectReason] = useState<Record<string, string>>({})
   const [replacementMsg, setReplacementMsg] = useState<Record<string, string>>({})
+  const [rejectingDocId, setRejectingDocId] = useState<string | null>(null)
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -172,7 +173,7 @@ export default function DocumentVerificationPanel({
 
                     {onReject && doc.status !== 'rejected' && (
                       <>
-                        {expandedDoc === doc.id && !rejectReason[doc.id] && (
+                        {rejectingDocId === doc.id ? (
                           <>
                             <p className="text-xs text-ink-3 font-medium mt-3">
                               {lang === 'th' ? 'ปฏิเสธเอกสาร' : 'Reject Document'}
@@ -184,20 +185,39 @@ export default function DocumentVerificationPanel({
                               className="input-base w-full text-xs py-2"
                               rows={2}
                             />
-                            <button
-                              onClick={() => {
-                                if (rejectReason[doc.id]?.trim()) {
-                                  onReject(doc.id, rejectReason[doc.id])
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => {
+                                  setRejectingDocId(null)
                                   setRejectReason({ ...rejectReason, [doc.id]: '' })
-                                  setExpandedDoc(null)
-                                }
-                              }}
-                              disabled={!rejectReason[doc.id]?.trim()}
-                              className="w-full text-xs py-1.5 px-3 bg-status-danger/10 text-status-danger rounded hover:bg-status-danger/20 transition-colors disabled:opacity-50"
-                            >
-                              {lang === 'th' ? 'ส่งการปฏิเสธ' : 'Send Rejection'}
-                            </button>
+                                }}
+                                className="flex-1 text-xs py-1.5 px-3 border border-line text-ink-3 rounded hover:bg-surface-low transition-colors"
+                              >
+                                {lang === 'th' ? 'ยกเลิก' : 'Cancel'}
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (rejectReason[doc.id]?.trim()) {
+                                    onReject(doc.id, rejectReason[doc.id])
+                                    setRejectReason({ ...rejectReason, [doc.id]: '' })
+                                    setRejectingDocId(null)
+                                    setExpandedDoc(null)
+                                  }
+                                }}
+                                disabled={!rejectReason[doc.id]?.trim()}
+                                className="flex-1 text-xs py-1.5 px-3 bg-status-danger/10 text-status-danger rounded hover:bg-status-danger/20 transition-colors disabled:opacity-50"
+                              >
+                                {lang === 'th' ? 'ส่งการปฏิเสธ' : 'Send Rejection'}
+                              </button>
+                            </div>
                           </>
+                        ) : (
+                          <button
+                            onClick={() => setRejectingDocId(doc.id)}
+                            className="w-full text-xs py-1.5 px-3 bg-status-danger/10 text-status-danger rounded hover:bg-status-danger/20 transition-colors"
+                          >
+                            {lang === 'th' ? 'ปฏิเสธเอกสาร' : 'Reject Document'}
+                          </button>
                         )}
                       </>
                     )}
