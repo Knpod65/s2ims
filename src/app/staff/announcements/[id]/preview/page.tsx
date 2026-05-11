@@ -1,5 +1,5 @@
 'use client'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
@@ -9,8 +9,8 @@ import { useToast } from '@/components/ui/Toast'
 import { Send, Download, FileText } from 'lucide-react'
 import Link from 'next/link'
 
-export default function AnnouncementPreviewPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default function AnnouncementPreviewPage({ params }: { params: { id: string } }) {
+  const { id } = params
   const { lang } = useLang()
   const { addToast } = useToast()
   const router = useRouter()
