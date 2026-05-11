@@ -175,6 +175,12 @@ export default function DocumentVerificationPanel({
                       <>
                         {rejectingDocId === doc.id ? (
                           <>
+                            <AuditWarningCard
+                              title={lang === 'th' ? 'การตรวจสอบการปฏิเสธเอกสาร' : 'Document rejection review'}
+                              message={lang === 'th'
+                                ? 'ต้นแบบนี้บันทึกเหตุผลของเจ้าหน้าที่ใน UI เท่านั้น การบันทึก audit จริงยังไม่ได้เชื่อมต่อ กรุณาระบุเหตุผลที่ชัดเจนและเหมาะสมสำหรับการตรวจสอบในอนาคต'
+                                : 'This prototype captures the staff reason in the UI flow, but real audit-log persistence is not connected yet. Keep the reason clear, factual, and appropriate for future audit review.'}
+                            />
                             <p className="text-xs text-ink-3 font-medium mt-3">
                               {lang === 'th' ? 'ปฏิเสธเอกสาร' : 'Reject Document'}
                             </p>
@@ -224,6 +230,12 @@ export default function DocumentVerificationPanel({
 
                     {onRequestReplacement && doc.status !== 'rejected' && (
                       <>
+                        <AuditWarningCard
+                          title={lang === 'th' ? 'การตรวจสอบคำขอส่งแทน' : 'Replacement request review'}
+                          message={lang === 'th'
+                            ? 'ต้นแบบนี้บันทึกข้อความของเจ้าหน้าที่ใน UI เท่านั้น การบันทึก audit จริงยังไม่ได้เชื่อมต่อ กรุณาระบุคำขอที่เจาะจงและดำเนินการได้สำหรับนักศึกษา'
+                            : 'This prototype captures the staff message in the UI flow, but real audit-log persistence is not connected yet. Keep the request specific, factual, and student-actionable.'}
+                        />
                         <p className="text-xs text-ink-3 font-medium mt-3">
                           {lang === 'th' ? 'ขอส่งแทน' : 'Request Replacement'}
                         </p>

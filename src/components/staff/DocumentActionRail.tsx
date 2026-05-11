@@ -1,7 +1,7 @@
 'use client'
 
 import { useLang } from '@/lib/i18n'
-import { CheckCircle2, RotateCcw, AlertCircle, Clock, FileQuestion, AlertTriangle } from 'lucide-react'
+import { CheckCircle2, RotateCcw, AlertCircle, Clock, FileQuestion } from 'lucide-react'
 import type { DocumentVerificationState } from '@/data/mock/staffData'
 
 type Props = {
@@ -125,15 +125,6 @@ export default function DocumentActionRail({ documents }: Props) {
         </div>
       )}
 
-      {/* Prototype audit awareness — must not imply real persistence */}
-      <div className="flex items-start gap-1.5 pt-2 border-t border-line">
-        <AlertTriangle size={11} className="text-[#B45309] shrink-0 mt-0.5" />
-        <p className="text-[10px] text-[#78350F] leading-relaxed">
-          {lang === 'th'
-            ? 'บริบท audit ต้นแบบ — การบันทึก audit จริงยังไม่ได้เชื่อมต่อ การดำเนินการเอกสารควรสามารถตรวจสอบได้ในระบบจริง'
-            : 'Prototype audit awareness — real audit persistence is not yet connected. Document actions should be auditable in production.'}
-        </p>
-      </div>
     </div>
   )
 }
