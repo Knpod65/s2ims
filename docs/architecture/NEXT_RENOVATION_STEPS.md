@@ -320,6 +320,40 @@ Why Option C is safest now:
 If migration must continue, use a plan-only phase for document statuses rather than immediate
 runtime wiring.
 
+## Phase 2L Result (Renovation Branch Review Package)
+
+Completed in this branch:
+
+- Added renovation branch review package:
+	- `docs/architecture/RENOVATION_BRANCH_REVIEW_PHASE_2L.md`
+- Added merge checklist:
+	- `docs/architecture/RENOVATION_MERGE_CHECKLIST_PHASE_2L.md`
+
+Phase 2L constraints honored:
+
+- Documentation/review only.
+- No runtime code changes.
+- No additional status migration.
+- No route/auth/role/nav/disclosure/export behavior changes.
+- No merge into `main`.
+
+## Recommended Next Step After 2L
+
+Recommended: Option A
+
+Open PR / merge review for `audit/architecture-renovation-plan` into `main`.
+
+Alternative: Option B
+
+Continue with a docs-only plan for document statuses if merge review must wait.
+
+Why Option A is recommended:
+
+- The branch now has a complete review package and merge checklist.
+- Runtime migration should pause until reviewers approve the helper/config pattern.
+- Merging the reviewed foundation reduces long-lived branch drift before any higher-risk domain
+  work continues.
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
