@@ -259,7 +259,71 @@ Key findings:
 - `staffData.ts` uses `current` for freshness; every other source uses `fresh`.
 - Announcement statuses are entirely absent from `statuses.ts`.
 
-## Recommended Phase 2G
+## Phase 2G-2J Result (Low-Risk Runtime Status Migrations)
+
+Completed in this branch:
+
+- Phase 2G — Data freshness status handling:
+	- `docs/architecture/DATA_FRESHNESS_MIGRATION_PHASE_2G.md`
+- Phase 2H — Shortlist request status display:
+	- `docs/architecture/SHORTLIST_STATUS_MIGRATION_PHASE_2H.md`
+- Phase 2I — Provider scholarship status display:
+	- `docs/architecture/PROVIDER_SCHOLARSHIP_STATUS_MIGRATION_PHASE_2I.md`
+- Phase 2J — Provider candidate pool status display:
+	- `docs/architecture/CANDIDATE_POOL_STATUS_MIGRATION_PHASE_2J.md`
+
+Runtime status domains now partially or fully using `src/config/statusHelpers.ts`:
+
+- `dataFreshness`
+- `shortlistRequest`
+- `scholarship` for provider-facing scholarship status display
+- `candidatePool`
+
+Phase 2G-2J constraints honored:
+
+- No route/auth/role/nav changes.
+- No disclosure/export behavior changes.
+- No backend/API/database changes.
+- No public scholarship, application, document, disclosure, or audit/security risk migration.
+
+## Phase 2K Result (Status Migration Review & Stabilization Summary)
+
+Completed in this branch:
+
+- Added status migration review:
+	- `docs/architecture/STATUS_MIGRATION_REVIEW_PHASE_2K.md`
+- Added status helper pattern guide:
+	- `docs/architecture/STATUS_HELPER_PATTERN_PHASE_2K.md`
+
+Phase 2K constraints honored:
+
+- Documentation/review only.
+- No runtime status migration.
+- No component refactor.
+- No route/auth/role/nav/disclosure/export behavior changes.
+
+## Recommended Next Phase After 2K
+
+Recommended: Option C
+
+Phase 2L — Pause renovation branch and prepare PR/merge review.
+
+Why Option C is safest now:
+
+- The branch contains several incremental runtime migrations and should be reviewed before more
+  status domains are wired.
+- Remaining domains carry higher privacy, governance, or behavior risk.
+- The helper pattern is established but still adapter-heavy and has no unit tests yet.
+- A PR/merge review can validate the low-risk approach before applying it to documents,
+  applications, disclosure, audit/security, admin export, or OCR/job states.
+
+If migration must continue, use a plan-only phase for document statuses rather than immediate
+runtime wiring.
+
+## Historical Recommended Phase 2G (Superseded)
+
+This section is preserved as historical planning context. Phase 2G has already been completed
+and followed by Phases 2H, 2I, 2J, and 2K. The current recommendation is Phase 2L above.
 
 Recommended: Stage 1 of the Status Config Migration Plan — Data Freshness domain only.
 
@@ -280,4 +344,3 @@ Phase 2G should remain small:
 - Confirm build passes and visual output is unchanged.
 - Do not expand scope to application or document statuses in the same phase.
 - One domain per phase until migration pattern is proven stable.
-
