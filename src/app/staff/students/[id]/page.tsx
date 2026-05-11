@@ -1,5 +1,4 @@
 'use client'
-import { use } from 'react'
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { PageHeader, StatCard, EmptyState } from '@/components/ui/index'
@@ -9,8 +8,8 @@ import { APP_STATUS_MAP } from '@/lib/utils'
 import { Lock, User } from 'lucide-react'
 import Link from 'next/link'
 
-export default function StaffStudentPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default function StaffStudentPage({ params }: { params: { id: string } }) {
+  const { id } = params
   const { lang } = useLang()
 
   const student = mockUsers.find(u => u.id === id && u.role === 'student')

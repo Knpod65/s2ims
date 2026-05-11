@@ -1,5 +1,5 @@
 'use client'
-import { use, useState } from 'react'
+import { useState } from 'react'
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { mockApplications } from '@/data/mock/applications'
@@ -15,8 +15,8 @@ import { useToast } from '@/components/ui/Toast'
 import { CheckCircle2, AlertCircle, Eye, MessageSquare } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/types'
 
-export default function StaffApplicationDetailPage({ params }: { params: Promise<{id:string}> }) {
-  const { id } = use(params)
+export default function StaffApplicationDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params
   const { lang } = useLang()
   const { addToast } = useToast()
   const app = mockApplications.find(a => a.id === id)

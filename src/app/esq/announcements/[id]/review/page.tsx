@@ -1,5 +1,5 @@
 'use client'
-import { useState, use } from 'react'
+import { useState } from 'react'
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { mockAnnouncements } from '@/data/mock/announcements'
@@ -7,8 +7,8 @@ import { PageHeader } from '@/components/ui/index'
 import { CheckCircle2, XCircle, MessageSquare, ArrowLeft, Clock } from 'lucide-react'
 import Link from 'next/link'
 
-export default function ESQReviewPage({ params }: { params: Promise<{id:string}> }) {
-  const { id } = use(params)
+export default function ESQReviewPage({ params }: { params: { id: string } }) {
+  const { id } = params
   const { lang } = useLang()
   const ann = mockAnnouncements.find(a => a.id === id) || mockAnnouncements[0]
   const [decision, setDecision] = useState<string | null>(null)

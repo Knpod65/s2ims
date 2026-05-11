@@ -1,5 +1,4 @@
 'use client'
-import { use } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Trophy, Users, BookOpen, MessageSquare, Video } from 'lucide-react'
 import { mockScholarships } from '@/data/mock/scholarships'
@@ -10,8 +9,8 @@ import { StatusBadge } from '@/components/ui/index'
 import { SCH_STATUS_MAP } from '@/lib/utils'
 import { MatchScoreRing } from '@/components/ScholarshipCard'
 
-export default function ScholarshipDetailPage({ params }: { params: Promise<{id:string}> }) {
-  const { id } = use(params)
+export default function ScholarshipDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params
   const { lang } = useLang()
   const { role } = useAuth()
   const s = mockScholarships.find(x => x.id === id)
