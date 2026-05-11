@@ -456,6 +456,53 @@ Alternative: Option C — Begin `ReasonRequiredModal` planning (shared governanc
 - Higher value if document rejection and replacement flows will use the modal.
 - Should wait until staff document policy is approved.
 
+---
+
+## Staff Document Evidence Workbench Planning Result
+
+**Started:** 2026-05-11
+
+Completed in this branch:
+
+- Staff document evidence workbench plan:
+  `docs/design/STAFF_DOCUMENT_EVIDENCE_WORKBENCH_PLAN.md`
+- Staff document workbench component plan:
+  `docs/design/STAFF_DOCUMENT_WORKBENCH_COMPONENT_PLAN.md`
+- Staff document workbench behavior contract:
+  `docs/design/STAFF_DOCUMENT_WORKBENCH_BEHAVIOR_CONTRACT.md`
+- Staff document workbench QA plan:
+  `docs/design/STAFF_DOCUMENT_WORKBENCH_QA_PLAN.md`
+- Staff document workbench implementation sequence:
+  `docs/design/STAFF_DOCUMENT_WORKBENCH_IMPLEMENTATION_SEQUENCE.md`
+
+Planning conclusion:
+
+- This branch is planning only.
+- No runtime UI was changed.
+- No staff document verification behavior was changed.
+- The recommended next runtime branch after merge is:
+  `design/staff-document-evidence-workbench-runtime`
+
+Recommended first runtime phase:
+
+- Phase SW-1 — layout-only workbench shell around the existing `DocumentVerificationPanel`.
+
+Why:
+
+- Staff workflows carry higher audit and operational risk than the completed Student refresh.
+- The current staff application detail page has correct pieces but separates evidence, actions, notes,
+  timeline, audit context, and masked student context into generic card columns.
+- A layout-only shell can test the workbench model without changing callbacks, status keys, reason
+  validation, audit behavior, or mock data.
+
+Runtime warning:
+
+- Staff workflow runtime changes require screenshot QA and reason/audit review.
+- Required QA should include desktop, mobile 375px, Thai locale, console review, and states for verified,
+  rejected, and needs replacement documents.
+- Do not extract action rails, add minimum reason lengths, or migrate staff status adapters until the
+  layout-only workbench model has been reviewed.
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
