@@ -17,6 +17,15 @@ const ICONS: Record<string, LucideIcon> = {
   ScrollText, Download, Settings, ScanLine, Users,
 }
 
+function uniqueByHref(items: Array<(typeof MOBILE_NAV)[keyof typeof MOBILE_NAV][number]>) {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    if (seen.has(item.href)) return false
+    seen.add(item.href)
+    return true
+  })
+}
+
 /*
   MobileBottomNav — role-themed indicator
   ─────────────────────────────────────────
@@ -33,7 +42,7 @@ export default function MobileBottomNav() {
 
   if (!role) return null
 
-  const items = (MOBILE_NAV[role] ?? []).slice(0, 5)
+  const items = uniqueByHref(MOBILE_NAV[role] ?? []).slice(0, 5)
 
   return (
     <nav
