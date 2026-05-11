@@ -12,6 +12,7 @@ import MaskedStudentProfileCard from '@/components/staff/MaskedStudentProfileCar
 import DocumentVerificationPanel from '@/components/staff/DocumentVerificationPanel'
 import AuditWarningCard from '@/components/staff/AuditWarningCard'
 import StaffDocumentEvidenceWorkbench from '@/components/staff/StaffDocumentEvidenceWorkbench'
+import DocumentActionRail from '@/components/staff/DocumentActionRail'
 import { useToast } from '@/components/ui/Toast'
 import { CheckCircle2, AlertCircle, Eye, MessageSquare } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/types'
@@ -91,6 +92,7 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
           { label: lang === 'th' ? 'ต้องดูแล' : 'Needs review', value: actionDocs },
           { label: lang === 'th' ? 'คะแนนจับคู่' : 'Match score', value: `${app.match_score}%` },
         ]}
+        actionRail={<DocumentActionRail documents={appDocs} />}
         evidence={(
           <DocumentVerificationPanel
             documents={appDocs}
