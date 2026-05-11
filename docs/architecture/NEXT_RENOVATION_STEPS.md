@@ -354,6 +354,108 @@ Why Option A is recommended:
 - Merging the reviewed foundation reduces long-lived branch drift before any higher-risk domain
   work continues.
 
+---
+
+## Document Status Planning — Branch Result (renovation/document-status-planning)
+
+Completed and merged into main. See merge checkpoint:
+`docs/daily-reports/2026-05-08-document-status-merge.md`
+
+Included in merge:
+- `docs/architecture/DOCUMENT_STATUS_MIGRATION_PLAN.md`
+- `docs/architecture/DOCUMENT_STATUS_STUDENT_ADAPTER_PHASE_1.md`
+- `docs/architecture/DOCUMENT_STATUS_STUDENT_UPLOAD_CARD_PHASE_2.md`
+- `docs/architecture/DOCUMENT_STATUS_BRANCH_REVIEW.md`
+- `docs/architecture/DOCUMENT_STATUS_MERGE_CHECKLIST.md`
+- `docs/qa/document-status-student-adapter/` (5 screenshots)
+- `src/config/documentStatusDisplay.ts` (student-facing adapter)
+- `src/components/student/RequiredDocumentsList.tsx` (migrated)
+- `src/components/student/DocumentUploadCard.tsx` (migrated)
+
+Constraints honored:
+- `DocumentVerificationPanel` untouched
+- Routes, auth, backend, upload behavior, validation behavior unchanged
+- `pending` and `verification_pending` remain separate
+- `invalid_file_type` remains a UI validation/display state only
+- Student-facing `rejected` maps to "Needs replacement"
+
+---
+
+## Staff Document Status Policy + DRY Audit (renovation/staff-document-status-policy)
+
+**Started:** 2026-05-11
+
+Completed in this branch:
+
+- Staff document status policy planning:
+  `docs/architecture/STAFF_DOCUMENT_STATUS_POLICY_PLAN.md`
+- System-wide DRY audit:
+  `docs/architecture/DRY_SYSTEM_AUDIT.md`
+- Phased DRY refactor roadmap:
+  `docs/architecture/DRY_REFACTOR_ROADMAP.md`
+- Do Not DRY Yet list:
+  `docs/architecture/DO_NOT_DRY_YET.md`
+
+Key DRY findings:
+- 6+ components with inline `getStatusLabel()` / `getStatusIcon()` / `getStatusColor()` functions
+- 5 modals with identical shell structure and no shared wrapper
+- 3 different reason field minimum lengths (none/10/20) — governance gap
+- `RoleBadge.tsx` hardcodes role colors instead of using CSS vars
+- 20+ dynamic route pages write their own `.find()` / `.filter()` queries with no data layer
+- `AuditWarningCard` and `AdminAuditWarningCard` are separate but structurally identical
+- Amber hex `#FFFBEB / #FDE68A / #78350F` used in 10+ locations
+
+Do Not DRY highlights:
+- Student vs staff `rejected` wording must remain separate (finalized product decision)
+- `pending` vs `verification_pending` must stay separate until backend schema is agreed
+- Application statuses must not be adapted until key inconsistency and wording are resolved
+- Disclosure approval vs rejection flows must stay separate (independent governance paths)
+- ESQ aggregate and admin raw views must never share data access logic (privacy boundary)
+
+Constraints honored:
+- Documentation and planning only
+- No runtime behavior changes
+- `DocumentVerificationPanel` untouched
+- No routes, auth, role guards, backend, export, upload, or validation changes
+
+---
+
+## Recommended Next Phase After Staff Policy + DRY Audit
+
+**Recommended: Option D — Open PR for this documentation branch**
+
+Rationale:
+
+- The branch now contains a complete staff document status policy, a full DRY audit,
+  a phased refactor roadmap, and a clear "do not DRY yet" list.
+- These four documents represent the planning foundation needed before any further
+  runtime extraction or refactoring can proceed safely.
+- Merging now reduces branch drift and gives reviewers a chance to validate the
+  policy decisions (especially staff label ratification and role-specific wording rules)
+  before DRY-2A (staff display adapter extraction) begins.
+- No implementation has been done — this is a pure documentation branch with low
+  review risk.
+
+Alternative: Option A — Begin DRY-2A (staff document display adapter extraction)
+
+- Only if staff label decisions in `STAFF_DOCUMENT_STATUS_POLICY_PLAN.md` are approved
+  without changes.
+- Risk: if label decisions change after adapter is extracted, the config will need
+  to be updated before any component is wired.
+- Safest approach: approve policy plan first, then extract.
+
+Alternative: Option B — Begin DRY-1 (consume existing configs — role labels, CSS vars)
+
+- DRY-1 does not depend on staff document label decisions.
+- Could start in parallel if PR review is delayed.
+- Low risk; no behavioral changes.
+
+Alternative: Option C — Begin `ReasonRequiredModal` planning (shared governance primitive)
+
+- Depends on `REASON_REQUIRED_MODAL_PROPOSAL_PHASE_2E.md` decisions being approved.
+- Higher value if document rejection and replacement flows will use the modal.
+- Should wait until staff document policy is approved.
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
