@@ -39,7 +39,7 @@ export interface MatchReview {
     type: 'low_income_high_match' | 'high_match_low_gpa' | 'other'
     message: string
   }
-  dataFreshness: 'current' | 'stale'
+  dataFreshness: 'fresh' | 'stale' | 'failed'
   lastUpdated: string
 }
 
@@ -213,7 +213,7 @@ export const mockMatchReviews: MatchReview[] = [
       type: 'low_income_high_match',
       message: 'High match + Low-to-moderate financial need. Verify intent to support low-income students.',
     },
-    dataFreshness: 'current',
+    dataFreshness: 'fresh',
     lastUpdated: '2025-04-22',
   },
   {
@@ -237,7 +237,7 @@ export const mockMatchReviews: MatchReview[] = [
       type: 'high_match_low_gpa',
       message: 'High financial need but lower GPA. Ensure decision aligns with scholarship equity goals.',
     },
-    dataFreshness: 'current',
+    dataFreshness: 'fresh',
     lastUpdated: '2025-04-25',
   },
 ]

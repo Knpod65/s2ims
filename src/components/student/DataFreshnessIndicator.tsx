@@ -1,6 +1,7 @@
 'use client'
 import { AlertTriangle, CheckCircle2, RefreshCw, XCircle } from 'lucide-react'
 import { useLang } from '@/lib/i18n'
+import { getStatusConfig } from '@/config/statusHelpers'
 import type { DataFreshness, DataFreshnessStatus } from '@/data/mock/studentMatchingData'
 
 type DataFreshnessIndicatorProps = {
@@ -36,12 +37,13 @@ export default function DataFreshnessIndicator({
   className = '',
 }: DataFreshnessIndicatorProps) {
   const { lang } = useLang()
+  const statusConfig = getStatusConfig('dataFreshness', freshness.status)
   const Icon = ICON_MAP[freshness.status] ?? AlertTriangle
   const label = {
     fresh: { th: 'ข้อมูลสดใหม่', en: 'Fresh' },
     stale: { th: 'ควรอัปเดต', en: 'Stale' },
     failed: { th: 'ซิงก์ไม่สำเร็จ', en: 'Sync failed' },
-  }[freshness.status][lang]
+  }[freshness.status]?.[lang] ?? statusConfig.label[lang]
 
   return (
     <div

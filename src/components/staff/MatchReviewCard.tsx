@@ -131,7 +131,7 @@ export default function MatchReviewCard({ review, onRequestManualOverride }: Mat
           {/* Data Freshness */}
           <p className="text-xs text-ink-3">
             {lang === 'th' ? 'ความสดใหม่ของข้อมูล:' : 'Data Freshness:'}{' '}
-            {review.dataFreshness === 'current'
+            {review.dataFreshness === 'fresh'
               ? lang === 'th'
                 ? 'ปัจจุบัน'
                 : 'Current'
