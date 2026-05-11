@@ -15,8 +15,10 @@ import {
   ApplicationRevisionNotice,
   ApplicationTimeline,
   DataFreshnessIndicator,
+  NextBestActionPanel,
   RequiredDocumentsList,
   StudentPrivacyNotice,
+  StudentReadinessPath,
 } from '@/components/student'
 
 export default function StudentApplicationDetailPage({
@@ -57,47 +59,29 @@ export default function StudentApplicationDetailPage({
       <div className="mx-auto max-w-6xl space-y-6">
         <ApplicationRevisionNotice application={application} />
 
+        <StudentReadinessPath
+          readinessPct={application.readinessPct}
+          documents={application.documents}
+        />
+
         {missingDocuments.length > 0 && (
-          <div className="rounded-xl border border-[#FDE68A] bg-[#FFFBEB] p-4 text-[#78350F]">
-            <div className="font-semibold">
-              {lang === 'th' ? 'มีเอกสารที่ช่วยให้ใบสมัครพร้อมขึ้น' : 'Some documents can make this application stronger'}
-            </div>
-            <p className="mt-1 text-sm leading-relaxed">
-              {lang === 'th'
-                ? 'เพิ่มหรือแทนที่เอกสารตามคำแนะนำด้านล่างเมื่อคุณพร้อม'
-                : 'Add or replace the documents below when you are ready.'}
-            </p>
-          </div>
+          <NextBestActionPanel
+            title={lang === 'th' ? 'เพิ่มเอกสารเพื่อให้การตรวจสอบเดินต่อ' : 'Add documents so review can keep moving'}
+            description={lang === 'th'
+              ? 'เพิ่มหรือแทนที่เอกสารตามคำแนะนำเมื่อคุณพร้อม โดยไม่เปลี่ยนสถานะใบสมัครหรือข้อมูลที่ส่งไว้'
+              : 'Add or replace the recommended documents when ready without changing the application status or submitted details.'}
+            primaryAction={(
+              <Link href={`/student/applications/${application.id}/documents`} className="btn-primary inline-flex min-h-11 items-center justify-center gap-2 px-4 py-3 text-sm">
+                <UploadCloud size={14} />
+                {lang === 'th' ? 'จัดการเอกสาร' : 'Manage documents'}
+                <ArrowRight size={14} />
+              </Link>
+            )}
+          />
         )}
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
           <main className="space-y-6">
-            <section className="card p-5">
-              <h2 className="font-display text-lg font-bold text-ink-1">
-                {lang === 'th' ? 'สรุปใบสมัคร' : 'Application summary'}
-              </h2>
-              <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
-                <div className="rounded-xl border border-line bg-surface-low p-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-                    {lang === 'th' ? 'ความพร้อม' : 'Readiness'}
-                  </div>
-                  <div className="mt-1 font-display text-xl font-bold text-role-primary">{application.readinessPct}%</div>
-                </div>
-                <div className="rounded-xl border border-line bg-surface-low p-3">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-                    {lang === 'th' ? 'เอกสาร' : 'Documents'}
-                  </div>
-                  <div className="mt-1 font-mono text-xl font-bold text-ink-1">{application.documents.length}</div>
-                </div>
-                <div className="rounded-xl border border-line bg-surface-low p-3 md:col-span-2">
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-3">
-                    {lang === 'th' ? 'ทุน' : 'Scholarship'}
-                  </div>
-                  <div className="mt-1 line-clamp-1 text-sm font-semibold text-ink-1">{title}</div>
-                </div>
-              </div>
-            </section>
-
             <section className="card p-5">
               <h2 className="font-display text-lg font-bold text-ink-1">
                 {lang === 'th' ? 'ลำดับสถานะ' : 'Timeline'}
