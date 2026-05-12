@@ -284,104 +284,47 @@ AP-3 constraints honored:
 
 Recommended next phase:
 
-- AP-4 pure mock writer + tests only
-- keep `src/data/mock/audit-logs.ts` untouched
-- delay UI wiring until mock labels, admin display rules, and copy rules are finalized
+- AP-5 — Admin mock audit display planning, or a review checkpoint before UI wiring.
+- Keep `src/data/mock/audit-logs.ts` untouched
+- Delay UI wiring until mock labels and admin display rules are finalized.
 
-## Phase 2G-2J Result (Low-Risk Runtime Status Migrations)
+---
 
-Completed in this branch:
-
-- Phase 2G — Data freshness status handling:
-	- `docs/architecture/DATA_FRESHNESS_MIGRATION_PHASE_2G.md`
-- Phase 2H — Shortlist request status display:
-	- `docs/architecture/SHORTLIST_STATUS_MIGRATION_PHASE_2H.md`
-- Phase 2I — Provider scholarship status display:
-	- `docs/architecture/PROVIDER_SCHOLARSHIP_STATUS_MIGRATION_PHASE_2I.md`
-- Phase 2J — Provider candidate pool status display:
-	- `docs/architecture/CANDIDATE_POOL_STATUS_MIGRATION_PHASE_2J.md`
-
-Runtime status domains now partially or fully using `src/config/statusHelpers.ts`:
-
-- `dataFreshness`
-- `shortlistRequest`
-- `scholarship` for provider-facing scholarship status display
-- `candidatePool`
-
-Phase 2G-2J constraints honored:
-
-- No route/auth/role/nav changes.
-- No disclosure/export behavior changes.
-- No backend/API/database changes.
-- No public scholarship, application, document, disclosure, or audit/security risk migration.
-
-## Phase 2K Result (Status Migration Review & Stabilization Summary)
+## AP-5 Planning Result — Admin Mock Audit Display
 
 Completed in this branch:
 
-- Added status migration review:
-	- `docs/architecture/STATUS_MIGRATION_REVIEW_PHASE_2K.md`
-- Added status helper pattern guide:
-	- `docs/architecture/STATUS_HELPER_PATTERN_PHASE_2K.md`
+- Admin mock audit display plan:
+  - `docs/architecture/ADMIN_MOCK_AUDIT_DISPLAY_PLAN_PHASE_AP5.md`
+- Admin audit mock copy rules:
+  - `docs/architecture/ADMIN_AUDIT_MOCK_COPY_RULES.md`
+- Admin audit display privacy rules:
+  - `docs/architecture/ADMIN_AUDIT_DISPLAY_PRIVACY_RULES.md`
+- Admin mock audit runtime sequence:
+  - `docs/architecture/ADMIN_MOCK_AUDIT_RUNTIME_SEQUENCE.md`
 
-Phase 2K constraints honored:
+AP-5 constraints honored:
 
-- Documentation/review only.
-- No runtime status migration.
-- No component refactor.
-- No route/auth/role/nav/disclosure/export behavior changes.
+- Planning and documentation only.
+- No runtime code changed.
+- No admin UI modified.
+- No mock writer wiring.
+- No real persistence added.
+- No mock audit fixture mutated.
 
-## Recommended Next Phase After 2K
+Key planning outputs:
 
-Recommended: Option C
+- Persistence mode badge rules defined for `prototype_only`, `mock_only`, `real_persisted`.
+- Admin audit table future columns and filters planned.
+- Event detail drawer copy defined.
+- Export rules for mock events documented.
+- Metadata display privacy rules extended from AP-2.
+- Runtime sequence recommends AP-6A (mock badge on existing page) before writer wiring.
 
-Phase 2L — Pause renovation branch and prepare PR/merge review.
+Recommended next phase:
 
-Why Option C is safest now:
-
-- The branch contains several incremental runtime migrations and should be reviewed before more
-  status domains are wired.
-- Remaining domains carry higher privacy, governance, or behavior risk.
-- The helper pattern is established but still adapter-heavy and has no unit tests yet.
-- A PR/merge review can validate the low-risk approach before applying it to documents,
-  applications, disclosure, audit/security, admin export, or OCR/job states.
-
-If migration must continue, use a plan-only phase for document statuses rather than immediate
-runtime wiring.
-
-## Phase 2L Result (Renovation Branch Review Package)
-
-Completed in this branch:
-
-- Added renovation branch review package:
-	- `docs/architecture/RENOVATION_BRANCH_REVIEW_PHASE_2L.md`
-- Added merge checklist:
-	- `docs/architecture/RENOVATION_MERGE_CHECKLIST_PHASE_2L.md`
-
-Phase 2L constraints honored:
-
-- Documentation/review only.
-- No runtime code changes.
-- No additional status migration.
-- No route/auth/role/nav/disclosure/export behavior changes.
-- No merge into `main`.
-
-## Recommended Next Step After 2L
-
-Recommended: Option A
-
-Open PR / merge review for `audit/architecture-renovation-plan` into `main`.
-
-Alternative: Option B
-
-Continue with a docs-only plan for document statuses if merge review must wait.
-
-Why Option A is recommended:
-
-- The branch now has a complete review package and merge checklist.
-- Runtime migration should pause until reviewers approve the helper/config pattern.
-- Merging the reviewed foundation reduces long-lived branch drift before any higher-risk domain
-  work continues.
+- AP-6A — Admin mock badge/filter on existing mock audit log only.
+- Do not wire Staff document actions until Admin display is reviewed.
 
 ---
 
