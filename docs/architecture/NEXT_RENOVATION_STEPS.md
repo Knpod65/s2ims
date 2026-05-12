@@ -259,6 +259,35 @@ Key findings:
 - `staffData.ts` uses `current` for freshness; every other source uses `fresh`.
 - Announcement statuses are entirely absent from `statuses.ts`.
 
+## AP-3 Planning Result - Mock Audit Writer Contract
+
+Completed in this branch:
+
+- Added mock audit writer plan:
+  - `docs/architecture/MOCK_AUDIT_WRITER_PLAN_PHASE_AP3.md`
+- Added mock audit writer UI copy rules:
+  - `docs/architecture/MOCK_AUDIT_WRITER_UI_COPY_RULES.md`
+- Added mock audit writer admin display plan:
+  - `docs/architecture/MOCK_AUDIT_WRITER_ADMIN_DISPLAY_PLAN.md`
+- Added mock audit writer first wiring decision:
+  - `docs/architecture/MOCK_AUDIT_WRITER_FIRST_WIRING_DECISION.md`
+
+AP-3 constraints honored:
+
+- planning and documentation only
+- no runtime code changed
+- no mock writer implemented
+- no UI wiring added
+- no real audit persistence added
+- no reason validation changes
+- no `ReasonRequiredModal` introduced
+
+Recommended next phase:
+
+- AP-4 pure mock writer + tests only
+- keep `src/data/mock/audit-logs.ts` untouched
+- delay UI wiring until mock labels, admin display rules, and copy rules are finalized
+
 ## Phase 2G-2J Result (Low-Risk Runtime Status Migrations)
 
 Completed in this branch:
