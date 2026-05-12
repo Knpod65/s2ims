@@ -503,6 +503,44 @@ Runtime warning:
 - Do not extract action rails, add minimum reason lengths, or migrate staff status adapters until the
   layout-only workbench model has been reviewed.
 
+## Audit Persistence Contract Planning Result
+
+**Started:** 2026-05-12
+
+Planning branch:
+
+- `architecture/audit-persistence-contract-plan`
+
+Completed in this branch:
+
+- Audit persistence contract plan:
+  `docs/architecture/AUDIT_PERSISTENCE_CONTRACT_PLAN.md`
+- Audit event type matrix:
+  `docs/architecture/AUDIT_EVENT_TYPE_MATRIX.md`
+- Audit copy stage guide:
+  `docs/architecture/AUDIT_COPY_STAGE_GUIDE.md`
+- Audit metadata privacy rules:
+  `docs/architecture/AUDIT_METADATA_PRIVACY_RULES.md`
+
+Planning conclusion:
+
+- This branch is planning only.
+- Real audit persistence was not implemented.
+- Audit service/API/database code was not added.
+- Reason validation was not changed.
+- `ReasonRequiredModal` was not introduced.
+- Runtime UI and workflow behavior were not changed.
+
+Recommended next phase:
+
+- AP-2 — mock audit event builder and tests, after this contract is reviewed.
+
+Why AP-2 should come before runtime wiring:
+
+- It proves the event shape, metadata allowlists, and copy-stage assumptions without touching live workflows.
+- It keeps Staff document warnings prototype-safe until persistence behavior is explicitly defined.
+- It avoids jumping directly to `ReasonRequiredModal` or reason min-length enforcement before the audit persistence model is clear.
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
