@@ -619,3 +619,54 @@ Phase 2G should remain small:
 - Confirm build passes and visual output is unchanged.
 - Do not expand scope to application or document statuses in the same phase.
 - One domain per phase until migration pattern is proven stable.
+
+## AP-6A Result — Admin Mock Audit Badge/Filter Runtime
+
+Completed on 2026-05-12:
+
+- Added mock/demo badge display to Admin audit log table (6th "Status" column)
+- Added persistence mode filter dropdown with 3 options:
+  - All (shows 6 mock records)
+  - Mock/demo only (shows 6 mock records)
+  - Official persisted records (shows empty state)
+- Updated page header subtitle from Stage 0 ("Immutable record") to Stage 1 mock copy ("Demo audit events")
+- Changed warning banner from red danger styling to purple mock warning styling
+- Updated warning copy to clarify records are demo/mock for prototype review
+- Updated CSV export with warning header and status column
+- Changed export filename to include "-demo" suffix
+
+Implementation details:
+
+- File modified: `src/app/admin/audit-log/page.tsx` only
+- New dependency: `StatusBadge` component already available
+- All current fixture records treated as `mock_only` for display
+- Filter logic handles future persistence mode field (forward compatible)
+- No AP-4 writer wiring
+- No real persistence connected
+- No fixture mutation
+- No Staff/Provider/Student component changes
+- No backend/API behavior changes
+
+Validation:
+
+- ✅ Build passed: 40 routes, 0 type errors
+- ✅ Token checks: 4/4 passed
+- ✅ Audit event checks: 37/37 passed
+- ✅ Route verification: /admin/audit-log returns 200 OK
+- ✅ No hydration errors or warnings
+
+Key non-goals preserved:
+
+- AP-4 mock writer remains in library, not wired
+- Real audit persistence not added
+- Reason validation unchanged
+- ReasonRequiredModal not introduced
+- Staff action audit wiring deferred
+- Fixture data unchanged
+- No export bypass or new behavior
+
+Recommended next phase:
+
+- AP-6B — Admin event detail drawer (plan and runtime)
+- Or: Review checkpoint before continuing AP-6C writer wiring
+
