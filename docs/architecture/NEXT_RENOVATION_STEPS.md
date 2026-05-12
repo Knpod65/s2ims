@@ -604,6 +604,54 @@ Recommended next phase:
 
 Do not connect the builder to Staff document actions until the AP-2 contract and checks are reviewed.
 
+---
+
+## AP-4 Result — Pure Mock Audit Writer and Checks
+
+Completed in this branch:
+
+- Pure in-memory mock audit writer:
+  - `src/lib/audit/mockAuditWriter.ts`
+- Public audit utility exports:
+  - `src/lib/audit/index.ts`
+- Check script expanded to 37 checks:
+  - `scripts/check-audit-events.mjs`
+- AP-4 summary:
+  - `docs/architecture/MOCK_AUDIT_WRITER_PHASE_AP4.md`
+
+AP-4 constraints honored:
+
+- In-memory only, no persistence
+- No UI wiring
+- No real persistence added
+- No mutation of `src/data/mock/audit-logs.ts`
+- No audit builder contract changes
+- No backend/API behavior
+- No Staff/Student/Provider/Admin/ESQ workflow changes
+- No reason validation changes
+- No `ReasonRequiredModal` introduced
+
+Writer behavior:
+
+- Creates isolated instances with `createMockAuditWriter(options?)`
+- Accepts only `mock_only` persistence mode events
+- Returns copies to prevent external mutation
+- Supports filtering, clear, seed, snapshot, and count
+- Rejects duplicate IDs by default (configurable)
+- Preserves insertion order
+
+Check results:
+
+- Original 15 AP-2 checks: passed
+- Writer checks: passed
+- Total checks: 37/37 passed
+
+Recommended next phase:
+
+- AP-5 — Admin mock audit display planning, or a review checkpoint before UI wiring.
+- Keep `src/data/mock/audit-logs.ts` untouched
+- Delay UI wiring until mock labels and admin display rules are finalized.
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed

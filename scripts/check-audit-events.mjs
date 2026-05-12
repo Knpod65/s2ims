@@ -62,6 +62,7 @@ function loadTsModule(filePath) {
 const audit = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditEventBuilder.ts'))
 const metadataRules = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditMetadataRules.ts'))
 const auditLogsModule = loadTsModule(path.join(repoRoot, 'src/data/mock/audit-logs.ts'))
+const mockWriter = loadTsModule(path.join(repoRoot, 'src/lib/audit/mockAuditWriter.ts'))
 
 const {
   AUDIT_POLICY_VERSION,
@@ -73,6 +74,10 @@ const {
 } = audit
 const { validateAuditMetadata } = metadataRules
 const { mockAuditLogs } = auditLogsModule
+const {
+  createMockAuditWriter,
+  MockAuditWriterError,
+} = mockWriter
 
 const initialMockAuditLogLength = mockAuditLogs.length
 const checks = []
@@ -214,6 +219,201 @@ addCheck('mock audit log is not mutated', () => mockAuditLogs.length === initial
 addCheck('sourceRoute is present', () => buildAuditEvent(baseInput()).sourceRoute === '/staff/applications/app_002')
 
 addCheck('target privacy level is present', () => buildAuditEvent(baseInput()).targetPrivacyLevel === 'internal')
+
+// AP-4 Mock Audit Writer checks
+function createTestEvent(overrides = {}) {
+  return buildAuditEvent({
+    id: 'writer_test_001',
+    eventType: 'staff.document.verify',
+    actorId: 'usr_staff_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Writer Test Staff',
+    targetType: 'document',
+    targetId: 'doc_writer',
+    targetDisplayToken: 'Student #S-9999',
+    targetPrivacyLevel: 'internal',
+    sourceRoute: '/staff/writer-test',
+    createdAt: '2026-05-12T00:00:00.000Z',
+    metadata: { documentId: 'doc_writer', applicationId: 'app_writer', studentToken: 'Student #S-9999' },
+    ...overrides,
+  })
+}
+
+addCheck('writer starts empty', () => {
+  const writer = createMockAuditWriter()
+  return writer.count() === 0
+})
+
+addCheck('write one mock event', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'write_001' })
+  const result = writer.write(event)
+  return result.id === 'write_001' && writer.count() === 1
+})
+
+addCheck('list returns copy', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'list_copy_001' })
+  writer.write(event)
+  const list = writer.list()
+  return list.length === 1 && list !== writer.snapshot().events
+})
+
+addCheck('snapshot returns copy', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'snap_001' })
+  writer.write(event)
+  const snapshot = writer.snapshot()
+  return snapshot.count === 1 && snapshot.events.length === 1
+})
+
+addCheck('count updates', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'count_001' }))
+  writer.write(createTestEvent({ id: 'count_002' }))
+  return writer.count() === 2
+})
+
+addCheck('getById works', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'getbyid_001' })
+  writer.write(event)
+  const found = writer.getById('getbyid_001')
+  return found && found.id === 'getbyid_001'
+})
+
+addCheck('getById returns undefined for missing id', () => {
+  const writer = createMockAuditWriter()
+  return writer.getById('nonexistent') === undefined
+})
+
+addCheck('clear works', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'clear_001' }))
+  writer.clear()
+  return writer.count() === 0
+})
+
+addCheck('seed works', () => {
+  const writer = createMockAuditWriter()
+  const events = [
+    createTestEvent({ id: 'seed_001' }),
+    createTestEvent({ id: 'seed_002' }),
+  ]
+  writer.seed(events)
+  return writer.count() === 2 && writer.getById('seed_001') && writer.getById('seed_002')
+})
+
+addCheck('seed replaces existing events', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'seed_old_001' }))
+  writer.seed([createTestEvent({ id: 'seed_new_001' })])
+  return writer.count() === 1 && !writer.getById('seed_old_001') && writer.getById('seed_new_001')
+})
+
+addCheck('writeMany works', () => {
+  const writer = createMockAuditWriter()
+  const events = [
+    createTestEvent({ id: 'many_001' }),
+    createTestEvent({ id: 'many_002' }),
+    createTestEvent({ id: 'many_003' }),
+  ]
+  const results = writer.writeMany(events)
+  return results.length === 3 && writer.count() === 3
+})
+
+addCheck('filters work by eventType', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'filter_001', eventType: 'staff.document.verify' }))
+  writer.write(createTestEvent({ id: 'filter_002', eventType: 'staff.document.reject', reason: 'test' }))
+  const filtered = writer.list({ eventType: 'staff.document.reject' })
+  return filtered.length === 1 && filtered[0].id === 'filter_002'
+})
+
+addCheck('filters work by actorRole', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'role_001', actorRole: 'staff' }))
+  writer.write(createTestEvent({ id: 'role_002', actorRole: 'admin' }))
+  const filtered = writer.list({ actorRole: 'admin' })
+  return filtered.length === 1 && filtered[0].actorRole === 'admin'
+})
+
+addCheck('insertion order is preserved', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'order_001' }))
+  writer.write(createTestEvent({ id: 'order_002' }))
+  writer.write(createTestEvent({ id: 'order_003' }))
+  const list = writer.list()
+  return list[0].id === 'order_001' && list[1].id === 'order_002' && list[2].id === 'order_003'
+})
+
+addCheck('input event is not mutated', () => {
+  const writer = createMockAuditWriter()
+  const originalEvent = createTestEvent({ id: 'mutate_001' })
+  const originalReason = originalEvent.reason
+  writer.write(originalEvent)
+  return originalEvent.reason === originalReason
+})
+
+addCheck('returned list cannot mutate internal state', () => {
+  const writer = createMockAuditWriter()
+  writer.write(createTestEvent({ id: 'immutable_001' }))
+  const list = writer.list()
+  list.length = 0
+  return writer.count() === 1
+})
+
+addCheck('duplicate ID rejected by default', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'dup_001' })
+  writer.write(event)
+  try {
+    writer.write(createTestEvent({ id: 'dup_001' }))
+    return false
+  } catch (error) {
+    return error instanceof MockAuditWriterError && error.code === 'DUPLICATE_ID'
+  }
+})
+
+addCheck('duplicate ID allowed when configured', () => {
+  const writer = createMockAuditWriter({ allowDuplicateIds: true })
+  writer.write(createTestEvent({ id: 'dup_allowed_001' }))
+  writer.write(createTestEvent({ id: 'dup_allowed_001' }))
+  return writer.count() === 2
+})
+
+addCheck('real_persisted event rejected', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'real_reject_001', persistenceMode: 'real_persisted' })
+  try {
+    writer.write(event)
+    return false
+  } catch (error) {
+    return error instanceof MockAuditWriterError && error.code === 'INVALID_PERSISTENCE_MODE'
+  }
+})
+
+addCheck('prototype_only event rejected', () => {
+  const writer = createMockAuditWriter()
+  const event = createTestEvent({ id: 'proto_reject_001', persistenceMode: 'prototype_only' })
+  try {
+    writer.write(event)
+    return false
+  } catch (error) {
+    return error instanceof MockAuditWriterError && error.code === 'INVALID_PERSISTENCE_MODE'
+  }
+})
+
+addCheck('unsafe metadata still rejected through builder before writer', () => {
+  try {
+    createTestEvent({ id: 'unsafe_meta_001', metadata: { studentEmail: 'bad@example.com' } })
+    return false
+  } catch (error) {
+    return error instanceof AuditEventValidationError
+  }
+})
+
+addCheck('mock audit log fixture still not mutated', () => mockAuditLogs.length === initialMockAuditLogLength)
 
 const failures = checks.filter((check) => !check.passed)
 
