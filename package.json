@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check:tokens": "node scripts/check-token-formats.mjs"
+    "check:tokens": "node scripts/check-token-formats.mjs",
+    "check:audit-events": "node scripts/check-audit-events.mjs"
   },
   "dependencies": {
     "next": "14.2.3",
