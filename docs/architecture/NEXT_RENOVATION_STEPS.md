@@ -541,6 +541,40 @@ Why AP-2 should come before runtime wiring:
 - It keeps Staff document warnings prototype-safe until persistence behavior is explicitly defined.
 - It avoids jumping directly to `ReasonRequiredModal` or reason min-length enforcement before the audit persistence model is clear.
 
+## AP-2 Result — Mock Audit Event Builder and Tests
+
+**Started:** 2026-05-12
+
+Completed in this branch:
+
+- Pure audit event builder types:
+  `src/lib/audit/auditTypes.ts`
+- Metadata privacy validation rules:
+  `src/lib/audit/auditMetadataRules.ts`
+- Pure builder helpers:
+  `src/lib/audit/auditEventBuilder.ts`
+- Public audit utility exports:
+  `src/lib/audit/index.ts`
+- Lightweight check script:
+  `scripts/check-audit-events.mjs`
+- AP-2 summary:
+  `docs/architecture/MOCK_AUDIT_EVENT_BUILDER_PHASE_AP2.md`
+
+AP-2 constraints honored:
+
+- No UI wiring.
+- No real audit persistence.
+- No mock audit log mutation.
+- No component or app page changes.
+- No reason validation behavior changes.
+- No `ReasonRequiredModal`.
+
+Recommended next phase:
+
+- AP-3 planning for a clearly labeled mock audit writer, or a review checkpoint before runtime wiring.
+
+Do not connect the builder to Staff document actions until the AP-2 contract and checks are reviewed.
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
