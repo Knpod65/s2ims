@@ -44,8 +44,7 @@ export default function AuditLogPage() {
   // All combined rows are mock_only; real_persisted shows empty state
   const filteredLogs = persistenceFilter === 'real_persisted' ? [] : ALL_DISPLAY_ROWS
 
-  const fixtureCount = ALL_DISPLAY_ROWS.filter(r => r.source === 'fixture').length
-  const writerCount = ALL_DISPLAY_ROWS.filter(r => r.source === 'writer').length
+  const totalCount = ALL_DISPLAY_ROWS.length
 
   return (
     <AppShell requiredRole="admin">
@@ -58,8 +57,8 @@ export default function AuditLogPage() {
         <AlertCircle size={13} className="text-purple-600"/>
         <span className="text-xs text-purple-600">
           {lang==='th'
-            ? `นี่คือเหตุการณ์การตรวจสอบแบบเดโมสำหรับการตรวจทานโปรโตไทป์ ไม่ใช่บันทึกการตรวจสอบอย่างเป็นทางการ (Fixture mock: ${fixtureCount}, Writer mock: ${writerCount})`
-            : `Showing mock/demo audit records for prototype review. Not official persisted audit evidence. (Fixture mock: ${fixtureCount}, Writer mock: ${writerCount})`}
+            ? `การตรวจสอบ Audit ของ Admin แสดงบันทึกเดโม ${totalCount} รายการเท่านั้น บันทึกเหล่านี้ช่วยตรวจสอบประสบการณ์ Audit และไม่ใช่หลักฐานการตรวจสอบอย่างเป็นทางการ`
+            : `Admin audit review is currently showing ${totalCount} mock/demo records only. These records help validate the audit experience and are not official persisted audit evidence.`}
         </span>
       </div>
 
@@ -94,7 +93,7 @@ export default function AuditLogPage() {
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'การกระทำ':'Action'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'เอนทิตี':'Entity'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'สถานะ':'Status'}</th>
-              <th className="p-3 text-xs text-ink-3 font-semibold"></th>
+              <th className="p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'รายละเอียด':'Details'}</th>
             </tr>
           </thead>
           <tbody>
@@ -118,12 +117,12 @@ export default function AuditLogPage() {
                     />
                     <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border w-fit ${
                       row.source === 'writer'
-                        ? 'text-violet-700 bg-violet-50 border-violet-200'
+                        ? 'text-indigo-700 bg-indigo-50 border-indigo-200'
                         : 'text-slate-600 bg-slate-100 border-slate-200'
                     }`}>
                       {row.source === 'writer'
-                        ? (lang==='th'?'Writer mock':'Writer mock')
-                        : (lang==='th'?'Fixture mock':'Fixture mock')}
+                        ? (lang==='th'?'เดโม (สร้างขึ้น)':'Demo (generated)')
+                        : (lang==='th'?'เดโม (ฟิกซ์เจอร์)':'Demo (fixture)')}
                     </span>
                   </div>
                 </td>

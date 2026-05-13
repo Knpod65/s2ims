@@ -1,6 +1,6 @@
 'use client'
 
-import { X, AlertCircle, User, Target, Activity, Shield, Database } from 'lucide-react'
+import { X, AlertCircle, User, Target, Activity, Shield, Database, MessageSquare } from 'lucide-react'
 import { useLang } from '@/lib/i18n'
 import type { AdminAuditDisplayRow } from '@/lib/audit/adminAuditDisplayAdapter'
 import { FORBIDDEN_AUDIT_METADATA_KEYS } from '@/lib/audit/auditMetadataRules'
@@ -70,9 +70,11 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
   const legacyAfter = !isWriterEvent ? (log.after ?? {}) : {}
   const hasLegacyMeta = Object.keys(legacyBefore).length > 0 || Object.keys(legacyAfter).length > 0
 
-  const sourceLabel = isWriterEvent ? 'Writer mock' : 'Fixture mock'
+  const sourceLabel = isWriterEvent
+    ? (lang === 'th' ? 'เดโม (สร้างขึ้น)' : 'Demo (generated)')
+    : (lang === 'th' ? 'เดโม (ฟิกซ์เจอร์)' : 'Demo (fixture)')
   const sourceBadgeColor = isWriterEvent
-    ? 'text-violet-700 bg-violet-50 border-violet-200'
+    ? 'text-indigo-700 bg-indigo-50 border-indigo-200'
     : 'text-slate-600 bg-slate-100 border-slate-200'
 
   return (
@@ -141,10 +143,12 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
                 value={log.eventType ?? log.action}
                 mono
               />
-              <Field
-                label={lang === 'th' ? 'เวอร์ชันนโยบาย' : 'Policy Version'}
-                value={log.policyVersion ?? 'Not available in mock fixture'}
-              />
+              {log.policyVersion && (
+                <Field
+                  label={lang === 'th' ? 'เวอร์ชันนโยบาย' : 'Policy Version'}
+                  value={log.policyVersion}
+                />
+              )}
               {log.severity && (
                 <div className="flex flex-col gap-0.5">
                   <span className="text-[10px] text-ink-3">{lang === 'th' ? 'ระดับความรุนแรง' : 'Severity'}</span>
@@ -171,7 +175,7 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
                 value={log.actorName || '[Actor not available]'}
               />
               <Field
-                label={lang === 'th' ? 'รหัสผู้ดำเนินการ (ข้อมูลเดโม)' : 'Actor ID (mock data)'}
+                label={lang === 'th' ? 'รหัสผู้ดำเนินการ' : 'Actor ID'}
                 value={log.actorId}
                 mono
               />
@@ -205,7 +209,7 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
 
           {/* Action / Reason */}
           <section>
-            <SectionHeader icon={Activity} label={lang === 'th' ? 'การกระทำ / เหตุผล' : 'Action / Reason'} />
+            <SectionHeader icon={MessageSquare} label={lang === 'th' ? 'การกระทำ / เหตุผล' : 'Action / Reason'} />
             <div className="space-y-2.5">
               <Field label={lang === 'th' ? 'การกระทำ' : 'Action'} value={log.eventType ?? log.action} mono />
               {log.sourceRoute && (
@@ -339,15 +343,6 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
               <Field label="IP (mock fixture)" value={log.ip} mono />
             </section>
           )}
-
-          {/* Bottom evidence note */}
-          <div className="p-3 rounded-lg border border-line bg-surface-low/40">
-            <div className="text-[10px] text-ink-3 leading-relaxed">
-              {lang === 'th'
-                ? 'บันทึกนี้มาจากชุดข้อมูลเดโม S²IMS ไม่สามารถใช้เป็นหลักฐาน Audit อย่างเป็นทางการได้ การบันทึก Audit จริงจะพร้อมใช้งานในเฟสถัดไป'
-                : 'This record is from the S²IMS mock/demo dataset. It cannot be used as official audit evidence. Real audit persistence will be available in a future phase.'}
-            </div>
-          </div>
 
         </div>
 
