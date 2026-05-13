@@ -796,3 +796,53 @@ Recommended next phase:
 - Do not wire Provider/Student/ESQ actions.
 - Do not add real persistence.
 
+## Admin Audit UX QA/Polish Plan after AP-6C
+
+Completed on 2026-05-13:
+
+- Admin audit UX QA/polish plan:
+  `docs/design/ADMIN_AUDIT_UX_QA_POLISH_PLAN.md`
+- Admin audit copy simplification guide:
+  `docs/design/ADMIN_AUDIT_COPY_SIMPLIFICATION_GUIDE.md`
+- Admin audit visual hierarchy plan:
+  `docs/design/ADMIN_AUDIT_VISUAL_HIERARCHY_PLAN.md`
+- Admin audit QA checklist (AP-6C):
+  `docs/design/ADMIN_AUDIT_QA_CHECKLIST_AP6C.md`
+
+Planning conclusion:
+
+- Docs-only branch. No runtime UI modified.
+- No Staff action wiring performed.
+- No reason validation changed.
+- No real persistence added.
+- No mock fixture mutated.
+
+Key findings:
+
+- Double badge in Status column (primary "Mock event" + secondary "Fixture mock"/"Writer mock") creates visual noise. Source sub-badge should be de-emphasized or removed from table.
+- "Writer mock" violet badge conflicts with ESQ role color (`text-violet-700`) in the same table. Change to indigo recommended (M4 in polish plan).
+- "Writer mock" / "Fixture mock" source labels have no Thai translations — both locales output English strings. Thai copy needed (M5 in polish plan).
+- Technical counts "(Fixture mock: 6, Writer mock: 3)" in banner are developer-facing, not admin-facing. Should be simplified or removed (M3).
+- Drawer bottom note is a third restatement of mock nature — redundant with banner and Persistence/Evidence section. Recommend removal (R6).
+- Two drawer sections use the same `Activity` icon — recommend using `MessageSquare` for Action/Reason section (R5).
+- No Thai translations exist for source badge labels ("Fixture mock" / "Writer mock") — this is a known gap.
+
+Must-have polish items (M1–M5) are identified and documented. See `ADMIN_AUDIT_UX_QA_POLISH_PLAN.md`.
+
+AP-6D status: **blocked until Admin audit UX review is complete.**
+
+Staff action wiring remains blocked:
+
+- AP-6D must not start until the Admin audit log UX has been reviewed and approved by a human reviewer.
+- Product sign-off is required on which Staff callbacks (`onReject`, `onRequestReplacement`) should call `mockAuditWriter.write(...)`.
+- Mock-safe copy for Staff-triggered entries must be confirmed before any Staff component changes.
+
+Recommended next phase:
+
+1. Human reviewer completes the QA checklist in `docs/design/ADMIN_AUDIT_QA_CHECKLIST_AP6C.md`.
+2. Implement must-have polish items M1–M5 (or explicitly defer with rationale) in a `design/admin-audit-ux-polish-runtime` branch.
+3. After polish review and approval, begin AP-6D planning (document scope, copy, and test plan).
+4. Only after AP-6D plan is approved: implement AP-6D runtime (Staff action wiring to mock writer, mock_only only).
+
+Do not start AP-6D without explicit approval.
+
