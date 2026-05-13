@@ -1012,3 +1012,43 @@ Recommended next phase:
 - Do not add real persistence.
 - Do not introduce ReasonRequiredModal.
 
+## Staff Document Mock Audit Wiring AP-6D QA Result
+
+Completed on 2026-05-13.
+
+QA checklist: `docs/qa/staff-document-mock-audit-wiring-ap6d/README.md`
+QA summary: `docs/architecture/STAFF_DOCUMENT_MOCK_AUDIT_WIRING_AP6D_QA_SUMMARY.md`
+
+QA verdict: **PASS** — with known limitations.
+
+What was confirmed:
+
+- Staff reject callback wired and auditable: `onReject` → `buildStaffDocumentRejectEvent` → `sharedMockAuditWriter.write()` in `try/catch`.
+- Staff replacement request callback wired and auditable: `onRequestReplacement` → `buildStaffDocumentReplacementRequestEvent` → `sharedMockAuditWriter.write()` in `try/catch`.
+- Writer failure cannot block Staff UI — toast fires regardless.
+- Privacy boundary confirmed — `studentToken` used in metadata, raw `student_id` excluded.
+- Admin audit display adapter reads live shared writer events.
+- Official persisted filter intentionally empty — no real events exist.
+- AuditWarningCard Stage 0 copy preserved unchanged.
+- All checks pass: build 40/40, tokens 4/4, audit events 42/42.
+- All routes 200 OK, dev log clean.
+
+Known limitations:
+
+- Shared writer is session-scoped — resets on page reload. Events only visible within the same browser session.
+- Stage 0 AuditWarningCard copy says "real audit-log persistence is not connected yet" — technically inaccurate now that mock wiring exists. Copy update deferred to AP-7 or a dedicated copy-stage branch.
+- No document status mutation in panel — static mock data.
+- Actor identity is prototype placeholder (`staff_demo_session` / `Staff (Demo)`).
+- No reason min-length enforcement — deferred to SW-3B/SD-3.
+- No browser screenshots captured — headless QA only.
+
+AP-7 not started.
+
+Recommended next phase:
+
+- Human browser QA: open `/staff/applications/app_002`, perform reject + replacement request, then open `/admin/audit-log` in the same session to confirm live events appear.
+- After human QA passes: plan AP-7 persistence strategy separately.
+- Do not jump directly to real persistence.
+- Do not change reason validation yet.
+- Do not introduce `ReasonRequiredModal` yet.
+
