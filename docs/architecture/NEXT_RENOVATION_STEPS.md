@@ -670,3 +670,35 @@ Recommended next phase:
 - AP-6B — Admin event detail drawer (plan and runtime)
 - Or: Review checkpoint before continuing AP-6C writer wiring
 
+
+## AP-6B Plan — Admin Audit Event Detail Drawer
+
+Completed in this branch:
+
+- Admin audit event detail drawer plan:
+  `docs/architecture/ADMIN_AUDIT_DETAIL_DRAWER_PLAN_PHASE_AP6B.md`
+- Admin audit event detail drawer copy rules:
+  `docs/architecture/ADMIN_AUDIT_DETAIL_DRAWER_COPY_RULES.md`
+- Admin audit event detail drawer privacy model:
+  `docs/architecture/ADMIN_AUDIT_DETAIL_DRAWER_PRIVACY_MODEL.md`
+- Admin audit event detail drawer runtime sequence:
+  `docs/architecture/ADMIN_AUDIT_DETAIL_DRAWER_RUNTIME_SEQUENCE.md`
+
+AP-6B constraints honored:
+
+- Planning and documentation only.
+- No runtime code changed.
+- No admin UI modified.
+- No mock writer wiring.
+- No real persistence added.
+- No mock audit fixture mutated.
+- No Staff/Student/Provider/Admin/ESQ workflow changes.
+- No reason validation changes.
+- No ReasonRequiredModal introduced.
+
+Recommended next phase:
+
+- AP-6B runtime — Admin audit event detail drawer implementation (read-only, mock-only).
+- Alternative: AP-6C — Connect AP-4 mock writer to Admin display in mock-only mode.
+- Do not wire Staff document actions yet.
+
