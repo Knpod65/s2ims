@@ -2,11 +2,11 @@
 
 import { X, AlertCircle, User, Target, Activity, Shield, Database } from 'lucide-react'
 import { useLang } from '@/lib/i18n'
-import type { AuditLog } from '@/lib/types'
+import type { AdminAuditDisplayRow } from '@/lib/audit/adminAuditDisplayAdapter'
 import { FORBIDDEN_AUDIT_METADATA_KEYS } from '@/lib/audit/auditMetadataRules'
 
 interface Props {
-  log: AuditLog
+  log: AdminAuditDisplayRow
   onClose: () => void
 }
 
@@ -45,20 +45,35 @@ const ROLE_COLOR: Record<string, string> = {
   admin: 'text-slate-700 bg-slate-100',
 }
 
+const SEVERITY_COLOR: Record<string, string> = {
+  info: 'text-ink-3 bg-surface-low',
+  low: 'text-status-success bg-status-success/10',
+  medium: 'text-status-warning bg-status-warning/10',
+  high: 'text-status-danger bg-status-danger/10',
+  critical: 'text-status-danger bg-status-danger/20 font-semibold',
+}
+
 export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
   const { lang } = useLang()
 
-  const formattedTime = new Date(log.created_at).toLocaleString(
+  const isWriterEvent = log.source === 'writer'
+
+  const formattedTime = new Date(log.createdAt).toLocaleString(
     lang === 'th' ? 'th-TH' : 'en-US',
     { dateStyle: 'medium', timeStyle: 'medium' }
   )
 
-  const metadataEntries: [string, unknown][] = [
-    ...(log.before ? Object.entries(log.before) : []),
-    ...(log.after ? Object.entries(log.after) : []),
-  ]
+  const structuredMetadata = isWriterEvent ? (log.metadata ?? {}) : {}
+  const metadataEntries = Object.entries(structuredMetadata)
 
-  const hasMetadata = metadataEntries.length > 0
+  const legacyBefore = !isWriterEvent ? (log.before ?? {}) : {}
+  const legacyAfter = !isWriterEvent ? (log.after ?? {}) : {}
+  const hasLegacyMeta = Object.keys(legacyBefore).length > 0 || Object.keys(legacyAfter).length > 0
+
+  const sourceLabel = isWriterEvent ? 'Writer mock' : 'Fixture mock'
+  const sourceBadgeColor = isWriterEvent
+    ? 'text-violet-700 bg-violet-50 border-violet-200'
+    : 'text-slate-600 bg-slate-100 border-slate-200'
 
   return (
     <>
@@ -74,8 +89,13 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
         {/* Drawer header */}
         <div className="flex items-start justify-between gap-3 p-4 border-b border-line bg-surface-low/60 shrink-0">
           <div>
-            <div className="text-sm font-semibold text-ink-1">
-              {lang === 'th' ? 'รายละเอียดเหตุการณ์ Audit (เดโม)' : 'Audit Event Detail (Mock/Demo)'}
+            <div className="flex items-center gap-2 mb-0.5">
+              <div className="text-sm font-semibold text-ink-1">
+                {lang === 'th' ? 'รายละเอียดเหตุการณ์ Audit (เดโม)' : 'Audit Event Detail (Mock/Demo)'}
+              </div>
+              <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${sourceBadgeColor}`}>
+                {sourceLabel}
+              </span>
             </div>
             <div className="text-[10px] text-purple-600 mt-0.5 font-mono">{log.id}</div>
           </div>
@@ -96,9 +116,13 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
               {lang === 'th' ? 'เหตุการณ์เดโม — ไม่ใช่หลักฐาน Audit อย่างเป็นทางการ' : 'Mock/demo event — Not official audit evidence'}
             </div>
             <div className="text-[10px] text-purple-600 mt-0.5">
-              {lang === 'th'
-                ? 'บันทึกนี้แสดงเพื่อการตรวจสอบเดโมเท่านั้น การบันทึก Audit จริงยังไม่ได้เชื่อมต่อ'
-                : 'This record is shown for mock/demo review. Real audit persistence is not connected yet.'}
+              {isWriterEvent
+                ? (lang === 'th'
+                  ? 'สร้างโดย mock audit writer สำหรับการตรวจสอบการแสดงผลเท่านั้น'
+                  : 'Generated from the mock audit writer for display review only.')
+                : (lang === 'th'
+                  ? 'บันทึกนี้แสดงเพื่อการตรวจสอบเดโมเท่านั้น การบันทึก Audit จริงยังไม่ได้เชื่อมต่อ'
+                  : 'This record is shown for mock/demo review. Real audit persistence is not connected yet.')}
             </div>
           </div>
         </div>
@@ -112,8 +136,23 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
             <div className="space-y-2.5">
               <Field label={lang === 'th' ? 'รหัสเหตุการณ์' : 'Event ID'} value={log.id} mono />
               <Field label={lang === 'th' ? 'เวลา' : 'Timestamp'} value={formattedTime} />
-              <Field label={lang === 'th' ? 'ประเภทเหตุการณ์' : 'Event / Action'} value={log.action} mono />
-              <Field label={lang === 'th' ? 'เวอร์ชันนโยบาย' : 'Policy Version'} value="Not available in mock fixture" />
+              <Field
+                label={lang === 'th' ? 'ประเภทเหตุการณ์' : 'Event / Action'}
+                value={log.eventType ?? log.action}
+                mono
+              />
+              <Field
+                label={lang === 'th' ? 'เวอร์ชันนโยบาย' : 'Policy Version'}
+                value={log.policyVersion ?? 'Not available in mock fixture'}
+              />
+              {log.severity && (
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[10px] text-ink-3">{lang === 'th' ? 'ระดับความรุนแรง' : 'Severity'}</span>
+                  <span className={`text-xs font-mono px-1.5 py-0.5 rounded w-fit ${SEVERITY_COLOR[log.severity] ?? 'text-ink-3 bg-surface-low'}`}>
+                    {log.severity}
+                  </span>
+                </div>
+              )}
             </div>
           </section>
 
@@ -123,17 +162,17 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
             <div className="space-y-2.5">
               <div className="flex flex-col gap-0.5">
                 <span className="text-[10px] text-ink-3">{lang === 'th' ? 'บทบาท' : 'Role'}</span>
-                <span className={`text-xs font-mono font-medium px-1.5 py-0.5 rounded w-fit ${ROLE_COLOR[log.actor_role] ?? 'text-ink-3 bg-surface-low'}`}>
-                  {log.actor_role}
+                <span className={`text-xs font-mono font-medium px-1.5 py-0.5 rounded w-fit ${ROLE_COLOR[log.actorRole] ?? 'text-ink-3 bg-surface-low'}`}>
+                  {log.actorRole}
                 </span>
               </div>
               <Field
                 label={lang === 'th' ? 'ชื่อผู้ดำเนินการ' : 'Actor Name'}
-                value={log.actor_name || '[Actor not available]'}
+                value={log.actorName || '[Actor not available]'}
               />
               <Field
-                label={lang === 'th' ? 'รหัสผู้ดำเนินการ (ข้อมูลเดโม)' : 'Actor ID (mock fixture)'}
-                value={log.actor_id}
+                label={lang === 'th' ? 'รหัสผู้ดำเนินการ (ข้อมูลเดโม)' : 'Actor ID (mock data)'}
+                value={log.actorId}
                 mono
               />
             </div>
@@ -143,15 +182,24 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
           <section>
             <SectionHeader icon={Target} label={lang === 'th' ? 'เป้าหมาย / เอนทิตี' : 'Target / Entity'} />
             <div className="space-y-2.5">
-              <Field label={lang === 'th' ? 'ประเภทเอนทิตี' : 'Entity Type'} value={log.entity_type || '[Entity type not available]'} />
-              <Field label={lang === 'th' ? 'รหัสเอนทิตี' : 'Entity ID'} value={log.entity_id || '[Entity ID not available]'} mono />
-              <div className="p-2 rounded bg-surface-low/60 border border-line">
-                <div className="text-[10px] text-ink-3">
-                  {lang === 'th'
-                    ? 'รหัสที่แสดงมาจากข้อมูลเดโม ไม่ใช่ token ที่ผ่านการปกปิดตัวตน'
-                    : 'IDs shown are from the mock fixture and are not privacy-masked tokens.'}
+              <Field label={lang === 'th' ? 'ประเภทเอนทิตี' : 'Entity Type'} value={log.entityType || '[Entity type not available]'} />
+              {log.targetDisplayToken ? (
+                <Field label={lang === 'th' ? 'โทเคนเป้าหมาย' : 'Target Display Token'} value={log.targetDisplayToken} mono />
+              ) : (
+                <Field label={lang === 'th' ? 'รหัสเอนทิตี' : 'Entity ID'} value={log.entityId || '[Entity ID not available]'} mono />
+              )}
+              {log.targetPrivacyLevel && (
+                <Field label={lang === 'th' ? 'ระดับความเป็นส่วนตัว' : 'Privacy Level'} value={log.targetPrivacyLevel} mono />
+              )}
+              {!log.targetDisplayToken && (
+                <div className="p-2 rounded bg-surface-low/60 border border-line">
+                  <div className="text-[10px] text-ink-3">
+                    {lang === 'th'
+                      ? 'รหัสที่แสดงมาจากข้อมูลเดโม ไม่ใช่ token ที่ผ่านการปกปิดตัวตน'
+                      : 'IDs shown are from the mock fixture and are not privacy-masked tokens.'}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </section>
 
@@ -159,11 +207,29 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
           <section>
             <SectionHeader icon={Activity} label={lang === 'th' ? 'การกระทำ / เหตุผล' : 'Action / Reason'} />
             <div className="space-y-2.5">
-              <Field label={lang === 'th' ? 'การกระทำ' : 'Action'} value={log.action} mono />
-              <Field
-                label={lang === 'th' ? 'เหตุผล' : 'Reason'}
-                value={lang === 'th' ? 'ไม่ได้ระบุเหตุผล' : 'Reason not provided'}
-              />
+              <Field label={lang === 'th' ? 'การกระทำ' : 'Action'} value={log.eventType ?? log.action} mono />
+              {log.sourceRoute && (
+                <Field label={lang === 'th' ? 'เส้นทางต้นทาง' : 'Source Route'} value={log.sourceRoute} mono />
+              )}
+              {log.reason ? (
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[10px] text-ink-3">{lang === 'th' ? 'เหตุผล' : 'Reason'}</span>
+                  <span className="text-xs text-ink-1 p-2 rounded bg-surface-low/60 border border-line leading-relaxed">
+                    {log.reason}
+                  </span>
+                </div>
+              ) : (
+                <Field
+                  label={lang === 'th' ? 'เหตุผล' : 'Reason'}
+                  value={lang === 'th' ? 'ไม่ได้ระบุเหตุผล' : 'Reason not provided'}
+                />
+              )}
+              {log.reasonRequired !== undefined && (
+                <Field
+                  label={lang === 'th' ? 'ต้องการเหตุผล' : 'Reason Required'}
+                  value={log.reasonRequired ? 'Yes' : 'No'}
+                />
+              )}
             </div>
           </section>
 
@@ -174,7 +240,7 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
               <div className="flex flex-col gap-0.5">
                 <span className="text-[10px] text-ink-3">{lang === 'th' ? 'โหมดการบันทึก' : 'Persistence Mode'}</span>
                 <span className="text-xs font-mono font-medium text-purple-700 bg-purple-500/10 px-1.5 py-0.5 rounded w-fit">
-                  mock_only
+                  {log.persistenceMode}
                 </span>
               </div>
               <div className="p-2.5 rounded-lg bg-purple-500/[0.05] border border-purple-500/15">
@@ -184,58 +250,89 @@ export default function AdminAuditEventDetailDrawer({ log, onClose }: Props) {
                     : 'This is a mock/demo event. Not official audit evidence.'}
                 </div>
                 <div className="text-[10px] text-purple-600 mt-1">
-                  {lang === 'th'
-                    ? 'สำหรับการสาธิตเท่านั้น ไม่ใช่การบันทึก Audit จริง'
-                    : 'For demonstration purposes only. Not real audit persistence.'}
+                  {isWriterEvent
+                    ? (lang === 'th'
+                      ? 'สร้างโดย mock audit writer — สำหรับการสาธิตเท่านั้น'
+                      : 'Generated from the mock audit writer — for demonstration purposes only.')
+                    : (lang === 'th'
+                      ? 'สำหรับการสาธิตเท่านั้น ไม่ใช่การบันทึก Audit จริง'
+                      : 'For demonstration purposes only. Not real audit persistence.')}
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Metadata */}
-          <section>
-            <SectionHeader icon={Database} label={lang === 'th' ? 'ข้อมูลเพิ่มเติม' : 'Metadata'} />
-            {hasMetadata ? (
-              <div className="space-y-1.5">
-                {log.before && Object.keys(log.before).length > 0 && (
-                  <div className="mb-2">
-                    <div className="text-[10px] text-ink-3 mb-1">{lang === 'th' ? 'ก่อน' : 'Before'}</div>
-                    <div className="space-y-1">
-                      {Object.entries(log.before).map(([key, val]) => (
-                        <div key={`before-${key}`} className="flex items-start justify-between gap-2 p-1.5 rounded bg-surface-low/60 border border-line">
-                          <span className="text-[10px] font-mono text-ink-2 shrink-0">{key}</span>
-                          <span className="text-[10px] text-ink-1 text-right break-all">
-                            {renderMetadataValue(key, val)}
-                          </span>
-                        </div>
-                      ))}
+          {/* Metadata — writer events */}
+          {isWriterEvent && (
+            <section>
+              <SectionHeader icon={Database} label={lang === 'th' ? 'ข้อมูลเพิ่มเติม' : 'Metadata'} />
+              {metadataEntries.length > 0 ? (
+                <div className="space-y-1">
+                  {metadataEntries.map(([key, val]) => (
+                    <div key={key} className="flex items-start justify-between gap-2 p-1.5 rounded bg-surface-low/60 border border-line">
+                      <span className="text-[10px] font-mono text-ink-2 shrink-0">{key}</span>
+                      <span className="text-[10px] text-ink-1 text-right break-all">
+                        {renderMetadataValue(key, val)}
+                      </span>
                     </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-[11px] text-ink-3 italic">
+                  {lang === 'th' ? 'ไม่มีข้อมูลเมตาเพิ่มเติม' : 'No additional metadata'}
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* Before/After — fixture events with metadata */}
+          {!isWriterEvent && hasLegacyMeta && (
+            <section>
+              <SectionHeader icon={Database} label={lang === 'th' ? 'ข้อมูลเพิ่มเติม' : 'Metadata'} />
+              {Object.keys(legacyBefore).length > 0 && (
+                <div className="mb-2">
+                  <div className="text-[10px] text-ink-3 mb-1">{lang === 'th' ? 'ก่อน' : 'Before'}</div>
+                  <div className="space-y-1">
+                    {Object.entries(legacyBefore).map(([key, val]) => (
+                      <div key={`before-${key}`} className="flex items-start justify-between gap-2 p-1.5 rounded bg-surface-low/60 border border-line">
+                        <span className="text-[10px] font-mono text-ink-2 shrink-0">{key}</span>
+                        <span className="text-[10px] text-ink-1 text-right break-all">
+                          {renderMetadataValue(key, val)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                )}
-                {log.after && Object.keys(log.after).length > 0 && (
-                  <div>
-                    <div className="text-[10px] text-ink-3 mb-1">{lang === 'th' ? 'หลัง' : 'After'}</div>
-                    <div className="space-y-1">
-                      {Object.entries(log.after).map(([key, val]) => (
-                        <div key={`after-${key}`} className="flex items-start justify-between gap-2 p-1.5 rounded bg-surface-low/60 border border-line">
-                          <span className="text-[10px] font-mono text-ink-2 shrink-0">{key}</span>
-                          <span className="text-[10px] text-ink-1 text-right break-all">
-                            {renderMetadataValue(key, val)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                </div>
+              )}
+              {Object.keys(legacyAfter).length > 0 && (
+                <div>
+                  <div className="text-[10px] text-ink-3 mb-1">{lang === 'th' ? 'หลัง' : 'After'}</div>
+                  <div className="space-y-1">
+                    {Object.entries(legacyAfter).map(([key, val]) => (
+                      <div key={`after-${key}`} className="flex items-start justify-between gap-2 p-1.5 rounded bg-surface-low/60 border border-line">
+                        <span className="text-[10px] font-mono text-ink-2 shrink-0">{key}</span>
+                        <span className="text-[10px] text-ink-1 text-right break-all">
+                          {renderMetadataValue(key, val)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
-            ) : (
+                </div>
+              )}
+            </section>
+          )}
+
+          {/* No metadata — fixture events without before/after */}
+          {!isWriterEvent && !hasLegacyMeta && (
+            <section>
+              <SectionHeader icon={Database} label={lang === 'th' ? 'ข้อมูลเพิ่มเติม' : 'Metadata'} />
               <div className="text-[11px] text-ink-3 italic">
                 {lang === 'th' ? 'ไม่มีข้อมูลเมตาเพิ่มเติม' : 'No additional metadata'}
               </div>
-            )}
-          </section>
+            </section>
+          )}
 
-          {/* IP note */}
+          {/* Session context — fixture events only */}
           {log.ip && (
             <section>
               <SectionHeader icon={Shield} label={lang === 'th' ? 'บริบทเซสชัน (เดโม)' : 'Session Context (Mock)'} />

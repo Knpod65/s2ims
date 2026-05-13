@@ -747,3 +747,52 @@ Recommended next phase:
 - Do not start AP-6C without explicit approval.
 - Do not claim real persistence in any copy before AP-6C is reviewed.
 
+## AP-6C Runtime Result — Admin Mock Writer Display
+
+Completed on 2026-05-13:
+
+- Admin audit log can now display both fixture mock records and mock writer demo events.
+- Added `src/lib/audit/adminAuditDisplayAdapter.ts`:
+  - Defines `AdminAuditDisplayRow` unified type for both sources.
+  - Builds 3 static demo writer events at module load (verify, reject, role assign).
+  - `getAdminAuditDisplayRows()` combines fixture + writer rows sorted by timestamp.
+- Updated `src/app/admin/audit-log/page.tsx`:
+  - Uses adapter to show 9 total rows (6 fixture + 3 writer demo).
+  - Source badge per row: "Fixture mock" (slate) / "Writer mock" (violet).
+  - Count in banner: "Fixture mock: N, Writer mock: N".
+  - AP-6A persistence filter and official persisted empty state preserved.
+- Updated `src/components/admin/AdminAuditEventDetailDrawer.tsx`:
+  - Accepts `AdminAuditDisplayRow` instead of `AuditLog`.
+  - Shows source badge in header ("Fixture mock" / "Writer mock").
+  - Shows richer fields for writer events (severity, eventType, reason, policyVersion, targetDisplayToken).
+  - Source-aware copy in mock/demo banner and persistence section.
+
+Writer connection boundary:
+
+- `buildAuditEvent` used in adapter for static demo events only.
+- No `createMockAuditWriter` instance created at display time.
+- No Staff/Provider/Student actions wired.
+- No runtime user action triggers any write.
+
+Safety confirmations:
+
+- `src/data/mock/audit-logs.ts` not mutated.
+- No Staff actions wired to mock writer.
+- No real persistence added.
+- No reason validation changed.
+- No ReasonRequiredModal introduced.
+
+Validation:
+
+- ✅ Build passed: 40 routes, 0 type errors
+- ✅ Token checks: 4/4 passed
+- ✅ Audit event checks: 37/37 passed
+- ✅ /admin/audit-log: 200 OK, log clean
+
+Recommended next phase:
+
+- AP-6D — Wire Staff document reject and replacement request callbacks to mock audit writer (mock_only only).
+- Do not start AP-6D without explicit approval.
+- Do not wire Provider/Student/ESQ actions.
+- Do not add real persistence.
+

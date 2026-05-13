@@ -6,14 +6,21 @@ import { mockAuditLogs } from '@/data/mock/audit-logs'
 import { Download, AlertCircle } from 'lucide-react'
 import { useState } from 'react'
 import AdminAuditEventDetailDrawer from '@/components/admin/AdminAuditEventDetailDrawer'
+import { getAdminAuditDisplayRows } from '@/lib/audit/adminAuditDisplayAdapter'
+import type { AdminAuditDisplayRow } from '@/lib/audit/adminAuditDisplayAdapter'
 
 type PersistenceMode = 'all' | 'mock_only' | 'real_persisted'
 
+// Combined fixture + writer demo rows — computed once at module level.
+// mockAuditLogs is static; DEMO_WRITER_EVENTS inside adapter are static.
+// No runtime writes occur from this call.
+const ALL_DISPLAY_ROWS = getAdminAuditDisplayRows(mockAuditLogs)
+
 function exportAuditCSV() {
-  const header = 'Time,Actor,Role,Action,Entity,Status'
+  const header = 'Time,Actor,Role,Action,Entity,Source,Status'
   const warningRow = '# Export contains demo/mock audit data — not official persistence'
-  const rows = mockAuditLogs.map(l =>
-    `"${l.created_at}","${l.actor_name}","${l.actor_role}","${l.action}","${l.entity_type}","Mock event"`
+  const rows = ALL_DISPLAY_ROWS.map(r =>
+    `"${r.createdAt}","${r.actorName}","${r.actorRole}","${r.action}","${r.entityType}","${r.source === 'writer' ? 'Mock writer demo' : 'Fixture mock'}","Mock event"`
   )
   const blob = new Blob([[warningRow, header, ...rows].join('\n')], { type: 'text/csv' })
   const url = URL.createObjectURL(blob)
@@ -32,14 +39,13 @@ const ROLE_COLOR: Record<string, string> = {
 export default function AuditLogPage() {
   const { lang } = useLang()
   const [persistenceFilter, setPersistenceFilter] = useState<PersistenceMode>('all')
-  const [selectedLog, setSelectedLog] = useState<(typeof mockAuditLogs)[number] | null>(null)
+  const [selectedLog, setSelectedLog] = useState<AdminAuditDisplayRow | null>(null)
 
-  // All current records are treated as mock_only since fixture doesn't have persistenceMode field
-  const filteredLogs = persistenceFilter === 'all' 
-    ? mockAuditLogs
-    : persistenceFilter === 'mock_only'
-    ? mockAuditLogs
-    : [] // real_persisted shows empty state
+  // All combined rows are mock_only; real_persisted shows empty state
+  const filteredLogs = persistenceFilter === 'real_persisted' ? [] : ALL_DISPLAY_ROWS
+
+  const fixtureCount = ALL_DISPLAY_ROWS.filter(r => r.source === 'fixture').length
+  const writerCount = ALL_DISPLAY_ROWS.filter(r => r.source === 'writer').length
 
   return (
     <AppShell requiredRole="admin">
@@ -50,12 +56,16 @@ export default function AuditLogPage() {
       />
       <div className="flex items-center gap-2 mb-4 p-3 bg-purple-500/[0.05] border border-purple-500/20 rounded-lg">
         <AlertCircle size={13} className="text-purple-600"/>
-        <span className="text-xs text-purple-600">{lang==='th'?'นี่คือเหตุการณ์การตรวจสอบแบบเดโมสำหรับการตรวจทานโปรโตไทป์ ไม่ใช่บันทึกการตรวจสอบอย่างเป็นทางการ':'This audit view shows demo/mock records for prototype review. These records are not official persisted audit evidence.'}</span>
+        <span className="text-xs text-purple-600">
+          {lang==='th'
+            ? `นี่คือเหตุการณ์การตรวจสอบแบบเดโมสำหรับการตรวจทานโปรโตไทป์ ไม่ใช่บันทึกการตรวจสอบอย่างเป็นทางการ (Fixture mock: ${fixtureCount}, Writer mock: ${writerCount})`
+            : `Showing mock/demo audit records for prototype review. Not official persisted audit evidence. (Fixture mock: ${fixtureCount}, Writer mock: ${writerCount})`}
+        </span>
       </div>
 
       <div className="mb-4 flex items-center gap-3">
         <label className="text-xs font-semibold text-ink-2">{lang==='th'?'การบันทึก':'Persistence'}:</label>
-        <select 
+        <select
           value={persistenceFilter}
           onChange={(e) => setPersistenceFilter(e.target.value as PersistenceMode)}
           className="px-3 py-1.5 text-xs border border-line rounded-lg bg-bg-000 text-ink-1 focus:outline-none focus:ring-2 focus:ring-role-primary/30"
@@ -88,27 +98,38 @@ export default function AuditLogPage() {
             </tr>
           </thead>
           <tbody>
-            {filteredLogs.map((log, i) => (
-              <tr key={log.id} className={`border-b border-line ${i%2===1?'bg-surface-low/60':''}`}>
+            {filteredLogs.map((row, i) => (
+              <tr key={row.id} className={`border-b border-line ${i%2===1?'bg-surface-low/60':''}`}>
                 <td className="p-3 text-xs text-ink-3 font-mono whitespace-nowrap">
-                  {new Date(log.created_at).toLocaleString(lang==='th'?'th-TH':'en-US',{dateStyle:'short',timeStyle:'short'})}
+                  {new Date(row.createdAt).toLocaleString(lang==='th'?'th-TH':'en-US',{dateStyle:'short',timeStyle:'short'})}
                 </td>
-                <td className="p-3 text-xs text-ink-1 max-w-[140px]"><div className="truncate">{log.actor_name}</div></td>
+                <td className="p-3 text-xs text-ink-1 max-w-[140px]"><div className="truncate">{row.actorName}</div></td>
                 <td className="p-3">
-                  <span className={`text-xs font-mono ${ROLE_COLOR[log.actor_role]||'text-ink-3'}`}>{log.actor_role}</span>
+                  <span className={`text-xs font-mono ${ROLE_COLOR[row.actorRole]||'text-ink-3'}`}>{row.actorRole}</span>
                 </td>
-                <td className="p-3"><span className="font-mono text-xs text-role-primary">{log.action}</span></td>
-                <td className="p-3 text-xs text-ink-3">{log.entity_type}</td>
+                <td className="p-3"><span className="font-mono text-xs text-role-primary">{row.action}</span></td>
+                <td className="p-3 text-xs text-ink-3">{row.entityType}</td>
                 <td className="p-3">
-                  <StatusBadge
-                    label={lang==='th'?'เหตุการณ์เดโม':'Mock event'}
-                    color="bg-purple-500/10 text-purple-600 border-purple-500/20"
-                    dot
-                  />
+                  <div className="flex flex-col gap-1">
+                    <StatusBadge
+                      label={lang==='th'?'เหตุการณ์เดโม':'Mock event'}
+                      color="bg-purple-500/10 text-purple-600 border-purple-500/20"
+                      dot
+                    />
+                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border w-fit ${
+                      row.source === 'writer'
+                        ? 'text-violet-700 bg-violet-50 border-violet-200'
+                        : 'text-slate-600 bg-slate-100 border-slate-200'
+                    }`}>
+                      {row.source === 'writer'
+                        ? (lang==='th'?'Writer mock':'Writer mock')
+                        : (lang==='th'?'Fixture mock':'Fixture mock')}
+                    </span>
+                  </div>
                 </td>
                 <td className="p-3">
                   <button
-                    onClick={() => setSelectedLog(log)}
+                    onClick={() => setSelectedLog(row)}
                     className="text-[11px] px-2 py-1 rounded border border-line text-ink-2 hover:bg-surface-low hover:text-ink-1 transition-colors whitespace-nowrap"
                   >
                     {lang==='th'?'ดูรายละเอียด':'View details'}
