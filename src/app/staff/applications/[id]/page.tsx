@@ -16,6 +16,8 @@ import DocumentActionRail from '@/components/staff/DocumentActionRail'
 import { useToast } from '@/components/ui/Toast'
 import { CheckCircle2, AlertCircle, Eye, MessageSquare } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/types'
+import { buildStaffDocumentRejectEvent, buildStaffDocumentReplacementRequestEvent } from '@/lib/audit/auditEventBuilder'
+import { sharedMockAuditWriter } from '@/lib/audit/sharedMockWriter'
 
 export default function StaffApplicationDetailPage({ params }: { params: { id: string } }) {
   const { id } = params
@@ -103,6 +105,30 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
               )
             }}
             onReject={(docId, reason) => {
+              try {
+                const doc = appDocs.find(d => d.id === docId)
+                const event = buildStaffDocumentRejectEvent({
+                  actorId: 'staff_demo_session',
+                  actorRole: 'staff',
+                  actorDisplayName: 'Staff (Demo)',
+                  documentId: docId,
+                  applicationId: id,
+                  studentToken: studentToken,
+                  sourceRoute: `/staff/applications/${id}`,
+                  reason: reason,
+                  createdAt: new Date().toISOString(),
+                  metadata: {
+                    documentId: docId,
+                    applicationId: id,
+                    studentToken: studentToken,
+                    previousStatus: doc?.status ?? '',
+                    nextStatus: 'rejected',
+                  },
+                })
+                sharedMockAuditWriter.write(event)
+              } catch (err) {
+                console.warn('[AP-6D] Mock audit write failed (reject)', err)
+              }
               addToast(
                 lang === 'th'
                   ? `เอกสารปฏิเสธแล้ว: ${reason}`
@@ -111,6 +137,30 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
               )
             }}
             onRequestReplacement={(docId, message) => {
+              try {
+                const doc = appDocs.find(d => d.id === docId)
+                const event = buildStaffDocumentReplacementRequestEvent({
+                  actorId: 'staff_demo_session',
+                  actorRole: 'staff',
+                  actorDisplayName: 'Staff (Demo)',
+                  documentId: docId,
+                  applicationId: id,
+                  studentToken: studentToken,
+                  sourceRoute: `/staff/applications/${id}`,
+                  reason: message,
+                  createdAt: new Date().toISOString(),
+                  metadata: {
+                    documentId: docId,
+                    applicationId: id,
+                    studentToken: studentToken,
+                    previousStatus: doc?.status ?? '',
+                    nextStatus: 'needs_replacement',
+                  },
+                })
+                sharedMockAuditWriter.write(event)
+              } catch (err) {
+                console.warn('[AP-6D] Mock audit write failed (replacement request)', err)
+              }
               addToast(
                 lang === 'th'
                   ? `ขอส่งแทน: ${message}`

@@ -956,3 +956,59 @@ Do not add real persistence.
 Do not introduce ReasonRequiredModal.
 Do not change reason validation.
 
+## AP-6D Runtime Result — Staff Document Mock Audit Wiring
+
+Completed on 2026-05-13:
+
+Runtime branch: `architecture/staff-document-mock-audit-wiring-runtime`
+
+Runtime summary: `docs/architecture/STAFF_DOCUMENT_MOCK_AUDIT_WIRING_AP6D_RUNTIME_SUMMARY.md`
+
+Files changed:
+
+| File | Change |
+|------|--------|
+| `src/lib/audit/sharedMockWriter.ts` | New — shared singleton + 3 helper exports |
+| `src/lib/audit/index.ts` | Named exports for shared writer helpers added |
+| `src/lib/audit/adminAuditDisplayAdapter.ts` | Merges live `sharedMockAuditWriter.list()` into display rows |
+| `src/app/staff/applications/[id]/page.tsx` | `onReject` and `onRequestReplacement` wired to shared writer |
+| `scripts/check-audit-events.mjs` | 5 new AP-6D checks — total 42/42 |
+
+What is now wired:
+
+- Staff document rejection (`onReject`) → `buildStaffDocumentRejectEvent` → `sharedMockAuditWriter.write()`
+- Staff replacement request (`onRequestReplacement`) → `buildStaffDocumentReplacementRequestEvent` → `sharedMockAuditWriter.write()`
+- Admin audit log (`/admin/audit-log`) now shows Staff-triggered events as live writer rows alongside fixture and demo rows
+- Writer failure is wrapped in `try/catch` — toast fires regardless; UI never broken by writer error
+
+What remains deferred:
+
+- `onVerify` not wired — deferred to AP-6E or later
+- Real audit persistence — not added
+- Reason min-length not changed — deferred to SW-3B/SD-3
+- ReasonRequiredModal — not introduced
+- Staff identity reveal — separate governance path
+
+Constraints honored:
+
+- `src/data/mock/audit-logs.ts` not mutated
+- `AuditWarningCard` copy unchanged (Stage 0 prototype-safe)
+- `DocumentVerificationPanel` interface unchanged — no new props
+- Provider/Student/ESQ components unchanged
+- Routes, auth, role guards unchanged
+
+Validation:
+
+- ✅ Build passed: 40/40 static routes, 0 type errors
+- ✅ Token checks: 4/4 passed
+- ✅ Audit event checks: 42/42 passed
+- ✅ /login, /staff/applications/app_001, /staff/applications/app_002, /admin/audit-log, /admin/dashboard: 200 OK, log clean
+
+Recommended next phase:
+
+- SW-3B — Add 20-character minimum reason length for Staff rejection and replacement request.
+- OR: AP-6E — Wire `onVerify` callback to a `staff.document.verify` mock audit event (low-risk, no reason required).
+- Do not start either without explicit approval.
+- Do not add real persistence.
+- Do not introduce ReasonRequiredModal.
+
