@@ -63,6 +63,8 @@ const audit = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditEventBuilder.
 const metadataRules = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditMetadataRules.ts'))
 const auditLogsModule = loadTsModule(path.join(repoRoot, 'src/data/mock/audit-logs.ts'))
 const mockWriter = loadTsModule(path.join(repoRoot, 'src/lib/audit/mockAuditWriter.ts'))
+const sharedWriterModule = loadTsModule(path.join(repoRoot, 'src/lib/audit/sharedMockWriter.ts'))
+const adapterModule = loadTsModule(path.join(repoRoot, 'src/lib/audit/adminAuditDisplayAdapter.ts'))
 
 const {
   AUDIT_POLICY_VERSION,
@@ -78,6 +80,11 @@ const {
   createMockAuditWriter,
   MockAuditWriterError,
 } = mockWriter
+const {
+  sharedMockAuditWriter,
+  clearSharedMockAuditEvents,
+} = sharedWriterModule
+const { getAdminAuditDisplayRows } = adapterModule
 
 const initialMockAuditLogLength = mockAuditLogs.length
 const checks = []
@@ -414,6 +421,70 @@ addCheck('unsafe metadata still rejected through builder before writer', () => {
 })
 
 addCheck('mock audit log fixture still not mutated', () => mockAuditLogs.length === initialMockAuditLogLength)
+
+// AP-6D shared writer checks
+addCheck('shared writer starts empty', () => {
+  clearSharedMockAuditEvents()
+  return sharedMockAuditWriter.count() === 0
+})
+
+addCheck('shared writer accepts reject event', () => {
+  clearSharedMockAuditEvents()
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'staff_demo_session',
+    actorRole: 'staff',
+    actorDisplayName: 'Staff (Demo)',
+    documentId: 'doc_chk_001',
+    applicationId: 'app_002',
+    studentToken: 'Student #S-2345',
+    sourceRoute: '/staff/applications/app_002',
+    reason: 'Document is expired',
+    id: 'shared_reject_001',
+    createdAt: '2026-05-13T08:00:00.000Z',
+    metadata: {
+      documentId: 'doc_chk_001',
+      applicationId: 'app_002',
+      studentToken: 'Student #S-2345',
+      nextStatus: 'rejected',
+    },
+  })
+  sharedMockAuditWriter.write(event)
+  return sharedMockAuditWriter.count() === 1 && sharedMockAuditWriter.getById('shared_reject_001')?.eventType === 'staff.document.reject'
+})
+
+addCheck('shared writer accepts replacement request event', () => {
+  const event = buildStaffDocumentReplacementRequestEvent({
+    actorId: 'staff_demo_session',
+    actorRole: 'staff',
+    actorDisplayName: 'Staff (Demo)',
+    documentId: 'doc_chk_002',
+    applicationId: 'app_002',
+    studentToken: 'Student #S-2345',
+    sourceRoute: '/staff/applications/app_002',
+    reason: 'Please submit current year document',
+    id: 'shared_replacement_001',
+    createdAt: '2026-05-13T08:01:00.000Z',
+    metadata: {
+      documentId: 'doc_chk_002',
+      applicationId: 'app_002',
+      studentToken: 'Student #S-2345',
+      nextStatus: 'needs_replacement',
+    },
+  })
+  sharedMockAuditWriter.write(event)
+  return sharedMockAuditWriter.count() === 2 && sharedMockAuditWriter.getById('shared_replacement_001')?.eventType === 'staff.document.request_replacement'
+})
+
+addCheck('shared writer events appear in admin display adapter rows', () => {
+  const rows = getAdminAuditDisplayRows([])
+  const liveIds = ['shared_reject_001', 'shared_replacement_001']
+  return liveIds.every(id => rows.some(r => r.id === id && r.source === 'writer'))
+})
+
+addCheck('shared writer clear helper resets count', () => {
+  clearSharedMockAuditEvents()
+  return sharedMockAuditWriter.count() === 0
+})
 
 const failures = checks.filter((check) => !check.passed)
 

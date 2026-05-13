@@ -1,6 +1,7 @@
 import type { AuditLog } from '@/lib/types'
 import { buildAuditEvent } from './auditEventBuilder'
 import type { AuditEvent } from './auditTypes'
+import { sharedMockAuditWriter } from './sharedMockWriter'
 
 export type AuditRecordSource = 'fixture' | 'writer'
 
@@ -151,12 +152,13 @@ const DEMO_WRITER_EVENTS: AuditEvent[] = (() => {
   }
 })()
 
-// Returns combined fixture + writer demo rows sorted by createdAt descending.
-// Pure function — does not write to any store or mutate any source.
+// Returns combined fixture + static demo + live shared writer rows sorted by createdAt descending.
+// Does not write to any store or mutate any source.
 export function getAdminAuditDisplayRows(fixtureLogs: AuditLog[]): AdminAuditDisplayRow[] {
   const fixtureRows = fixtureLogs.map(fixtureToRow)
-  const writerRows = DEMO_WRITER_EVENTS.map(writerEventToRow)
-  const combined = [...fixtureRows, ...writerRows]
+  const demoRows = DEMO_WRITER_EVENTS.map(writerEventToRow)
+  const liveRows = sharedMockAuditWriter.list().map(writerEventToRow)
+  const combined = [...fixtureRows, ...demoRows, ...liveRows]
   combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   return combined
 }
