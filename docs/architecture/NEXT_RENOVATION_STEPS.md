@@ -1192,3 +1192,45 @@ Do not jump directly to real persistence (AP-9).
 Do not change reason validation yet.
 Do not introduce ReasonRequiredModal yet.
 Do not start notification runtime fix yet.
+
+## Audit Service/Repository Runtime Skeleton AP-8A
+
+**Completed on 2026-05-13.**
+
+Branch: `architecture/audit-service-repository-runtime-skeleton`
+
+Created TypeScript contract/DTO/repository/service/policy/presenter/copy skeletons:
+
+- `src/lib/audit/contracts/auditContracts.ts` — 8 interfaces
+- `src/lib/audit/dto/auditDto.ts` — typed DTOs for all layers
+- `src/lib/audit/repositories/inMemoryAuditRepository.ts` — skeleton repository
+- `src/lib/audit/policies/auditPolicy.ts` — role-based visibility and masking
+- `src/lib/audit/presenters/auditDisplayPresenter.ts` — display row conversion
+- `src/lib/audit/copy/auditCopyStage.ts` — copy stage resolution
+- `src/lib/audit/services/auditService.ts` — orchestration layer with factory helper
+- `docs/architecture/AUDIT_SERVICE_REPOSITORY_RUNTIME_SKELETON_AP8A_SUMMARY.md`
+
+Updated:
+- `src/lib/audit/index.ts` — exports new modules without breaking existing imports
+- `scripts/check-audit-events.mjs` — 7 new skeleton checks, total now 49/49
+
+Constraints honored:
+- No behavior change — existing AP-6D mock writer remains live path
+- No real persistence, no backend/API, no migrations
+- No mutation of mock fixtures
+- No reason validation changes
+- No ReasonRequiredModal
+- No Staff/Provider/Student/Admin workflow changes
+- No notification click changes
+
+Recommended next:
+
+- **AP-8A-QA** — Human review of skeleton contracts, then wire a single workflow through the new service
+- **AP-8C** — Refactor Admin display adapter to use presenter
+- **AP-8B** — Database schema plan informed by repository filter contract
+
+Do not start real persistence yet.
+Do not start AP-8B.
+Do not start AP-8C.
+Do not start AP-9.
+Do not start UX-N1.
