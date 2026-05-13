@@ -906,3 +906,53 @@ Recommended next phase:
 
 Do not start AP-6D planning or runtime without explicit approval.
 
+## Staff Document Mock Audit Wiring Plan AP-6D
+
+Completed on 2026-05-13:
+
+Planning branch: `architecture/staff-document-mock-audit-wiring-plan`
+
+Planning documents added:
+
+- `docs/architecture/STAFF_DOCUMENT_MOCK_AUDIT_WIRING_PLAN_AP6D.md`
+- `docs/architecture/STAFF_DOCUMENT_AUDIT_EVENT_MAPPING_AP6D.md`
+- `docs/architecture/STAFF_DOCUMENT_MOCK_WRITER_RUNTIME_SEQUENCE_AP6D.md`
+- `docs/architecture/STAFF_DOCUMENT_AUDIT_QA_CHECKLIST_AP6D.md`
+
+Planning conclusion:
+
+- Planning and documentation only.
+- No runtime code changed.
+- No Staff actions wired.
+- No real persistence added.
+- No mock audit fixture mutated.
+- No reason validation changed.
+- No ReasonRequiredModal introduced.
+- No Admin audit runtime changed.
+- AP-6D runtime not started.
+
+Key decisions documented:
+
+- In-scope actions: `staff.document.reject` and `staff.document.request_replacement` only.
+- Out-of-scope in AP-6D: `staff.document.verify` (deferred), real persistence, reason min-length, ReasonRequiredModal.
+- Builder helpers `buildStaffDocumentRejectEvent` and `buildStaffDocumentReplacementRequestEvent` are ready in `auditEventBuilder.ts` — no builder changes needed.
+- Shared writer singleton pattern documented: `src/lib/audit/sharedMockWriter.ts` (new file in runtime).
+- `adminAuditDisplayAdapter.ts` must be updated in runtime to merge `sharedMockWriter.list()` with `DEMO_WRITER_EVENTS`.
+- All events use `persistenceMode: 'mock_only'` — writer only accepts this mode.
+- Privacy boundary: `studentToken` (`Student #S-XXXX`) used in metadata — never raw `student_id`.
+- `AuditWarningCard` copy must remain Stage 0 prototype-safe — must not change to Stage 2 copy.
+- Writer failure must be wrapped in try/catch — must not break Staff UI.
+- Reason min-length not changed in AP-6D — still non-empty-only, deferred to SW-3B/SD-3.
+
+Staff actions remain unwired until AP-6D runtime is explicitly approved.
+
+Recommended next branch:
+
+**`architecture/staff-document-mock-audit-wiring-runtime`**
+
+Do not start AP-6D runtime until explicit approval is given.
+Do not wire Staff actions until AP-6D runtime is approved.
+Do not add real persistence.
+Do not introduce ReasonRequiredModal.
+Do not change reason validation.
+
