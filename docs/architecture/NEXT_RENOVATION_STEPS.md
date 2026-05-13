@@ -1052,3 +1052,65 @@ Recommended next phase:
 - Do not change reason validation yet.
 - Do not introduce `ReasonRequiredModal` yet.
 
+## Audit Persistence Strategy Plan AP-7
+
+**Completed on 2026-05-13.**
+
+Planning branch: `architecture/audit-persistence-strategy-plan`
+
+Planning documents added:
+
+- `docs/architecture/AUDIT_PERSISTENCE_STRATEGY_PLAN_AP7.md`
+- `docs/architecture/AUDIT_PERSISTENCE_LARAVEL_ARCHITECTURE_MAP.md`
+- `docs/architecture/AUDIT_REPOSITORY_AND_SERVICE_BOUNDARY_AP7.md`
+- `docs/architecture/AUDIT_PERSISTENCE_MIGRATION_SEQUENCE_AP7.md`
+- `docs/architecture/AUDIT_PERSISTENCE_QA_CHECKLIST_AP7.md`
+
+Planning conclusion:
+
+- Planning and documentation only.
+- No runtime code changed.
+- No real audit persistence implemented.
+- No reason validation changed.
+- No ReasonRequiredModal introduced.
+- No Staff/Provider/Student/ESQ flows changed.
+- No backend, API, DB schema, or route changes.
+- `src/data/mock/audit-logs.ts` not mutated.
+- `AuditWarningCard` copy remains Stage 0 — unchanged.
+
+Key planning outputs:
+
+- Current mock-only state inventoried (AP-6D baseline).
+- 7-stage migration sequence defined: Stage 0 (mock-only) → Stage 1 (contract+tests) → Stage 2 (repository abstraction) → Stage 3 (DB schema planning) → Stage 4 (shadow write-through) → Stage 5 (real display) → Stage 6 (copy upgrade) → Stage 7 (reason validation + modal).
+- Each stage has explicit rollback plan and gate criteria.
+- `AuditWriterInterface` contract planned (not implemented) — covers both mock and future persistent writers.
+- `AuditRepository` abstraction planned (not implemented) — decouples service from storage.
+- `PersistentAuditWriter` planned (not implemented) — async, API-backed, Stage 4+.
+- Laravel/PHP conceptual mapping completed — every TypeScript module mapped to its Laravel equivalent.
+- Proposed TypeScript folder restructure documented (current flat → future layered).
+- 13-section QA checklist created (sections A–M) — items tagged `[current]` vs `[stage N]`.
+- Privacy/PII boundary confirmed — `[current]` items in sections B and J block all stages.
+- High/medium/low risk analysis completed.
+- DRY boundary rules documented — anti-patterns for AP-8+ identified.
+
+What must NOT change until AP-8 is approved:
+
+- `AuditEvent` type shape
+- `auditEventBuilder.ts`
+- `mockAuditWriter.ts`
+- `sharedMockWriter.ts`
+- `AuditWarningCard` copy (Stage 0)
+- `src/data/mock/audit-logs.ts`
+- Reason validation min-length
+- `ReasonRequiredModal`
+- Staff verify action wiring (deferred to AP-6E)
+- Provider/Student/ESQ flows
+
+Recommended next phase:
+
+- AP-8A — Repository/Service Contract: define `AuditWriterInterface`, `AuditRepository` abstraction, add contract tests; do NOT implement persistent writer.
+- AP-8B — Schema and API Design: plan `audit_events` DB table, POST `/api/audit-events`, Admin read API; do NOT create migration or API route.
+- Do not start AP-8A or AP-8B without explicit approval.
+- Do not add real persistence in AP-8A.
+- Do not change reason validation before AP-8B is confirmed.
+
