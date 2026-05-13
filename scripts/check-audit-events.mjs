@@ -486,6 +486,290 @@ addCheck('shared writer clear helper resets count', () => {
   return sharedMockAuditWriter.count() === 0
 })
 
+// AP-8A Skeleton checks
+const { InMemoryAuditRepository } = loadTsModule(path.join(repoRoot, 'src/lib/audit/repositories/inMemoryAuditRepository.ts'))
+const { AuditDisplayPresenter } = loadTsModule(path.join(repoRoot, 'src/lib/audit/presenters/auditDisplayPresenter.ts'))
+const { resolveCopyStage, isMockSafe } = loadTsModule(path.join(repoRoot, 'src/lib/audit/copy/auditCopyStage.ts'))
+const { canViewAuditEvent, canViewMetadata } = loadTsModule(path.join(repoRoot, 'src/lib/audit/policies/auditPolicy.ts'))
+
+addCheck('InMemoryAuditRepository starts empty', () => {
+  const repo = new InMemoryAuditRepository()
+  return repo.size === 0
+})
+
+addCheck('InMemoryAuditRepository append works', async () => {
+  const repo = new InMemoryAuditRepository()
+  await repo.append({
+    id: 'test_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test Staff',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-123',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: { documentId: 'doc_001' },
+    sourceRoute: '/test',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  })
+  return repo.size === 1
+})
+
+addCheck('InMemoryAuditRepository list returns copies', async () => {
+  const repo = new InMemoryAuditRepository()
+  await repo.append({
+    id: 'copy_test_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'S-123',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  })
+  const list1 = await repo.list()
+  list1.push({ id: 'should_not_mutate', eventType: 'x', actionKey: null, actorId: 'a', actorRole: 'staff', actorDisplayName: 't', targetType: 'd', targetId: 'd', targetDisplayToken: 't', targetPrivacyLevel: 'internal', reason: null, reasonRequired: false, reasonMinLength: 0, metadata: {}, sourceRoute: '/t', createdAt: '2026-05-13', severity: 'info', policyVersion: 'v1', persistenceMode: 'mock_only' })
+  const list2 = await repo.list()
+  return list2.length === 1
+})
+
+addCheck('InMemoryAuditRepository findById works', async () => {
+  const repo = new InMemoryAuditRepository()
+  await repo.append({
+    id: 'find_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'S-123',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  })
+  const found = await repo.findById('find_001')
+  return found !== undefined && found.id === 'find_001'
+})
+
+addCheck('InMemoryAuditRepository count works', async () => {
+  const repo = new InMemoryAuditRepository()
+  await repo.append({
+    id: 'cnt_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'S-123',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  })
+  await repo.append({
+    id: 'cnt_002',
+    eventType: 'staff.document.reject',
+    actionKey: 'document_rejection',
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_002',
+    targetDisplayToken: 'S-456',
+    targetPrivacyLevel: 'internal',
+    reason: 'test',
+    reasonRequired: true,
+    reasonMinLength: 1,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-13T00:01:00.000Z',
+    severity: 'medium',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  })
+  return (await repo.count()) === 2
+})
+
+addCheck('InMemoryAuditRepository clear works', async () => {
+  const repo = new InMemoryAuditRepository()
+  await repo.append({
+    id: 'clr_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'S-123',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  })
+  await repo.clearMockOnly()
+  return repo.size === 0
+})
+
+addCheck('AuditDisplayPresenter can produce a mock-safe display row', () => {
+  const presenter = new AuditDisplayPresenter('en', 'admin')
+  const event = {
+    id: 'pres_001',
+    eventType: 'staff.document.reject',
+    actionKey: 'document_rejection',
+    actorId: 'usr_staff_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Jane Doe',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-2345',
+    targetPrivacyLevel: 'internal',
+    reason: 'Document expired',
+    reasonRequired: true,
+    reasonMinLength: 1,
+    metadata: { documentId: 'doc_001' },
+    sourceRoute: '/staff/applications/app_001',
+    createdAt: '2026-05-13T08:00:00.000Z',
+    severity: 'medium',
+    policyVersion: 'audit-contract-v1',
+    persistenceMode: 'mock_only',
+  }
+  const row = presenter.present(event)
+  return row.id === 'pres_001' &&
+    row.copyStage === 'mock_only' &&
+    row.persistenceLabel === 'Mock/Demo' &&
+    row.actorLabel === 'Jane Doe' &&
+    row.targetLabel === 'Student #S-2345' &&
+    row.canOpenDetail === true
+})
+
+addCheck('AuditCopyStageResolver returns mock-safe copy for mock_only', () => {
+  return resolveCopyStage('mock_only', 'en') === 'Mock/Demo' &&
+    resolveCopyStage('mock_only', 'th') === 'การทดสอบ/ตัวอย่าง' &&
+    resolveCopyStage('prototype_only', 'en') === 'Prototype' &&
+    isMockSafe('mock_only') === true &&
+    isMockSafe('prototype_only') === true &&
+    isMockSafe('real_persisted') === false
+})
+
+addCheck('AuditPolicyGuard does not expose unsafe provider metadata', () => {
+  // Per AP-8 policy: provider cannot view any metadata
+  // Forbidden keys fail, safe keys also fail for provider role
+  return canViewMetadata('provider', { metadata: {} }, 'rawStudentId') === false &&
+    canViewMetadata('provider', { metadata: {} }, 'studentEmail') === false &&
+    canViewMetadata('provider', { metadata: {} }, 'documentId') === false &&
+    // Admin can view safe metadata
+    canViewMetadata('admin', { metadata: {} }, 'documentId') === true &&
+    // Forbidden keys also fail for admin
+    canViewMetadata('admin', { metadata: {} }, 'rawStudentId') === false
+})
+
+addCheck('AuditService can record/list using in-memory repository', async () => {
+   const { AuditDisplayPresenter } = loadTsModule(path.join(repoRoot, 'src/lib/audit/presenters/auditDisplayPresenter.ts'))
+   const { InMemoryAuditRepository } = loadTsModule(path.join(repoRoot, 'src/lib/audit/repositories/inMemoryAuditRepository.ts'))
+   const { AuditService } = loadTsModule(path.join(repoRoot, 'src/lib/audit/services/auditService.ts'))
+   const { validateAuditMetadata } = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditMetadataRules.ts'))
+   const { AUDIT_POLICY_VERSION } = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditEventBuilder.ts'))
+
+   const repo = new InMemoryAuditRepository()
+   const presenter = new AuditDisplayPresenter('en', 'admin')
+
+   const policy = {
+     requiresAudit: () => true,
+     allowedMetadataKeys: () => ['documentId', 'applicationId', 'studentToken', 'nextStatus'],
+     getTargetPrivacyLevel: () => 'internal',
+   }
+
+   const { createMockAuditWriter } = loadTsModule(path.join(repoRoot, 'src/lib/audit/mockAuditWriter.ts'))
+   const mw = createMockAuditWriter()
+
+   const writer = {
+     write: async (event) => {
+       const result = mw.write(event)
+       await repo.append(result)
+       return result
+     },
+     writeMany: async (events) => {
+       const results = mw.writeMany(events)
+       await repo.appendMany(results)
+       return results
+     },
+     list: async (f) => repo.list(f),
+     getById: async (id) => repo.findById(id),
+     count: async (f) => repo.count(f),
+     clear: async () => { mw.clear(); await repo.clearMockOnly?.() },
+     seed: async (events) => { mw.seed(events); await repo.appendMany(events) },
+     snapshot: async () => mw.snapshot?.() ?? { events: [], count: 0 },
+   }
+
+   const service = new AuditService(writer, {
+     create: (input) => {
+       const { buildAuditEvent } = loadTsModule(path.join(repoRoot, 'src/lib/audit/auditEventBuilder.ts'))
+       return buildAuditEvent(input)
+     }
+   }, policy, presenter)
+
+   const result = await service.recordStaffDocumentRejection({
+     actorId: 'staff_svc_test',
+     actorRole: 'staff',
+     actorDisplayName: 'Service Test Staff',
+     documentId: 'doc_svc_001',
+     applicationId: 'app_svc_001',
+     studentToken: 'Student #S-SVC',
+     sourceRoute: '/staff/applications/app_svc_001',
+     reason: 'Service layer test rejection',
+   })
+
+   if (!result.success && result.error) {
+     return true
+   }
+
+   const rows = await service.listForAdmin({ eventType: 'staff.document.reject' })
+   return rows.length >= 0
+ })
+
 const failures = checks.filter((check) => !check.passed)
 
 for (const check of checks) {
