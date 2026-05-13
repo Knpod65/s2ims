@@ -846,3 +846,63 @@ Recommended next phase:
 
 Do not start AP-6D without explicit approval.
 
+## Admin Audit UX Polish Runtime Result
+
+Completed on 2026-05-13:
+
+- Must-have polish items M1–M5 implemented in `design/admin-audit-ux-polish-runtime`.
+- Runtime summary: `docs/architecture/ADMIN_AUDIT_UX_POLISH_RUNTIME_SUMMARY.md`
+
+Changes made:
+
+| Item | Change |
+|------|--------|
+| M1 | Banner copy simplified — developer-facing fixture/writer counts replaced with admin-facing total count |
+| M2 | Source badge retained as secondary indicator with updated labels and color (see M4/M5) |
+| M3 | `totalCount = ALL_DISPLAY_ROWS.length` (= 9) shown in banner instead of fixture/writer breakdown |
+| M4 | Writer mock source badge color changed from violet (`text-violet-700`) to indigo (`text-indigo-700`) — ESQ role color collision resolved |
+| M5 | Thai translations added for source labels: "เดโม (สร้างขึ้น)" / "เดโม (ฟิกซ์เจอร์)" |
+| R3 | "(mock data)" annotation removed from Actor ID drawer label |
+| R5 | Action/Reason section icon changed from `Activity` to `MessageSquare` — duplicate icon resolved |
+| R6 | Drawer bottom note (third restatement of mock nature) removed |
+| R7 | Policy Version row hidden for fixture events when `policyVersion` is not present |
+| Details col | Empty `<th>` for "View details" column now reads "Details" / "รายละเอียด" |
+
+Files modified:
+
+- `src/app/admin/audit-log/page.tsx`
+- `src/components/admin/AdminAuditEventDetailDrawer.tsx`
+
+Constraints honored:
+
+- `src/data/mock/audit-logs.ts` not mutated
+- Staff/Provider/Student/ESQ components unchanged
+- No Staff action wiring performed
+- No real persistence added
+- No reason validation changed
+- No ReasonRequiredModal introduced
+- No routes, auth, or role guards changed
+- AP-6D not started
+
+Validation:
+
+- ✅ Build passed: 40 routes, 0 type errors
+- ✅ Token checks: 4/4 passed
+- ✅ Audit event checks: 37/37 passed
+- ✅ /admin/audit-log, /admin/dashboard, /login: 200 OK, log clean
+
+AP-6D status: **still blocked — QA browser review required before AP-6D planning begins.**
+
+Recommended next phase:
+
+1. Human reviewer opens `/admin/audit-log` in a browser and confirms:
+   - Indigo source badge does not collide with any role color in the table.
+   - "Demo (generated)" / "Demo (fixture)" label distinction is clear.
+   - Simplified banner copy reads naturally to an Admin audience.
+   - Drawer without bottom note still conveys mock/demo evidence limitation.
+   - Thai locale source labels render correctly.
+2. After QA review passes: begin AP-6D **planning only** (document scope, copy, and test plan — no implementation).
+3. Only after AP-6D plan is approved: implement AP-6D runtime (Staff action wiring to mock writer, `mock_only` only).
+
+Do not start AP-6D planning or runtime without explicit approval.
+
