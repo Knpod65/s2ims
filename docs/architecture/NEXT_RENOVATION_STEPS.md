@@ -1114,3 +1114,81 @@ Recommended next phase:
 - Do not add real persistence in AP-8A.
 - Do not change reason validation before AP-8B is confirmed.
 
+
+## AP-8 Audit Repository/Service Contract Plan
+
+AP-8 completed in this branch:
+
+- Audit Repository/Service Contract Plan:
+  `docs/architecture/AUDIT_REPOSITORY_SERVICE_CONTRACT_PLAN_AP8.md`
+- Audit Service Interface Spec:
+  `docs/architecture/AUDIT_SERVICE_INTERFACE_SPEC_AP8.md`
+- Audit Repository Contract:
+  `docs/architecture/AUDIT_REPOSITORY_CONTRACT_AP8.md`
+- Audit Policy and Privacy Contract:
+  `docs/architecture/AUDIT_POLICY_AND_PRIVACY_CONTRACT_AP8.md`
+- Audit Display Presenter Contract:
+  `docs/architecture/AUDIT_DISPLAY_PRESENTER_CONTRACT_AP8.md`
+- Audit Notification Navigation Note:
+  `docs/architecture/AUDIT_NOTIFICATION_NAVIGATION_NOTE_AP8.md`
+- Audit Service QA Checklist:
+  `docs/architecture/AUDIT_SERVICE_QA_CHECKLIST_AP8.md`
+
+AP-8 constraints honored:
+
+- Planning and documentation only.
+- No runtime code changed.
+- No admin UI modified.
+- No mock writer wiring changed.
+- No real persistence added.
+- No mock audit fixture mutated.
+- No Staff/Student/Provider/Admin/ESQ workflow changes.
+- No reason validation changes.
+- No ReasonRequiredModal introduced.
+- Notification click issue documented but not fixed.
+
+Key planning outputs:
+
+- Concrete TypeScript interface contracts for AuditService, AuditWriter, AuditRepository, AuditPolicyGuard, AuditDisplayPresenter, AuditCopyStageResolver, AuditEventFactory.
+- Concrete DTO shapes for AuditEventInput, AuditActionContext, AuditActorContext, AuditTargetContext, AuditMetadataInput, AuditWriteResult, AuditDisplayRow.
+- Laravel/PHP equivalent interfaces and folder structure mapping.
+- Repository filter and pagination contract.
+- Policy/privacy layer contract with role-based visibility matrix.
+- Display presenter contract for Admin table, drawer, and CSV export.
+- Notification navigation issue documented as UX-N1 future work.
+
+Recommended next phase:
+
+**AP-8A — Audit Service/Repository Runtime Skeleton**
+
+Suggested branch:
+
+`architecture/audit-service-repository-skeleton`
+
+AP-8A should:
+
+- Create TypeScript interface files in planned folder structure.
+- Implement `InMemoryAuditRepository` as concrete class.
+- Create minimal `AuditService` that delegates to writer/repository.
+- Keep existing `sharedMockWriter` unchanged (feature-flagged or config-driven).
+- Not wire into existing UI yet (docs-only planning becomes runtime skeleton).
+
+Alternative:
+
+**AP-8B — Audit Database Schema Plan**
+
+Suggested branch:
+
+`architecture/audit-database-schema-plan`
+
+AP-8B should:
+
+- Plan database schema (table name, columns, indexes, foreign keys).
+- Define migration file template.
+- Define seed data for testing.
+- Remain docs-only until AP-8A validates interfaces.
+
+Do not jump directly to real persistence (AP-9).
+Do not change reason validation yet.
+Do not introduce ReasonRequiredModal yet.
+Do not start notification runtime fix yet.
