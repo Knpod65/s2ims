@@ -702,3 +702,48 @@ Recommended next phase:
 - Alternative: AP-6C — Connect AP-4 mock writer to Admin display in mock-only mode.
 - Do not wire Staff document actions yet.
 
+## AP-6B Runtime Result — Admin Audit Event Detail Drawer
+
+Completed on 2026-05-13:
+
+- Admin audit log now has a read-only mock-safe event detail drawer.
+- "View details" button added to each row in the audit log table.
+- Clicking opens a fixed right-side drawer showing:
+  - Event Identity (ID, timestamp, action, policy version fallback)
+  - Actor (role badge, name, mock ID)
+  - Target / Entity (entity type, entity ID, privacy note)
+  - Action / Reason (action string, "Reason not provided" placeholder)
+  - Persistence / Evidence (`mock_only` badge + full mock-safe copy)
+  - Metadata (before/after fields filtered through FORBIDDEN_AUDIT_METADATA_KEYS)
+  - Session Context (IP from fixture, labeled as mock)
+  - Bottom evidence note (demo-only restatement)
+
+Implementation details:
+
+- New component: `src/components/admin/AdminAuditEventDetailDrawer.tsx`
+- Modified: `src/app/admin/audit-log/page.tsx` (state + button + conditional render)
+- `FORBIDDEN_AUDIT_METADATA_KEYS` applied to all before/after metadata display
+- All records displayed as `mock_only`
+
+Safety confirmations:
+
+- No AP-4 mock writer wired into display
+- No Staff document actions wired into audit writer
+- No real audit persistence added
+- `src/data/mock/audit-logs.ts` not mutated
+- No reason validation changed
+- No ReasonRequiredModal introduced
+- Existing AP-6A persistence filter and mock badge retained
+
+Validation:
+
+- ✅ Build passed: 40 routes, 0 type errors
+- ✅ Token checks: 4/4 passed
+- ✅ Audit event checks: 37/37 passed
+
+Recommended next phase:
+
+- AP-6C — Wire AP-4 mock audit writer into Staff document reject and replacement request callbacks (mock_only persistence mode only).
+- Do not start AP-6C without explicit approval.
+- Do not claim real persistence in any copy before AP-6C is reviewed.
+

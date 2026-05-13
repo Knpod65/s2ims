@@ -5,6 +5,7 @@ import { PageHeader, StatusBadge } from '@/components/ui/index'
 import { mockAuditLogs } from '@/data/mock/audit-logs'
 import { Download, AlertCircle } from 'lucide-react'
 import { useState } from 'react'
+import AdminAuditEventDetailDrawer from '@/components/admin/AdminAuditEventDetailDrawer'
 
 type PersistenceMode = 'all' | 'mock_only' | 'real_persisted'
 
@@ -31,6 +32,7 @@ const ROLE_COLOR: Record<string, string> = {
 export default function AuditLogPage() {
   const { lang } = useLang()
   const [persistenceFilter, setPersistenceFilter] = useState<PersistenceMode>('all')
+  const [selectedLog, setSelectedLog] = useState<(typeof mockAuditLogs)[number] | null>(null)
 
   // All current records are treated as mock_only since fixture doesn't have persistenceMode field
   const filteredLogs = persistenceFilter === 'all' 
@@ -82,6 +84,7 @@ export default function AuditLogPage() {
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'การกระทำ':'Action'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'เอนทิตี':'Entity'}</th>
               <th className="text-left p-3 text-xs text-ink-3 font-semibold">{lang==='th'?'สถานะ':'Status'}</th>
+              <th className="p-3 text-xs text-ink-3 font-semibold"></th>
             </tr>
           </thead>
           <tbody>
@@ -97,17 +100,32 @@ export default function AuditLogPage() {
                 <td className="p-3"><span className="font-mono text-xs text-role-primary">{log.action}</span></td>
                 <td className="p-3 text-xs text-ink-3">{log.entity_type}</td>
                 <td className="p-3">
-                  <StatusBadge 
+                  <StatusBadge
                     label={lang==='th'?'เหตุการณ์เดโม':'Mock event'}
                     color="bg-purple-500/10 text-purple-600 border-purple-500/20"
                     dot
                   />
+                </td>
+                <td className="p-3">
+                  <button
+                    onClick={() => setSelectedLog(log)}
+                    className="text-[11px] px-2 py-1 rounded border border-line text-ink-2 hover:bg-surface-low hover:text-ink-1 transition-colors whitespace-nowrap"
+                  >
+                    {lang==='th'?'ดูรายละเอียด':'View details'}
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      )}
+
+      {selectedLog && (
+        <AdminAuditEventDetailDrawer
+          log={selectedLog}
+          onClose={() => setSelectedLog(null)}
+        />
       )}
     </AppShell>
   )
