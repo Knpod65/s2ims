@@ -65,6 +65,11 @@ const auditLogsModule = loadTsModule(path.join(repoRoot, 'src/data/mock/audit-lo
 const mockWriter = loadTsModule(path.join(repoRoot, 'src/lib/audit/mockAuditWriter.ts'))
 const sharedWriterModule = loadTsModule(path.join(repoRoot, 'src/lib/audit/sharedMockWriter.ts'))
 const adapterModule = loadTsModule(path.join(repoRoot, 'src/lib/audit/adminAuditDisplayAdapter.ts'))
+const notificationRouteRegistryModule = loadTsModule(path.join(repoRoot, 'src/lib/notifications/routes/notificationRouteRegistry.ts'))
+const notificationPolicyModule = loadTsModule(path.join(repoRoot, 'src/lib/notifications/policies/notificationNavigationPolicy.ts'))
+const notificationServiceModule = loadTsModule(path.join(repoRoot, 'src/lib/notifications/services/notificationNavigationService.ts'))
+const notificationPresenterModule = loadTsModule(path.join(repoRoot, 'src/lib/notifications/presenters/notificationNavigationPresenter.ts'))
+const notificationCopyModule = loadTsModule(path.join(repoRoot, 'src/lib/notifications/copy/notificationNavigationCopy.ts'))
 
 const {
   AUDIT_POLICY_VERSION,
@@ -85,6 +90,14 @@ const {
   clearSharedMockAuditEvents,
 } = sharedWriterModule
 const { getAdminAuditDisplayRows } = adapterModule
+const {
+  isKnownNotificationRouteName,
+  resolveNotificationRouteTarget,
+} = notificationRouteRegistryModule
+const { NotificationNavigationPolicy } = notificationPolicyModule
+const { NotificationNavigationService } = notificationServiceModule
+const { NotificationNavigationPresenter } = notificationPresenterModule
+const { NotificationNavigationCopy } = notificationCopyModule
 
 const initialMockAuditLogLength = mockAuditLogs.length
 const checks = []
@@ -769,6 +782,89 @@ addCheck('AuditService can record/list using in-memory repository', async () => 
    const rows = await service.listForAdmin({ eventType: 'staff.document.reject' })
    return rows.length >= 0
  })
+
+// UX-N1A Notification Navigation Runtime Skeleton checks
+function staffNotificationPayload(overrides = {}) {
+  return {
+    id: 'notif_staff_001',
+    type: 'staff.application.review',
+    severity: 'medium',
+    title: 'Application needs review',
+    body: 'Open the staff application detail.',
+    targetRouteName: 'staff.application.detail',
+    targetRouteParams: { id: 'app_001' },
+    targetDisplayToken: 'Application app_001',
+    actorRoleScope: ['staff'],
+    requiresPermission: 'staff.application.view',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    isClickable: true,
+    ...overrides,
+  }
+}
+
+addCheck('notification route registry recognizes known route names', () =>
+  isKnownNotificationRouteName('staff.application.detail') &&
+  isKnownNotificationRouteName('admin.audit.detail')
+)
+
+addCheck('notification unknown route names are blocked', () => {
+  const result = resolveNotificationRouteTarget(staffNotificationPayload({ targetRouteName: 'student.raw.detail' }))
+  return result.allowed === false && result.blockedReason === 'unknown_route'
+})
+
+addCheck('notification missing params are blocked', () => {
+  const result = resolveNotificationRouteTarget(staffNotificationPayload({ targetRouteParams: {} }))
+  return result.allowed === false && result.blockedReason === 'missing_param'
+})
+
+addCheck('safe staff application notification resolves to staff application route', () => {
+  const result = resolveNotificationRouteTarget(staffNotificationPayload())
+  return result.allowed === true && result.target.href === '/staff/applications/app_001'
+})
+
+addCheck('raw PII-looking notification param key is blocked', () => {
+  const result = resolveNotificationRouteTarget(
+    staffNotificationPayload({ targetRouteParams: { id: 'app_001', studentId: '650912345' } })
+  )
+  return result.allowed === false && result.blockedReason === 'unsafe_param'
+})
+
+addCheck('notification policy blocks role mismatch', () => {
+  const policy = new NotificationNavigationPolicy()
+  return policy.canNavigate('provider', staffNotificationPayload()) === false &&
+    policy.explainBlockedNavigation('provider', staffNotificationPayload()) === 'role_scope_mismatch'
+})
+
+addCheck('notification policy allows staff route for staff role', () => {
+  const policy = new NotificationNavigationPolicy()
+  return policy.canNavigate('staff', staffNotificationPayload()) === true &&
+    policy.canUseRoute('staff', 'staff.application.detail') === true
+})
+
+addCheck('notification service returns resolution without mutating payload', () => {
+  const service = new NotificationNavigationService()
+  const payload = staffNotificationPayload()
+  const before = JSON.stringify(payload)
+  const result = service.resolve(payload, { actorRole: 'staff', lang: 'en' })
+  const after = JSON.stringify(payload)
+  return result.allowed === true && result.target.href === '/staff/applications/app_001' && before === after
+})
+
+addCheck('notification presenter returns non-clickable state for blocked notification', () => {
+  const presenter = new NotificationNavigationPresenter()
+  const output = presenter.present(
+    staffNotificationPayload(),
+    { allowed: false, isClickable: false, blockedReason: 'role_scope_mismatch' },
+    { lang: 'en' }
+  )
+  return output.isClickable === false && output.actionLabel === 'Not available' && Boolean(output.disabledReason)
+})
+
+addCheck('notification copy returns Thai and English blocked reason labels', () => {
+  const copy = new NotificationNavigationCopy()
+  return copy.getBlockedReasonCopy('role_scope_mismatch', 'en') === 'This item is not available from your current workspace.' &&
+    copy.getBlockedReasonCopy('role_scope_mismatch', 'th') === 'รายการนี้ไม่สามารถเปิดได้จากพื้นที่ทำงานปัจจุบัน'
+})
 
 const failures = checks.filter((check) => !check.passed)
 

@@ -1329,3 +1329,51 @@ Important guardrails:
 - Do not implement click behavior until the route, permission, and privacy model is reviewed.
 - Do not expose raw PII in notification payloads or URLs.
 - Do not bypass role policies during notification route resolution.
+
+## Notification Navigation Runtime Skeleton UX-N1A
+
+**Completed on 2026-05-14.**
+
+Branch: `architecture/notification-navigation-runtime-skeleton`
+
+UX-N1A added a minimal runtime skeleton for safe notification navigation.
+
+Created:
+
+- `src/lib/notifications/contracts/notificationNavigationContracts.ts`
+- `src/lib/notifications/dto/notificationNavigationDto.ts`
+- `src/lib/notifications/routes/notificationRouteRegistry.ts`
+- `src/lib/notifications/policies/notificationNavigationPolicy.ts`
+- `src/lib/notifications/services/notificationNavigationService.ts`
+- `src/lib/notifications/presenters/notificationNavigationPresenter.ts`
+- `src/lib/notifications/copy/notificationNavigationCopy.ts`
+- `src/lib/notifications/index.ts`
+- `docs/architecture/NOTIFICATION_NAVIGATION_RUNTIME_SKELETON_UXN1A_SUMMARY.md`
+
+Updated:
+
+- `scripts/check-audit-events.mjs` — added UX-N1A notification navigation checks.
+- `docs/architecture/NEXT_RENOVATION_STEPS.md`
+
+Result:
+
+- TypeScript notification navigation contracts, DTOs, route registry, service, policy, presenter, and copy skeletons created.
+- Laravel/PHP boundary reflected in code.
+- DRY route-resolution boundary represented.
+- Notification click behavior unchanged.
+- Topbar notification bell behavior unchanged.
+- Student notification page behavior unchanged.
+- Route behavior unchanged.
+- No PII route exposure added.
+- No backend/API added.
+- No database migrations added.
+- No real persistence added.
+- Checks updated.
+
+Recommended next options:
+
+- **UX-N1A-QA** — Review skeleton boundaries, route registry, policy, and checks.
+- **UX-N1B** — Topbar notification safe click wiring after UX-N1A QA passes.
+- **UX-N1C** — Student notification card route normalization after safe payload decisions.
+
+Do not implement notification click behavior until UX-N1A QA passes.
