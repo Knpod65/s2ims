@@ -595,6 +595,32 @@ Recommended next phase:
 - Keep `src/data/mock/audit-logs.ts` untouched
 - Delay UI wiring until mock labels and admin display rules are finalized.
 
+## Audit Shadow Write Runtime QA AP-9D
+
+AP-9D QA checkpoint completed on `architecture/audit-shadow-write-runtime-ap9d`.
+
+Reviewed:
+- shadow write metrics, guards, and service
+- Staff reject/replacement wiring
+- sharedMockWriter source-of-truth boundary
+- adminAuditDisplayAdapter active read/display path
+- disabled-by-default prototype persistence boundary
+
+Confirmed:
+- sharedMockWriter remains the source of truth
+- adminAuditDisplayAdapter remains the active Admin read path
+- prototype persistence remains disabled by default
+- audit/notification checks pass 107/107
+- route smoke passed for `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, and `/staff/applications/app_002`
+- dev log clean
+- runtime code unchanged in QA
+
+Recommended next:
+- push/open PR if not pushed
+- AP-9E read comparison only after AP-9D merge and approval
+- AP-10 only after prototype evidence and compliance review
+- do not start real persistence yet
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
