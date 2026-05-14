@@ -1925,4 +1925,54 @@ Recommended next:
 - Do not start real persistence yet
 - Do not start AP-10 yet
 
-## End of AP-9A
+## Audit Prototype Integration Plan AP-9B
+
+**Completed on 2026-05-14.**
+
+AP-9B defines a documentation-only plan for feature-flagged prototype integration using shadow writes, read comparison, and rollback gates.
+
+Documents created:
+
+- `docs/architecture/AUDIT_PROTOTYPE_INTEGRATION_PLAN_AP9B.md` — Main AP-9B plan overview
+- `docs/architecture/AUDIT_SHADOW_WRITE_STRATEGY_AP9B.md` — Shadow write strategy and source-of-truth rules
+- `docs/architecture/AUDIT_READ_COMPARISON_PLAN_AP9B.md` — Read comparison dimensions and privacy rules
+- `docs/architecture/AUDIT_PROTOTYPE_FEATURE_FLAG_MATRIX_AP9B.md` — 6 feature flags, defaults, allowed/forbidden combos
+- `docs/architecture/AUDIT_PROTOTYPE_ROLLBACK_AND_MONITORING_AP9B.md` — Monitoring signals, rollback triggers, incident template
+- `docs/architecture/AUDIT_PROTOTYPE_PRIVACY_QA_AP9B.md` — Privacy enforcement: forbidden/safe fields, role matrix, gates
+- `docs/architecture/AUDIT_PROTOTYPE_INTEGRATION_QA_CHECKLIST_AP9B.md` — 11-section QA checklist (sections A-K)
+- `docs/daily-reports/2026-05-13-audit-prototype-integration-plan-ap9b.md` — Daily report
+
+AP-9B constraints honored:
+
+- Documentation and planning only
+- No runtime code created or modified
+- No backend/API added
+- No database migrations created
+- No real persistence added
+- No prototype runtime integration started
+- No mock fixtures mutated
+- No Staff callbacks changed
+- No Staff verify action wired
+- No reason validation changed
+- No ReasonRequiredModal introduced
+- No notification behavior changed
+- No PII exposed
+- `real_persisted` mode remains blocked
+
+Key design outputs:
+
+- 6 feature flags all defaulting to `false`
+- Phased rollout: monitoring -> shadow write -> read compare -> admin visible
+- Source-of-truth rule: `sharedMockWriter` always authoritative
+- Rollback: disable any flag to revert immediately
+- Privacy gates run before every shadow write and read comparison
+- Monitoring signals with alert thresholds defined
+
+Recommended next:
+
+- **AP-9B-QA** — Formal QA checkpoint for documentation (optional)
+- **AP-9C** — Shadow write runtime integration (feature-flagged, `prototype_only`)
+- Do not start real persistence yet
+- Do not start AP-10 yet
+
+## End of AP-9B
