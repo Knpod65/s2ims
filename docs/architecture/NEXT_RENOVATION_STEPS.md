@@ -2441,4 +2441,45 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Plan QA AP-9G
+
+AP-9G QA completed on branch `architecture/audit-admin-comparison-debug-panel-plan-ap9g` (plan commit `8cec03a`).
+
+QA confirmed:
+- Docs-only scope confirmed: no `src/*`, `scripts/*`, or `package.json` changes; no component or route created
+- All 6 planning docs reviewed: main plan, privacy boundary, access control, UI spec, rollout/rollback, QA checklist
+- Admin-only model: hard constraint at component, route, and feature-flag levels; all non-Admin roles silently blocked
+- Privacy boundary: 17 forbidden fields; safe allowed fields; logging/export/copy restrictions; Thai/English copy safety
+- Access control: all 4 non-Admin roles explicitly blocked; direct URL planned as redirect; blocked access leaves no DOM trace
+- UI state model: 8 states defined; mismatch table safe and non-exportable; accessibility and mobile requirements defined
+- Rollout/rollback: 5 stages with QA gates; rollback triggers include PII exposure (Critical) and prototype-as-official (Critical)
+- QA checklist: 11 sections (A–K) covering all safety dimensions
+- Runtime unchanged during QA
+- Admin UI not switched to prototype reads
+- Prototype persistence remains disabled
+- Real persistence not added
+- Checks pass: 122/122
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI prototype read switch
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-10 not started
+
+Recommended next:
+- Merge AP-9G after review and approval
+- AP-9G post-merge QA after merge
+- Runtime implementation (Stage 1: hidden component) only after explicit approval
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
