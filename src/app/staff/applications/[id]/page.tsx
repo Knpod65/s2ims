@@ -18,16 +18,21 @@ import { CheckCircle2, AlertCircle, Eye, MessageSquare } from 'lucide-react'
 import type { ApplicationStatus } from '@/lib/types'
 import { buildStaffDocumentRejectEvent, buildStaffDocumentReplacementRequestEvent } from '@/lib/audit/auditEventBuilder'
 import { sharedMockAuditWriter } from '@/lib/audit/sharedMockWriter'
+import { AuditShadowWriteService } from '@/lib/audit/shadow/auditShadowWriteService'
+import { DEFAULT_AUDIT_PERSISTENCE_CONFIG } from '@/lib/audit/storage/auditPersistenceConfig'
 
 export default function StaffApplicationDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params
-  const { lang } = useLang()
-  const { addToast } = useToast()
-  const app = mockApplications.find(a => a.id === id)
-  const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(app?.status ?? 'SUBMITTED')
-  const [revealModal, setRevealModal] = useState(false)
-  const [revealReason, setRevealReason] = useState('')
-  const [staffNote, setStaffNote] = useState('')
+   const { id } = params
+   const { lang } = useLang()
+   const { addToast } = useToast()
+   const app = mockApplications.find(a => a.id === id)
+   const [currentStatus, setCurrentStatus] = useState<ApplicationStatus>(app?.status ?? 'SUBMITTED')
+   const [revealModal, setRevealModal] = useState(false)
+   const [revealReason, setRevealReason] = useState('')
+   const [staffNote, setStaffNote] = useState('')
+
+   // Shadow write service — disabled by default via config
+   const shadowWriteService = new AuditShadowWriteService(DEFAULT_AUDIT_PERSISTENCE_CONFIG)
 
   if (!app) return <AppShell requiredRole="staff"><div className="text-ink-3">Not found</div></AppShell>
 
@@ -125,16 +130,20 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
                     nextStatus: 'rejected',
                   },
                 })
-                sharedMockAuditWriter.write(event)
-              } catch (err) {
-                console.warn('[AP-6D] Mock audit write failed (reject)', err)
-              }
-              addToast(
-                lang === 'th'
-                  ? `เอกสารปฏิเสธแล้ว: ${reason}`
-                  : `Document rejected: ${reason}`,
-                'info'
-              )
+sharedMockAuditWriter.write(event)
+                 // AP-9D: shadow write to prototype — non-blocking, fire-and-forget
+                 void shadowWriteService.shadowWrite(event).catch(() => {
+                   console.warn('[AUDIT PROTOTYPE] Shadow write skipped or failed safely')
+                 })
+               } catch (err) {
+                 console.warn('[AP-6D] Mock audit write failed (reject)', err)
+               }
+               addToast(
+                 lang === 'th'
+                   ? `เอกสารปฏิเสธแล้ว: ${reason}`
+                   : `Document rejected: ${reason}`,
+                 'info'
+               )
             }}
             onRequestReplacement={(docId, message) => {
               try {
@@ -157,16 +166,20 @@ export default function StaffApplicationDetailPage({ params }: { params: { id: s
                     nextStatus: 'needs_replacement',
                   },
                 })
-                sharedMockAuditWriter.write(event)
-              } catch (err) {
-                console.warn('[AP-6D] Mock audit write failed (replacement request)', err)
-              }
-              addToast(
-                lang === 'th'
-                  ? `ขอส่งแทน: ${message}`
-                  : `Replacement requested: ${message}`,
-                'info'
-              )
+sharedMockAuditWriter.write(event)
+                 // AP-9D: shadow write to prototype — non-blocking, fire-and-forget
+                 void shadowWriteService.shadowWrite(event).catch(() => {
+                   console.warn('[AUDIT PROTOTYPE] Shadow write skipped or failed safely')
+                 })
+               } catch (err) {
+                 console.warn('[AP-6D] Mock audit write failed (replacement request)', err)
+               }
+               addToast(
+                 lang === 'th'
+                   ? `ขอส่งแทน: ${message}`
+                   : `Replacement requested: ${message}`,
+                 'info'
+               )
             }}
           />
         )}

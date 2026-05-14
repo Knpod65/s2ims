@@ -2122,4 +2122,60 @@ Recommended next:
 - Do not start real persistence yet
 - Do not start AP-10 yet
 
+## Audit Shadow Write Runtime AP-9D
+
+**Completed on 2026-05-14.**
+
+Branch: `architecture/audit-shadow-write-runtime-ap9d`
+
+Result:
+
+- Implemented shadow write runtime integration for Staff document reject and replacement request
+- Created 3 new modules: `auditShadowWriteMetrics.ts`, `auditShadowWriteGuards.ts`, `auditShadowWriteService.ts`
+- Wired shadow writes into `onReject` and `onRequestReplacement` callbacks in Staff application page
+- Updated check script with 15 new AP-9D checks (92 → 107 total)
+- All feature flags disabled by default — no user-facing behavior change
+
+Constraints honored:
+
+- `sharedMockWriter` remains the single source of truth
+- `adminAuditDisplayAdapter` remains active read path
+- Shadow writes are secondary and non-blocking
+- No real persistence added
+- No backend/API changes
+- No database migrations
+- No localStorage/sessionStorage
+- Mock fixture not mutated
+- `DocumentVerificationPanel` props unchanged
+- Staff callback signatures unchanged
+- Reason validation unchanged
+- No `ReasonRequiredModal`
+- No notification behavior change
+- No PII exposure
+- `real_persisted` remains blocked at type + guard level
+- AP-10 not started
+
+Key design decisions:
+
+- Shadow service accepts both `mock_only` and `prototype_only` input events (converts to `prototype_only` internally)
+- 6-gate guard sequence: master switch → shadow write flag → mode check → real persistence block → event type allowlist → privacy guard
+- Fire-and-forget pattern: `void shadowWriteService.shadowWrite(event)` — never awaits, never blocks UI
+- Module-level shared metrics store for developer diagnostics
+- Testing factory `createAuditShadowWriteServiceForTesting()` for isolated unit testing
+
+Validation:
+
+- Build: 40/40 routes, 0 type errors
+- Tokens: 4/4 passed
+- Audit/notification checks: 107/107 (was 92/92)
+- Route smoke: 5/5 routes return 200 OK
+- Dev log: clean
+
+Recommended next:
+
+- **AP-9D-QA** — Formal documentation QA checkpoint for this implementation
+- Then consider **AP-9E** read comparison planning (separate phase)
+- Do not start real persistence until prototype phase is proven stable and compliant
+- Do not start AP-10 until AP-9C/AP-9D evidence and compliance review complete
+
 ## End of AP-9B
