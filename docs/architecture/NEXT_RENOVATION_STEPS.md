@@ -1495,3 +1495,65 @@ Do not start AP-8B.
 Do not start AP-8C.
 Do not start AP-9.
 Do not start real persistence.
+
+## Notification Dropdown Polish & Accessibility Review Plan UX-N1C
+
+**Completed on 2026-05-14.**
+
+UX-N1C is a documentation-only planning phase for polishing the notification dropdown/list UX after UX-N1B Topbar safe click wiring.
+
+Branch:
+
+`design/notification-dropdown-accessibility-polish-plan`
+
+Documents added:
+
+- `docs/design/NOTIFICATION_DROPDOWN_POLISH_PLAN_UXN1C.md` — Dropdown behavior model, card anatomy, interaction model
+- `docs/design/NOTIFICATION_ACCESSIBILITY_REVIEW_UXN1C.md` — Keyboard, screen reader, focus, touch target, color contrast specs
+- `docs/design/NOTIFICATION_CARD_AND_EMPTY_STATE_GUIDE_UXN1C.md` — Card variants, empty/blocked/error state copy
+- `docs/design/NOTIFICATION_READ_UNREAD_STATE_PLAN_UXN1C.md` — Read/unread state plan (local-only, no persistence)
+- `docs/design/NOTIFICATION_MOBILE_INTERACTION_PLAN_UXN1C.md` — Bottom sheet interaction patterns for mobile
+- `docs/design/NOTIFICATION_QA_CHECKLIST_UXN1C.md` — QA checklist for future implementation phases
+
+Updated:
+
+- `docs/architecture/NEXT_RENOVATION_STEPS.md`
+
+Planning conclusion:
+
+- This phase is documentation only.
+- No runtime code changed.
+- No notification click behavior changed.
+- No route behavior changed.
+- No PII exposed in routes or payloads.
+- No audit behavior changed.
+- No real persistence added.
+- No backend/API added.
+- No database migrations added.
+- No mock fixture mutated.
+- No ReasonRequiredModal introduced.
+- No Staff verify action wired.
+- Existing UX-N1A/UX-N1B notification navigation contracts preserved as the foundation.
+
+Key design outputs:
+
+- Dropdown panel anchored to Topbar bell with desktop dropdown + mobile bottom sheet.
+- Notification card anatomy with severity, title, body, timestamp, action label, read/unread indicator, and optional navigation arrow.
+- Empty state (EN/TH), error state (EN/TH), and blocked state with 7 reason-specific copy strings (EN/TH).
+- Keyboard navigation: arrow keys between cards, Enter/Space to activate, Escape to close, Tab/Shift+Tab cycling, Home/End to jump.
+- Screen reader: `role="dialog"`, `aria-modal="true"`, `aria-live="polite"` for state changes, per-card state announcements.
+- Touch targets: minimum 44x44px (Apple HIG) / 48x48dp (Material).
+- Read/unread state: local-only toggle, no persistence, "mark all as read" in footer.
+- Privacy boundary: no raw PII in payloads, all URLs resolved through route registry.
+
+Recommended next options:
+
+- **UX-N1C Runtime** — Implement the dropdown panel, accessibility features, mobile bottom sheet, and card components as a runtime branch.
+- **AP-8C** — Refactor Admin audit display to use the presenter layer.
+- **AP-8B** — Audit database schema plan.
+
+Do not start UX-N1C runtime without explicit approval.
+Do not start AP-8B without explicit approval.
+Do not start AP-8C without explicit approval.
+Do not start AP-9.
+Do not start real persistence.
