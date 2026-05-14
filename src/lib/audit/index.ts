@@ -25,3 +25,9 @@ export * from './services/prototypeAuditPersistenceService'
 export * from './shadow/auditShadowWriteMetrics'
 export * from './shadow/auditShadowWriteGuards'
 export * from './shadow/auditShadowWriteService'
+
+// AP-9F Read Comparison Runtime Skeleton
+export * from './comparison/auditReadComparisonTypes'
+export * from './comparison/auditReadComparisonMetrics'
+export * from './comparison/auditReadComparisonGuards'
+export * from './comparison/auditReadComparisonService'

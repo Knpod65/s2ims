@@ -2307,4 +2307,75 @@ Recommended next:
 - no real persistence
 - no AP-10
 
+## Audit Read Comparison Runtime AP-9F
+
+AP-9F runtime skeleton added on branch `architecture/audit-read-comparison-runtime-ap9f`.
+
+Files created:
+- `src/lib/audit/comparison/auditReadComparisonTypes.ts` — pure type definitions
+- `src/lib/audit/comparison/auditReadComparisonMetrics.ts` — in-memory PII-free metrics store
+- `src/lib/audit/comparison/auditReadComparisonGuards.ts` — 6-gate guard evaluation
+- `src/lib/audit/comparison/auditReadComparisonService.ts` — core comparison service with 11 dimensions and testing factory
+
+Files modified:
+- `src/lib/audit/index.ts` — added AP-9F comparison module exports
+- `scripts/check-audit-events.mjs` — added 15 AP-9F checks (107 → 122)
+
+Safety boundaries preserved:
+- No Admin UI switch to prototype reads
+- No prototype read as source of truth
+- No real persistence activated
+- No backend/API changes
+- No database migrations
+- No mock fixture mutation
+- `sharedMockWriter` source of truth preserved
+- `adminAuditDisplayAdapter` active read path preserved
+- All comparison feature flags disabled by default
+
+Audit/notification checks: 107 → 122 (15 new checks).
+
+Recommended next:
+- AP-9F-QA — formal documentation QA checkpoint for the runtime skeleton
+- Future Admin debug-only comparison panel only after explicit approval, separate QA gate, and PII safety review
+- Do not start AP-10 yet
+- Do not activate real persistence
+
+## Audit Read Comparison Runtime QA AP-9F
+
+AP-9F QA checkpoint completed on branch `architecture/audit-read-comparison-runtime-ap9f`.
+
+QA confirmed:
+- Runtime skeleton source-reviewed: all 4 new comparison modules reviewed
+- Admin UI read path preserved: `adminAuditDisplayAdapter` unchanged, still reads from `sharedMockAuditWriter.list()` and fixture logs
+- `sharedMockWriter` source of truth confirmed: unchanged, no comparison path reads or writes to it
+- `AuditDisplayPresenter` formatting boundary confirmed: unchanged
+- Comparison guards reviewed: 6-gate chain blocks disabled flags, missing event arrays, `real_persisted` events, and unsafe metadata keys correctly
+- Metrics store reviewed: in-memory closure only, no browser storage, no backend calls, `list()` returns deep copies
+- Mismatch output reviewed as PII-free: `AuditReadComparisonMismatch` has no `actorId`, `targetId`, `reason`, or metadata value fields — enforced at type level and by 122-check suite
+- Checks pass: 122/122
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+- Runtime code unchanged during QA
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI prototype read switch
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-10 not started
+
+Recommended next:
+- Push `architecture/audit-read-comparison-runtime-ap9f` branch after QA approval
+- Open PR targeting `main`
+- Merge only after review and approval
+- Run AP-9F post-merge QA after merge to confirm `main` state (build, token check, 122/122 audit checks, route smoke, dev log)
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
