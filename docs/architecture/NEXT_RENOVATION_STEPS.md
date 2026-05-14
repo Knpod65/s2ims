@@ -2340,4 +2340,42 @@ Recommended next:
 - Do not start AP-10 yet
 - Do not activate real persistence
 
+## Audit Read Comparison Runtime QA AP-9F
+
+AP-9F QA checkpoint completed on branch `architecture/audit-read-comparison-runtime-ap9f`.
+
+QA confirmed:
+- Runtime skeleton source-reviewed: all 4 new comparison modules reviewed
+- Admin UI read path preserved: `adminAuditDisplayAdapter` unchanged, still reads from `sharedMockAuditWriter.list()` and fixture logs
+- `sharedMockWriter` source of truth confirmed: unchanged, no comparison path reads or writes to it
+- `AuditDisplayPresenter` formatting boundary confirmed: unchanged
+- Comparison guards reviewed: 6-gate chain blocks disabled flags, missing event arrays, `real_persisted` events, and unsafe metadata keys correctly
+- Metrics store reviewed: in-memory closure only, no browser storage, no backend calls, `list()` returns deep copies
+- Mismatch output reviewed as PII-free: `AuditReadComparisonMismatch` has no `actorId`, `targetId`, `reason`, or metadata value fields — enforced at type level and by 122-check suite
+- Checks pass: 122/122
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+- Runtime code unchanged during QA
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI prototype read switch
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-10 not started
+
+Recommended next:
+- Push `architecture/audit-read-comparison-runtime-ap9f` branch after QA approval
+- Open PR targeting `main`
+- Merge only after review and approval
+- Run AP-9F post-merge QA after merge to confirm `main` state (build, token check, 122/122 audit checks, route smoke, dev log)
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
