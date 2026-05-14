@@ -2024,4 +2024,58 @@ Recommended next:
 - Do not start real persistence yet
 - Do not start AP-10 yet
 
+## Audit Shadow Write Runtime Plan AP-9C
+
+**Completed on 2026-05-14.**
+
+AP-9C is a documentation-only plan that defines how the AP-9A prototype persistence skeleton should be integrated as a future runtime phase using feature-flagged, non-blocking shadow writes.
+
+Documents created:
+
+- `docs/architecture/AUDIT_SHADOW_WRITE_RUNTIME_PLAN_AP9C.md` — Main shadow write runtime architecture, candidate actions, source-of-truth rules, failure handling, rollback plan, QA gates, Laravel/PHP mapping
+- `docs/architecture/AUDIT_SHADOW_WRITE_CALLBACK_MAPPING_AP9C.md` — Maps Staff callbacks (reject, replacement request) to current write paths and future shadow write insertion points
+- `docs/architecture/AUDIT_SHADOW_WRITE_FEATURE_FLAG_GUARDS_AP9C.md` — Feature flag defaults, gate sequence, forbidden combinations, fail-open/fail-closed rules, pseudo-code, Laravel/PHP config mapping
+- `docs/architecture/AUDIT_SHADOW_WRITE_PRIVACY_AND_FAILURE_BOUNDARY_AP9C.md` — Privacy enforcement (forbidden/safe data classes), gate sequence, failure classes, logging rules, rollback behavior
+- `docs/architecture/AUDIT_SHADOW_WRITE_QA_CHECKLIST_AP9C.md` — 12-section QA checklist (sections A-L)
+- `docs/daily-reports/2026-05-13-audit-shadow-write-runtime-plan-ap9c.md` — Daily report
+
+AP-9C constraints honored:
+
+- Documentation and planning only
+- No runtime code created or modified
+- No backend/API added
+- No database migrations created
+- No real persistence added
+- No prototype persistence activated
+- No mock fixtures mutated
+- No Staff callbacks changed
+- No Staff verify action wired
+- No reason validation changed
+- No ReasonRequiredModal introduced
+- No notification behavior changed
+- No PII exposed
+- sharedMockWriter remains active source of truth
+- adminAuditDisplayAdapter remains active read/display path
+- AuditDisplayPresenter remains single formatting boundary
+- real_persisted remains blocked at type and guard level
+
+Key design outputs:
+
+- Two candidate actions identified for shadow writes: staff.document.reject and staff.document.request_replacement
+- Shadow write sequence: sharedMockWriter first, then non-blocking prototype write
+- 8-gate feature flag sequence documented
+- 7-gate privacy enforcement sequence before every shadow write
+- 10 failure classes defined with severity and non-blocking behavior
+- Fail-open default for all user-facing prototype flows
+- Fail-closed only for real_persisted attempts and privacy gate violations
+- Rollback achievable by disabling any feature flag
+- Laravel/PHP config mapping provided for all new flags
+
+Recommended next:
+
+- **AP-9C-QA** — Formal documentation QA checkpoint (peer review of all 6 plan files)
+- **AP-9D** — Shadow write runtime implementation (only after AP-9C plan approval)
+- Do not start real persistence yet
+- Do not start AP-10 yet
+
 ## End of AP-9B
