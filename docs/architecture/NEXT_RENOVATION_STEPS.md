@@ -1460,3 +1460,38 @@ Important guardrails:
 - Do not expose PII in notification routes or payloads.
 - Do not bypass role policies during notification navigation.
 - Do not wire additional notification surfaces until UX-N1B-QA passes.
+
+## Notification Topbar Safe Click Wiring QA UX-N1B-QA
+
+**Completed on 2026-05-14.**
+
+UX-N1B QA checkpoint verified the merged Topbar notification click wiring through code review and route smoke testing.
+
+QA artifacts:
+
+- `docs/qa/notification-topbar-safe-click-wiring-uxn1b/README.md`
+- `docs/architecture/NOTIFICATION_TOPBAR_SAFE_CLICK_WIRING_UXN1B_QA_SUMMARY.md`
+- `docs/daily-reports/2026-05-13-notification-topbar-safe-click-wiring-qa-uxn1b.md`
+
+Validation:
+
+- Build passed 40/40, 0 type errors
+- Token check passed 4/4
+- Audit/notification checks passed 71/71
+- Route smoke: `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, `/staff/applications/app_002` — all 200 OK
+- Dev log: clean, no errors
+- Topbar click wiring reviewed: safe resolution through service/policy/registry/presenter chain
+- No PII in route params, no raw route construction, role mismatch blocked
+- Existing routes and audit behavior confirmed unchanged
+
+Recommended next:
+
+- **UX-N1C** — Notification dropdown polish, accessibility review, Student notification card normalization
+- **AP-8C** — Refactor Admin audit display to presenter
+- **AP-8B** — Audit database schema plan
+
+Do not start UX-N1C.
+Do not start AP-8B.
+Do not start AP-8C.
+Do not start AP-9.
+Do not start real persistence.
