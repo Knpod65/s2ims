@@ -1377,3 +1377,41 @@ Recommended next options:
 - **UX-N1C** — Student notification card route normalization after safe payload decisions.
 
 Do not implement notification click behavior until UX-N1A QA passes.
+
+## Notification Navigation Runtime Skeleton QA UX-N1A
+
+**Completed on 2026-05-13.**
+
+QA checkpoint reviewed the merged UX-N1A skeleton on `main`.
+
+QA artifacts:
+
+- `docs/qa/notification-navigation-runtime-skeleton-uxn1a/README.md`
+- `docs/architecture/NOTIFICATION_NAVIGATION_RUNTIME_SKELETON_UXN1A_QA_SUMMARY.md`
+- `docs/daily-reports/2026-05-13-notification-navigation-runtime-skeleton-qa-uxn1a.md`
+
+Result:
+
+- UX-N1A skeleton reviewed.
+- No runtime behavior changed in QA.
+- No click behavior implemented.
+- Route registry, policy, service, presenter, and copy boundaries reviewed.
+- Privacy safety reviewed.
+- Existing Topbar notification behavior unchanged.
+- Existing Student notification page behavior unchanged.
+- Build passed 40/40.
+- Token check passed 4/4.
+- Audit/notification checks passed 62/62.
+- Local routes verified: `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, `/staff/applications/app_002`.
+
+Recommended next options:
+
+- **UX-N1B** — Topbar notification safe click wiring plan/runtime.
+- **AP-8C** — Audit display presenter refactor.
+- **AP-8B** — Audit database schema plan.
+
+Important guardrails:
+
+- Do not start real persistence yet.
+- Do not expose PII in notification routes.
+- Do not bypass role policies during notification route resolution.
