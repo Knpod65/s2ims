@@ -2413,4 +2413,32 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Plan AP-9G
+
+AP-9G documentation-only planning phase added on branch `architecture/audit-admin-comparison-debug-panel-plan-ap9g`.
+
+Docs added:
+- `docs/architecture/AUDIT_ADMIN_COMPARISON_DEBUG_PANEL_PLAN_AP9G.md` — main plan: architecture, goals, non-goals, panel model, privacy, rollout, QA gates
+- `docs/architecture/AUDIT_ADMIN_COMPARISON_PANEL_PRIVACY_BOUNDARY_AP9G.md` — forbidden/allowed UI data, logging/export/copy restrictions
+- `docs/architecture/AUDIT_ADMIN_COMPARISON_PANEL_ACCESS_CONTROL_AP9G.md` — admin-only rule, forbidden roles, feature flag gates, blocked access behavior
+- `docs/architecture/AUDIT_ADMIN_COMPARISON_PANEL_UI_SPEC_AP9G.md` — panel states, summary cards, mismatch table, accessibility, mobile, copy
+- `docs/architecture/AUDIT_ADMIN_COMPARISON_PANEL_ROLLOUT_AND_ROLLBACK_AP9G.md` — 5-stage rollout, rollback triggers and actions
+- `docs/architecture/AUDIT_ADMIN_COMPARISON_PANEL_QA_CHECKLIST_AP9G.md` — full QA checklist for all implementation stages
+
+Runtime unchanged:
+- Admin UI not switched to prototype reads
+- `adminAuditDisplayAdapter` active read path preserved
+- `sharedMockWriter` source of truth preserved
+- Prototype persistence remains disabled by default
+- Real persistence not added
+- 122/122 checks pass
+- Routes pass
+- Dev log clean
+
+Recommended next:
+- AP-9G-QA: documentation-only review of this planning phase
+- Runtime implementation (Stage 1 hidden component) only after explicit approval and AP-9G-QA approval
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
