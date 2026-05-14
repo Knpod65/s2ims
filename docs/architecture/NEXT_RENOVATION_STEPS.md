@@ -1234,3 +1234,55 @@ Do not start AP-8B.
 Do not start AP-8C.
 Do not start AP-9.
 Do not start UX-N1.
+
+## Audit Service/Repository Runtime Skeleton QA AP-8A-QA
+
+**Completed on 2026-05-13.**
+
+QA reviewed the merged AP-8A runtime skeleton:
+
+- `src/lib/audit/contracts/auditContracts.ts`
+- `src/lib/audit/dto/auditDto.ts`
+- `src/lib/audit/repositories/inMemoryAuditRepository.ts`
+- `src/lib/audit/services/auditService.ts`
+- `src/lib/audit/policies/auditPolicy.ts`
+- `src/lib/audit/presenters/auditDisplayPresenter.ts`
+- `src/lib/audit/copy/auditCopyStage.ts`
+
+QA artifacts:
+
+- `docs/qa/audit-service-repository-runtime-skeleton-ap8a/README.md`
+- `docs/architecture/AUDIT_SERVICE_REPOSITORY_RUNTIME_SKELETON_AP8A_QA_SUMMARY.md`
+- `docs/daily-reports/2026-05-13-audit-service-repository-runtime-skeleton-qa-ap8a.md`
+
+Result:
+
+- AP-8A skeleton boundaries reviewed.
+- Contract, DTO, repository, service, policy, presenter, and copy-stage layers are separated cleanly.
+- Laravel/PHP-inspired mapping confirmed.
+- Build passed 40/40.
+- Token check passed 4/4.
+- Audit event check passed 52/52.
+- Routes verified: `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, `/staff/applications/app_002`.
+- Current runtime still uses `sharedMockWriter` and `adminAuditDisplayAdapter`.
+- No real persistence added.
+- No backend/API added.
+- No database migrations added.
+- No mock fixture mutation.
+- No Staff callback rewiring.
+- No Staff verify wiring.
+- No notification click behavior change.
+
+Recommended next options:
+
+- **AP-8C** — Refactor Admin display to use the presenter.
+- **AP-8B** — Database schema plan.
+- **UX-N1** — Notification navigation contract plan.
+
+Recommendation:
+
+- Choose AP-8C first if the goal is DRY runtime usage.
+- Choose AP-8B first if the goal is persistence readiness.
+- Choose UX-N1 first if user-facing notification clickability is the priority.
+
+Do not start AP-8B, AP-8C, UX-N1, or AP-9 without explicit approval.
