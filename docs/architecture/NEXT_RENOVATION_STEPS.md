@@ -1733,3 +1733,60 @@ Recommended next:
 Do not start AP-9 without AP-8B schema plan review approval.
 Do not start real persistence yet.
 Do not create migrations yet.
+
+## Audit Prototype Persistence Plan AP-9
+
+**Completed on 2026-05-14.**
+
+Branch:
+
+`architecture/audit-prototype-persistence-plan-ap9`
+
+AP-9 is a documentation-only planning phase that defines how the system can safely move from mock-only/in-memory audit behavior toward prototype persistence. No runtime code was created or modified.
+
+Documents created:
+
+- `docs/architecture/AUDIT_PROTOTYPE_PERSISTENCE_PLAN_AP9.md` — Main AP-9 plan: overview, problem statement, layered architecture, persistence modes, AP-9A scope, non-goals, risk analysis
+- `docs/architecture/AUDIT_STORAGE_DRIVER_CONTRACT_AP9.md` — Storage driver abstraction: TypeScript interface, driver types, safety requirements, failure handling, rollback, config mapping
+- `docs/architecture/AUDIT_PROTOTYPE_REPOSITORY_IMPLEMENTATION_PLAN_AP9.md` — Repository implementation plan: write/read flows, migration strategy, duplicate prevention, query filters, storage recommendations
+- `docs/architecture/AUDIT_PERSISTENCE_PRIVACY_ENFORCEMENT_PLAN_AP9.md` — Privacy enforcement: 8 enforcement layers, forbidden/safe fields, reason text handling, metadata handling, IP handling, role matrix
+- `docs/architecture/AUDIT_PERSISTENCE_ROLLOUT_AND_ROLLBACK_PLAN_AP9.md` — Rollout stages (0–7), feature flags config, rollback triggers/actions, QA gates, copy requirements
+- `docs/architecture/AUDIT_PERSISTENCE_QA_CHECKLIST_AP9.md` — 15-section QA checklist (sections A–O)
+- `docs/daily-reports/2026-05-13-audit-prototype-persistence-plan-ap9.md` — Daily report
+
+AP-9 constraints honored:
+
+- Documentation and planning only.
+- No runtime code created or modified.
+- No backend/API added.
+- No database migrations created.
+- No real persistence added.
+- No prototype persistence runtime added.
+- No mock fixture mutated.
+- No Staff callbacks changed.
+- No Staff verify action wired.
+- No reason validation changed.
+- No ReasonRequiredModal introduced.
+- No notification behavior changed.
+- No PII exposed in any route, label, payload, export, log, metadata, or display output.
+
+Key planning outputs:
+
+- Layered write/read architecture defined (UI → Service → Policy → Sanitizer → Repository → Storage Driver → Storage)
+- Three persistence modes defined: `mock_only`, `prototype_only`, `real_persisted`
+- Storage driver contract (`AuditStorageDriver`) with TypeScript interface and Laravel/PHP equivalent
+- Privacy enforcement across 8 layers before data reaches storage
+- Rollout plan with 7 stages from mock-only to real persistence (Stage 7 deferred)
+- Rollback plan preserves existing mock-only flow at every stage
+- Role-based access matrix for all 6 actor roles
+- Reason text separated from metadata with independent access control
+- IP handling plan: no raw IP storage, optional salted hash only
+- Storage drivers are replaceable (interface-based)
+
+Recommended next:
+
+- **AP-9A** — Prototype Audit Persistence Runtime Skeleton (after AP-9 review approval)
+- **AP-9A Privacy Review** — optional dedicated privacy review before runtime if needed
+- Do not start real persistence yet.
+- Do not create migrations yet.
+- Do not start AP-9A without explicit approval.
