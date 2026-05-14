@@ -46,7 +46,7 @@ export class PrototypeAuditPersistenceService {
     this.driver = driver ?? new (
       // Dynamic import to avoid circular dependency in module evaluation
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('./storage/inMemoryPrototypeAuditStorageDriver').InMemoryPrototypeAuditStorageDriver
+      require('../storage/inMemoryPrototypeAuditStorageDriver').InMemoryPrototypeAuditStorageDriver
     )()
     this.repository = new PrototypeAuditRepository(this.driver)
   }

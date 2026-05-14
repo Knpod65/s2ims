@@ -969,6 +969,22 @@ const {
   PrototypeAuditPersistenceService,
 } = loadTsModule(path.join(repoRoot, 'src/lib/audit/services/prototypeAuditPersistenceService.ts'))
 
+// AP-9D Shadow Write modules
+const {
+  AuditShadowWriteService,
+  createAuditShadowWriteServiceForTesting,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/shadow/auditShadowWriteService.ts'))
+
+const {
+  createAuditShadowWriteMetricsStore,
+  AuditShadowWriteStatus,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/shadow/auditShadowWriteMetrics.ts'))
+
+const {
+  evaluateAuditShadowWriteGuards,
+  isShadowWritableEventType,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/shadow/auditShadowWriteGuards.ts'))
+
 addCheck('default persistence config is disabled', () => {
   return DEFAULT_AUDIT_PERSISTENCE_CONFIG.prototypeEnabled === false &&
     DEFAULT_AUDIT_PERSISTENCE_CONFIG.mode === 'mock_only' &&
@@ -1336,9 +1352,226 @@ addCheck('mock fixture remains unmutated by AP-9A', () => {
   return mockAuditLogs.length === initialMockAuditLogLength
 })
 
-// ---------------------------------------------------------------------------
-// Results
-// ---------------------------------------------------------------------------
+// AP-9D Shadow Write Checks
+addCheck('shadow metrics store starts empty', () => {
+  const store = createAuditShadowWriteMetricsStore()
+  return store.count() === 0
+})
+
+addCheck('shadow metrics store appends and counts statuses', () => {
+  const store = createAuditShadowWriteMetricsStore()
+  const { createAuditShadowWriteMetric } = loadTsModule(path.join(repoRoot, 'src/lib/audit/shadow/auditShadowWriteMetrics.ts'))
+  store.append(createAuditShadowWriteMetric({ eventId: 'e1', eventType: 'staff.document.reject', status: 'skipped', reason: 'prototype_disabled', safeMessage: 'test' }))
+  store.append(createAuditShadowWriteMetric({ eventId: 'e2', eventType: 'staff.document.reject', status: 'written', safeMessage: 'test' }))
+  store.append(createAuditShadowWriteMetric({ eventId: 'e3', eventType: 'staff.document.reject', status: 'failed', reason: 'write_failed', safeMessage: 'test' }))
+  return store.count() === 3 && store.countByStatus('skipped') === 1 && store.countByStatus('written') === 1 && store.countByStatus('failed') === 1
+})
+
+addCheck('guard skips when prototype disabled', () => {
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: false }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === false && result.status === 'skipped' && result.reason === 'prototype_disabled'
+})
+
+addCheck('guard skips when shadow write disabled', () => {
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: true, shadowWrites: false }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === false && result.status === 'skipped' && result.reason === 'shadow_write_disabled'
+})
+
+addCheck('guard blocks real_persisted', () => {
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'real_persisted',
+  })
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: true, shadowWrites: true }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === false && result.status === 'blocked' && result.reason === 'real_persisted_blocked'
+})
+
+addCheck('guard blocks unsupported event type', () => {
+  const event = buildStaffDocumentVerifyEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: true, shadowWrites: true }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === false && result.status === 'blocked' && result.reason === 'unsupported_event_type'
+})
+
+addCheck('guard allows staff.document.reject when enabled and safe', () => {
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: true, shadowWrites: true }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === true && result.status === 'allowed'
+})
+
+addCheck('guard allows staff.document.request_replacement when enabled and safe', () => {
+  const event = buildStaffDocumentReplacementRequestEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: true, shadowWrites: true }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === true && result.status === 'allowed'
+})
+
+addCheck('guard blocks unsafe metadata', () => {
+  // Build valid event first, then mutate metadata to bypass builder validation
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  event.metadata = { ...event.metadata, studentEmail: 'bad@example.com' }
+  const config = { ...DEFAULT_AUDIT_PERSISTENCE_CONFIG, prototypeEnabled: true, shadowWrites: true }
+  const result = evaluateAuditShadowWriteGuards(event, config)
+  return result.allowed === false && result.status === 'blocked' && result.reason === 'privacy_guard_failed'
+})
+
+addCheck('shadow service skips safely with default disabled config', async () => {
+  const service = new AuditShadowWriteService(DEFAULT_AUDIT_PERSISTENCE_CONFIG)
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  const metric = await service.shadowWrite(event)
+  return metric.status === 'skipped' && metric.reason === 'prototype_disabled'
+})
+
+addCheck('shadow service writes prototype_only clone when enabled', async () => {
+  const service = createAuditShadowWriteServiceForTesting({
+    prototypeEnabled: true,
+    shadowWrites: true,
+    prototypeStorageEnabled: true,
+  })
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_001', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_001' },
+    persistenceMode: 'mock_only',
+  })
+  // Verify original event is not mutated
+  const originalMode = event.persistenceMode
+  const metric = await service.service.shadowWrite(event)
+  return metric.status === 'written' && event.persistenceMode === originalMode
+})
+
+addCheck('shadow service does not mutate original event', async () => {
+  const service = createAuditShadowWriteServiceForTesting({
+    prototypeEnabled: true,
+    shadowWrites: true,
+    prototypeStorageEnabled: true,
+  })
+  const event = buildStaffDocumentReplacementRequestEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_002', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_002' },
+    persistenceMode: 'mock_only',
+  })
+  const originalId = event.id
+  const originalMetadata = { ...event.metadata }
+  const originalMode = event.persistenceMode
+  await service.service.shadowWrite(event)
+  return event.id === originalId &&
+    event.persistenceMode === originalMode &&
+    JSON.stringify(event.metadata) === JSON.stringify(originalMetadata)
+})
+
+addCheck('shadow service catches prototype write failure and returns failed metric', async () => {
+  // Create service with disabled storage driver to force failure
+  const service = createAuditShadowWriteServiceForTesting({
+    prototypeEnabled: true,
+    shadowWrites: true,
+    prototypeStorageEnabled: false, // driver disabled -> write will fail
+  })
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
+    documentId: 'doc_003', applicationId: 'app_001', studentToken: 'Student #S-001',
+    sourceRoute: '/staff/applications/app_001', reason: 'test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_003' },
+    persistenceMode: 'mock_only',
+  })
+  const metric = await service.service.shadowWrite(event)
+  return metric.status === 'failed' && metric.reason === 'write_failed'
+})
+
+addCheck('shadow service does not expose PII in metric safeMessage', async () => {
+  const service = createAuditShadowWriteServiceForTesting({
+    prototypeEnabled: true,
+    shadowWrites: true,
+    prototypeStorageEnabled: true,
+  })
+  // Build a valid event first, then manually inject forbidden metadata to bypass builder validation
+  const event = buildStaffDocumentRejectEvent({
+    actorId: 'usr_staff_001', actorRole: 'staff', actorDisplayName: 'Jane Doe',
+    documentId: 'doc_pii_001', applicationId: 'app_pii_001', studentToken: 'Student #S-PII-001',
+    sourceRoute: '/staff/applications/app_pii_001', reason: 'test reason',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    metadata: { documentId: 'doc_pii_001' },
+    persistenceMode: 'mock_only',
+  })
+  event.metadata = { ...event.metadata, studentEmail: 'should.fail@example.com' }
+  const metric = await service.service.shadowWrite(event)
+  // Either blocked by privacy guard or, if it somehow passes, safeMessage must not contain PII
+  const piiPatterns = ['123-45-6789', 'ssn', 'should.fail@example.com', 'Jane Doe']
+  const hasPii = piiPatterns.some(p => (metric.safeMessage || '').toLowerCase().includes(p.toLowerCase()))
+  return !hasPii
+})
+
+addCheck('isShadowWritableEventType identifies correct event types', () => {
+  return isShadowWritableEventType('staff.document.reject') === true &&
+    isShadowWritableEventType('staff.document.request_replacement') === true &&
+    isShadowWritableEventType('staff.document.verify') === false &&
+    isShadowWritableEventType('admin.role.assign') === false
+})
 
 await Promise.all(checkPromises)
 

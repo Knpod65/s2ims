@@ -20,3 +20,8 @@ export * from './storage/inMemoryPrototypeAuditStorageDriver'
 export * from './repositories/prototypeAuditRepository'
 export * from './guards/auditPersistenceFeatureGuard'
 export * from './services/prototypeAuditPersistenceService'
+
+// AP-9D Shadow Write Runtime Integration
+export * from './shadow/auditShadowWriteMetrics'
+export * from './shadow/auditShadowWriteGuards'
+export * from './shadow/auditShadowWriteService'
