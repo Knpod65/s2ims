@@ -1,16 +1,18 @@
 // ---------------------------------------------------------------------------
-// Audit Display Presenter — AP-8A Runtime Skeleton
+// Audit Display Presenter — AP-8C Refactor
 // ---------------------------------------------------------------------------
 // Converts stored AuditEvent objects into display-ready rows.
-// This is a skeleton: it provides the structure but does NOT replace
-// adminAuditDisplayAdapter.ts (which remains the live adapter for now).
+// This is the single source of truth for all audit display formatting.
 //
-// Future: AdminAuditDisplayPresenter will replace the current adapter.
+// Replaces the duplicated formatting logic that previously lived in:
+//   - adminAuditDisplayAdapter.ts (row construction)
+//   - AdminAuditEventDetailDrawer.tsx (detail labels)
+//   - page.tsx (table cell labels, source badges)
 //
 // Laravel/PHP equivalent: App\Http\Resources\AuditEventResource
 // ---------------------------------------------------------------------------
 
-import type { AuditEvent, AuditSeverity, AuditPersistenceMode } from '../auditTypes'
+import type { AuditEvent, AuditSeverity, AuditPersistenceMode, AuditTargetType } from '../auditTypes'
 import type { AuditDisplayPresenterContract, AuditDisplayRow, CsvAuditRow } from '../contracts/auditContracts'
 import { maskTargetForRole } from '../policies/auditPolicy'
 import { resolveCopyStage } from '../copy/auditCopyStage'
@@ -25,23 +27,48 @@ export class AuditDisplayPresenter implements AuditDisplayPresenterContract {
     private readonly viewerRole: string = 'admin',
   ) {}
 
-  /** Convert a single event into a display row. */
+  /** Convert a single event into a display row with all fields needed for table + drawer. */
   present(event: AuditEvent, options?: { locale?: 'en' | 'th' }): AuditDisplayRow {
     const locale = options?.locale ?? this.locale
     const targetMask = maskTargetForRole(this.viewerRole as any, event)
 
     return {
+      // Identity
       id: event.id,
       createdAt: event.createdAt,
+      formattedTime: this._formatTime(event.createdAt, locale),
+      actorId: event.actorId,
+      actorRole: event.actorRole,
+
+      // Labels (presenter-owned, not duplicated in components)
       actorLabel: event.actorDisplayName,
       actorRoleLabel: _roleLabel(event.actorRole, locale),
       actionLabel: _actionLabel(event.eventType, locale),
       targetLabel: targetMask.displayToken,
-      sourceLabel: event.sourceRoute,
+      sourceLabel: _sourceLabel(event.sourceRoute, locale),
+      sourceType: _sourceType(event.sourceRoute),
       persistenceLabel: _persistenceLabel(event.persistenceMode, locale),
       severityLabel: event.severity ? _severityLabel(event.severity, locale) : undefined,
       canOpenDetail: true,
       copyStage: event.persistenceMode,
+
+      // Drawer detail fields
+      eventType: event.eventType,
+      actionKey: event.actionKey,
+      reason: event.reason,
+      reasonRequired: event.reasonRequired,
+      targetDisplayToken: event.targetDisplayToken,
+      targetPrivacyLevel: event.targetPrivacyLevel,
+      targetType: event.targetType,
+      targetId: event.targetId,
+      sourceRoute: event.sourceRoute,
+      policyVersion: event.policyVersion,
+      metadata: event.metadata,
+
+      // Legacy fixture fields
+      before: event.before as Record<string, unknown> | undefined,
+      after: event.after as Record<string, unknown> | undefined,
+      ip: event.ip,
     }
   }
 
@@ -65,13 +92,24 @@ export class AuditDisplayPresenter implements AuditDisplayPresenterContract {
       severity: row.severityLabel ?? '',
     }
   }
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
+  private _formatTime(iso: string, locale: 'en' | 'th'): string {
+    return new Date(iso).toLocaleString(
+      locale === 'th' ? 'th-TH' : 'en-US',
+      { dateStyle: 'medium', timeStyle: 'medium' }
+    )
+  }
 }
 
 // ---------------------------------------------------------------------------
-// Module-level helper functions (avoid private class fields for ES5 compat)
+// Module-level helper functions (shared between presenter and tests)
 // ---------------------------------------------------------------------------
 
-function _roleLabel(role: string, locale: 'en' | 'th'): string {
+export function _roleLabel(role: string, locale: 'en' | 'th'): string {
   const labels: Record<string, Record<string, string>> = {
     staff: { en: 'Staff', th: 'เจ้าหน้าที่' },
     admin: { en: 'Admin', th: 'ผู้ดูแลระบบ' },
@@ -84,7 +122,7 @@ function _roleLabel(role: string, locale: 'en' | 'th'): string {
   return labels[role]?.[locale] ?? role
 }
 
-function _actionLabel(eventType: string, locale: 'en' | 'th'): string {
+export function _actionLabel(eventType: string, locale: 'en' | 'th'): string {
   const map: Record<string, Record<string, string>> = {
     'staff.document.verify': { en: 'Verified document', th: 'ตรวจสอบเอกสาร' },
     'staff.document.reject': { en: 'Rejected document', th: 'ปฏิเสธเอกสาร' },
@@ -100,11 +138,43 @@ function _actionLabel(eventType: string, locale: 'en' | 'th'): string {
   return map[eventType]?.[locale] ?? eventType
 }
 
-function _persistenceLabel(mode: AuditPersistenceMode, locale: 'en' | 'th'): string {
+/** Derive source label from route path. */
+export function _sourceLabel(sourceRoute: string | undefined, locale: 'en' | 'th'): string {
+  if (!sourceRoute) return locale === 'th' ? 'ไม่ทราบ' : 'Unknown'
+  const map: Record<string, Record<string, string>> = {
+    '/staff/applications': { en: 'Staff review', th: 'ตรวจเอกสาร' },
+    '/admin/users': { en: 'Admin users', th: 'ผู้ใช้' },
+    '/admin/audit-log': { en: 'Audit log', th: 'ประวัติการตรวจสอบ' },
+    '/admin/dashboard': { en: 'Admin dashboard', th: 'แดชบอร์ด' },
+    '/staff/applications/app_002': { en: 'Application review', th: 'ตรวจใบสมัคร' },
+    '/staff/writer-test': { en: 'Writer test', th: 'ทดสอบระบบ' },
+  }
+  // Try exact match first
+  if (map[sourceRoute]) return map[sourceRoute][locale]
+  // Fallback: try prefix match
+  for (const [prefix, labels] of Object.entries(map)) {
+    if (sourceRoute.startsWith(prefix)) return labels[locale]
+  }
+  return sourceRoute
+}
+
+/** Determine if the event came from the mock writer or fixture. */
+export function _sourceType(sourceRoute: string | undefined): 'fixture' | 'writer' {
+  // Events with source routes containing 'writer-test' or not matching
+  // known fixture routes are from the writer.
+  // Everything else is from fixture/static data.
+  if (!sourceRoute) return 'fixture'
+  if (sourceRoute.includes('writer-test') || sourceRoute.includes('writer_test')) return 'writer'
+  // Default: fixture (the existing display logic treats the 'source' field
+  // as 'writer' only for DEMO_WRITER_EVENTS which carry a specific sourceRoute)
+  return 'fixture'
+}
+
+export function _persistenceLabel(mode: AuditPersistenceMode, locale: 'en' | 'th'): string {
   return resolveCopyStage(mode, locale as any)
 }
 
-function _severityLabel(severity: AuditSeverity, locale: 'en' | 'th'): string {
+export function _severityLabel(severity: AuditSeverity, locale: 'en' | 'th'): string {
   const labels: Record<AuditSeverity, Record<string, string>> = {
     info: { en: 'Info', th: 'ข้อมูล' },
     low: { en: 'Low', th: 'ต่ำ' },
