@@ -2283,4 +2283,28 @@ Recommended next:
 - no real persistence
 - no AP-10
 
+## Audit Read Comparison Plan Post-Merge QA AP-9E
+
+AP-9E post-merge QA completed on `main`.
+
+Confirmed:
+- main validated after AP-9E merge and merge checkpoint
+- build passed, 40/40
+- token checks passed, 4/4
+- audit/notification checks passed, 107/107
+- route smoke passed for `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, and `/staff/applications/app_002`
+- dev log clean
+- runtime code unchanged in QA
+- Admin read path preserved through `adminAuditDisplayAdapter`
+- `sharedMockWriter` source of truth confirmed
+- `AuditDisplayPresenter` boundary confirmed
+- no prototype read switch
+- AP-9E remains documentation-only
+- no prototype activation, real persistence, backend/API, database migration, mock fixture mutation, notification behavior change, or PII exposure found
+
+Recommended next:
+- AP-9F read comparison runtime only after explicit approval
+- no real persistence
+- no AP-10
+
 ## End of AP-9B
