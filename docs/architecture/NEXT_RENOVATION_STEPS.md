@@ -1694,3 +1694,42 @@ Recommended next:
 
 Do not start AP-9 without AP-8B schema plan review approval.
 Do not start real persistence yet.
+
+## Audit Database Schema Plan QA AP-8B
+
+**Completed on 2026-05-14.**
+
+AP-8B QA checkpoint verified the Audit Database Schema Plan through automated checks, route smoke tests, and source-level review.
+
+QA artifacts:
+
+- `docs/qa/audit-database-schema-plan-ap8b/README.md`
+- `docs/architecture/AUDIT_DATABASE_SCHEMA_PLAN_AP8B_QA_SUMMARY.md`
+- `docs/daily-reports/2026-05-13-audit-database-schema-plan-qa-ap8b.md`
+
+Validation:
+
+- Build passed 40/40, 0 type errors
+- Token check passed 4/4
+- Audit/notification checks passed 71/71
+- All 5 routes 200 OK, dev log clean
+
+QA findings:
+
+- Schema covers all 5 tables with complete column definitions
+- Index optimization matches AuditRepositoryFilters query patterns
+- Privacy model confirmed: IP hashed, metadata sanitized, reason text separated, access control matrix defined
+- Retention policy defaults appropriate (365–3650 days by severity)
+- Rollback plan: all migrations additive with independent steps
+- TypeScript contracts consistent with database schema
+- No runtime code, scripts, or mock fixture changes
+- No PII exposure in schema design
+
+Recommended next:
+
+- **AP-9** — Prototype persistence implementation (after explicit approval)
+- Security/compliance review of privacy model before Phase 2
+
+Do not start AP-9 without AP-8B schema plan review approval.
+Do not start real persistence yet.
+Do not create migrations yet.
