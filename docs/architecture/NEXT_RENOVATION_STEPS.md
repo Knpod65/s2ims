@@ -1826,3 +1826,53 @@ Recommended next:
 - **AP-9A** — Prototype Audit Persistence Runtime Skeleton (requires explicit approval, feature-flagged, `prototype_only` only)
 - Do not start real persistence yet
 - Do not start AP-10 yet
+
+## Audit Prototype Persistence Runtime Skeleton AP-9A
+
+**Completed on 2026-05-14.**
+
+AP-9A implemented a disabled-by-default prototype persistence runtime skeleton. No existing behavior was changed.
+
+Created:
+
+- `src/lib/audit/storage/auditStorageDriver.ts` — Storage driver contract interface
+- `src/lib/audit/storage/auditPersistenceConfig.ts` — Config model with safe defaults
+- `src/lib/audit/storage/inMemoryPrototypeAuditStorageDriver.ts` — In-memory prototype driver
+- `src/lib/audit/repositories/prototypeAuditRepository.ts` — Prototype repository
+- `src/lib/audit/guards/auditPersistenceFeatureGuard.ts` — Feature guard functions
+- `src/lib/audit/services/prototypeAuditPersistenceService.ts` — Prototype persistence service
+- `docs/architecture/AUDIT_PROTOTYPE_PERSISTENCE_RUNTIME_SKELETON_AP9A_SUMMARY.md` — Summary
+
+Modified:
+
+- `src/lib/audit/index.ts` — Added exports for new AP-9A modules
+- `scripts/check-audit-events.mjs` — Added 21 AP-9A checks (92 total)
+- `docs/architecture/NEXT_RENOVATION_STEPS.md` — This section
+
+AP-9A constraints honored:
+
+- Prototype persistence is disabled by default.
+- No real persistence (real_persisted) is available.
+- No backend/API behavior added.
+- No database migrations created.
+- No existing runtime behavior changed.
+- sharedMockWriter remains the active write path.
+- All existing checks continue to pass (92/92).
+
+Key design decisions:
+
+- Storage driver is replaceable via interface.
+- Feature flag must be explicitly enabled (prototypeEnabled: true).
+- In-memory driver only — no localStorage, sessionStorage, or file writes.
+- real_persisted mode is not reachable from this config.
+- Prototype repository does not replace existing InMemoryAuditRepository.
+- Service returns safe no-op result when disabled (no errors thrown).
+
+Recommended next:
+
+- **AP-9A-QA** — Formal QA checkpoint review (optional, build validation serves as primary gate)
+- **AP-9B** — Feature-flagged integration plan (shadow writes, read comparison) — docs only
+- Do not start real persistence yet
+- Do not start AP-10 yet
+
+## End of AP-9A

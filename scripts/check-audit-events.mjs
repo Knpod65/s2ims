@@ -105,13 +105,16 @@ const { NotificationNavigationCopy } = notificationCopyModule
 const initialMockAuditLogLength = mockAuditLogs.length
 const checks = []
 
+const checkPromises = []
+
 function addCheck(label, run) {
-  try {
-    const result = run()
-    checks.push({ label, passed: Boolean(result), error: null })
-  } catch (error) {
-    checks.push({ label, passed: false, error })
-  }
+  const promise = Promise.resolve()
+    .then(() => run())
+    .then(
+      (result) => { checks.push({ label, passed: Boolean(result), error: null }) },
+      (error) => { checks.push({ label, passed: false, error }) }
+    )
+  checkPromises.push(promise)
 }
 
 function baseInput(overrides = {}) {
@@ -936,10 +939,408 @@ addCheck('topbar unsafe PII-like notification param is blocked', () => {
 })
 
 addCheck('topbar copy helper returns Thai and English blocked navigation copy', () => {
-  const copy = new NotificationNavigationCopy()
-  return copy.getBlockedReasonCopy('not_clickable', 'en') === 'This notification is informational only.' &&
-    copy.getBlockedReasonCopy('not_clickable', 'th') === 'การแจ้งเตือนนี้เป็นข้อมูลเท่านั้น'
+   const copy = new NotificationNavigationCopy()
+   return copy.getBlockedReasonCopy('not_clickable', 'en') === 'This notification is informational only.' &&
+     copy.getBlockedReasonCopy('not_clickable', 'th') === 'การแจ้งเตือนนี้เป็นข้อมูลเท่านั้น'
+ })
+
+// AP-9A Prototype Audit Persistence Runtime Skeleton checks
+const {
+  DEFAULT_AUDIT_PERSISTENCE_CONFIG,
+  isPrototypePersistenceEnabled,
+  assertPrototypePersistenceAllowed,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/storage/auditPersistenceConfig.ts'))
+
+const {
+  canUsePrototypePersistence,
+  assertCanUsePrototypePersistence,
+  assertNoRealPersistence,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/guards/auditPersistenceFeatureGuard.ts'))
+
+const {
+  InMemoryPrototypeAuditStorageDriver,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/storage/inMemoryPrototypeAuditStorageDriver.ts'))
+
+const {
+  PrototypeAuditRepository,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/repositories/prototypeAuditRepository.ts'))
+
+const {
+  PrototypeAuditPersistenceService,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/services/prototypeAuditPersistenceService.ts'))
+
+addCheck('default persistence config is disabled', () => {
+  return DEFAULT_AUDIT_PERSISTENCE_CONFIG.prototypeEnabled === false &&
+    DEFAULT_AUDIT_PERSISTENCE_CONFIG.mode === 'mock_only' &&
+    DEFAULT_AUDIT_PERSISTENCE_CONFIG.shadowWrites === false &&
+    DEFAULT_AUDIT_PERSISTENCE_CONFIG.readFromPrototype === false
 })
+
+addCheck('feature guard blocks prototype persistence by default', () => {
+  return canUsePrototypePersistence() === false
+})
+
+addCheck('feature guard blocks real persistence', () => {
+  try {
+    assertNoRealPersistence()
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('isPrototypePersistenceEnabled returns false by default', () => {
+  return isPrototypePersistenceEnabled() === false
+})
+
+addCheck('InMemoryPrototypeAuditStorageDriver exists', () => {
+  return typeof InMemoryPrototypeAuditStorageDriver === 'function'
+})
+
+addCheck('InMemoryPrototypeAuditStorageDriver starts disabled', () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver()
+  return driver.isEnabled() === false
+})
+
+addCheck('InMemoryPrototypeAuditStorageDriver rejects writes when disabled', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver()
+  const result = await driver.append({
+    eventId: 'test_disabled_001',
+    eventType: 'staff.document.verify',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    severity: 'info',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:00:00.000Z',
+  })
+  return result.success === false && result.error !== undefined
+})
+
+addCheck('InMemoryPrototypeAuditStorageDriver accepts prototype_only write when enabled', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  const result = await driver.append({
+    eventId: 'test_enabled_001',
+    eventType: 'staff.document.verify',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    severity: 'info',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:00:00.000Z',
+  })
+  return result.success === true && result.record?.eventId === 'test_enabled_001'
+})
+
+addCheck('InMemoryPrototypeAuditStorageDriver rejects real_persisted event', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  try {
+    await driver.append({
+      eventId: 'test_real_001',
+      eventType: 'staff.document.verify',
+      actorRole: 'staff',
+      actorId: 'usr_001',
+      actorDisplayName: 'Test',
+      targetType: 'document',
+      targetId: 'doc_001',
+      targetDisplayToken: 'Student #S-001',
+      targetPrivacyLevel: 'internal',
+      severity: 'info',
+      persistenceMode: 'real_persisted',
+      policyVersion: 'v1',
+      createdAt: '2026-05-14T00:00:00.000Z',
+    })
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('driver list returns copies', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  await driver.append({
+    eventId: 'copy_001',
+    eventType: 'staff.document.verify',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    severity: 'info',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:00:00.000Z',
+  })
+  const list = await driver.query()
+  if (list.length !== 1) return false
+  list.push({ eventId: 'mutate_attempt', eventType: 'x', actorRole: 's', actorId: 'a', actorDisplayName: 't', targetType: 'd', targetId: 'd', targetDisplayToken: 't', targetPrivacyLevel: 'internal', severity: 'info', persistenceMode: 'prototype_only', policyVersion: 'v1', createdAt: '2026-05-14', storedAt: '2026-05-14' })
+  const list2 = await driver.query()
+  return list2.length === 1
+})
+
+addCheck('driver findById works', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  await driver.append({
+    eventId: 'find_001',
+    eventType: 'staff.document.verify',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    severity: 'info',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:00:00.000Z',
+  })
+  const found = await driver.findById('find_001')
+  return found !== null && found.eventId === 'find_001'
+})
+
+addCheck('driver count works', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  await driver.append({
+    eventId: 'cnt_001',
+    eventType: 'staff.document.verify',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    severity: 'info',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:00:00.000Z',
+  })
+  await driver.append({
+    eventId: 'cnt_002',
+    eventType: 'staff.document.reject',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_002',
+    targetDisplayToken: 'Student #S-002',
+    targetPrivacyLevel: 'internal',
+    severity: 'medium',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:01:00.000Z',
+  })
+  return (await driver.count()) === 2
+})
+
+addCheck('driver clearPrototypeOnly works', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  await driver.append({
+    eventId: 'clr_001',
+    eventType: 'staff.document.verify',
+    actorRole: 'staff',
+    actorId: 'usr_001',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    severity: 'info',
+    persistenceMode: 'prototype_only',
+    policyVersion: 'v1',
+    createdAt: '2026-05-14T00:00:00.000Z',
+  })
+  await driver.clear()
+  return (await driver.count()) === 0
+})
+
+addCheck('driver health check works', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  const health = await driver.health()
+  return health.status === 'healthy' && health.mode === 'prototype_only'
+})
+
+addCheck('PrototypeAuditRepository blocks writes when disabled', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver()
+  const repo = new PrototypeAuditRepository(driver)
+  try {
+    await repo.append({
+      id: 'repo_test_001',
+      eventType: 'staff.document.verify',
+      actionKey: null,
+      actorId: 'usr_001',
+      actorRole: 'staff',
+      actorDisplayName: 'Test',
+      targetType: 'document',
+      targetId: 'doc_001',
+      targetDisplayToken: 'Student #S-001',
+      targetPrivacyLevel: 'internal',
+      reason: null,
+      reasonRequired: false,
+      reasonMinLength: 0,
+      metadata: {},
+      sourceRoute: '/test',
+      createdAt: '2026-05-14T00:00:00.000Z',
+      severity: 'info',
+      policyVersion: 'v1',
+      persistenceMode: 'prototype_only',
+    })
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('PrototypeAuditRepository writes when enabled', async () => {
+  const driver = new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true })
+  const repo = new PrototypeAuditRepository(driver)
+  await repo.append({
+    id: 'repo_test_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'v1',
+    persistenceMode: 'prototype_only',
+  })
+  const count = await repo.count()
+  return count === 1
+})
+
+addCheck('PrototypeAuditPersistenceService records when enabled', async () => {
+  const service = new PrototypeAuditPersistenceService(
+    new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true }),
+    { mode: 'prototype_only', prototypeEnabled: true, shadowWrites: false, readFromPrototype: false },
+  )
+  const result = await service.recordPrototypeEvent({
+    id: 'svc_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'v1',
+    persistenceMode: 'prototype_only',
+  })
+  return result.success === true && result.eventId === 'svc_001'
+})
+
+addCheck('PrototypeAuditPersistenceService returns disabled when not enabled', async () => {
+  const service = new PrototypeAuditPersistenceService(
+    new InMemoryPrototypeAuditStorageDriver(),
+    { mode: 'mock_only', prototypeEnabled: false, shadowWrites: false, readFromPrototype: false },
+  )
+  const result = await service.recordPrototypeEvent({
+    id: 'svc_disabled',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'v1',
+    persistenceMode: 'prototype_only',
+  })
+  return result.success === false && result.reason === 'prototype_persistence_disabled'
+})
+
+addCheck('PrototypeAuditPersistenceService list returns empty when disabled', async () => {
+  const service = new PrototypeAuditPersistenceService(
+    new InMemoryPrototypeAuditStorageDriver(),
+    { mode: 'mock_only', prototypeEnabled: false, shadowWrites: false, readFromPrototype: false },
+  )
+  const results = await service.listPrototypeEvents()
+  return results.length === 0
+})
+
+addCheck('prototype persistence does not mutate sharedMockWriter', async () => {
+  const { sharedMockAuditWriter } = loadTsModule(path.join(repoRoot, 'src/lib/audit/sharedMockWriter.ts'))
+  const initialCount = sharedMockAuditWriter.count()
+
+  const service = new PrototypeAuditPersistenceService(
+    new InMemoryPrototypeAuditStorageDriver({ prototypeEnabled: true }),
+    { mode: 'prototype_only', prototypeEnabled: true, shadowWrites: false, readFromPrototype: false },
+  )
+  await service.recordPrototypeEvent({
+    id: 'svc_nomutate_001',
+    eventType: 'staff.document.verify',
+    actionKey: null,
+    actorId: 'usr_001',
+    actorRole: 'staff',
+    actorDisplayName: 'Test',
+    targetType: 'document',
+    targetId: 'doc_001',
+    targetDisplayToken: 'Student #S-001',
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '/test',
+    createdAt: '2026-05-14T00:00:00.000Z',
+    severity: 'info',
+    policyVersion: 'v1',
+    persistenceMode: 'prototype_only',
+  })
+
+  return sharedMockAuditWriter.count() === initialCount
+})
+
+addCheck('mock fixture remains unmutated by AP-9A', () => {
+  return mockAuditLogs.length === initialMockAuditLogLength
+})
+
+// ---------------------------------------------------------------------------
+// Results
+// ---------------------------------------------------------------------------
+
+await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
 
