@@ -51,3 +51,39 @@ export class NotificationNavigationService implements NotificationNavigationServ
 }
 
 export const notificationNavigationService = new NotificationNavigationService()
+
+export function createTopbarNotificationPayload(options: {
+  role?: string | null
+  unreadCount: number
+  lang?: 'en' | 'th'
+}): NotificationNavigationPayload {
+  const { role, unreadCount, lang = 'en' } = options
+  const isStudent = role === 'student'
+  const hasUnread = unreadCount > 0
+
+  return {
+    id: 'topbar-notification-center',
+    type: 'topbar.notification_center',
+    severity: hasUnread ? 'info' : 'low',
+    title: lang === 'th' ? 'การแจ้งเตือน' : 'Notifications',
+    body: hasUnread
+      ? lang === 'th'
+        ? `มีการแจ้งเตือนที่ยังไม่ได้อ่าน ${unreadCount} รายการ`
+        : `${unreadCount} unread notification${unreadCount === 1 ? '' : 's'}`
+      : lang === 'th'
+        ? 'ไม่มีการแจ้งเตือนใหม่'
+        : 'No new notifications',
+    targetRouteName: isStudent ? 'student.notifications' : 'role.dashboard',
+    targetRouteParams: {},
+    targetDisplayToken: isStudent
+      ? lang === 'th'
+        ? 'ศูนย์การแจ้งเตือน'
+        : 'Notification center'
+      : undefined,
+    actorRoleScope: isStudent ? ['student'] : role ? [role] : [],
+    requiresPermission: isStudent ? 'student.notifications.view_own' : 'role.dashboard.view',
+    createdAt: '1970-01-01T00:00:00.000Z',
+    actionLabel: lang === 'th' ? 'ดูการแจ้งเตือน' : 'View notifications',
+    isClickable: isStudent,
+  }
+}

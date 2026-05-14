@@ -1415,3 +1415,48 @@ Important guardrails:
 - Do not start real persistence yet.
 - Do not expose PII in notification routes.
 - Do not bypass role policies during notification route resolution.
+
+## Notification Topbar Safe Click Wiring UX-N1B
+
+**Runtime slice completed on 2026-05-14.**
+
+UX-N1B wires the existing Topbar notification bell through the UX-N1A notification navigation boundary.
+
+Files updated:
+
+- `src/components/layout/Topbar.tsx`
+- `src/lib/notifications/dto/notificationNavigationDto.ts`
+- `src/lib/notifications/routes/notificationRouteRegistry.ts`
+- `src/lib/notifications/services/notificationNavigationService.ts`
+- `scripts/check-audit-events.mjs`
+- `docs/architecture/NOTIFICATION_TOPBAR_SAFE_CLICK_WIRING_UXN1B_SUMMARY.md`
+
+Result:
+
+- Student Topbar notification click resolves to `/student/notifications`.
+- Topbar does not build raw notification routes directly.
+- Route resolution goes through named route registry.
+- Role permission checks go through notification policy.
+- UI-ready clickable/disabled state goes through presenter.
+- Thai/English blocked navigation copy remains centralized.
+- Non-student Topbar notifications remain disabled/informational until role-specific destinations are approved.
+- No dropdown notification list was added.
+- No mock fixtures were mutated.
+- No backend/API behavior was added.
+- No real persistence was added.
+- No PII route exposure was added.
+- No audit behavior changed.
+
+Recommended next options:
+
+- **UX-N1B-QA** — Review Topbar click behavior, role blocking, mobile/accessibility, and dev logs.
+- **UX-N1C** — Normalize Student notification card route handling through the same service boundary.
+- **AP-8C** — Refactor Admin audit display to presenter.
+- **AP-8B** — Audit database schema plan.
+
+Important guardrails:
+
+- Do not start real persistence yet.
+- Do not expose PII in notification routes or payloads.
+- Do not bypass role policies during notification navigation.
+- Do not wire additional notification surfaces until UX-N1B-QA passes.

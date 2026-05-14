@@ -1,9 +1,16 @@
 'use client'
+import { useMemo } from 'react'
+import { useRouter } from 'next/navigation'
 import { Bell, Globe } from 'lucide-react'
 import { useLang } from '@/lib/i18n'
 import { useAuth } from '@/lib/auth'
 import { ROLE_LABELS } from '@/lib/navigation'
 import { mockNotifications } from '@/data/mock/notifications'
+import {
+  createTopbarNotificationPayload,
+  notificationNavigationPresenter,
+  notificationNavigationService,
+} from '@/lib/notifications'
 
 /*
   Topbar — premium redesign
@@ -21,12 +28,31 @@ import { mockNotifications } from '@/data/mock/notifications'
 export default function Topbar({ title }: { title?: string }) {
   const { lang, setLang } = useLang()
   const { user, role } = useAuth()
+  const router = useRouter()
   const unread = mockNotifications.filter((n) => !n.is_read).length
   const roleLabel = role ? ROLE_LABELS[role] : null
   const displayName = user ? (lang === 'th' ? user.name_th : user.name_en) : ''
+  const notificationNavigation = useMemo(() => {
+    const payload = createTopbarNotificationPayload({
+      role,
+      unreadCount: unread,
+      lang,
+    })
+    const resolution = notificationNavigationService.resolve(payload, {
+      actorRole: role ?? 'guest',
+      lang,
+    })
+
+    return notificationNavigationPresenter.present(payload, resolution, { lang })
+  }, [role, unread, lang])
 
   /* First character of the user's display name */
   const avatarChar = displayName ? displayName.charAt(0).toUpperCase() : '?'
+  const handleNotificationClick = () => {
+    if (notificationNavigation.isClickable && notificationNavigation.href) {
+      router.push(notificationNavigation.href)
+    }
+  }
 
   return (
     <header className="relative h-[52px] bg-bg-100/90 backdrop-blur-xl border-b border-line flex items-center px-4 gap-3 sticky top-0 z-50 select-none">
@@ -98,10 +124,19 @@ export default function Topbar({ title }: { title?: string }) {
 
         {/* Notification bell */}
         <button
-          className="relative p-1.5 rounded-md
-                     text-ink-2 hover:text-ink-1 hover:bg-role-tint
-                     transition-all duration-150"
-          aria-label={`Notifications${unread > 0 ? `, ${unread} unread` : ''}`}
+          onClick={handleNotificationClick}
+          className={`relative p-1.5 rounded-md
+                     text-ink-2 transition-all duration-150
+                     ${notificationNavigation.isClickable
+                       ? 'hover:text-ink-1 hover:bg-role-tint'
+                       : 'opacity-60 cursor-not-allowed'}`}
+          aria-label={`${notificationNavigation.ariaLabel}${unread > 0
+            ? lang === 'th'
+              ? `, มี ${unread} รายการที่ยังไม่ได้อ่าน`
+              : `, ${unread} unread`
+            : ''}`}
+          aria-disabled={!notificationNavigation.isClickable}
+          title={notificationNavigation.disabledReason ?? notificationNavigation.actionLabel}
         >
           <Bell size={16} strokeWidth={1.75} />
           {unread > 0 && (

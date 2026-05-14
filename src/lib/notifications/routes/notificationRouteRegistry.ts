@@ -43,6 +43,13 @@ const FORBIDDEN_PARAM_KEYS = [
 ]
 
 export const NOTIFICATION_ROUTE_REGISTRY: Record<NotificationRouteName, RouteDefinition> = {
+  'student.notifications': {
+    routeName: 'student.notifications',
+    template: '/student/notifications',
+    requiredParams: [],
+    allowedRoles: ['student'],
+    permission: 'student.notifications.view_own',
+  },
   'student.application.detail': {
     routeName: 'student.application.detail',
     template: '/student/applications/[applicationId]',

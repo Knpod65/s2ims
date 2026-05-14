@@ -21,6 +21,7 @@ export type NotificationRoleScope =
   | 'system'
 
 export type NotificationRouteName =
+  | 'student.notifications'
   | 'student.application.detail'
   | 'student.application.documents'
   | 'student.scholarship.detail'
