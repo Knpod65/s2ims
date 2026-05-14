@@ -1790,3 +1790,39 @@ Recommended next:
 - Do not start real persistence yet.
 - Do not create migrations yet.
 - Do not start AP-9A without explicit approval.
+
+## Audit Prototype Persistence Plan QA AP-9
+
+**Completed on 2026-05-14.**
+
+QA checkpoint reviewed the merged AP-9 documentation through automated checks, route smoke tests, and source-level review.
+
+QA artifacts:
+
+- `docs/qa/audit-prototype-persistence-plan-ap9/README.md` — Full QA checklist with source-level review of 11 runtime files
+- `docs/architecture/AUDIT_PROTOTYPE_PERSISTENCE_PLAN_AP9_QA_SUMMARY.md` — QA summary with findings, risks, and safety confirmations
+- `docs/daily-reports/2026-05-13-audit-prototype-persistence-plan-qa-ap9.md` — Daily report
+
+Validation:
+
+- ✅ Build passed 40/40, 0 type errors
+- ✅ Token check passed 4/4
+- ✅ Audit/notification checks passed 71/71
+- ✅ All 5 routes 200 OK (`/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, `/staff/applications/app_002`)
+- ✅ Dev log clean (no errors, no warnings)
+
+QA findings:
+
+- Docs-only scope confirmed — no runtime code modified
+- Storage driver boundary confirmed — replaceable interface, prototype separated from real
+- Repository plan confirmed — staged migration with duplicate prevention
+- Privacy enforcement confirmed — 8-layer model, all forbidden fields addressed
+- Rollback plan confirmed — every stage reversible, mock-only preserved
+- No PII exposure found — source review of 11 runtime files clean
+- No runtime workflow regression — all routes and behaviors unchanged
+
+Recommended next:
+
+- **AP-9A** — Prototype Audit Persistence Runtime Skeleton (requires explicit approval, feature-flagged, `prototype_only` only)
+- Do not start real persistence yet
+- Do not start AP-10 yet
