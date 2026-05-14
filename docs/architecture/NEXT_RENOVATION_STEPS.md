@@ -2307,4 +2307,37 @@ Recommended next:
 - no real persistence
 - no AP-10
 
+## Audit Read Comparison Runtime AP-9F
+
+AP-9F runtime skeleton added on branch `architecture/audit-read-comparison-runtime-ap9f`.
+
+Files created:
+- `src/lib/audit/comparison/auditReadComparisonTypes.ts` — pure type definitions
+- `src/lib/audit/comparison/auditReadComparisonMetrics.ts` — in-memory PII-free metrics store
+- `src/lib/audit/comparison/auditReadComparisonGuards.ts` — 6-gate guard evaluation
+- `src/lib/audit/comparison/auditReadComparisonService.ts` — core comparison service with 11 dimensions and testing factory
+
+Files modified:
+- `src/lib/audit/index.ts` — added AP-9F comparison module exports
+- `scripts/check-audit-events.mjs` — added 15 AP-9F checks (107 → 122)
+
+Safety boundaries preserved:
+- No Admin UI switch to prototype reads
+- No prototype read as source of truth
+- No real persistence activated
+- No backend/API changes
+- No database migrations
+- No mock fixture mutation
+- `sharedMockWriter` source of truth preserved
+- `adminAuditDisplayAdapter` active read path preserved
+- All comparison feature flags disabled by default
+
+Audit/notification checks: 107 → 122 (15 new checks).
+
+Recommended next:
+- AP-9F-QA — formal documentation QA checkpoint for the runtime skeleton
+- Future Admin debug-only comparison panel only after explicit approval, separate QA gate, and PII safety review
+- Do not start AP-10 yet
+- Do not activate real persistence
+
 ## End of AP-9B

@@ -1573,6 +1573,212 @@ addCheck('isShadowWritableEventType identifies correct event types', () => {
     isShadowWritableEventType('admin.role.assign') === false
 })
 
+// AP-9F Read Comparison Runtime Skeleton checks
+const {
+  evaluateAuditReadComparisonGuards,
+  canRunAuditReadComparison,
+  assertNoRealPersistedReadComparison,
+  hasUnsafeComparisonMetadata,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/comparison/auditReadComparisonGuards.ts'))
+
+const {
+  createAuditReadComparisonMetricsStore,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/comparison/auditReadComparisonMetrics.ts'))
+
+const {
+  AuditReadComparisonService,
+  createAuditReadComparisonServiceForTesting,
+} = loadTsModule(path.join(repoRoot, 'src/lib/audit/comparison/auditReadComparisonService.ts'))
+
+function buildComparisonEvent(overrides = {}) {
+  return buildStaffDocumentRejectEvent({
+    actorId: 'usr_staff_cmp',
+    actorRole: 'staff',
+    actorDisplayName: 'Comparison Test Staff',
+    documentId: 'doc_cmp_001',
+    applicationId: 'app_cmp_001',
+    studentToken: 'Student #S-CMP',
+    sourceRoute: '/staff/applications/app_cmp_001',
+    reason: 'Comparison test reason',
+    createdAt: '2026-05-15T00:00:00.000Z',
+    metadata: { documentId: 'doc_cmp_001', applicationId: 'app_cmp_001' },
+    persistenceMode: 'mock_only',
+    ...overrides,
+  })
+}
+
+addCheck('read comparison disabled when feature flag false', () => {
+  const event = buildComparisonEvent({ id: 'cmp_flag_001' })
+  const input = {
+    sourceEvents: [event],
+    prototypeEvents: [event],
+    featureEnabled: false,
+    readCompareEnabled: true,
+    adminCompareVisible: false,
+  }
+  const result = evaluateAuditReadComparisonGuards(input)
+  return result.allowed === false && result.status === 'disabled'
+})
+
+addCheck('read comparison disabled when readCompare flag false', () => {
+  const event = buildComparisonEvent({ id: 'cmp_flag_002' })
+  const input = {
+    sourceEvents: [event],
+    prototypeEvents: [event],
+    featureEnabled: true,
+    readCompareEnabled: false,
+    adminCompareVisible: false,
+  }
+  const result = evaluateAuditReadComparisonGuards(input)
+  return result.allowed === false && result.status === 'disabled'
+})
+
+addCheck('guard blocks real_persisted read comparison events', () => {
+  const event = buildComparisonEvent({ id: 'cmp_real_001', persistenceMode: 'real_persisted' })
+  try {
+    assertNoRealPersistedReadComparison([event])
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('guard blocks unsafe metadata keys in comparison', () => {
+  const event = buildComparisonEvent({ id: 'cmp_unsafe_001' })
+  event.metadata = { ...event.metadata, studentId: 'raw-001' }
+  return hasUnsafeComparisonMetadata([event]) === true
+})
+
+addCheck('comparison metrics store starts empty', () => {
+  const store = createAuditReadComparisonMetricsStore()
+  return store.count() === 0
+})
+
+addCheck('comparison metrics append/list/count works', () => {
+  const store = createAuditReadComparisonMetricsStore()
+  const result = {
+    status: 'matched',
+    sourceCount: 1,
+    prototypeCount: 1,
+    mismatchCount: 0,
+    mismatches: [],
+    createdAt: '2026-05-15T00:00:00.000Z',
+    safeMessage: 'Matched',
+  }
+  store.append(result)
+  return store.count() === 1 &&
+    store.list().length === 1 &&
+    store.countByStatus('matched') === 1 &&
+    store.countByStatus('mismatched') === 0
+})
+
+addCheck('comparison metrics list returns copies', () => {
+  const store = createAuditReadComparisonMetricsStore()
+  store.append({
+    status: 'matched',
+    sourceCount: 1,
+    prototypeCount: 1,
+    mismatchCount: 0,
+    mismatches: [],
+    createdAt: '2026-05-15T00:00:00.000Z',
+    safeMessage: 'Matched',
+  })
+  const list1 = store.list()
+  list1.push({
+    status: 'failed',
+    sourceCount: 0,
+    prototypeCount: 0,
+    mismatchCount: 0,
+    mismatches: [],
+    createdAt: '2026-05-15T00:00:00.000Z',
+    safeMessage: 'Should not appear',
+  })
+  const list2 = store.list()
+  return list2.length === 1
+})
+
+addCheck('comparison returns matched for identical safe event lists', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const event = buildComparisonEvent({ id: 'cmp_match_001' })
+  const result = service.compare(buildInput([event], [event]))
+  return result.status === 'matched' && result.mismatchCount === 0
+})
+
+addCheck('comparison detects count mismatch', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const e1 = buildComparisonEvent({ id: 'cmp_cnt_001' })
+  const e2 = buildComparisonEvent({ id: 'cmp_cnt_002' })
+  const result = service.compare(buildInput([e1, e2], [e1]))
+  return result.status === 'mismatched' && result.mismatchCount > 0
+})
+
+addCheck('comparison detects missing prototype event', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const e1 = buildComparisonEvent({ id: 'cmp_miss_001' })
+  const e2 = buildComparisonEvent({ id: 'cmp_miss_002' })
+  const result = service.compare(buildInput([e1, e2], [e1]))
+  return result.mismatches.some(m => m.category === 'missing_in_prototype' && m.sourceEventId === 'cmp_miss_002')
+})
+
+addCheck('comparison detects extra prototype event', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const e1 = buildComparisonEvent({ id: 'cmp_extra_001' })
+  const eExtra = buildComparisonEvent({ id: 'cmp_extra_999' })
+  const result = service.compare(buildInput([e1], [e1, eExtra]))
+  return result.mismatches.some(m => m.category === 'extra_in_prototype' && m.prototypeEventId === 'cmp_extra_999')
+})
+
+addCheck('comparison detects event type mismatch', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const srcEvent = buildComparisonEvent({ id: 'cmp_etype_001' })
+  const protoEvent = buildStaffDocumentReplacementRequestEvent({
+    actorId: 'usr_staff_cmp', actorRole: 'staff', actorDisplayName: 'Comparison Test Staff',
+    documentId: 'doc_cmp_001', applicationId: 'app_cmp_001', studentToken: 'Student #S-CMP',
+    sourceRoute: '/staff/applications/app_cmp_001', reason: 'Comparison test reason',
+    id: 'cmp_etype_001',
+    createdAt: '2026-05-15T00:00:00.000Z',
+    metadata: { documentId: 'doc_cmp_001', applicationId: 'app_cmp_001' },
+    persistenceMode: 'mock_only',
+  })
+  const result = service.compare(buildInput([srcEvent], [protoEvent]))
+  return result.mismatches.some(m => m.category === 'event_type_mismatch')
+})
+
+addCheck('comparison detects target display token mismatch', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const srcEvent = buildComparisonEvent({ id: 'cmp_token_001' })
+  const protoEvent = buildComparisonEvent({ id: 'cmp_token_001', studentToken: 'Student #S-OTHER' })
+  const result = service.compare(buildInput([srcEvent], [protoEvent]))
+  return result.mismatches.some(m => m.category === 'target_display_token_mismatch')
+})
+
+addCheck('comparison does not expose actorId/targetId/reason/metadata in mismatches', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const srcEvent = buildComparisonEvent({ id: 'cmp_pii_001' })
+  const protoEvent = buildComparisonEvent({ id: 'cmp_pii_001', studentToken: 'Student #S-OTHER' })
+  const result = service.compare(buildInput([srcEvent], [protoEvent]))
+  for (const m of result.mismatches) {
+    if ('actorId' in m && m.actorId !== undefined) return false
+    if ('targetId' in m && m.targetId !== undefined) return false
+    if ('reason' in m && m.reason !== undefined) return false
+    if ('metadata' in m && m.metadata !== undefined) return false
+  }
+  return true
+})
+
+addCheck('comparison service does not mutate input events', () => {
+  const { service, buildInput } = createAuditReadComparisonServiceForTesting({ featureEnabled: true, readCompareEnabled: true })
+  const srcEvent = buildComparisonEvent({ id: 'cmp_mutate_001' })
+  const protoEvent = buildComparisonEvent({ id: 'cmp_mutate_001', studentToken: 'Student #S-OTHER' })
+  const originalSrcId = srcEvent.id
+  const originalSrcMode = srcEvent.persistenceMode
+  const originalSrcMeta = JSON.stringify(srcEvent.metadata)
+  service.compare(buildInput([srcEvent], [protoEvent]))
+  return srcEvent.id === originalSrcId &&
+    srcEvent.persistenceMode === originalSrcMode &&
+    JSON.stringify(srcEvent.metadata) === originalSrcMeta
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
