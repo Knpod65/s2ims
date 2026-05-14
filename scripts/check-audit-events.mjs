@@ -95,7 +95,10 @@ const {
   resolveNotificationRouteTarget,
 } = notificationRouteRegistryModule
 const { NotificationNavigationPolicy } = notificationPolicyModule
-const { NotificationNavigationService } = notificationServiceModule
+const {
+  NotificationNavigationService,
+  createTopbarNotificationPayload,
+} = notificationServiceModule
 const { NotificationNavigationPresenter } = notificationPresenterModule
 const { NotificationNavigationCopy } = notificationCopyModule
 
@@ -804,7 +807,8 @@ function staffNotificationPayload(overrides = {}) {
 
 addCheck('notification route registry recognizes known route names', () =>
   isKnownNotificationRouteName('staff.application.detail') &&
-  isKnownNotificationRouteName('admin.audit.detail')
+  isKnownNotificationRouteName('admin.audit.detail') &&
+  isKnownNotificationRouteName('student.notifications')
 )
 
 addCheck('notification unknown route names are blocked', () => {
@@ -864,6 +868,77 @@ addCheck('notification copy returns Thai and English blocked reason labels', () 
   const copy = new NotificationNavigationCopy()
   return copy.getBlockedReasonCopy('role_scope_mismatch', 'en') === 'This item is not available from your current workspace.' &&
     copy.getBlockedReasonCopy('role_scope_mismatch', 'th') === 'รายการนี้ไม่สามารถเปิดได้จากพื้นที่ทำงานปัจจุบัน'
+})
+
+// UX-N1B Topbar Notification Safe Click Wiring checks
+addCheck('topbar student notification route resolves to notification center', () => {
+  const payload = createTopbarNotificationPayload({ role: 'student', unreadCount: 3, lang: 'en' })
+  const result = resolveNotificationRouteTarget(payload)
+  return result.allowed === true && result.target.href === '/student/notifications'
+})
+
+addCheck('topbar notification payload does not require raw PII params', () => {
+  const payload = createTopbarNotificationPayload({ role: 'student', unreadCount: 1, lang: 'en' })
+  const params = Object.keys(payload.targetRouteParams)
+  return payload.targetRouteName === 'student.notifications' && params.length === 0
+})
+
+addCheck('topbar safe payload policy allows student notification route', () => {
+  const policy = new NotificationNavigationPolicy()
+  const payload = createTopbarNotificationPayload({ role: 'student', unreadCount: 2, lang: 'en' })
+  return policy.canNavigate('student', payload) === true &&
+    policy.canUseRoute('student', 'student.notifications') === true
+})
+
+addCheck('topbar safe notification service resolves without mutating payload', () => {
+  const service = new NotificationNavigationService()
+  const payload = createTopbarNotificationPayload({ role: 'student', unreadCount: 2, lang: 'en' })
+  const before = JSON.stringify(payload)
+  const result = service.resolve(payload, { actorRole: 'student', lang: 'en' })
+  const after = JSON.stringify(payload)
+  return result.allowed === true && result.target.href === '/student/notifications' && before === after
+})
+
+addCheck('topbar presenter marks valid notification as clickable', () => {
+  const service = new NotificationNavigationService()
+  const presenter = new NotificationNavigationPresenter()
+  const payload = createTopbarNotificationPayload({ role: 'student', unreadCount: 2, lang: 'en' })
+  const output = presenter.present(payload, service.resolve(payload, { actorRole: 'student', lang: 'en' }), { lang: 'en' })
+  return output.isClickable === true &&
+    output.href === '/student/notifications' &&
+    output.actionLabel === 'View notifications'
+})
+
+addCheck('topbar presenter marks blocked role notification as disabled', () => {
+  const service = new NotificationNavigationService()
+  const presenter = new NotificationNavigationPresenter()
+  const payload = createTopbarNotificationPayload({ role: 'staff', unreadCount: 2, lang: 'en' })
+  const output = presenter.present(payload, service.resolve(payload, { actorRole: 'staff', lang: 'en' }), { lang: 'en' })
+  return output.isClickable === false &&
+    output.href === undefined &&
+    output.actionLabel === 'Not available' &&
+    Boolean(output.disabledReason)
+})
+
+addCheck('topbar role mismatch is blocked by policy', () => {
+  const service = new NotificationNavigationService()
+  const payload = createTopbarNotificationPayload({ role: 'student', unreadCount: 2, lang: 'en' })
+  const result = service.resolve(payload, { actorRole: 'staff', lang: 'en' })
+  return result.allowed === false && result.blockedReason === 'role_scope_mismatch'
+})
+
+addCheck('topbar unsafe PII-like notification param is blocked', () => {
+  const result = resolveNotificationRouteTarget({
+    ...createTopbarNotificationPayload({ role: 'student', unreadCount: 1, lang: 'en' }),
+    targetRouteParams: { studentId: 'raw-student-001' },
+  })
+  return result.allowed === false && result.blockedReason === 'unsafe_param'
+})
+
+addCheck('topbar copy helper returns Thai and English blocked navigation copy', () => {
+  const copy = new NotificationNavigationCopy()
+  return copy.getBlockedReasonCopy('not_clickable', 'en') === 'This notification is informational only.' &&
+    copy.getBlockedReasonCopy('not_clickable', 'th') === 'การแจ้งเตือนนี้เป็นข้อมูลเท่านั้น'
 })
 
 const failures = checks.filter((check) => !check.passed)
