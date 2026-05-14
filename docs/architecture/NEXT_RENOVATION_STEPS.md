@@ -2518,4 +2518,42 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 1 AP-9G
+
+AP-9G Stage 1 hidden component skeleton added on branch `architecture/audit-admin-comparison-debug-hidden-component-ap9g-stage1`.
+
+Added:
+- `src/components/admin/AdminAuditComparisonDebugPanel.tsx` — always returns null; no DOM output
+
+Runtime behavior:
+- Component always renders null
+- Not wired into Admin Audit Log page
+- No route added
+- No navigation added
+- No comparison data displayed
+- No Admin UI prototype read switch
+- No source-of-truth change
+
+Audit checks:
+- 6 AP-9G Stage 1 checks added: file exists, returns null, no getReadComparisonMetrics import, no forbidden PII tokens, not imported by audit-log page, not imported by any src/app route
+- Total: 128/128
+
+Safety confirmations:
+- No PII exposure
+- No prototype persistence activation
+- No real persistence
+- No backend/API
+- No database migration
+- No mock fixture mutation
+- `sharedMockWriter` preserved
+- `adminAuditDisplayAdapter` preserved
+- Staff callbacks unchanged
+- AP-10 not started
+
+Recommended next:
+- AP-9G Stage 1 QA checkpoint
+- Stage 2 Admin-only render only after explicit approval
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B

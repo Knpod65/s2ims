@@ -1779,6 +1779,56 @@ addCheck('comparison service does not mutate input events', () => {
     JSON.stringify(srcEvent.metadata) === originalSrcMeta
 })
 
+// AP-9G Stage 1 Hidden Component checks
+const panelComponentPath = path.join(repoRoot, 'src/components/admin/AdminAuditComparisonDebugPanel.tsx')
+const auditLogPagePath = path.join(repoRoot, 'src/app/admin/audit-log/page.tsx')
+
+addCheck('AP-9G Stage 1 panel component file exists', () => {
+  return fs.existsSync(panelComponentPath) && fs.statSync(panelComponentPath).isFile()
+})
+
+addCheck('AP-9G Stage 1 panel component returns null', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return source.includes('return null')
+})
+
+addCheck('AP-9G Stage 1 panel component does not import getReadComparisonMetrics', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return !source.includes('getReadComparisonMetrics')
+})
+
+addCheck('AP-9G Stage 1 panel component contains no forbidden PII tokens', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  const forbidden = ['actorId', 'targetId', 'nationalId', 'bankAccount', 'rawIp', 'ocrText', 'reasonText', 'metadataValues']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('AP-9G Stage 1 panel component not imported by audit-log page', () => {
+  const source = fs.readFileSync(auditLogPagePath, 'utf8')
+  return !source.includes('AdminAuditComparisonDebugPanel')
+})
+
+addCheck('AP-9G Stage 1 panel component not imported by any src/app route', () => {
+  const appDir = path.join(repoRoot, 'src/app')
+  function walkAppDir(dir) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true })
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        if (walkAppDir(full)) return true
+      } else if (
+        entry.isFile() &&
+        (entry.name.endsWith('.tsx') || entry.name.endsWith('.ts'))
+      ) {
+        const src = fs.readFileSync(full, 'utf8')
+        if (src.includes('AdminAuditComparisonDebugPanel')) return true
+      }
+    }
+    return false
+  }
+  return !walkAppDir(appDir)
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
