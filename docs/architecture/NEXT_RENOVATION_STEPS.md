@@ -1557,3 +1557,55 @@ Do not start AP-8B without explicit approval.
 Do not start AP-8C without explicit approval.
 Do not start AP-9.
 Do not start real persistence.
+
+## Audit Display Presenter Refactor AP-8C
+
+**Completed on 2026-05-14.**
+
+Refactored Admin Audit Log display flow to use the AP-8A `AuditDisplayPresenter` as the single formatting boundary.
+
+Branch:
+
+`architecture/audit-display-presenter-refactor-ap8c`
+
+Result:
+
+- `AuditDisplayPresenter.present()` now produces complete `AuditDisplayRow` with all display fields: formatted time, role labels, action labels, source type, drawer detail fields.
+- `adminAuditDisplayAdapter.ts` simplified — composes raw AuditEvents, delegates formatting to presenter.
+- `AdminAuditEventDetailDrawer.tsx` and `page.tsx` consume presenter output directly; no inline formatting.
+
+Files modified:
+
+- `src/lib/audit/contracts/auditContracts.ts` — extended `AuditDisplayRow`, added `AdminAuditDisplayRow`, moved `CsvAuditRow` forward.
+- `src/lib/audit/auditTypes.ts` — added `before`/`after`/`ip` fields to `AuditEvent` for legacy fixture carry-forward.
+- `src/lib/audit/presenters/auditDisplayPresenter.ts` — enhanced to produce fully-populated display rows.
+- `src/lib/audit/adminAuditDisplayAdapter.ts` — simplified adapter using presenter.
+- `src/app/admin/audit-log/page.tsx` — uses presenter-formatted fields.
+- `src/components/admin/AdminAuditEventDetailDrawer.tsx` — uses presenter-populated fields.
+
+Constraints honored:
+
+- No runtime behavior changed — visual output identical.
+- No real persistence, no backend/API, no migrations.
+- `src/data/mock/audit-logs.ts` not mutated.
+- `sharedMockWriter` preserved.
+- No notification, route, auth, or audit behavior changes.
+- No PII exposure.
+- No Staff verify, ReasonRequiredModal, or Staff document behavior changes.
+
+Validation:
+
+- Build passed 40/40, 0 type errors
+- Token check passed 4/4
+- Audit event checks passed 71/71
+- All 5 routes 200 OK, dev log clean
+
+Recommended next:
+
+- **AP-8B** — Audit database schema plan
+- **UX-N1C Runtime** — Notification dropdown implementation
+- **AP-6D Runtime** — Staff document mock audit wiring (unblocked)
+
+Do not start AP-8B without explicit approval.
+Do not start AP-9.
+Do not start real persistence.

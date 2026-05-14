@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Audit Contracts — AP-8A Runtime Skeleton
+// Audit Contracts — AP-8A Runtime Skeleton (updated for AP-8C)
 // ---------------------------------------------------------------------------
 // Documentation-only interfaces that formalise the audit service, repository,
 // policy, presenter, and copy-stage boundaries defined in AP-7 and AP-8.
@@ -21,6 +21,71 @@ import type {
   BuildAuditEventInput,
   StaffDocumentAuditInput,
 } from '../auditTypes'
+import type { AuditCopyStage } from '../copy/auditCopyStage'
+
+// ---------------------------------------------------------------------------
+// Output DTOs (defined before presenter contracts that reference them)
+// ---------------------------------------------------------------------------
+
+export interface AuditWriteResult {
+  success: boolean
+  eventId?: string
+  error?: string
+}
+
+export interface AuditDisplayRow {
+  id: string
+  createdAt: string
+  formattedTime: string
+  actorId: string
+  actorRole: AuditActorRole
+  actorLabel: string
+  actorRoleLabel: string
+  actionLabel: string
+  targetLabel: string
+  sourceLabel: string
+  sourceType: 'fixture' | 'writer'
+  persistenceLabel: string
+  severityLabel?: string
+  canOpenDetail: boolean
+  copyStage: AuditCopyStage
+
+  // Drawer detail fields (presenter-populated)
+  eventType?: string
+  actionKey?: string | null
+  reason?: string | null
+  reasonRequired?: boolean
+  targetDisplayToken?: string
+  targetPrivacyLevel?: string
+  targetType?: AuditTargetType
+  targetId?: string
+  sourceRoute?: string
+  policyVersion?: string
+  metadata?: Record<string, unknown>
+
+  // Legacy fixture-only fields
+  before?: Record<string, unknown>
+  after?: Record<string, unknown>
+  ip?: string
+}
+
+/** AuditDisplayRow with an explicit source discriminator for the admin table. */
+export interface AdminAuditDisplayRow extends AuditDisplayRow {
+  source: 'fixture' | 'writer'
+}
+
+export interface CsvAuditRow {
+  id: string
+  createdAt: string
+  actor: string
+  actorRole: string
+  action: string
+  target: string
+  source: string
+  persistence: string
+  severity: string
+  reason?: string
+}
 
 // ---------------------------------------------------------------------------
 // AuditEventFactoryContract
@@ -185,10 +250,6 @@ export interface DisplayOptions {
 // AuditCopyStageResolverContract
 // ---------------------------------------------------------------------------
 
-// AuditCopyStage is defined in copy/auditCopyStage.ts
-// Imported here for use in the contract interface.
-import type { AuditCopyStage } from '../copy/auditCopyStage'
-
 export interface AuditCopyStageResolverContract {
   /** Determine the copy stage for a given event. */
   getCopyStage(event: AuditEvent): AuditCopyStage
@@ -317,44 +378,6 @@ export interface ExportGeneratedInput {
   id?: string
   createdAt?: string
   metadata?: AuditMetadata
-}
-
-// ---------------------------------------------------------------------------
-// Output DTOs
-// ---------------------------------------------------------------------------
-
-export interface AuditWriteResult {
-  success: boolean
-  eventId?: string
-  error?: string
-}
-
-export interface AuditDisplayRow {
-  id: string
-  createdAt: string
-  actorLabel: string
-  actorRoleLabel: string
-  actionLabel: string
-  targetLabel: string
-  sourceLabel: string
-  persistenceLabel: string
-  severityLabel?: string
-  routeHref?: string
-  canOpenDetail: boolean
-  copyStage: AuditCopyStage
-}
-
-export interface CsvAuditRow {
-  id: string
-  createdAt: string
-  actor: string
-  actorRole: string
-  action: string
-  target: string
-  source: string
-  persistence: string
-  severity: string
-  reason?: string
 }
 
 // ---------------------------------------------------------------------------

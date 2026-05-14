@@ -1,78 +1,60 @@
 import type { AuditLog } from '@/lib/types'
-import { buildAuditEvent } from './auditEventBuilder'
-import type { AuditEvent } from './auditTypes'
+import { AuditDisplayPresenter } from './presenters/auditDisplayPresenter'
+import type { AuditEvent, AuditEventType, AuditActorRole, AuditTargetType } from './auditTypes'
+import type { AuditDisplayRow, AdminAuditDisplayRow } from './contracts/auditContracts'
 import { sharedMockAuditWriter } from './sharedMockWriter'
+import { buildAuditEvent } from './auditEventBuilder'
 
-export type AuditRecordSource = 'fixture' | 'writer'
+// ---------------------------------------------------------------------------
+// Source: AuditDisplayPresenter — AP-8C Refactor
+// ---------------------------------------------------------------------------
+// The presenter is now the single display-formatting boundary.
+// This adapter composes raw data into AuditEvents, then delegates to
+// the presenter for all label formatting, persistence labels, source
+// labels, and drawer-ready detail fields.
+// ---------------------------------------------------------------------------
 
-// Unified display row — normalizes both AuditLog fixture records and AuditEvent writer events
-export interface AdminAuditDisplayRow {
-  id: string
-  source: AuditRecordSource
-  actorName: string
-  actorId: string
-  actorRole: string
-  action: string
-  entityType: string
-  entityId: string
-  createdAt: string
-  persistenceMode: 'mock_only' | 'prototype_only' | 'real_persisted'
-  // Extended fields — present for writer events
-  eventType?: string
-  severity?: string
-  reason?: string | null
-  reasonRequired?: boolean
-  targetDisplayToken?: string
-  targetPrivacyLevel?: string
-  metadata?: Record<string, unknown>
-  sourceRoute?: string
-  policyVersion?: string
-  // Legacy fields — present for fixture events
-  before?: Record<string, unknown>
-  after?: Record<string, unknown>
-  ip?: string
+// Shared presenter instance (en: admin view; locale overridden per-request)
+const presenter = new AuditDisplayPresenter('en', 'admin')
+
+/** Append source info to a presenter-produced row. */
+function withSource(row: AuditDisplayRow, source: 'fixture' | 'writer'): AdminAuditDisplayRow {
+  return { ...row, source }
 }
 
+/** Convert a fixture AuditLog into a presentable AuditDisplayRow via the presenter. */
 function fixtureToRow(log: AuditLog): AdminAuditDisplayRow {
-  return {
+  const event: AuditEvent & { before?: AuditDisplayRow['before']; after?: AuditDisplayRow['after']; ip?: string } = {
     id: log.id,
-    source: 'fixture',
-    actorName: log.actor_name,
+    eventType: log.action as AuditEventType,
+    actionKey: null,
     actorId: log.actor_id,
-    actorRole: log.actor_role,
-    action: log.action,
-    entityType: log.entity_type,
-    entityId: log.entity_id,
+    actorRole: log.actor_role as AuditActorRole,
+    actorDisplayName: log.actor_name,
+    targetType: log.entity_type as AuditTargetType,
+    targetId: log.entity_id,
+    targetDisplayToken: `${log.actor_role} #${log.actor_id}`,
+    targetPrivacyLevel: 'internal',
+    reason: null,
+    reasonRequired: false,
+    reasonMinLength: 0,
+    metadata: {},
+    sourceRoute: '',
     createdAt: log.created_at,
-    persistenceMode: 'mock_only',
-    before: log.before,
-    after: log.after,
+    severity: 'info' as AuditEvent['severity'],
+    policyVersion: '',
+    persistenceMode: 'mock_only' as AuditEvent['persistenceMode'],
+    before: log.before as AuditDisplayRow['before'],
+    after: log.after as AuditDisplayRow['after'],
     ip: log.ip,
   }
+
+  return withSource(presenter.present(event) as AuditDisplayRow, 'fixture')
 }
 
+/** Convert a writer AuditEvent into a presentable AuditDisplayRow via the presenter. */
 function writerEventToRow(event: AuditEvent): AdminAuditDisplayRow {
-  return {
-    id: event.id,
-    source: 'writer',
-    actorName: event.actorDisplayName,
-    actorId: event.actorId,
-    actorRole: event.actorRole,
-    action: event.eventType,
-    entityType: event.targetType,
-    entityId: event.targetId,
-    createdAt: event.createdAt,
-    persistenceMode: event.persistenceMode,
-    eventType: event.eventType,
-    severity: event.severity,
-    reason: event.reason,
-    reasonRequired: event.reasonRequired,
-    targetDisplayToken: event.targetDisplayToken,
-    targetPrivacyLevel: event.targetPrivacyLevel,
-    metadata: event.metadata as Record<string, unknown>,
-    sourceRoute: event.sourceRoute,
-    policyVersion: event.policyVersion,
-  }
+  return withSource(presenter.present(event) as AuditDisplayRow, 'writer')
 }
 
 // Static demo writer events — module-level, mock_only, never persisted.
@@ -99,7 +81,7 @@ const DEMO_WRITER_EVENTS: AuditEvent[] = (() => {
           nextStatus: 'verified',
         },
         sourceRoute: '/staff/applications/app_002',
-        createdAt: '2026-05-10T09:00:00Z',
+        createdAt: '2026-05-10T09:00:00.000Z',
         severity: 'low',
         persistenceMode: 'mock_only',
       }),
@@ -123,7 +105,7 @@ const DEMO_WRITER_EVENTS: AuditEvent[] = (() => {
           nextStatus: 'rejected',
         },
         sourceRoute: '/staff/applications/app_002',
-        createdAt: '2026-05-10T10:30:00Z',
+        createdAt: '2026-05-10T10:30:00.000Z',
         severity: 'medium',
         persistenceMode: 'mock_only',
       }),
@@ -142,7 +124,7 @@ const DEMO_WRITER_EVENTS: AuditEvent[] = (() => {
         reasonMinLength: 1,
         metadata: { roleBefore: 'none', roleAfter: 'staff' },
         sourceRoute: '/admin/users',
-        createdAt: '2026-05-11T08:00:00Z',
+        createdAt: '2026-05-11T08:00:00.000Z',
         severity: 'critical',
         persistenceMode: 'mock_only',
       }),
@@ -152,8 +134,12 @@ const DEMO_WRITER_EVENTS: AuditEvent[] = (() => {
   }
 })()
 
-// Returns combined fixture + static demo + live shared writer rows sorted by createdAt descending.
-// Does not write to any store or mutate any source.
+/**
+ * Returns combined fixture + static demo + live shared writer rows
+ * sorted by createdAt descending.
+ * Presenter handles all display label formatting — this function only
+ * composes raw data and delegates to the presenter.
+ */
 export function getAdminAuditDisplayRows(fixtureLogs: AuditLog[]): AdminAuditDisplayRow[] {
   const fixtureRows = fixtureLogs.map(fixtureToRow)
   const demoRows = DEMO_WRITER_EVENTS.map(writerEventToRow)

@@ -73,6 +73,11 @@ export interface AuditEvent {
   severity: AuditSeverity
   policyVersion: string
   persistenceMode: AuditPersistenceMode
+
+  // Legacy fixture fields — optional, carried forward during migration
+  before?: Record<string, unknown>
+  after?: Record<string, unknown>
+  ip?: string
 }
 
 export interface AuditActorInput {
