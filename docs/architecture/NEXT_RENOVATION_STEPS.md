@@ -2204,4 +2204,27 @@ Recommended next:
 - Do not start real persistence until prototype phase is proven stable and compliant
 - Do not start AP-10 until AP-9C/AP-9D evidence and compliance review complete
 
+## Audit Shadow Write Runtime Post-Merge QA AP-9D
+
+AP-9D post-merge QA completed on `main`.
+
+Confirmed:
+- `main` validated after AP-9D merge and merge checkpoint
+- build passed, 40/40
+- token checks passed, 4/4
+- audit/notification checks passed, 107/107
+- route smoke passed for `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, and `/staff/applications/app_002`
+- dev log clean
+- runtime code unchanged in post-merge QA
+- `sharedMockWriter` source of truth confirmed
+- `adminAuditDisplayAdapter` active read path confirmed
+- `AuditDisplayPresenter` display boundary confirmed
+- prototype persistence remains disabled by default
+- no real persistence, backend/API, database migration, browser storage, mock fixture mutation, notification behavior change, or PII exposure found
+
+Recommended next:
+- AP-9E read comparison planning only after explicit approval
+- no real persistence
+- no AP-10
+
 ## End of AP-9B
