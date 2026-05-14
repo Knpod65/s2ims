@@ -1651,3 +1651,46 @@ Recommended next:
 Do not start AP-8B without explicit approval.
 Do not start AP-9.
 Do not start real persistence.
+
+## Audit Database Schema Plan AP-8B
+
+**Planned on 2026-05-14.**
+
+Branch:
+
+`architecture/audit-database-schema-plan-ap8b`
+
+AP-8B plans the future audit database schema as a Laravel/PHP migration equivalent. This is a docs-only phase — no runtime code, no migrations, no real persistence.
+
+Documents created:
+
+- `docs/architecture/AUDIT_DATABASE_SCHEMA_PLAN_AP8B.md` — Full schema plan
+- `docs/daily-reports/2026-05-13-audit-database-schema-plan-ap8b.md` — Daily report
+
+What the schema plan covers:
+
+- 5 tables: `audit_events`, `audit_reasons`, `audit_metadata_blobs`, `audit_retention_policies`, `audit_archived_events`
+- Index optimization for `AuditRepositoryFilters` patterns (actor, target, event type, persistence mode, severity, source route)
+- Archive table + `audit_events_all` database view for unified querying
+- Retention policy defaults: 365 days (info) through 3650 days (critical/admin role changes)
+- Phased implementation: Phase 0 (no persistence) → Phase 1 (prototype) → Phase 2 (real persistence + privacy) → Phase 3 (archive/retention) → Phase 4 (optimization)
+- Privacy model: IP hashed, metadata sanitized, reason text separated, role-based access matrix
+- Rollback plan: all migrations additive with independent rollback steps
+
+Constraints honored:
+
+- No runtime code created or modified
+- No database migrations executed
+- No mock fixtures mutated
+- No backend/API behavior added
+- No PII exposure
+- No real persistence started
+- No AP-9 started
+
+Recommended next:
+
+- **AP-9** — Prototype persistence implementation (after AP-8B review approval)
+- **AP-8C-QA follow-up** — Verify schema alignment with presenter contract
+
+Do not start AP-9 without AP-8B schema plan review approval.
+Do not start real persistence yet.
