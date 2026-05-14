@@ -2482,4 +2482,40 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Plan Post-Merge QA AP-9G
+
+AP-9G post-merge QA completed on `main` after merge commit `0725f18` (checkpoint `d867069`).
+
+Post-merge QA confirmed:
+- AP-9G planning docs present on main: 7 architecture docs, QA README, merge checkpoint
+- Docs-only scope confirmed: no component, route, or UI panel added; no `src/*`, `scripts/*`, or `package.json` changed
+- Admin UI read path preserved: `adminAuditDisplayAdapter` unchanged
+- `sharedMockWriter` source of truth confirmed: unchanged
+- `AuditDisplayPresenter` formatting boundary confirmed: unchanged
+- Prototype persistence remains disabled: `DEFAULT_AUDIT_PERSISTENCE_CONFIG` unchanged
+- Real persistence not added
+- Checks pass: 122/122
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+- Runtime code unchanged during post-merge QA
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI prototype read switch
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-10 not started
+
+Recommended next:
+- AP-9G Stage 1 hidden component only after explicit approval
+- Separate runtime implementation branch and QA gate required
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
