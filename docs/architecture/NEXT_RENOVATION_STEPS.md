@@ -2378,4 +2378,39 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Read Comparison Runtime Post-Merge QA AP-9F
+
+AP-9F post-merge QA completed on `main` after merge commit `e9a14ed` (checkpoint `8a8a32c`).
+
+Post-merge QA confirmed:
+- Comparison modules present on main: all 4 modules in `src/lib/audit/comparison/`
+- Admin UI read path preserved: `adminAuditDisplayAdapter` unchanged, still reads from `sharedMockAuditWriter.list()` and fixture logs
+- `sharedMockWriter` source of truth confirmed: unchanged, no comparison path reads or writes to it
+- `AuditDisplayPresenter` formatting boundary confirmed: unchanged
+- Prototype persistence remains disabled: `DEFAULT_AUDIT_PERSISTENCE_CONFIG` has `prototypeEnabled: false`, `shadowWrites: false`, `readFromPrototype: false`
+- Real persistence not added
+- Checks pass: 122/122
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+- Runtime code unchanged during post-merge QA
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI prototype read switch
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-10 not started
+
+Recommended next:
+- AP-9G planning only after explicit approval
+- Admin debug-only comparison panel only after explicit approval, with separate QA gate and PII safety review
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
