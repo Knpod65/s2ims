@@ -2227,4 +2227,60 @@ Recommended next:
 - no real persistence
 - no AP-10
 
+## Audit Read Comparison Plan AP-9E
+
+AP-9E docs-only plan added on `architecture/audit-read-comparison-plan-ap9e`.
+
+Planned:
+- read comparison architecture between current Admin mock reads and future prototype reads
+- comparison dimensions for event counts, ids, event types, actor roles, safe target tokens, persistence modes, severity, timestamp order, source routes, safe metadata key sets, presenter output, and copy-stage consistency
+- mismatch categories for missing, extra, duplicate, order, metadata, unsafe metadata, persistence mode, presenter output, and copy-stage mismatches
+- privacy/logging boundaries with aggregate-only, developer-safe output
+- Admin display boundary preserving `adminAuditDisplayAdapter` and `AuditDisplayPresenter`
+- rollout/rollback plan with all comparison flags disabled by default
+- QA checklist for docs-only review and future runtime readiness
+
+Confirmed:
+- runtime unchanged
+- no Admin read switch
+- no prototype activation
+- no real persistence
+- no backend/API
+- no database migrations
+- no Staff callback change
+- no notification behavior change
+- no PII exposure
+
+Recommended next:
+- AP-9E-QA docs-only review
+- AP-9F read comparison runtime only after approval
+- do not start real persistence
+- do not start AP-10
+
+## Audit Read Comparison Plan QA AP-9E
+
+AP-9E QA checkpoint completed on `architecture/audit-read-comparison-plan-ap9e`.
+
+Confirmed:
+- docs-only scope confirmed
+- Admin read path preserved through `adminAuditDisplayAdapter`
+- `sharedMockWriter` source of truth confirmed
+- `AuditDisplayPresenter` formatting boundary confirmed
+- privacy/logging reviewed and PII-safe
+- rollout/rollback reviewed and flag-based
+- checks pass 107/107
+- route smoke passed for `/login`, `/admin/audit-log`, `/admin/dashboard`, `/staff/applications/app_001`, and `/staff/applications/app_002`
+- dev log clean
+- runtime code unchanged in QA
+- no Admin prototype read switch
+- no prototype activation
+- no real persistence
+- no AP-9E runtime, AP-9F, or AP-10 started
+
+Recommended next:
+- merge AP-9E after review
+- AP-9F read comparison runtime only after explicit approval
+- no real persistence
+- no AP-10
+
 ## End of AP-9B
