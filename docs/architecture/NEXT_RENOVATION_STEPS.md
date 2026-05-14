@@ -1609,3 +1609,45 @@ Recommended next:
 Do not start AP-8B without explicit approval.
 Do not start AP-9.
 Do not start real persistence.
+
+## Audit Display Presenter Refactor QA AP-8C
+
+**Completed on 2026-05-14.**
+
+AP-8C QA checkpoint verified the merged Audit Display Presenter Refactor through automated checks, route smoke tests, and source-level review.
+
+QA artifacts:
+
+- `docs/qa/audit-display-presenter-refactor-ap8c/README.md`
+- `docs/architecture/AUDIT_DISPLAY_PRESENTER_REFACTOR_AP8C_QA_SUMMARY.md`
+- `docs/daily-reports/2026-05-13-audit-display-presenter-refactor-qa-ap8c.md`
+
+Validation:
+
+- Build passed 40/40, 0 type errors
+- Token check passed 4/4
+- Audit/notification checks passed 71/71
+- All 5 routes 200 OK, dev log clean
+
+QA findings:
+
+- Presenter boundary confirmed working as intended
+- Adapter correctly delegates display formatting to presenter
+- Admin Audit Log table renders fixture + demo rows correctly
+- Detail drawer displays all fields safely (fixture legacy + writer metadata)
+- Source labels render correctly (Demo fixture / Demo generated)
+- Persistence labels remain mock-safe
+- Real persisted filter shows safe empty state
+- Forbidden metadata keys filtered in drawer
+- CSV export uses presenter-safe labels with warning header
+- No PII exposure found
+- No runtime workflow regression
+
+Recommended next:
+
+- **AP-8B** — Audit database schema plan (docs-only)
+- **AP-9** — Real persistence planning only after AP-8B schema review
+
+Do not start AP-8B without explicit approval.
+Do not start AP-9.
+Do not start real persistence.
