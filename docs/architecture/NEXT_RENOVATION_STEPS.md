@@ -1286,3 +1286,46 @@ Recommendation:
 - Choose UX-N1 first if user-facing notification clickability is the priority.
 
 Do not start AP-8B, AP-8C, UX-N1, or AP-9 without explicit approval.
+
+## Notification Navigation Contract Plan UX-N1
+
+**Completed on 2026-05-14.**
+
+Branch: `architecture/notification-navigation-contract-plan`
+
+UX-N1 documented the visible notification click issue and planned a safe future navigation contract.
+
+Documents added:
+
+- `docs/architecture/NOTIFICATION_NAVIGATION_CONTRACT_PLAN_UXN1.md`
+- `docs/architecture/NOTIFICATION_ROUTE_AND_PERMISSION_MODEL_UXN1.md`
+- `docs/architecture/NOTIFICATION_PRIVACY_AND_PAYLOAD_CONTRACT_UXN1.md`
+- `docs/architecture/NOTIFICATION_UI_ACCESSIBILITY_QA_UXN1.md`
+- `docs/architecture/NOTIFICATION_LARAVEL_PHP_ARCHITECTURE_MAP_UXN1.md`
+
+Result:
+
+- Visible notification click issue documented.
+- Navigation payload contract planned.
+- Route and permission model planned.
+- Privacy payload rules planned.
+- UI/accessibility QA checklist planned.
+- Laravel/PHP architecture mapping added.
+- Runtime unchanged.
+- No notification click implementation yet.
+- No route behavior changed.
+- No backend/API added.
+- No database migrations added.
+- No audit behavior changed.
+
+Recommended next options:
+
+- **UX-N1A** — Runtime skeleton for notification navigation service and safe route registry checks.
+- **AP-8C** — Refactor Admin display to use the audit presenter.
+- **AP-8B** — Audit database schema plan.
+
+Important guardrails:
+
+- Do not implement click behavior until the route, permission, and privacy model is reviewed.
+- Do not expose raw PII in notification payloads or URLs.
+- Do not bypass role policies during notification route resolution.
