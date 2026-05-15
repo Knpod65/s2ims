@@ -2712,4 +2712,47 @@ Recommended next:
 - do not start AP-10
 - do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 2 Post-Merge QA AP-9G
+
+AP-9G Stage 2 post-merge QA completed on `main` after merge commit `95906dd` and checkpoint commit `61e57b7`.
+
+Post-merge QA confirmed:
+- Stage 2 runtime present on main
+- Component does not render by default
+- Non-admin receives no DOM trace
+- Admin-only gated render path remains disabled by default
+- Admin Audit Log table behavior unchanged
+- Drawer behavior unchanged
+- Export behavior unchanged
+- No route added
+- No navigation added
+- Prototype persistence remains disabled
+- Real persistence not added
+- `sharedMockWriter` source of truth preserved
+- `adminAuditDisplayAdapter` active read path preserved
+- Checks pass: 137/137
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+- Runtime code unchanged during post-merge QA
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI table behavior change
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-9G Stage 3 not started
+- AP-10 not started
+
+Recommended next:
+- AP-9G Stage 3 only after explicit approval
+- Separate planning/runtime branch and QA gate required
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
