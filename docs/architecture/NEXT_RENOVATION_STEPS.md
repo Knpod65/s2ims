@@ -2827,4 +2827,40 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 3 Plan Post-Merge QA AP-9G
+
+AP-9G Stage 3 planning post-merge QA completed on `main` after merge commit `f6c5e56` and checkpoint `bd3a420`.
+
+Post-merge QA confirmed:
+- Stage 3 planning docs present on main
+- Docs-only scope confirmed
+- Stage 3 runtime not started
+- No `src/*`, `scripts/*`, or `package.json` changes in QA
+- No route/nav/export changes
+- Staging review plan complete
+- Privacy review plan complete
+- Observability plan remains aggregate-only and PII-safe
+- Rollout/rollback plan complete
+- QA checklist complete
+- Checks pass: `137/137`
+- Routes pass: all 5 smoke routes `200 OK`
+- Dev log clean
+
+Safety confirmations:
+- Prototype persistence not activated
+- Real persistence not added
+- Backend/API unchanged
+- No migrations added
+- No mock fixture mutation
+- No Staff callback changes
+- No notification behavior changes
+- No PII exposure found
+- AP-10 not started
+
+Recommended next:
+1. AP-9G Stage 3 runtime only after explicit approval and a separate implementation branch
+2. Use staging-only flags and follow rollout/rollback gates
+3. Do not start AP-10
+4. Do not activate real persistence
+
 ## End of AP-9B
