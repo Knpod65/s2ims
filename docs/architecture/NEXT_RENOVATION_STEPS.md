@@ -621,6 +621,34 @@ Recommended next:
 - AP-10 only after prototype evidence and compliance review
 - do not start real persistence yet
 
+## Audit Production Persistence Evidence Pack Preparation AP-10B
+
+**Completed on 2026-05-15.**
+
+Branch: `architecture/audit-production-persistence-evidence-pack-ap10b`
+
+Documents added:
+- `docs/architecture/AUDIT_PRODUCTION_PERSISTENCE_EVIDENCE_PACK_AP10B.md` — Evidence pack index
+- `docs/architecture/AUDIT_PRODUCTION_PERSISTENCE_APPROVAL_SIGNOFF_TEMPLATE_AP10B.md` — Sign-off template (7 owners)
+- `docs/architecture/AUDIT_PRODUCTION_PERSISTENCE_APPROVAL_EVIDENCE_TRACKER_AP10B.md` — Approval and artifact tracker
+- `docs/daily-reports/2026-05-15-audit-production-persistence-evidence-pack-ap10b.md` — Daily report
+
+This is docs-only. No runtime code, schema, migration, or persistence changes.
+
+Current readiness: NOT READY FOR AP-10C.
+
+**Required next:**
+1. Create the schema design document
+2. Name and assign the 7 approval owners
+3. Collect written sign-offs using the sign-off template
+4. Run fresh validation (build, tokens, audit, route smoke — within 7 days of each sign-off)
+5. Confirm all 9 blocking conditions are false
+6. Update this tracker with final approval summary
+
+Do not start AP-10C. Do not start AP-11. Do not activate persistence.
+
+---
+
 ## Historical Recommended Phase 2G (Superseded)
 
 This section is preserved as historical planning context. Phase 2G has already been completed
