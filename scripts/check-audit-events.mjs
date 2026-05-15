@@ -948,6 +948,7 @@ addCheck('topbar copy helper returns Thai and English blocked navigation copy', 
 const {
   DEFAULT_AUDIT_PERSISTENCE_CONFIG,
   isPrototypePersistenceEnabled,
+  isAdminDebugPanelEnabled,
   assertPrototypePersistenceAllowed,
 } = loadTsModule(path.join(repoRoot, 'src/lib/audit/storage/auditPersistenceConfig.ts'))
 
@@ -989,7 +990,8 @@ addCheck('default persistence config is disabled', () => {
   return DEFAULT_AUDIT_PERSISTENCE_CONFIG.prototypeEnabled === false &&
     DEFAULT_AUDIT_PERSISTENCE_CONFIG.mode === 'mock_only' &&
     DEFAULT_AUDIT_PERSISTENCE_CONFIG.shadowWrites === false &&
-    DEFAULT_AUDIT_PERSISTENCE_CONFIG.readFromPrototype === false
+    DEFAULT_AUDIT_PERSISTENCE_CONFIG.readFromPrototype === false &&
+    DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminDebugPanelEnabled === false
 })
 
 addCheck('feature guard blocks prototype persistence by default', () => {
@@ -1007,6 +1009,10 @@ addCheck('feature guard blocks real persistence', () => {
 
 addCheck('isPrototypePersistenceEnabled returns false by default', () => {
   return isPrototypePersistenceEnabled() === false
+})
+
+addCheck('AP-9G Stage 2 admin debug panel flag defaults false', () => {
+  return isAdminDebugPanelEnabled() === false
 })
 
 addCheck('InMemoryPrototypeAuditStorageDriver exists', () => {
@@ -1779,7 +1785,7 @@ addCheck('comparison service does not mutate input events', () => {
     JSON.stringify(srcEvent.metadata) === originalSrcMeta
 })
 
-// AP-9G Stage 1 Hidden Component checks
+// AP-9G Stage 1/2 Admin Comparison Debug Panel checks
 const panelComponentPath = path.join(repoRoot, 'src/components/admin/AdminAuditComparisonDebugPanel.tsx')
 const auditLogPagePath = path.join(repoRoot, 'src/app/admin/audit-log/page.tsx')
 
@@ -1803,12 +1809,14 @@ addCheck('AP-9G Stage 1 panel component contains no forbidden PII tokens', () =>
   return forbidden.every((token) => !source.includes(token))
 })
 
-addCheck('AP-9G Stage 1 panel component not imported by audit-log page', () => {
+addCheck('AP-9G Stage 2 panel component is wired disabled-by-default on audit-log page', () => {
   const source = fs.readFileSync(auditLogPagePath, 'utf8')
-  return !source.includes('AdminAuditComparisonDebugPanel')
+  return source.includes('AdminAuditComparisonDebugPanel') &&
+    source.includes('enabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminDebugPanelEnabled}') &&
+    source.includes('readCompareEnabled={false}')
 })
 
-addCheck('AP-9G Stage 1 panel component not imported by any src/app route', () => {
+addCheck('AP-9G Stage 2 panel component is not imported by non-audit-log src/app routes', () => {
   const appDir = path.join(repoRoot, 'src/app')
   function walkAppDir(dir) {
     const entries = fs.readdirSync(dir, { withFileTypes: true })
@@ -1820,6 +1828,7 @@ addCheck('AP-9G Stage 1 panel component not imported by any src/app route', () =
         entry.isFile() &&
         (entry.name.endsWith('.tsx') || entry.name.endsWith('.ts'))
       ) {
+        if (full === auditLogPagePath) continue
         const src = fs.readFileSync(full, 'utf8')
         if (src.includes('AdminAuditComparisonDebugPanel')) return true
       }
@@ -1827,6 +1836,57 @@ addCheck('AP-9G Stage 1 panel component not imported by any src/app route', () =
     return false
   }
   return !walkAppDir(appDir)
+})
+
+addCheck('AP-9G Stage 2 panel returns null for non-admin role', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return source.includes("role !== 'admin'") && source.includes('return null')
+})
+
+addCheck('AP-9G Stage 2 panel returns null when flag disabled', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return source.includes('enabled = false') && source.includes('if (!enabled) return null')
+})
+
+addCheck('AP-9G Stage 2 panel read comparison gates default false', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return source.includes('featureEnabled = false') &&
+    source.includes('readCompareEnabled = false')
+})
+
+addCheck('AP-9G Stage 2 panel has Admin-only debug label', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return source.includes('Developer Debug: Audit Read Comparison') &&
+    source.includes('Comparison debug panel is disabled.')
+})
+
+addCheck('AP-9G Stage 2 panel does not display internal comparison event ids', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return !source.includes('sourceEventId') && !source.includes('prototypeEventId')
+})
+
+addCheck('AP-9G Stage 2 panel introduces no export behavior', () => {
+  const source = fs.readFileSync(panelComponentPath, 'utf8')
+  return !source.includes('Export') &&
+    !source.includes('download') &&
+    !source.includes('Blob') &&
+    !source.includes('URL.createObjectURL')
+})
+
+addCheck('AP-9G Stage 2 audit-log page keeps existing data source', () => {
+  const source = fs.readFileSync(auditLogPagePath, 'utf8')
+  return source.includes('const ALL_DISPLAY_ROWS = getAdminAuditDisplayRows(mockAuditLogs)') &&
+    source.includes("const filteredLogs = persistenceFilter === 'real_persisted' ? [] : ALL_DISPLAY_ROWS") &&
+    !source.includes('getReadComparisonMetrics') &&
+    !source.includes('AuditReadComparisonService')
+})
+
+addCheck('AP-9G Stage 2 audit-log export remains on display rows only', () => {
+  const source = fs.readFileSync(auditLogPagePath, 'utf8')
+  return source.includes('const rows = ALL_DISPLAY_ROWS.map') &&
+    !source.includes('mismatchCount') &&
+    !source.includes('prototypeCount') &&
+    !source.includes('sourceCount')
 })
 
 await Promise.all(checkPromises)

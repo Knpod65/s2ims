@@ -6,7 +6,9 @@ import { mockAuditLogs } from '@/data/mock/audit-logs'
 import { Download, AlertCircle } from 'lucide-react'
 import { useState } from 'react'
 import AdminAuditEventDetailDrawer from '@/components/admin/AdminAuditEventDetailDrawer'
+import AdminAuditComparisonDebugPanel from '@/components/admin/AdminAuditComparisonDebugPanel'
 import { getAdminAuditDisplayRows } from '@/lib/audit/adminAuditDisplayAdapter'
+import { DEFAULT_AUDIT_PERSISTENCE_CONFIG } from '@/lib/audit/storage/auditPersistenceConfig'
 import type { AdminAuditDisplayRow } from '@/lib/audit/contracts/auditContracts'
 
 type PersistenceMode = 'all' | 'mock_only' | 'real_persisted'
@@ -62,6 +64,13 @@ export default function AuditLogPage() {
             : `Admin audit review is currently showing ${totalCount} mock/demo records only. These records help validate the audit experience and are not official persisted audit evidence.`}
         </span>
       </div>
+
+      <AdminAuditComparisonDebugPanel
+        role="admin"
+        enabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminDebugPanelEnabled}
+        featureEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.prototypeEnabled}
+        readCompareEnabled={false}
+      />
 
       <div className="mb-4 flex items-center gap-3">
         <label className="text-xs font-semibold text-ink-2">{t==='th'?'การบันทึก':'Persistence'}:</label>
