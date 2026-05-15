@@ -3037,4 +3037,32 @@ Recommended next:
 - Do not activate real persistence
 - Any enabling of `prototypeMetricsEnabled` or `adminComparisonStagingReviewEnabled` must use a staging-only config override — never a change to `DEFAULT_AUDIT_PERSISTENCE_CONFIG`
 
+## Audit Admin Comparison Debug Panel Stage 4 Plan AP-9G
+
+AP-9G Stage 4 planning documentation created on branch `architecture/audit-admin-comparison-debug-panel-stage4-plan-ap9g`.
+
+Docs-only planning confirmed:
+- Stage 4 production-disabled-by-default plan created (5 architecture docs)
+- No runtime implementation — documentation only
+- No production flag enablement
+- Stage 3 runtime remains gated (`adminDebugPanelEnabled: false` in `DEFAULT_AUDIT_PERSISTENCE_CONFIG`)
+- Real persistence not activated
+- AP-10 not started
+- All 139 audit/notification checks pass
+- Build 40/40; routes 5×200 OK
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes
+- No `package.json` changes
+- No backend/API, migration, or mock fixture changes
+- No Staff callback or notification changes
+- No PII exposure
+- Stage 4 runtime not started
+- AP-10 not started
+
+Recommended next:
+1. Stage 4 QA documentation checkpoint only (no runtime)
+2. Stage 4 runtime only after all 5 approvals obtained (engineering, privacy/PDPA, product/admin owner, QA, rollback owner)
+3. Do not start AP-10
+
 ## End of AP-9B
