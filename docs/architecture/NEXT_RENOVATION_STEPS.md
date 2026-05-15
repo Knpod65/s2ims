@@ -3307,12 +3307,46 @@ Post-merge QA confirmed:
 - Dev log clean
 
 Recommended next:
-1. Name all 7 approval owners
-2. Distribute sign-off templates
-3. Collect written approvals
-4. Prepare schema design document
-5. Verify all 9 blocking conditions are false
-6. Only then consider AP-10C
-7. Do not start AP-11
+1. Name all 7 approval owners and fill in the owner matrix
+2. Create the schema design document
+3. Run fresh validations and update sign-off packet checklist
+4. Distribute sign-off packet to all identified owners
+5. Collect written approvals using the standardized template
+6. Update evidence tracker and owner matrix
+7. Verify all 9 blocking conditions are false
+8. Only then authorize AP-10C
+
+Do not start AP-10C.
+Do not start AP-11.
+
+## Audit Production Persistence Approval Collection AP-10B
+
+AP-10B Approval Collection package created on branch `architecture/audit-production-persistence-approval-collection-ap10b`.
+
+This package operationalizes the evidence pack:
+- Approval collection master doc defines process, workflow, and blocking conditions
+- Owner matrix tracks named owners and sign-off readiness
+- Sign-off packet checklist ensures all evidence is assembled before collection begins
+
+Current state:
+- AP-10B evidence pack and post-merge QA complete on main
+- 0/7 approvals collected
+- All 9 blocking conditions remain unresolved
+- No runtime/schema/migration work started
+- AP-10C not started
+- AP-11 not started
+
+Recommended next:
+1. Name all 7 approval owners and fill in the owner matrix
+2. Create the schema design document
+3. Run fresh validations and update sign-off packet checklist
+4. Distribute sign-off packet to all identified owners
+5. Collect written approvals using the standardized template
+6. Update evidence tracker and owner matrix
+7. Verify all 9 blocking conditions are false
+8. Only then authorize AP-10C
+
+Do not start AP-10C.
+Do not start AP-11.
 
 ## End of AP-9B
