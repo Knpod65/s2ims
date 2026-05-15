@@ -2596,4 +2596,45 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 1 Post-Merge QA AP-9G
+
+AP-9G Stage 1 post-merge QA completed on `main` after merge commit `6ef820b` and checkpoint commit `685e0b5`.
+
+Post-merge QA confirmed:
+- Hidden component exists on main: `src/components/admin/AdminAuditComparisonDebugPanel.tsx`
+- Component intentionally renders `null`
+- Component is not imported by any page
+- Admin Audit Log page unchanged
+- No route added
+- No navigation added
+- No user-facing behavior change
+- `adminAuditDisplayAdapter` active read path preserved
+- `sharedMockWriter` source of truth preserved
+- `AuditDisplayPresenter` formatting boundary preserved
+- Prototype persistence remains disabled
+- Real persistence not added
+- Checks pass: 128/128
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+
+Safety confirmations:
+- No runtime code changed during QA
+- No Admin UI behavior change
+- No component render path
+- No route/nav wiring
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-9G Stage 2 not started
+- AP-10 not started
+
+Recommended next:
+- AP-9G Stage 2 Admin-only gated render only after explicit approval
+- Separate runtime branch and QA gate required
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
