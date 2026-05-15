@@ -3095,4 +3095,57 @@ Recommended next:
 3. Stage 4 runtime only after all 5 approvals obtained on a separate feature branch
 4. Do not start AP-10
 
+## Audit Admin Comparison Debug Panel Stage 4 Plan Post-Merge QA AP-9G
+
+AP-9G Stage 4 plan post-merge QA completed on `main` (merge commit `2c2e630`, main tip `5f29fac`).
+
+QA confirmed:
+- All 10 Stage 4 planning and QA docs present on main
+- Production-disabled-by-default model confirmed: all 6 flags default `false` in `DEFAULT_AUDIT_PERSISTENCE_CONFIG`
+- Approval gate doc present — 5 owners required
+- Rollout/rollback doc present — 4 stages, ordered procedure
+- Privacy/PDPA requirements present — all forbidden PII classes enumerated
+- No `src/*` changes since Stage 3 runtime merge (`c5ba835`) — runtime unchanged on main
+- Stage 4 runtime not started
+- AP-10 not started
+- Checks: 139/139; build 40/40; routes 5×200 OK; dev log clean
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No AP-9G flag enabled
+- No PII exposure
+- Stage 4 runtime not started
+- AP-10 not started
+
+Recommended next:
+1. Stage 4 runtime only after all 5 approvals obtained on a separate feature branch
+2. Do not start AP-10
+3. Do not activate real or prototype persistence
+
+## AP-9G Section Closure — Admin Audit Comparison Debug Panel (Stage 1 through Stage 4 Plan)
+
+AP-9G lifecycle complete through the Stage 4 planning phase. This entry formally closes the AP-9G planning and runtime-observability section.
+
+AP-9G progression:
+
+- Stage 1 — Hidden component skeleton: `AdminAuditComparisonDebugPanel` scaffolded with role guard and all-false flags; renders null by default. Merged and post-merge QA completed.
+- Stage 2 — Admin-only gated render: Stage 2 disabled/enabled shell added; gating order established (role → enabled → feature flags). Merged and post-merge QA completed.
+- Stage 3 runtime planning — Staging-only aggregate observability plan documented; rollout/rollback/privacy requirements defined. Merged and post-merge QA completed.
+- Stage 3 runtime — Aggregate observability surface implemented (implementation commit `663ab54`): Stage 3 path gated behind `prototypeMetricsEnabled && adminComparisonStagingReviewEnabled` (both default `false`); PII-free surface; "not official audit evidence" note present. Checks expanded to 139/139. Merged (commit `c5ba835`) and post-merge QA completed.
+- Stage 4 plan — Production-disabled-by-default planning: 5 architecture docs defining approval gate (5 owners), rollout/rollback procedure, privacy/PDPA requirements, and QA checklist. Docs-only. Merged (commit `2c2e630`) and post-merge QA completed.
+
+Current state at section closure:
+- `AdminAuditComparisonDebugPanel` present in production bundle; renders null in default config
+- All AP-9G flags default `false` in `DEFAULT_AUDIT_PERSISTENCE_CONFIG`
+- `adminAuditDisplayAdapter` and `sharedMockWriter` are the active Admin Audit Log read paths — unchanged
+- Prototype comparison reads are diagnostic only — not official audit evidence
+- No comparison data is exportable
+- Stage 4 runtime not started
+- AP-10 not started
+
+Required before any further AP-9G work:
+1. Stage 4 runtime requires all 5 approvals (engineering, privacy/PDPA, product/admin owner, QA, rollback owner) on a separate feature branch — see `AUDIT_ADMIN_COMPARISON_DEBUG_PANEL_STAGE4_APPROVAL_GATE_AP9G.md`
+2. AP-10 requires explicit authorization separate from AP-9G
+3. No real or prototype persistence may be activated without a separate documented approval
+
 ## End of AP-9B
