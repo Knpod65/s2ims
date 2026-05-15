@@ -3373,4 +3373,39 @@ Recommended next:
 4. Do not start AP-10C.
 5. Do not start AP-11.
 
+## Audit Production Persistence Approval Collection Post-Merge QA AP-10B
+
+AP-10B approval collection package post-merge QA completed on main.
+
+Confirmed:
+- approval collection package present on main
+- approval collection master doc present
+- owner matrix present
+- sign-off packet checklist present
+- QA summary present
+- merge checkpoint present
+- docs-only scope preserved
+- no runtime/schema/migration/backend/API/SQL work started
+- owners named: 0/7
+- approvals collected: 0/7
+- blocking conditions cleared: 0/9
+- blocking conditions unresolved: 9/9
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 139/139
+- route smoke complete
+- dev log clean
+
+Recommended next:
+1. Name all 7 approval owners.
+2. Assemble sign-off packet.
+3. Distribute evidence pack.
+4. Collect written approvals only.
+5. Update evidence tracker.
+6. Re-run QA validation before any gate decision.
+7. Do not start AP-10C.
+8. Do not start AP-11.
+
 ## End of AP-9B
