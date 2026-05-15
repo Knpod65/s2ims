@@ -2827,6 +2827,37 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 3 Runtime Plan AP-9G
+
+AP-9G Stage 3 runtime implementation plan added as documentation-only.
+
+Plan defines:
+- staging-only runtime review model
+- admin-only gated render model
+- aggregate-only observability model
+- privacy and PII boundary
+- source-of-truth boundary
+- staging feature flag strategy
+- rollout and rollback sequence
+- runtime QA checklist
+
+Runtime unchanged:
+- Stage 3 runtime not started
+- no `src/*`, `scripts/*`, or `package.json` changes
+- no route/nav/export changes
+- Admin Audit Log remains authoritative
+- `adminAuditDisplayAdapter` preserved
+- `sharedMockWriter` preserved
+- prototype persistence not activated
+- real persistence not added
+- AP-10 not started
+
+Recommended next:
+- AP-9G Stage 3 runtime plan QA (docs-only)
+- Stage 3 runtime implementation only after explicit approval and separate implementation branch
+- Do not start AP-10
+- Do not activate real persistence
+
 ## Audit Admin Comparison Debug Panel Stage 3 Plan Post-Merge QA AP-9G
 
 AP-9G Stage 3 planning post-merge QA completed on `main` after merge commit `f6c5e56` and checkpoint `bd3a420`.
