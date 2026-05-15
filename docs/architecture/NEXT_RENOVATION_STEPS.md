@@ -2556,4 +2556,44 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 1 QA AP-9G
+
+AP-9G Stage 1 QA completed on branch `architecture/audit-admin-comparison-debug-hidden-component-ap9g-stage1` (implementation commit `516e44e`).
+
+QA confirmed:
+- `AdminAuditComparisonDebugPanel` exists at `src/components/admin/AdminAuditComparisonDebugPanel.tsx`
+- Component returns null unconditionally — no DOM output for any prop combination
+- Not imported by `src/app/admin/audit-log/page.tsx`
+- Not referenced by any `src/app` route
+- No `getReadComparisonMetrics` or `AuditReadComparisonService` import in component
+- No forbidden PII tokens in component source
+- Admin UI behavior unchanged: `adminAuditDisplayAdapter` and `sharedMockWriter` unmodified
+- Prototype persistence remains disabled
+- Real persistence not added
+- AP-9G Stage 1 checks (128/128) all pass; prior 122 checks unweakened
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log: clean
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI prototype read switch
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-9G Stage 2 not started
+- AP-10 not started
+
+Recommended next:
+- Push branch and open PR after review
+- Merge only after approval
+- AP-9G Stage 1 post-merge QA after merge
+- Stage 2 Admin-only gated render only after explicit approval
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
