@@ -3065,4 +3065,34 @@ Recommended next:
 2. Stage 4 runtime only after all 5 approvals obtained (engineering, privacy/PDPA, product/admin owner, QA, rollback owner)
 3. Do not start AP-10
 
+## Audit Admin Comparison Debug Panel Stage 4 Plan QA AP-9G
+
+AP-9G Stage 4 plan QA completed on branch `architecture/audit-admin-comparison-debug-panel-stage4-plan-ap9g` (plan commit `011435d`).
+
+QA confirmed:
+- All 5 Stage 4 planning documents present and complete
+- Docs-only scope confirmed — no `src/*`, `scripts/*`, or `package.json` changes
+- Production-disabled-by-default model correctly specified: all 6 flags default `false` in `DEFAULT_AUDIT_PERSISTENCE_CONFIG`
+- Approval gate reviewed — 5 owners required (engineering, privacy/PDPA, product/admin owner, QA, rollback owner); all 8 blocking conditions specified
+- Rollout/rollback reviewed — 4-stage rollout sequence, 13-step production flag procedure, 9 rollback triggers, 10 rollback actions, 7 post-rollback validation items
+- Privacy/PDPA safety reviewed — forbidden display classes cover all PII categories; permitted staging surface restricted to aggregate counts and safeMessage only
+- Runtime unchanged — component gating, adapter, writer, flag defaults all confirmed unchanged from Stage 3 runtime merge
+- Stage 4 runtime not started
+- AP-10 not started
+- Checks pass: 139/139
+- Build 40/40; routes 5×200 OK; dev log clean
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No `package.json` changes
+- No AP-9G flag enabled
+- No prototype or real persistence activated
+- No PII exposure
+
+Recommended next:
+1. Merge Stage 4 plan branch into `main` after explicit instruction
+2. Run post-merge QA on `main` after merge
+3. Stage 4 runtime only after all 5 approvals obtained on a separate feature branch
+4. Do not start AP-10
+
 ## End of AP-9B
