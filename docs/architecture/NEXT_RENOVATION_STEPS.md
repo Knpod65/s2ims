@@ -2755,4 +2755,37 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 3 Plan AP-9G
+
+AP-9G Stage 3 documentation-only plan added on branch `architecture/audit-admin-comparison-debug-panel-stage3-plan-ap9g`.
+
+Stage 3 plan defines:
+- staging-only internal review model
+- admin-only reviewer access
+- feature-flag activation sequence
+- safe aggregate metrics display rules
+- privacy review checklist
+- observability and diagnostics rules
+- rollout and rollback sequence
+- QA checklist for future runtime implementation
+
+Runtime unchanged:
+- no `src/*`, `scripts/*`, or `package.json` changes
+- Stage 3 runtime not started
+- Admin UI table behavior unchanged
+- no route added
+- no navigation added
+- no export behavior changed
+- prototype persistence remains disabled
+- real persistence not added
+- `sharedMockWriter` preserved
+- `adminAuditDisplayAdapter` preserved
+- AP-10 not started
+
+Recommended next:
+- AP-9G Stage 3 QA documentation checkpoint
+- Stage 3 runtime only after explicit approval
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
