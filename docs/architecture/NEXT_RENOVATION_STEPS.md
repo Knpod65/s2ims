@@ -3211,4 +3211,43 @@ AP-10 docs-only plan post-merge QA:
   2026-05-15-audit-production-persistence-plan-post-merge-qa-ap10.md
 - AP-10 planning phase (a) complete
 
+## AP-10 Phase (b): Schema Design Authorization
+
+AP-10 Phase (b) schema design authorization started. Branch: architecture/audit-production-persistence-schema-authorization-ap10b.
+
+Docs-only authorization phase:
+- 2 architecture docs created (authorization gate, schema review criteria)
+- No schema files — no SQL, no ORM, no migration files
+- No src/*, scripts/*, or package.json changes
+- No persistence activated
+- AP-9G/AP-10 flags unchanged
+- All 139 audit/notification checks pass
+- Build 40/40; routes 5×200 OK; dev log clean
+
+Phase (b) scope:
+- 7-owner authorization scope defined (per-owner schema-specific criteria)
+- Evidence requirements for Phase (b) completion defined
+- Schema design output requirements defined (criteria, not schema)
+- Phase (b) → Phase (c) decision gate defined (9 blocking conditions)
+- Phase (b) QA gates defined
+
+Authorization conditions to enter schema design:
+- Phase (a) post-merge QA passed (d24742a) — confirmed
+- All 7 written approvals from plan section 11 required before schema design begins
+- DPO written sign-off required (per AUDIT_PRODUCTION_PERSISTENCE_PRIVACY_PDPA_AP10.md section 10)
+- Legal written confirmation of retention/cross-border compliance required
+
+Safety confirmations:
+- No src/* or scripts/* changes
+- No SQL, ORM, or migration files
+- No persistence activated
+- No flags changed
+- No PII exposure
+- AP-10 schema/runtime not started
+
+Recommended next:
+1. Obtain all 7 written approvals (plan section 11) before opening schema design work
+2. DPO and legal sign-off required before any schema design document is produced
+3. Do not open Phase (c) branch until all Phase (b) evidence is assembled
+
 ## End of AP-9B
