@@ -61,6 +61,17 @@ export interface AuditPersistenceConfig {
    * DEFAULT: false
    */
   adminDebugPanelEnabled?: boolean
+  /**
+   * Whether prototype comparison metrics emission is enabled.
+   * These metrics are in-memory and staging-only. DEFAULT: false
+   */
+  prototypeMetricsEnabled?: boolean
+
+  /**
+   * Whether the Admin comparison staging review controls are enabled.
+   * This flag is required (in addition to adminDebugPanelEnabled) for Stage 3 staging-only visibility. DEFAULT: false
+   */
+  adminComparisonStagingReviewEnabled?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -77,6 +88,8 @@ export const DEFAULT_AUDIT_PERSISTENCE_CONFIG: AuditPersistenceConfig = {
   shadowWrites: false,
   readFromPrototype: false,
   adminDebugPanelEnabled: false,
+  prototypeMetricsEnabled: false,
+  adminComparisonStagingReviewEnabled: false,
 } as const
 
 // ---------------------------------------------------------------------------
@@ -120,6 +133,18 @@ export function isAdminDebugPanelEnabled(
   config?: AuditPersistenceConfig,
 ): boolean {
   return (config ?? DEFAULT_AUDIT_PERSISTENCE_CONFIG).adminDebugPanelEnabled === true
+}
+
+export function isPrototypeMetricsEnabled(
+  config?: AuditPersistenceConfig,
+): boolean {
+  return (config ?? DEFAULT_AUDIT_PERSISTENCE_CONFIG).prototypeMetricsEnabled === true
+}
+
+export function isAdminComparisonStagingReviewEnabled(
+  config?: AuditPersistenceConfig,
+): boolean {
+  return (config ?? DEFAULT_AUDIT_PERSISTENCE_CONFIG).adminComparisonStagingReviewEnabled === true
 }
 
 /**

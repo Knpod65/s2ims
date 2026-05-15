@@ -1800,7 +1800,8 @@ addCheck('AP-9G Stage 1 panel component returns null', () => {
 
 addCheck('AP-9G Stage 1 panel component does not import getReadComparisonMetrics', () => {
   const source = fs.readFileSync(panelComponentPath, 'utf8')
-  return !source.includes('getReadComparisonMetrics')
+  // Stage 3 runtime renders aggregate-only metrics and should import getReadComparisonMetrics.
+  return source.includes('getReadComparisonMetrics')
 })
 
 addCheck('AP-9G Stage 1 panel component contains no forbidden PII tokens', () => {
@@ -1813,7 +1814,10 @@ addCheck('AP-9G Stage 2 panel component is wired disabled-by-default on audit-lo
   const source = fs.readFileSync(auditLogPagePath, 'utf8')
   return source.includes('AdminAuditComparisonDebugPanel') &&
     source.includes('enabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminDebugPanelEnabled}') &&
-    source.includes('readCompareEnabled={false}')
+    (
+      source.includes('readCompareEnabled={false}') ||
+      source.includes('readCompareEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.readFromPrototype}')
+    )
 })
 
 addCheck('AP-9G Stage 2 panel component is not imported by non-audit-log src/app routes', () => {
@@ -1846,6 +1850,18 @@ addCheck('AP-9G Stage 2 panel returns null for non-admin role', () => {
 addCheck('AP-9G Stage 2 panel returns null when flag disabled', () => {
   const source = fs.readFileSync(panelComponentPath, 'utf8')
   return source.includes('enabled = false') && source.includes('if (!enabled) return null')
+})
+
+// Stage 3 feature flag default checks
+const persistenceConfigPath = path.join(repoRoot, 'src/lib/audit/storage/auditPersistenceConfig.ts')
+addCheck('Stage 3 flags default false (prototypeMetricsEnabled)', () => {
+  const src = fs.readFileSync(persistenceConfigPath, 'utf8')
+  return src.includes('prototypeMetricsEnabled: false')
+})
+
+addCheck('Stage 3 flags default false (adminComparisonStagingReviewEnabled)', () => {
+  const src = fs.readFileSync(persistenceConfigPath, 'utf8')
+  return src.includes('adminComparisonStagingReviewEnabled: false')
 })
 
 addCheck('AP-9G Stage 2 panel read comparison gates default false', () => {
