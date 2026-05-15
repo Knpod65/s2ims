@@ -69,7 +69,9 @@ export default function AuditLogPage() {
         role="admin"
         enabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminDebugPanelEnabled}
         featureEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.prototypeEnabled}
-        readCompareEnabled={false}
+        readCompareEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.readFromPrototype}
+        prototypeMetricsEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.prototypeMetricsEnabled}
+        stagingReviewEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminComparisonStagingReviewEnabled}
       />
 
       <div className="mb-4 flex items-center gap-3">
