@@ -2998,4 +2998,43 @@ Recommended next:
 - Do not start AP-10
 - Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 3 Runtime Post-Merge QA AP-9G
+
+AP-9G Stage 3 runtime post-merge QA completed on `main` (merge commit `c5ba835`, main tip `26806cf`).
+
+QA confirmed:
+- Stage 3 runtime correctly merged on `main`; merge commit `c5ba835` confirmed in log
+- Stage 3 aggregate observability surface correctly gated: renders null when `adminDebugPanelEnabled: false` (default)
+- Stage 3 path only activates when both `prototypeMetricsEnabled` AND `adminComparisonStagingReviewEnabled` are `true` (both default `false`)
+- Aggregate data surface is PII-free: `createdAt`, `safeMessage`, `status`, counts only — no actorId/targetId/reason/metadata
+- "Not official audit evidence" note present (line 84)
+- Page wiring is read-only from `DEFAULT_AUDIT_PERSISTENCE_CONFIG` — no runtime state mutation
+- `adminAuditDisplayAdapter` active read path preserved (unchanged)
+- `sharedMockWriter` source of truth preserved (unchanged)
+- Prototype persistence remains disabled
+- Real persistence not added
+- Checks pass: 139/139
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log clean
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI read path change
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-9G Stage 4 not started
+- AP-10 not started
+
+Recommended next:
+- Do not start AP-9G Stage 4 without explicit approval and a separate QA gate
+- Do not start AP-10
+- Do not activate real persistence
+- Any enabling of `prototypeMetricsEnabled` or `adminComparisonStagingReviewEnabled` must use a staging-only config override — never a change to `DEFAULT_AUDIT_PERSISTENCE_CONFIG`
+
 ## End of AP-9B
