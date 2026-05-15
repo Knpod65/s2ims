@@ -3190,4 +3190,15 @@ Recommended next:
 2. Phase (c): implementation only after all 7 approvals obtained
 3. Do not activate real persistence without DPO sign-off
 
+AP-10 docs-only plan QA:
+- QA checkpoint passed on branch architecture/audit-production-persistence-plan-ap10
+- All 5 architecture docs verified present and internally consistent (section counts confirmed)
+- Daily report confirmed present
+- NEXT_RENOVATION_STEPS.md AP-10 section confirmed present
+- Build 40/40; tokens 4/4; audit 139/139; routes 5×200 OK; dev log clean
+- No non-docs files changed (diff scope confirmed)
+- QA artifacts created: docs/qa/audit-production-persistence-plan-ap10/README.md,
+  AUDIT_PRODUCTION_PERSISTENCE_PLAN_AP10_QA_SUMMARY.md,
+  2026-05-15-audit-production-persistence-plan-qa-ap10.md
+
 ## End of AP-9B
