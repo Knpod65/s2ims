@@ -3201,4 +3201,14 @@ AP-10 docs-only plan QA:
   AUDIT_PRODUCTION_PERSISTENCE_PLAN_AP10_QA_SUMMARY.md,
   2026-05-15-audit-production-persistence-plan-qa-ap10.md
 
+AP-10 docs-only plan post-merge QA:
+- Post-merge QA checkpoint passed on main (merge commit 3963534, checkpoint 6a73f82)
+- All 11 AP-10 docs confirmed present on main (6 architecture + 1 QA README + 2 daily reports + 1 merge checkpoint + NEXT_RENOVATION_STEPS.md update)
+- src/* unchanged since AP-9G Stage 3 runtime merge (c5ba835) — confirmed
+- Build 40/40; tokens 4/4; audit 139/139; routes 5×200 OK; dev log clean
+- QA artifacts created: docs/qa/audit-production-persistence-plan-post-merge-ap10/README.md,
+  AUDIT_PRODUCTION_PERSISTENCE_PLAN_AP10_POST_MERGE_QA_SUMMARY.md,
+  2026-05-15-audit-production-persistence-plan-post-merge-qa-ap10.md
+- AP-10 planning phase (a) complete
+
 ## End of AP-9B

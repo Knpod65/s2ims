@@ -11,7 +11,7 @@ AP-10 docs-only planning QA confirmed all 5 AP-10 architecture planning document
 | Branch | `architecture/audit-production-persistence-plan-ap10` |
 | Base commit (main tip at branch point) | `53857aa` |
 | Plan commit | `62acbf3` |
-| QA commit | (see git log after commit) |
+| QA commit | `f332209` |
 
 ## What Was Reviewed
 
