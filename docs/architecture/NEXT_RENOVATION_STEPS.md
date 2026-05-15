@@ -3148,4 +3148,57 @@ Required before any further AP-9G work:
 2. AP-10 requires explicit authorization separate from AP-9G
 3. No real or prototype persistence may be activated without a separate documented approval
 
+## AP-10 Production Audit Persistence Plan
+
+AP-10 planning phase started. Branch: `architecture/audit-production-persistence-plan-ap10`.
+
+Docs-only planning confirmed:
+- 5 architecture planning docs created
+- No runtime implementation — documentation only
+- No src/*, scripts/*, or package.json changes
+- No DB schema, ORM, or migration files
+- No persistence activated
+- AP-9G flags and config unchanged
+- All 139 audit/notification checks pass
+- Build 40/40; routes 5×200 OK; dev log clean
+
+AP-10 scope (planning phase):
+- Production audit persistence architecture
+- Evidence-grade audit log requirements
+- Database/storage model (conceptual)
+- Migration strategy (mock → production, phased)
+- Privacy/PDPA model (Thailand PDPA alignment)
+- Retention and deletion policy
+- Access control and Admin evidence review boundary
+- Export/reporting policy
+- Observability and incident response
+- Rollout/rollback plan (5 phases)
+- QA checklist (8 checklists)
+- 7-owner approval gate (engineering, privacy/PDPA, DPO, legal, product/admin owner, QA, rollback owner)
+
+Safety confirmations:
+- No src/* or scripts/* changes
+- No package.json changes
+- No DB/ORM/migration files added
+- No persistence activated
+- AP-9G flags unchanged
+- No PII exposure
+- AP-10 runtime not started
+
+Recommended next:
+1. Phase (b): schema design and DPO/legal review
+2. Phase (c): implementation only after all 7 approvals obtained
+3. Do not activate real persistence without DPO sign-off
+
+AP-10 docs-only plan QA:
+- QA checkpoint passed on branch architecture/audit-production-persistence-plan-ap10
+- All 5 architecture docs verified present and internally consistent (section counts confirmed)
+- Daily report confirmed present
+- NEXT_RENOVATION_STEPS.md AP-10 section confirmed present
+- Build 40/40; tokens 4/4; audit 139/139; routes 5×200 OK; dev log clean
+- No non-docs files changed (diff scope confirmed)
+- QA artifacts created: docs/qa/audit-production-persistence-plan-ap10/README.md,
+  AUDIT_PRODUCTION_PERSISTENCE_PLAN_AP10_QA_SUMMARY.md,
+  2026-05-15-audit-production-persistence-plan-qa-ap10.md
+
 ## End of AP-9B
