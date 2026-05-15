@@ -2959,4 +2959,43 @@ Recommended next:
 3. Do not start AP-10
 4. Do not activate real persistence
 
+## Audit Admin Comparison Debug Panel Stage 3 Runtime QA AP-9G
+
+AP-9G Stage 3 runtime QA completed on branch `architecture/audit-admin-comparison-debug-panel-stage3-runtime-ap9g` (implementation commit `663ab54`).
+
+QA confirmed:
+- Stage 3 aggregate observability surface correctly gated: renders null when `adminDebugPanelEnabled: false` (default)
+- Stage 3 path only activates when both `prototypeMetricsEnabled` AND `adminComparisonStagingReviewEnabled` are `true` (both default `false`)
+- Aggregate data surface is PII-free: `createdAt`, `safeMessage`, `status`, counts only — no actorId/targetId/reason/metadata
+- "Not official evidence" note present in Stage 3 render
+- Page wiring is read-only from `DEFAULT_AUDIT_PERSISTENCE_CONFIG` — no runtime state mutation
+- `adminAuditDisplayAdapter` active read path preserved (unchanged)
+- `sharedMockWriter` source of truth preserved (unchanged)
+- Prototype persistence remains disabled
+- Real persistence not added
+- Checks pass: 139/139
+- Routes pass: all 5 smoke routes 200 OK
+- Dev log clean
+
+Safety confirmations:
+- No `src/*` or `scripts/*` changes during QA
+- No Admin UI read path change
+- No prototype persistence activation
+- No real persistence added
+- No backend/API changes
+- No database migration
+- No mock fixture mutation
+- No Staff callback change
+- No notification behavior change
+- No PII exposure found
+- AP-9G Stage 4 not started
+- AP-10 not started
+- Not pushed
+
+Recommended next:
+- Push branch and open PR only after explicit instruction
+- Stage 4 (production disabled-by-default) only after explicit approval
+- Do not start AP-10
+- Do not activate real persistence
+
 ## End of AP-9B
