@@ -54,6 +54,13 @@ export interface AuditPersistenceConfig {
    * DEFAULT: false
    */
   readFromPrototype: boolean
+
+  /**
+   * Whether the Admin-only audit comparison debug panel may render.
+   * When false, the debug panel renders nothing.
+   * DEFAULT: false
+   */
+  adminDebugPanelEnabled?: boolean
 }
 
 // ---------------------------------------------------------------------------
@@ -69,6 +76,7 @@ export const DEFAULT_AUDIT_PERSISTENCE_CONFIG: AuditPersistenceConfig = {
   prototypeEnabled: false,
   shadowWrites: false,
   readFromPrototype: false,
+  adminDebugPanelEnabled: false,
 } as const
 
 // ---------------------------------------------------------------------------
@@ -103,6 +111,15 @@ export function isReadFromPrototypeEnabled(
   config?: AuditPersistenceConfig,
 ): boolean {
   return (config ?? DEFAULT_AUDIT_PERSISTENCE_CONFIG).readFromPrototype
+}
+
+/**
+ * Returns true if the Admin comparison debug panel may render.
+ */
+export function isAdminDebugPanelEnabled(
+  config?: AuditPersistenceConfig,
+): boolean {
+  return (config ?? DEFAULT_AUDIT_PERSISTENCE_CONFIG).adminDebugPanelEnabled === true
 }
 
 /**
