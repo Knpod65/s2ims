@@ -3645,4 +3645,32 @@ Recommended next:
 5. Do not start AP-10C
 6. Do not start AP-11
 
+## S²IMS Mock Assignment Candidates Plan
+
+Documentation-only design plan created for S²IMS mock workflow candidate sourcing.
+
+Source data:
+- Employee190226.csv (37 operational staff records)
+- Personnel120226.csv (45 faculty/teacher records)
+
+Key design decisions:
+- Employee division/unit → operational workflow roles (scholarship ops, student support, document review, QA, IT, finance check)
+- Personnel department → advisor/faculty reviewer roles (GOV, PA, IA, STB programs)
+- Mobile numbers: do not display
+- Raw student ID: always masked
+- Personal email: hidden by default
+- Mock candidates are suggested workflow assignees only — not official approvals, not verified authorities, not AP-10B governance owners
+
+AP-10B governance approval status: unchanged
+- Candidate owners identified: 0/7
+- Approvals collected: 0/7
+- Blocking conditions active: 9/9
+- AP-10C: Blocked
+- AP-11: Blocked
+
+Recommended next:
+- Review role mapping for completeness
+- Confirm advisor flow option (A or B) with product stakeholder
+- Future src implementation separate task
+
 ## End of AP-9B
