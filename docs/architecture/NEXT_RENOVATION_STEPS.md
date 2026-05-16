@@ -3943,4 +3943,39 @@ Recommended next:
 3. Run post-merge QA.
 4. Runtime implementation only on a later explicitly approved branch.
 
+---
+
+## S²IMS Advisor Candidate Generator Plan Post-Merge QA MC2
+
+Branch: main
+Merge commit: ff7b049
+Checkpoint commit: 1457bdc
+
+Status: Post-merge QA passed. Merged and closed on main.
+
+Post-merge QA confirmed:
+- all MC2 plan docs present on main
+- MC2 remains documentation-only
+- no runtime implementation
+- no auto-assignment
+- no UI/backend/API/persistence changes
+- Personnel source remains advisor/faculty reviewer suggestion source only
+- mobile hidden
+- personal email hidden by default
+- private remark internal only
+- raw student ID masked
+- advisor recommendation does not mean scholarship approval
+- advisor decline does not automatically reject scholarship
+- MC1 boundary preserved
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Consider MC2 runtime implementation only on a separate explicitly approved branch.
+2. Preserve MC1 no-auto-assignment boundary.
+3. Keep advisor candidates as workflow suggestions only.
+4. Do not start AP-10C.
+5. Do not start AP-11.
+
 ## End of AP-9B
