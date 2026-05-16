@@ -3689,4 +3689,18 @@ Confirmed:
 Validation: build 40/40, tokens 4/4, audit 139/139
 Routes: 5×200 OK, dev log clean
 
+### S²IMS Mock Assignment Candidates Plan Post-Merge QA
+
+Post-merge QA passed on main after merge commit d5b9872, checkpoint d3ed5f6.
+
+Confirmed:
+- All 8 merged docs present on main
+- Docs-only scope: b650d14...HEAD | grep -v "^docs/" returns empty
+- Validation baseline preserved: build 40/40, tokens 4/4, audit 139/139
+- Routes: 5×200 OK, dev log clean
+- Privacy rules intact: mobile hidden, student ID masked, personal email hidden by default
+- AP-10B gate status unchanged (0/7 owners, 9/9 blockers, AP-10C blocked, AP-11 blocked)
+
+S²IMS Mock Assignment Candidates Plan is merged and closed on main.
+
 ## End of AP-9B
