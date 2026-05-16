@@ -3703,4 +3703,63 @@ Confirmed:
 
 S²IMS Mock Assignment Candidates Plan is merged and closed on main.
 
+## S²IMS Mock Assignment Candidate Pool Adapter Plan MC1
+
+MC1 planning created for a future adapter that normalizes Employee and
+Personnel records into a safe selectable candidate pool.
+
+Important: this is NOT an automatic assignment engine. Assignment is
+performed manually by a human user on the web.
+
+Current status:
+- docs-only
+- no runtime implementation
+- Employee/Personnel source mapping preserved
+- mobile hidden by default
+- raw student ID masked
+- personal email hidden by default
+- mock candidates are selectable pool items only
+- manual selection on the web is workflow assignment only
+- no auto-assignment in this design
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Review MC1 candidate pool adapter plan.
+2. Run MC1 QA checkpoint.
+3. Only after QA/merge/post-merge QA, consider runtime adapter
+   implementation on a separate branch.
+
+## S²IMS Mock Assignment Candidate Pool Adapter Plan MC1 QA
+
+MC1 QA completed for the documentation-only candidate pool adapter plan.
+
+QA confirmed:
+- docs-only scope
+- no runtime implementation
+- no automatic assignment
+- human/manual assignment will happen on the web
+- Employee source maps to operational candidate pool items
+- Personnel source maps to advisor/faculty reviewer candidate pool items
+- mobile hidden by default
+- raw student ID masked
+- personal email hidden by default
+- remark internal only
+- mock candidates are selectable workflow options only
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. Merge MC1 plan after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future runtime candidate pool adapter must remain manual-selection only.
+
 ## End of AP-9B
