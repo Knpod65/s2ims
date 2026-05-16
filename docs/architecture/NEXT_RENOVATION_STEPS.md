@@ -3795,4 +3795,65 @@ Recommended next:
 4. AP-10B governance remains separate.
 5. AP-10C and AP-11 remain blocked.
 
+---
+
+## S²IMS Mock Assignment Candidate Pool Runtime MC1
+
+Branch: architecture/s2ims-mock-assignment-candidate-pool-runtime-mc1
+
+Status: Package implemented. QA pending.
+
+Implemented 6 pure TypeScript modules in `src/lib/assignment/`:
+- candidatePoolTypes.ts — type definitions
+- candidatePoolPrivacy.ts — privacy utilities and runtime safety guard
+- employeeCandidatePoolAdapter.ts — Employee CSV adapter
+- personnelCandidatePoolAdapter.ts — Personnel CSV adapter
+- candidatePoolBuilder.ts — unified pool builder
+- index.ts — barrel export
+
+Core constraint: `autoAssignedCount: 0` always. System prepares a selectable pool only — human user makes selection on web.
+
+Privacy: mobile FORBIDDEN. personal email FORBIDDEN. remark internal only. cmu_mail → officialEmail (role-gated).
+
+AP-10B unaffected: 0/7 owners, 0/7 approvals, 9/9 blockers. AP-10C blocked. AP-11 blocked.
+
+Validation:
+- npm run build: Compiled successfully, 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. Run QA checkpoint on feature branch before merging.
+2. UI/UX implementation is a separate branch and task.
+3. Runtime must preserve manual-selection-only design — no auto-assignment.
+4. AP-10B governance remains separate.
+5. AP-10C and AP-11 remain blocked.
+
+---
+
+## S²IMS Mock Assignment Candidate Pool Runtime MC1 QA
+
+Branch: architecture/s2ims-mock-assignment-candidate-pool-runtime-mc1
+Package commit: 346241c
+
+Status: QA passed. Ready to merge.
+
+All 6 TypeScript modules confirmed correct. Privacy enforced at type and runtime levels (`assertSafeCandidatePoolItem`). No auto-assignment. `autoAssignedCount: 0` literal confirmed. Manual web selection boundary confirmed. Deduplication confirmed. AP-10B gate unchanged.
+
+Validation:
+- npm run build: Compiled successfully, 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. Merge into main via --no-ff.
+2. Create merge checkpoint.
+3. Run post-merge QA on main.
+4. UI/UX implementation is a separate branch and task.
+5. AP-10C and AP-11 remain blocked.
+
 ## End of AP-9B
