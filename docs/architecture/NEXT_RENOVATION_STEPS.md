@@ -3831,4 +3831,29 @@ Recommended next:
 4. AP-10B governance remains separate.
 5. AP-10C and AP-11 remain blocked.
 
+---
+
+## S²IMS Mock Assignment Candidate Pool Runtime MC1 QA
+
+Branch: architecture/s2ims-mock-assignment-candidate-pool-runtime-mc1
+Package commit: 346241c
+
+Status: QA passed. Ready to merge.
+
+All 6 TypeScript modules confirmed correct. Privacy enforced at type and runtime levels (`assertSafeCandidatePoolItem`). No auto-assignment. `autoAssignedCount: 0` literal confirmed. Manual web selection boundary confirmed. Deduplication confirmed. AP-10B gate unchanged.
+
+Validation:
+- npm run build: Compiled successfully, 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. Merge into main via --no-ff.
+2. Create merge checkpoint.
+3. Run post-merge QA on main.
+4. UI/UX implementation is a separate branch and task.
+5. AP-10C and AP-11 remain blocked.
+
 ## End of AP-9B
