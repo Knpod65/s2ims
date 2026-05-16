@@ -3703,4 +3703,32 @@ Confirmed:
 
 S²IMS Mock Assignment Candidates Plan is merged and closed on main.
 
+## S²IMS Mock Assignment Candidate Pool Adapter Plan MC1
+
+MC1 planning created for a future adapter that normalizes Employee and
+Personnel records into a safe selectable candidate pool.
+
+Important: this is NOT an automatic assignment engine. Assignment is
+performed manually by a human user on the web.
+
+Current status:
+- docs-only
+- no runtime implementation
+- Employee/Personnel source mapping preserved
+- mobile hidden by default
+- raw student ID masked
+- personal email hidden by default
+- mock candidates are selectable pool items only
+- manual selection on the web is workflow assignment only
+- no auto-assignment in this design
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Review MC1 candidate pool adapter plan.
+2. Run MC1 QA checkpoint.
+3. Only after QA/merge/post-merge QA, consider runtime adapter
+   implementation on a separate branch.
+
 ## End of AP-9B
