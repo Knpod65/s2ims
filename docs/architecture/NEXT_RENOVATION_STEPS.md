@@ -3978,4 +3978,67 @@ Recommended next:
 4. Do not start AP-10C.
 5. Do not start AP-11.
 
+---
+
+## S²IMS MC2 Advisor Candidate Generator Runtime — 2026-05-16
+
+Branch: architecture/s2ims-advisor-candidate-generator-runtime-mc2
+Base: main tip 01c619b
+
+### What was done
+
+Implemented the MC2 advisor candidate generator runtime as a single pure TypeScript module `src/lib/assignment/advisorCandidateGenerator.ts`. Updated `src/lib/assignment/index.ts` barrel. Added 16 new audit/event checks to `scripts/check-audit-events.mjs` (total: 155/155). Created summary doc and daily report.
+
+New types:
+- `PersonnelAdvisorSourceRecord` — input record (teacher_id/name/surname required; mobile/email/remark present in input, never on output)
+- `AdvisorCandidatePoolItem` — safe output item (status: "suggested" literal, autoAssigned: false literal, isMock: true literal, no mobile/email/remark)
+- `AdvisorCandidatePoolBuildResult` — build summary (autoAssignedCount: 0 literal)
+
+New functions:
+- `mapAdvisorRoleCategory` — GOV/PA/IA/STB → academic_advisor; fallback → faculty_reviewer
+- `mapAdvisorAssignmentContexts` — GOV/PA/IA/STB → ["advisor_review","scholarship_academic_review"]; fallback → ["advisor_review"]
+- `assertSafeAdvisorCandidate` — throws on forbidden keys (mobile, email, personalEmail, remark, approvalStatus, scholarshipDecision, apOwner, ap10bOwner, approvalEvidence) and wrong literals
+- `normalizeAdvisorCandidate` — maps one record to a safe AdvisorCandidatePoolItem; calls assertSafeAdvisorCandidate before return
+- `buildAdvisorCandidatePool` — maps records with per-record try/catch, deduplicates by candidateId
+
+### Invariants preserved
+
+- autoAssigned: false on every item (literal) — not just summary count
+- autoAssignedCount: 0 (literal) in build result
+- status: "suggested" on every item (literal)
+- officialEmail uses cmu_mail only — record.email never used
+- mobile/email/remark never on output type
+- STB roleLabel: "Academic Advisor (Visiting/External)" — surfaces manual confirmation requirement
+- candidateId format: "advisor:{teacher_id}"
+- assertSafeAdvisorCandidate called in normalizeAdvisorCandidate before return
+- buildAdvisorCandidatePool catches per-record throws, counts unsafeRecordCount, never propagates
+- MC1 boundary: candidatePoolBuilder/employeeCandidatePoolAdapter/personnelCandidatePoolAdapter/candidatePoolTypes/candidatePoolPrivacy all unchanged
+
+### Validation
+
+- npm run build: Compiled successfully — 0 type errors
+- npm run check:tokens: Passed (4/4)
+- npm run check:audit-events: Passed (155/155)
+- /login: 200 OK
+- /admin/audit-log: 200 OK
+- /admin/dashboard: 200 OK
+- /staff/applications/app_001: 200 OK
+- /staff/applications/app_002: 200 OK
+- Dev log: Clean
+
+### AP-10B gate
+
+- 0/7 owners, 0/7 approvals, 9/9 blockers — unchanged
+- AP-10C: Blocked
+- AP-11: Blocked
+
+### Recommended next
+
+1. QA this branch.
+2. Merge via --no-ff, create merge checkpoint, run post-merge QA on main.
+3. Future UI for advisor assignment must use "Suggested" / "Confirm advisor" vocabulary — never auto-assign language.
+4. Future persistence requires a separate explicitly approved branch and task.
+5. Do not start AP-10C.
+6. Do not start AP-11.
+
 ## End of AP-9B

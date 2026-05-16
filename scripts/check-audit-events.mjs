@@ -1905,6 +1905,126 @@ addCheck('AP-9G Stage 2 audit-log export remains on display rows only', () => {
     !source.includes('sourceCount')
 })
 
+// MC2 Advisor Candidate Generator Runtime checks
+const advisorGeneratorModule = loadTsModule(path.join(repoRoot, 'src/lib/assignment/advisorCandidateGenerator.ts'))
+const {
+  normalizeAdvisorCandidate,
+  buildAdvisorCandidatePool,
+  assertSafeAdvisorCandidate,
+  mapAdvisorRoleCategory,
+  mapAdvisorAssignmentContexts,
+} = advisorGeneratorModule
+
+addCheck('MC2 advisor generator module imports cleanly', () => {
+  return typeof advisorGeneratorModule === 'object' && advisorGeneratorModule !== null
+})
+
+addCheck('MC2 normalizeAdvisorCandidate is a function', () => {
+  return typeof normalizeAdvisorCandidate === 'function'
+})
+
+addCheck('MC2 buildAdvisorCandidatePool is a function', () => {
+  return typeof buildAdvisorCandidatePool === 'function'
+})
+
+addCheck('MC2 assertSafeAdvisorCandidate is a function', () => {
+  return typeof assertSafeAdvisorCandidate === 'function'
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: output has no mobile field', () => {
+  const record = { teacher_id: 'T001', name: 'Test', surname: 'User', mobile: '0812345678', department: 'GOV' }
+  const result = normalizeAdvisorCandidate(record)
+  return !('mobile' in result)
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: output has no email field', () => {
+  const record = { teacher_id: 'T002', name: 'Test', surname: 'User', email: 'personal@gmail.com', department: 'PA' }
+  const result = normalizeAdvisorCandidate(record)
+  return !('email' in result)
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: output has no remark field', () => {
+  const record = { teacher_id: 'T003', name: 'Test', surname: 'User', remark: 'internal note', department: 'IA' }
+  const result = normalizeAdvisorCandidate(record)
+  return !('remark' in result)
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: officialEmail uses cmu_mail only', () => {
+  const record = { teacher_id: 'T004', name: 'Test', surname: 'User', cmu_mail: 'user@cmu.ac.th', email: 'other@gmail.com' }
+  const result = normalizeAdvisorCandidate(record)
+  return result.officialEmail === 'user@cmu.ac.th'
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: missing cmu_mail does not fallback to personal email', () => {
+  const record = { teacher_id: 'T005', name: 'Test', surname: 'User', email: 'personal@gmail.com' }
+  const result = normalizeAdvisorCandidate(record)
+  return result.officialEmail === undefined
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: autoAssigned is false', () => {
+  const record = { teacher_id: 'T006', name: 'Test', surname: 'User', department: 'GOV' }
+  const result = normalizeAdvisorCandidate(record)
+  return result.autoAssigned === false
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: status is suggested', () => {
+  const record = { teacher_id: 'T007', name: 'Test', surname: 'User', department: 'PA' }
+  const result = normalizeAdvisorCandidate(record)
+  return result.status === 'suggested'
+})
+
+addCheck('MC2 normalizeAdvisorCandidate: isMock is true', () => {
+  const record = { teacher_id: 'T008', name: 'Test', surname: 'User', department: 'IA' }
+  const result = normalizeAdvisorCandidate(record)
+  return result.isMock === true
+})
+
+addCheck('MC2 buildAdvisorCandidatePool: autoAssignedCount is 0', () => {
+  const records = [
+    { teacher_id: 'T009', name: 'Alpha', surname: 'Advisor', department: 'GOV' },
+    { teacher_id: 'T010', name: 'Beta', surname: 'Reviewer' },
+  ]
+  const result = buildAdvisorCandidatePool(records)
+  return result.autoAssignedCount === 0
+})
+
+addCheck('MC2 assertSafeAdvisorCandidate: throws on mobile field', () => {
+  const candidate = {
+    candidateId: 'advisor:T011', sourceType: 'personnel', sourceId: 'T011',
+    displayName: 'Test User', roleCategory: 'academic_advisor', roleLabel: 'Academic Advisor',
+    unitOrDepartment: 'GOV', assignmentContexts: ['advisor_review'],
+    status: 'suggested', confidence: 'rule_based', isMock: true, autoAssigned: false,
+    privacyLevel: 'safe_display', mobile: '0812345678',
+  }
+  try {
+    assertSafeAdvisorCandidate(candidate)
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC2 assertSafeAdvisorCandidate: throws on wrong autoAssigned', () => {
+  const candidate = {
+    candidateId: 'advisor:T012', sourceType: 'personnel', sourceId: 'T012',
+    displayName: 'Test User', roleCategory: 'faculty_reviewer', roleLabel: 'Faculty Reviewer',
+    unitOrDepartment: 'Unknown', assignmentContexts: ['advisor_review'],
+    status: 'suggested', confidence: 'rule_based', isMock: true, autoAssigned: true,
+    privacyLevel: 'safe_display',
+  }
+  try {
+    assertSafeAdvisorCandidate(candidate)
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC2 index.ts exports advisorCandidateGenerator functions', () => {
+  const indexSource = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/index.ts'), 'utf8')
+  return indexSource.includes('./advisorCandidateGenerator')
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
