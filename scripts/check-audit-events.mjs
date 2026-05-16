@@ -2025,6 +2025,167 @@ addCheck('MC2 index.ts exports advisorCandidateGenerator functions', () => {
   return indexSource.includes('./advisorCandidateGenerator')
 })
 
+// MC3 Staff Candidate Generator Runtime checks
+const staffGeneratorModule = loadTsModule(path.join(repoRoot, 'src/lib/assignment/staffCandidateGenerator.ts'))
+const {
+  normalizeStaffCandidate,
+  buildStaffCandidatePool,
+  assertSafeStaffCandidate,
+  deriveStaffRoleCategory,
+  deriveStaffAssignmentContexts,
+} = staffGeneratorModule
+
+addCheck('MC3 staff generator module imports cleanly', () => {
+  return typeof staffGeneratorModule === 'object' && staffGeneratorModule !== null
+})
+
+addCheck('MC3 normalizeStaffCandidate is a function', () => {
+  return typeof normalizeStaffCandidate === 'function'
+})
+
+addCheck('MC3 buildStaffCandidatePool is a function', () => {
+  return typeof buildStaffCandidatePool === 'function'
+})
+
+addCheck('MC3 assertSafeStaffCandidate is a function', () => {
+  return typeof assertSafeStaffCandidate === 'function'
+})
+
+addCheck('MC3 deriveStaffRoleCategory is a function', () => {
+  return typeof deriveStaffRoleCategory === 'function'
+})
+
+addCheck('MC3 deriveStaffAssignmentContexts is a function', () => {
+  return typeof deriveStaffAssignmentContexts === 'function'
+})
+
+addCheck('MC3 normalizeStaffCandidate: output sourceType is employee', () => {
+  const record = { employee_id: 'E001', name: 'Test', surname: 'Staff', unit: 'Student_Development' }
+  const result = normalizeStaffCandidate(record)
+  return result.sourceType === 'employee'
+})
+
+addCheck('MC3 normalizeStaffCandidate: output status is suggested', () => {
+  const record = { employee_id: 'E002', name: 'Test', surname: 'Staff', unit: 'Education_Services' }
+  const result = normalizeStaffCandidate(record)
+  return result.status === 'suggested'
+})
+
+addCheck('MC3 normalizeStaffCandidate: output autoAssigned is false', () => {
+  const record = { employee_id: 'E003', name: 'Test', surname: 'Staff', unit: 'IT_Communication' }
+  const result = normalizeStaffCandidate(record)
+  return result.autoAssigned === false
+})
+
+addCheck('MC3 normalizeStaffCandidate: output isMock is true', () => {
+  const record = { employee_id: 'E004', name: 'Test', surname: 'Staff', unit: 'Finance_Supplies' }
+  const result = normalizeStaffCandidate(record)
+  return result.isMock === true
+})
+
+addCheck('MC3 buildStaffCandidatePool: autoAssignedCount is 0', () => {
+  const records = [
+    { employee_id: 'E005', name: 'Alpha', surname: 'Staff', unit: 'Student_Development' },
+    { employee_id: 'E006', name: 'Beta', surname: 'Staff' },
+  ]
+  const result = buildStaffCandidatePool(records)
+  return result.autoAssignedCount === 0
+})
+
+addCheck('MC3 normalizeStaffCandidate: officialEmail uses cmu_mail only', () => {
+  const record = { employee_id: 'E007', name: 'Test', surname: 'Staff', cmu_mail: 'test@cmu.ac.th' }
+  const result = normalizeStaffCandidate(record)
+  return result.officialEmail === 'test@cmu.ac.th'
+})
+
+addCheck('MC3 normalizeStaffCandidate: missing cmu_mail yields undefined officialEmail', () => {
+  const record = { employee_id: 'E008', name: 'Test', surname: 'Staff', mobile: '0812345678' }
+  const result = normalizeStaffCandidate(record)
+  return result.officialEmail === undefined
+})
+
+addCheck('MC3 normalizeStaffCandidate: output has no mobile field', () => {
+  const record = { employee_id: 'E009', name: 'Test', surname: 'Staff', mobile: '0812345678' }
+  const result = normalizeStaffCandidate(record)
+  return !('mobile' in result)
+})
+
+addCheck('MC3 normalizeStaffCandidate: output has no phone field', () => {
+  const record = { employee_id: 'E010', name: 'Test', surname: 'Staff' }
+  const result = normalizeStaffCandidate(record)
+  return !('phone' in result)
+})
+
+addCheck('MC3 normalizeStaffCandidate: output has no personal email field', () => {
+  const record = { employee_id: 'E011', name: 'Test', surname: 'Staff' }
+  const result = normalizeStaffCandidate(record)
+  return !('email' in result) && !('personalEmail' in result)
+})
+
+addCheck('MC3 normalizeStaffCandidate: output has no remark field', () => {
+  const record = { employee_id: 'E012', name: 'Test', surname: 'Staff' }
+  const result = normalizeStaffCandidate(record)
+  return !('remark' in result)
+})
+
+addCheck('MC3 assertSafeStaffCandidate: throws on mobile field', () => {
+  const candidate = {
+    candidateId: 'staff:E013', sourceType: 'employee', sourceId: 'E013',
+    displayName: 'Test Staff', roleCategory: 'scholarship_operations', roleLabel: 'Scholarship Operations Staff',
+    unitOrDepartment: 'Unknown', assignmentContexts: ['scholarship_application_review'],
+    status: 'suggested', confidence: 'rule_based', isMock: true, autoAssigned: false,
+    privacyLevel: 'safe_display', mobile: '0812345678',
+  }
+  try {
+    assertSafeStaffCandidate(candidate)
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC3 assertSafeStaffCandidate: throws on wrong autoAssigned', () => {
+  const candidate = {
+    candidateId: 'staff:E014', sourceType: 'employee', sourceId: 'E014',
+    displayName: 'Test Staff', roleCategory: 'admin_support', roleLabel: 'Administrative Support',
+    unitOrDepartment: 'Unknown', assignmentContexts: ['admin_operations'],
+    status: 'suggested', confidence: 'mock', isMock: true, autoAssigned: true,
+    privacyLevel: 'safe_display',
+  }
+  try {
+    assertSafeStaffCandidate(candidate)
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC3 Education_Student_Quality division maps to scholarship_operations', () => {
+  const record = { employee_id: 'E015', name: 'Test', surname: 'Staff', division: 'Education_Student_Quality' }
+  const result = normalizeStaffCandidate(record)
+  return result.roleCategory === 'scholarship_operations' &&
+    result.assignmentContexts.includes('scholarship_application_review')
+})
+
+addCheck('MC3 Student_Development unit maps to student_support with student_follow_up context', () => {
+  const record = { employee_id: 'E016', name: 'Test', surname: 'Staff', unit: 'Student_Development' }
+  const result = normalizeStaffCandidate(record)
+  return result.roleCategory === 'student_support' &&
+    result.assignmentContexts.includes('student_follow_up')
+})
+
+addCheck('MC3 IT_Communication unit maps to system_support with technical_support context', () => {
+  const record = { employee_id: 'E017', name: 'Test', surname: 'Staff', unit: 'IT_Communication' }
+  const result = normalizeStaffCandidate(record)
+  return result.roleCategory === 'system_support' &&
+    result.assignmentContexts.includes('technical_support')
+})
+
+addCheck('MC3 index.ts exports staffCandidateGenerator functions', () => {
+  const indexSource = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/index.ts'), 'utf8')
+  return indexSource.includes('./staffCandidateGenerator')
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)

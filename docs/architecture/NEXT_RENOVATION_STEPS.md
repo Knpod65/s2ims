@@ -4119,4 +4119,108 @@ Recommended next:
 4. Do not start AP-10C.
 5. Do not start AP-11.
 
+---
+
+## S²IMS Staff Candidate Generator Runtime MC3
+
+Branch: architecture/s2ims-staff-candidate-generator-runtime-mc3
+Base: main tip 13ff258
+
+### What was done
+
+Implemented the MC3 staff candidate generator runtime as a single pure TypeScript module `src/lib/assignment/staffCandidateGenerator.ts`. Updated `src/lib/assignment/index.ts` barrel. Added 23 new audit/event checks to `scripts/check-audit-events.mjs` (total: 178/178).
+
+New types:
+- `EmployeeStaffSourceRecord` — input record (employee_id/name/surname required; mobile/ext present in input, never on output)
+- `StaffCandidatePoolItem` — safe output item (status: "suggested" literal, autoAssigned: false literal, isMock: true literal, no mobile/phone/email/remark)
+- `StaffCandidatePoolBuildResult` — build summary (autoAssignedCount: 0 literal)
+
+New functions:
+- `deriveStaffRoleCategory` — unit/division → roleCategory mapping
+- `deriveStaffAssignmentContexts` — unit/division → assignmentContexts array mapping
+- `assertSafeStaffCandidate` — throws on forbidden keys and wrong literals
+- `normalizeStaffCandidate` — maps one record to a safe StaffCandidatePoolItem; calls assertSafeStaffCandidate before return
+- `buildStaffCandidatePool` — maps records with per-record try/catch, deduplicates by candidateId
+
+### Invariants preserved
+
+- autoAssigned: false on every item (literal)
+- autoAssignedCount: 0 (literal) in build result
+- status: "suggested" on every item (literal)
+- officialEmail uses cmu_mail only — mobile never used
+- mobile/phone/email/remark never on output type
+- unitOrDepartment priority: unit → division → department → "Unassigned Unit"
+- assertSafeStaffCandidate called in normalizeStaffCandidate before return
+- buildStaffCandidatePool catches per-record throws, counts unsafeRecordCount, never propagates
+- MC1 boundary: all MC1 modules unchanged
+- MC2 boundary: advisorCandidateGenerator unchanged
+
+### Validation
+
+- npm run build: Compiled successfully — 0 type errors
+- npm run check:tokens: Passed (4/4)
+- npm run check:audit-events: Passed (178/178)
+- /login: 200 OK
+- /admin/audit-log: 200 OK
+- /admin/dashboard: 200 OK
+- /staff/applications/app_001: 200 OK
+- /staff/applications/app_002: 200 OK
+- Dev log: Clean
+
+### AP-10B gate
+
+- 0/7 owners, 0/7 approvals, 9/9 blockers — unchanged
+- AP-10C: Blocked
+- AP-11: Blocked
+
+### Recommended next
+
+1. QA this branch.
+2. Merge via --no-ff, create merge checkpoint, run post-merge QA on main.
+3. Future UI for staff assignment must use "Suggested" / "Confirm staff" vocabulary — never auto-assign language.
+4. Future persistence requires a separate explicitly approved branch and task.
+5. Do not start AP-10C.
+6. Do not start AP-11.
+
+---
+
+## S²IMS Staff Candidate Generator Runtime QA MC3
+
+Branch: architecture/s2ims-staff-candidate-generator-runtime-mc3
+Runtime commit: 17e6d4d
+
+Pre-merge QA completed for MC3 staff candidate generator runtime.
+
+QA confirmed:
+- pure TypeScript module only — no React, no Next.js, no API, no persistence, no network calls
+- no UI/backend/API/persistence changes
+- no auto-assignment
+- status always "suggested" (literal)
+- autoAssigned always false (literal on item)
+- isMock always true (literal)
+- officialEmail uses cmu_mail only — mobile never used
+- mobile not emitted
+- phone not emitted
+- personal email not emitted
+- remark not emitted
+- ext in input but never on output
+- raw student ID not in scope
+- no approval fields
+- no scholarship decision fields
+- assertSafeStaffCandidate guard present and called before return
+- audit checks pass at 178/178 (23 new MC3 checks added)
+- MC1 boundary preserved — all MC1 modules unchanged
+- MC2 boundary preserved — advisorCandidateGenerator unchanged
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge runtime after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future UI integration only on a separate explicitly approved branch.
+5. Do not start AP-10C.
+6. Do not start AP-11.
+
 ## End of AP-9B
