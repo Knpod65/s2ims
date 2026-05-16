@@ -3856,4 +3856,29 @@ Recommended next:
 4. UI/UX implementation is a separate branch and task.
 5. AP-10C and AP-11 remain blocked.
 
+---
+
+## S²IMS Mock Assignment Candidate Pool Runtime MC1 Post-Merge QA
+
+Branch: main
+Merge commit: 767fb8c
+Checkpoint commit: 69f726b
+
+Status: Post-merge QA passed. Merged and closed on main.
+
+All 6 TypeScript modules confirmed on main. Runtime safety boundary confirmed (d82443b...HEAD). Privacy enforced at type and runtime levels. No auto-assignment. AP-10B gate unchanged.
+
+Validation:
+- npm run build: Compiled successfully, 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. UI/UX implementation for candidate pool selection is a separate branch and task.
+2. UI must use "Select" / "Choose from pool" vocabulary — never auto-assign.
+3. AP-10B owner candidate identification remains the only unblocked governance action.
+4. AP-10C and AP-11 remain blocked.
+
 ## End of AP-9B
