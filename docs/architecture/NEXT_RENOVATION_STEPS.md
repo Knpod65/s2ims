@@ -3731,4 +3731,35 @@ Recommended next:
 3. Only after QA/merge/post-merge QA, consider runtime adapter
    implementation on a separate branch.
 
+## S²IMS Mock Assignment Candidate Pool Adapter Plan MC1 QA
+
+MC1 QA completed for the documentation-only candidate pool adapter plan.
+
+QA confirmed:
+- docs-only scope
+- no runtime implementation
+- no automatic assignment
+- human/manual assignment will happen on the web
+- Employee source maps to operational candidate pool items
+- Personnel source maps to advisor/faculty reviewer candidate pool items
+- mobile hidden by default
+- raw student ID masked
+- personal email hidden by default
+- remark internal only
+- mock candidates are selectable workflow options only
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. Merge MC1 plan after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future runtime candidate pool adapter must remain manual-selection only.
+
 ## End of AP-9B
