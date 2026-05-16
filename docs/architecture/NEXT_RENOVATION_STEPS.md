@@ -4079,4 +4079,44 @@ Recommended next:
 5. Do not start AP-10C.
 6. Do not start AP-11.
 
+---
+
+## S²IMS Advisor Candidate Generator Runtime Post-Merge QA MC2
+
+Branch: main
+Runtime commit: 813c6c7
+Merge commit: 8251888
+Merge checkpoint: 238b9fe
+
+Post-merge QA completed on main for MC2 advisor candidate generator runtime.
+
+Post-merge QA confirmed:
+- runtime files present on main
+- pure TypeScript advisor candidate generator module
+- no UI/backend/API/persistence changes
+- no auto-assignment
+- status always "suggested" (literal)
+- autoAssigned always false (literal on item)
+- isMock always true (literal)
+- officialEmail uses cmu_mail only — record.email never used
+- personal email not used
+- mobile not emitted
+- remark not emitted
+- raw student ID not in scope
+- no approval fields
+- no scholarship decision fields
+- assertSafeAdvisorCandidate guard present and confirmed on main
+- audit checks pass at 155/155
+- MC1 boundary preserved — all MC1 modules unchanged
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Consider MC3 staff candidate generator plan or MC2 UI integration only on a separate explicitly approved branch.
+2. Keep advisor candidates as workflow suggestions only.
+3. Preserve no-auto-assignment boundary.
+4. Do not start AP-10C.
+5. Do not start AP-11.
+
 ## End of AP-9B
