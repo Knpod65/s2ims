@@ -3673,4 +3673,20 @@ Recommended next:
 - Confirm advisor flow option (A or B) with product stakeholder
 - Future src implementation separate task
 
+### S²IMS Mock Assignment Candidates Plan QA
+
+QA checkpoint passed at commit 86933b1.
+
+Confirmed:
+- Employee source → operational workflow roles (10 division/unit mappings)
+- Personnel source → advisor/faculty reviewer roles (GOV, PA, IA, STB)
+- Mock candidate disclaimer present in all three architecture docs
+- Advisor flow options A and B documented with statuses
+- Privacy rules: mobile hidden, student ID masked, personal email hidden by default
+- No runtime, schema, SQL, migration, backend/API, or persistence changes
+- AP-10B gate status unchanged (0/7 owners, 9/9 blockers, AP-10C blocked, AP-11 blocked)
+
+Validation: build 40/40, tokens 4/4, audit 139/139
+Routes: 5×200 OK, dev log clean
+
 ## End of AP-9B
