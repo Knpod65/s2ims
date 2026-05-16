@@ -3762,4 +3762,37 @@ Recommended next:
 3. Run post-merge QA.
 4. Future runtime candidate pool adapter must remain manual-selection only.
 
+## S²IMS Mock Assignment Candidate Pool Adapter Plan MC1 Post-Merge QA
+
+MC1 post-merge QA completed on main.
+
+Confirmed:
+- MC1 docs present on main
+- docs-only scope preserved
+- no runtime adapter implemented
+- no automatic assignment
+- human/manual assignment will happen on the web
+- candidate pool items are selectable workflow options only
+- Employee source maps to operational candidate pool items
+- Personnel source maps to advisor/faculty reviewer candidate pool items
+- mobile hidden by default
+- raw student ID masked
+- personal email hidden by default
+- remark internal only
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit 139/139
+- routes 5×200 OK
+- dev log clean
+
+Recommended next:
+1. Consider MC1 runtime candidate pool adapter only on a separate implementation branch.
+2. Runtime implementation must preserve manual web selection only.
+3. No automatic assignment.
+4. AP-10B governance remains separate.
+5. AP-10C and AP-11 remain blocked.
+
 ## End of AP-9B
