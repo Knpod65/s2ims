@@ -4182,4 +4182,45 @@ New functions:
 5. Do not start AP-10C.
 6. Do not start AP-11.
 
+---
+
+## S²IMS Staff Candidate Generator Runtime QA MC3
+
+Branch: architecture/s2ims-staff-candidate-generator-runtime-mc3
+Runtime commit: 17e6d4d
+
+Pre-merge QA completed for MC3 staff candidate generator runtime.
+
+QA confirmed:
+- pure TypeScript module only — no React, no Next.js, no API, no persistence, no network calls
+- no UI/backend/API/persistence changes
+- no auto-assignment
+- status always "suggested" (literal)
+- autoAssigned always false (literal on item)
+- isMock always true (literal)
+- officialEmail uses cmu_mail only — mobile never used
+- mobile not emitted
+- phone not emitted
+- personal email not emitted
+- remark not emitted
+- ext in input but never on output
+- raw student ID not in scope
+- no approval fields
+- no scholarship decision fields
+- assertSafeStaffCandidate guard present and called before return
+- audit checks pass at 178/178 (23 new MC3 checks added)
+- MC1 boundary preserved — all MC1 modules unchanged
+- MC2 boundary preserved — advisorCandidateGenerator unchanged
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge runtime after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future UI integration only on a separate explicitly approved branch.
+5. Do not start AP-10C.
+6. Do not start AP-11.
+
 ## End of AP-9B
