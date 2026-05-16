@@ -3881,4 +3881,66 @@ Recommended next:
 3. AP-10B owner candidate identification remains the only unblocked governance action.
 4. AP-10C and AP-11 remain blocked.
 
+---
+
+## S²IMS Advisor Candidate Generator Plan MC2
+
+Branch: architecture/s2ims-advisor-candidate-generator-plan-mc2
+
+Status: Documentation-only plan created. QA checkpoint pending.
+
+MC2 planning created for a future Personnel-based advisor/faculty reviewer candidate generator.
+
+Current status:
+- docs-only — no runtime implementation
+- no auto-assignment
+- MC1 candidate pool boundary preserved (`src/lib/assignment/` unchanged)
+- Personnel source used only for safe advisor/faculty reviewer suggestions
+- AdvisorCandidate type defined with `autoAssigned: false` (literal) and `isMock: true` (literal)
+- mobile hidden — FORBIDDEN
+- personal email hidden by default — FORBIDDEN
+- private remark internal only — FORBIDDEN
+- raw student ID masked
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC2 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Runtime implementation only on a later explicitly approved branch.
+
+---
+
+## S²IMS Advisor Candidate Generator Plan QA MC2
+
+Branch: architecture/s2ims-advisor-candidate-generator-plan-mc2
+Package commit: 7941887
+
+Status: QA passed. Ready to merge.
+
+QA confirmed:
+- docs-only scope
+- no runtime implementation
+- no auto-assignment
+- Personnel source used only for safe advisor/faculty reviewer suggestions
+- mobile hidden
+- personal email hidden by default
+- private remark internal only
+- raw student ID masked
+- advisor recommendation does not mean scholarship approval
+- advisor decline does not automatically reject scholarship
+- staff/admin review remains separate
+- MC1 boundary preserved
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC2 plan after review.
+2. Run merge checkpoint.
+3. Run post-merge QA.
+4. Runtime implementation only on a later explicitly approved branch.
+
 ## End of AP-9B
