@@ -886,3 +886,43 @@ Recommended next:
 4. Future official audit-write work requires a separate planning/approval phase.
 
 MC20 QA passed on feature branch (commit 434e911). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 341/341, routes 6×200 OK, dev log clean. Merged to main as commit 3683c36. Post-merge QA passed.
+## S²IMS Candidate Review Demo Page Exposure Safety Plan MC21
+
+MC21 planning created for safe exposure and stakeholder review of the MC20 diagnostic preview demo page.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/navigation changes
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- exposure rules documented
+- stakeholder review checklist documented
+- exposure decision matrix documented
+- required/forbidden banner copy documented
+- demo feedback boundaries documented
+- AP-10B separation documented
+- MC1–MC20 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_PAGE_EXPOSURE_SAFETY_PLAN_MC21.md` — Master exposure safety plan
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_STAKEHOLDER_REVIEW_CHECKLIST_MC21.md` — Stakeholder review checklist
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_EXPOSURE_DECISION_MATRIX_MC21.md` — Exposure decision matrix
+
+Recommended next:
+1. Run MC21 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future navigation/exposure changes only on a separate explicitly approved branch.
+
+MC21 QA passed on feature branch (commit b7de109). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 341/341, routes 6×200 OK, dev log clean.
