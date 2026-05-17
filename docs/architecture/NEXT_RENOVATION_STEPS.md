@@ -4335,4 +4335,40 @@ Recommended next:
 5. Do not start AP-10C.
 6. Do not start AP-11.
 
+## S²IMS Combined Candidate Pool Runtime Post-Merge QA MC4
+
+Date: 2026-05-16
+Branch: main
+Runtime commit: 7598f26
+Merge commit: 76d6872
+Merge checkpoint commit: 4400a7b
+
+Post-merge QA completed for MC4 combined candidate pool runtime on main.
+
+Confirmed:
+- All 9 runtime files present on main after merge commit 76d6872
+- Runtime safety boundary: git diff --name-only 7598f26^...7598f26 returns exactly 6 files (2 src, 1 script, 3 docs) — all expected
+- All commits after 7598f26 are docs-only (QA, merge checkpoint, post-merge QA)
+- Build: 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 198/198
+- Routes: /login /admin/audit-log /admin/dashboard /staff/applications/app_001 /staff/applications/app_002 — all 200 OK, dev log clean
+- autoAssigned: false literal preserved on every CombinedCandidatePoolItem — confirmed on main
+- status: "suggested" literal preserved — confirmed on main
+- isMock: true literal preserved — confirmed on main
+- autoAssignedCount: 0 literal in CombinedCandidatePoolBuildResult — confirmed on main
+- officialEmail inherited from MC2/MC3 (cmu_mail only) — confirmed on main
+- mobile/phone/email/remark not on combined output — confirmed on main
+- assertSafeCombinedCandidate guard delegates to MC2/MC3 guards — confirmed on main
+- MC1 boundary preserved: all 5 MC1 modules unchanged
+- MC2 boundary preserved: advisorCandidateGenerator.ts unchanged
+- MC3 boundary preserved: staffCandidateGenerator.ts unchanged
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+MC4 runtime is merged and closed on main.
+Future UI integration is a separate explicitly approved branch and task.
+AP-10B owner candidate identification remains the only unblocked governance action.
+
 ## End of AP-9B
