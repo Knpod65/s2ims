@@ -398,5 +398,41 @@ Recommended next:
 3. Post-merge QA.
 4. Future real audit-write integration only after a separate explicit approval phase.
 
+## S²IMS Candidate Review Audit Preview UX Hardening Plan MC14
+
+MC14 planning created for future UX hardening of the MC13 diagnostic preview UI.
+
+Planning scope:
+- docs-only
+- no source/runtime/UI implementation
+- no audit writes
+- no persistence
+- no backend/API
+- no browser storage
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- copy boundary documented
+- false-flag visibility documented
+- empty state documented
+- accessibility requirements documented
+- MC1–MC13 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_AUDIT_PREVIEW_UX_HARDENING_PLAN_MC14.md` — Master plan with core rules, scope, baseline, labels, copy boundaries, accessibility requirements, QA checklist
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_AUDIT_PREVIEW_COPY_MATRIX_MC14.md` — Copy matrix with required/forbidden labels for all UI areas, bilingual (EN/TH)
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_AUDIT_PREVIEW_UX_CHECKLIST_MC14.md` — Comprehensive 14-section QA verification checklist
+
+Recommended next:
+1. Run MC14 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future UX hardening runtime only on a separate explicitly approved branch.
+
 MC13 QA passed on feature branch (commit 9efdff7). Build 40/40, tokens 4/4, audit checks 278/278, routes 5×200 OK, dev log clean. Merged to main as commit 37d7df6. Post-merge QA passed.
 EOF
