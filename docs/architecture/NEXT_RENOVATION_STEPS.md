@@ -510,4 +510,45 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future official audit-write work requires a separate planning/approval phase.
+## S²IMS Candidate Review Audit Preview UX Hardening Runtime Post-Merge QA MC15
+
+MC15 runtime post-merge QA completed on `main`.
+
+QA confirmed:
+- MC15 runtime hardening present on main
+- MC15 QA checkpoint present on main
+- MC15 merge checkpoint present on main
+- UI copy/layout/accessibility hardening only
+- required diagnostic preview copy present
+- not saved/not submitted/not official evidence labels present
+- not approval/not assignment labels present
+- local UI signal only label present
+- false flags visible as text
+- empty state preserved
+- accessibility marker present
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export
+- no notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC14 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 299/299
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Keep MC15 as diagnostic preview UX hardening only.
+2. Plan any official audit-write work in a separate approved phase.
+3. Do not introduce persistence, export, notification, assignment, approval, AP-10C, or AP-11 work from MC15.
 EOF
