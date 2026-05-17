@@ -4637,4 +4637,46 @@ Recommended next:
 3. Run post-merge QA.
 4. Future action wiring only on a separate explicitly approved branch.
 
+## S²IMS Candidate Selection Action Boundary Plan Post-Merge QA MC7
+
+MC7 post-merge QA completed on `main` after merge commit `976685e` and merge checkpoint `745eb2e`.
+
+QA confirmed:
+- MC7 package present on main
+- MC7 QA checkpoint present on main
+- MC7 merge checkpoint present on main
+- docs-only scope preserved
+- no source/runtime/UI changes
+- no action wiring
+- allowed actions remain workflow review signals only
+- forbidden actions remain documented
+- safe metadata boundary present
+- forbidden metadata boundary present
+- reason boundary present
+- audit-awareness documented but not implemented
+- rollback/manual correction boundary present
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- MC4 boundary preserved
+- MC5 boundary preserved
+- MC6 boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 210/210
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Future action wiring only on a separate explicitly approved branch.
+2. Do not auto-assign candidates.
+3. Do not introduce default selected candidate.
+4. Do not collect approvals.
+5. Do not make scholarship decisions.
+6. Do not start AP-10C.
+7. Do not start AP-11.
+
 ## End of AP-9B
