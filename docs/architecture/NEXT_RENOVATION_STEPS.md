@@ -884,3 +884,5 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future official audit-write work requires a separate planning/approval phase.
+
+MC20 QA passed on feature branch (commit 434e911). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 341/341, routes 6×200 OK, dev log clean.
