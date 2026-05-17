@@ -3502,6 +3502,64 @@ addCheck('MC20 index.ts exports createCandidateReviewDemoCandidates', () => {
   return source.includes('candidateReviewDemoData')
 })
 
+// MC22 Candidate Review Demo Route Navigation Safety checks
+const navConfigPath = 'src/lib/navigation.ts'
+const sidebarPath = 'src/components/layout/Sidebar.tsx'
+const topbarPath = 'src/components/layout/Topbar.tsx'
+const mobileNavPath = 'src/components/layout/MobileBottomNav.tsx'
+function readNavConfig() { return fs.readFileSync(navConfigPath, 'utf-8') }
+function readSidebar() { return fs.readFileSync(sidebarPath, 'utf-8') }
+function readTopbar() { return fs.readFileSync(topbarPath, 'utf-8') }
+function readMobileNav() { return fs.readFileSync(mobileNavPath, 'utf-8') }
+
+addCheck('MC22 navigation config exists', () =>
+  fs.existsSync(navConfigPath) && fs.statSync(navConfigPath).isFile()
+)
+
+addCheck('MC22 demo route not in navigation config', () =>
+  !readNavConfig().includes('candidate-review-demo')
+)
+
+addCheck('MC22 NAV_CONFIG defined in navigation config', () =>
+  readNavConfig().includes('NAV_CONFIG')
+)
+
+addCheck('MC22 MOBILE_NAV defined in navigation config', () =>
+  readNavConfig().includes('MOBILE_NAV')
+)
+
+addCheck('MC22 sidebar exists', () =>
+  fs.existsSync(sidebarPath) && fs.statSync(sidebarPath).isFile()
+)
+
+addCheck('MC22 demo route not in Sidebar', () =>
+  !readSidebar().includes('candidate-review-demo')
+)
+
+addCheck('MC22 Sidebar uses NAV_CONFIG', () =>
+  readSidebar().includes('NAV_CONFIG')
+)
+
+addCheck('MC22 MobileBottomNav exists', () =>
+  fs.existsSync(mobileNavPath) && fs.statSync(mobileNavPath).isFile()
+)
+
+addCheck('MC22 demo route not in MobileBottomNav', () =>
+  !readMobileNav().includes('candidate-review-demo')
+)
+
+addCheck('MC22 MobileBottomNav uses MOBILE_NAV', () =>
+  readMobileNav().includes('MOBILE_NAV')
+)
+
+addCheck('MC22 Topbar exists', () =>
+  fs.existsSync(topbarPath) && fs.statSync(topbarPath).isFile()
+)
+
+addCheck('MC22 demo route not in Topbar', () =>
+  !readTopbar().includes('candidate-review-demo')
+)
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)

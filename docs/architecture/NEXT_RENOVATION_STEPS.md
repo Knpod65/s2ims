@@ -926,3 +926,35 @@ Recommended next:
 4. Future navigation/exposure changes only on a separate explicitly approved branch.
 
 MC21 QA passed on feature branch (commit b7de109). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 341/341, routes 6×200 OK, dev log clean. Merged to main as commit f1599b0. Post-merge QA passed.
+## S²IMS Candidate Review Demo Route Navigation Safety Runtime MC22
+
+MC22 runtime added static safety checks confirming the MC20 diagnostic preview demo route remains hidden from navigation.
+
+Runtime guarantees:
+- no navigation exposure added
+- no route behavior changed
+- no source route/page changed
+- no UI component changed
+- no navigation config changed
+- no sidebar/topbar/mobile nav changed
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- demo route remains isolated/internal
+- 12 navigation safety checks added (341 → 353)
+- MC1–MC21 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC22 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future navigation exposure requires separate approval.
