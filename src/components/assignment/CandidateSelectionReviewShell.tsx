@@ -1,4 +1,10 @@
+import React, { useMemo, useState } from "react";
 import type { CombinedCandidatePoolItem } from "@/lib/assignment";
+import {
+  CandidateReviewState,
+  CandidateReviewAction,
+  createCandidateReviewStateTransition,
+} from "@/lib/assignment/candidateReviewState";
 
 export type CandidateSelectionReviewShellProps = {
   candidates: CombinedCandidatePoolItem[];
@@ -9,6 +15,9 @@ export type CandidateSelectionReviewShellProps = {
 
 const warningCopy =
   "Suggested candidates are workflow suggestions only. Selecting or reviewing a candidate does not approve a scholarship, assign a person, or collect AP-10B approval.";
+
+const runtimeWarningCopy =
+  "Review actions are local UI signals only. They do not assign, approve, reject scholarships, persist data, or collect AP-10B approvals.";
 
 function formatLabel(value: string): string {
   return value
@@ -23,6 +32,13 @@ function formatContextList(contexts: string[]): string {
   return contexts.map(formatLabel).join(", ");
 }
 
+function formatStateLabel(s: CandidateReviewState) {
+  return s
+    .split("_")
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(" ");
+}
+
 export default function CandidateSelectionReviewShell({
   candidates,
   title = "Candidate Selection Review",
@@ -35,6 +51,27 @@ export default function CandidateSelectionReviewShell({
   const staffCount = candidates.filter(
     (candidate) => candidate.poolType === "staff"
   ).length;
+
+  // Local-only review state map: candidateId -> CandidateReviewState
+  const initialMap = useMemo(
+    () =>
+      Object.fromEntries(
+        candidates.map((c) => [c.candidateId, "not_reviewed" as CandidateReviewState])
+      ),
+    [candidates]
+  );
+  const [reviewStateMap, setReviewStateMap] = useState<Record<string, CandidateReviewState>>(initialMap);
+
+  function applyAction(candidateId: string, action: CandidateReviewAction, safeReasonCode?: string) {
+    const prev = reviewStateMap[candidateId] ?? ("not_reviewed" as CandidateReviewState);
+    const transition = createCandidateReviewStateTransition({
+      candidateId,
+      previousState: prev,
+      actionType: action,
+      safeReasonCode,
+    });
+    setReviewStateMap((s) => ({ ...s, [candidateId]: transition.nextState }));
+  }
 
   return (
     <section className="space-y-4 rounded-lg border border-line bg-white p-4 shadow-card">
@@ -51,6 +88,7 @@ export default function CandidateSelectionReviewShell({
           <p className="mt-2 font-semibold">
             No candidate is auto-assigned. Nothing is selected by default.
           </p>
+          <p className="mt-2 text-sm text-amber-900">{runtimeWarningCopy}</p>
         </div>
       </div>
 
@@ -68,52 +106,72 @@ export default function CandidateSelectionReviewShell({
         </div>
       ) : (
         <div className="grid gap-3">
-          {candidates.map((candidate) => (
-            <article
-              key={candidate.candidateId}
-              className="rounded-md border border-line bg-surface-low p-4"
-            >
-              <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-                <div className="min-w-0 space-y-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-role-tint px-2.5 py-1 text-xs font-semibold uppercase text-role">
-                      {candidate.poolType}
-                    </span>
-                    <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-ink-2 ring-1 ring-line">
-                      {formatLabel(candidate.status)}
-                    </span>
-                    <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-ink-2 ring-1 ring-line">
-                      {candidate.isMock ? "Mock suggestion" : "Suggestion"}
-                    </span>
+          {candidates.map((candidate) => {
+            const state = reviewStateMap[candidate.candidateId] ?? "not_reviewed";
+            return (
+              <article
+                key={candidate.candidateId}
+                className="rounded-md border border-line bg-surface-low p-4"
+              >
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="min-w-0 space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-role-tint px-2.5 py-1 text-xs font-semibold uppercase text-role">
+                        {candidate.poolType}
+                      </span>
+                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-ink-2 ring-1 ring-line">
+                        {formatLabel(candidate.status)}
+                      </span>
+                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-ink-2 ring-1 ring-line">
+                        {candidate.isMock ? "Mock suggestion" : "Suggestion"}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h3 className="text-base font-semibold text-ink-1">
+                        {candidate.displayName}
+                      </h3>
+                      <p className="text-sm text-ink-2">{candidate.roleLabel}</p>
+                    </div>
+
+                    <dl className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                      <SafeField label="Role category" value={formatLabel(candidate.roleCategory)} />
+                      <SafeField label="Unit/department" value={candidate.unitOrDepartment} />
+                      <SafeField label="Assignment contexts" value={formatContextList(candidate.assignmentContexts)} />
+                      <SafeField label="Confidence" value={formatLabel(candidate.confidence)} />
+                      <SafeField label="Privacy level" value={formatLabel(candidate.privacyLevel)} />
+                      {candidate.officialEmail ? (
+                        <SafeField label="Official email" value={candidate.officialEmail} />
+                      ) : null}
+                    </dl>
                   </div>
 
-                  <div>
-                    <h3 className="text-base font-semibold text-ink-1">
-                      {candidate.displayName}
-                    </h3>
-                    <p className="text-sm text-ink-2">{candidate.roleLabel}</p>
+                  <div className="flex shrink-0 flex-wrap gap-2 items-center">
+                    <span className="rounded-full bg-surface-low px-2 py-1 text-xs text-ink-3 ring-1 ring-line">
+                      {formatStateLabel(state)}
+                    </span>
+
+                    {readonly ? (
+                      <>
+                        <ShellButton label="Review" readonly={readonly} />
+                        <ShellButton label="Shortlist" readonly={readonly} />
+                        <ShellButton label="Skip" readonly={readonly} />
+                      </>
+                    ) : (
+                      <>
+                        <ActionButton label="Shortlist" onClick={() => applyAction(candidate.candidateId, "shortlist_candidate")} />
+                        <ActionButton label="Skip" onClick={() => applyAction(candidate.candidateId, "skip_candidate")} />
+                        <ActionButton label="Needs more context" onClick={() => applyAction(candidate.candidateId, "request_more_context")} />
+                        <ActionButton label="Reject for assignment" onClick={() => applyAction(candidate.candidateId, "reject_for_assignment")} />
+                        <ActionButton label="Select for review" onClick={() => applyAction(candidate.candidateId, "manually_select_candidate")} />
+                        <ActionButton label="Clear" onClick={() => applyAction(candidate.candidateId, "clear_review_state")} />
+                      </>
+                    )}
                   </div>
-
-                  <dl className="grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
-                    <SafeField label="Role category" value={formatLabel(candidate.roleCategory)} />
-                    <SafeField label="Unit/department" value={candidate.unitOrDepartment} />
-                    <SafeField label="Assignment contexts" value={formatContextList(candidate.assignmentContexts)} />
-                    <SafeField label="Confidence" value={formatLabel(candidate.confidence)} />
-                    <SafeField label="Privacy level" value={formatLabel(candidate.privacyLevel)} />
-                    {candidate.officialEmail ? (
-                      <SafeField label="Official email" value={candidate.officialEmail} />
-                    ) : null}
-                  </dl>
                 </div>
-
-                <div className="flex shrink-0 flex-wrap gap-2">
-                  <ShellButton label="Review" readonly={readonly} />
-                  <ShellButton label="Shortlist" readonly={readonly} />
-                  <ShellButton label="Skip" readonly={readonly} />
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       )}
     </section>
@@ -150,6 +208,18 @@ function ShellButton({ label, readonly }: { label: string; readonly: boolean }) 
           ? "Review actions are disabled in the MC6 UI shell."
           : "Action wiring is outside MC6 scope."
       }
+    >
+      {label}
+    </button>
+  );
+}
+
+function ActionButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink-1 hover:bg-surface-hover"
     >
       {label}
     </button>

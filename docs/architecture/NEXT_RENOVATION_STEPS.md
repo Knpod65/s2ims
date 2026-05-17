@@ -798,6 +798,27 @@ Validation:
 Recommended next phase:
 
 - AP-6C — Wire AP-4 mock audit writer into Staff document reject and replacement request callbacks (mock_only persistence mode only).
+
+## S²IMS Candidate Review Local State Runtime MC8
+
+MC8 runtime implemented a local-only candidate review state for the existing MC6 UI shell.
+
+Runtime guarantees:
+- Local UI state only (React state map of candidateId → review state).
+- No persistence, no backend/API, no audit writes.
+- No auto-assignment and no default selected candidate.
+- No enabled Assign/Approve/Decision actions added.
+- Review actions are UI-only signals: `shortlist`, `skip`, `needs_more_context`, `reject_for_assignment`, `manually_selected`, `clear`.
+- Review actions do not imply approval, assignment, or scholarship decisions.
+- `safeReasonCode` only; no free-text reason capture in MC8.
+- No PII fields introduced; privacy rules preserved.
+- MC1–MC7 boundaries preserved; AP-10B unchanged; AP-10C and AP-11 remain blocked.
+
+Recommended next:
+1. Run MC8 runtime QA checkpoint.
+2. Merge only after QA artifacts and acceptance.
+3. Post-merge QA and merge checkpoint documentation.
+4. Any persistence or audit wiring must be implemented on a separate explicitly approved branch with AP-10B approvals.
 - Do not start AP-6C without explicit approval.
 - Do not claim real persistence in any copy before AP-6C is reviewed.
 
