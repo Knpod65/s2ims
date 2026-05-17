@@ -1172,3 +1172,48 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future backlog UI or persistence requires separate planning and approval.
+
+## S²IMS Candidate Review Demo Feedback Backlog Mock Runtime QA MC27
+
+MC27 runtime QA completed for the pure TypeScript mock feedback backlog builder.
+
+QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 372/372
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- pure TypeScript mock runtime only
+- deterministic backlog IDs
+- nonApprovalConfirmed true required
+- isMock true
+- officialEvidence false
+- approvalCollected false
+- persisted false
+- exported false
+- notified false
+- forbidden PII-like fields rejected
+- forbidden approval/assignment wording rejected
+- no feedback form runtime
+- no backlog UI
+- no route/navigation changes
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC26 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC27 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future backlog UI or persistence requires separate planning and approval.
