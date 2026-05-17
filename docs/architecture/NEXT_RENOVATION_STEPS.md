@@ -1255,3 +1255,38 @@ Recommended next:
 2. Use MC27 output only for safe planning discussions.
 3. Create a separate approved branch for any future backlog UI.
 4. Create a separate approved branch for any future persistence.
+
+## S²IMS Candidate Review Demo Feedback Backlog Demo Data Plan MC28
+
+MC28 created a safe demo data plan for future feedback backlog demo/runtime use.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/navigation changes
+- no backlog data runtime
+- no feedback form runtime
+- no backlog UI
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- safe sample data rules documented
+- sample catalog documented
+- unsafe sample exclusions documented
+- sample QA checklist documented
+- MC1-MC27 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC28 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future demo backlog sample runtime only on a separate explicitly approved branch.
