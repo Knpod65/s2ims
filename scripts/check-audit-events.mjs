@@ -3353,6 +3353,155 @@ addCheck('MC6 shell does not render forbidden field tokens', () => {
   return forbidden.every(token => !source.includes(token))
 })
 
+// MC20 Candidate Review Diagnostic Preview Demo Page Runtime checks
+
+const demoDataHelperPath = 'src/lib/assignment/candidateReviewDemoData.ts'
+const demoPagePath = 'src/app/admin/candidate-review-demo/page.tsx'
+
+function readDemoDataHelper() {
+  return fs.readFileSync(demoDataHelperPath, 'utf-8')
+}
+
+function readDemoPage() {
+  return fs.readFileSync(demoPagePath, 'utf-8')
+}
+
+addCheck('MC20 demo data helper file exists', () => {
+  return fs.existsSync(demoDataHelperPath) && fs.statSync(demoDataHelperPath).isFile()
+})
+
+addCheck('MC20 demo page file exists', () => {
+  return fs.existsSync(demoPagePath) && fs.statSync(demoPagePath).isFile()
+})
+
+addCheck('MC20 demo page imports CandidateSelectionReviewShell', () => {
+  const source = readDemoPage()
+  return source.includes('CandidateSelectionReviewShell')
+})
+
+addCheck('MC20 demo page imports createCandidateReviewDemoCandidates', () => {
+  const source = readDemoPage()
+  return source.includes('createCandidateReviewDemoCandidates')
+})
+
+addCheck('MC20 demo page contains "Demo only"', () => {
+  const source = readDemoPage()
+  return source.includes('Demo only')
+})
+
+addCheck('MC20 demo page contains "Diagnostic preview only"', () => {
+  const source = readDemoPage()
+  return source.includes('Diagnostic preview only')
+})
+
+addCheck('MC20 demo page contains "Uses safe mock data"', () => {
+  const source = readDemoPage()
+  return source.includes('Uses safe mock data')
+})
+
+addCheck('MC20 demo page contains "No real student or personnel data"', () => {
+  const source = readDemoPage()
+  return source.includes('No real student or personnel data')
+})
+
+addCheck('MC20 demo page contains "Not saved"', () => {
+  const source = readDemoPage()
+  return source.includes('Not saved')
+})
+
+addCheck('MC20 demo page contains "Not submitted"', () => {
+  const source = readDemoPage()
+  return source.includes('Not submitted')
+})
+
+addCheck('MC20 demo page contains "Not official evidence"', () => {
+  const source = readDemoPage()
+  return source.includes('Not official evidence')
+})
+
+addCheck('MC20 demo page contains "Not an approval"', () => {
+  const source = readDemoPage()
+  return source.includes('Not an approval')
+})
+
+addCheck('MC20 demo page contains "Not an assignment"', () => {
+  const source = readDemoPage()
+  return source.includes('Not an assignment')
+})
+
+addCheck('MC20 demo page contains "Not a scholarship decision"', () => {
+  const source = readDemoPage()
+  return source.includes('Not a scholarship decision')
+})
+
+addCheck('MC20 demo page passes readonly prop to shell', () => {
+  const source = readDemoPage()
+  return source.includes('readonly={true}') || source.includes('readonly=')
+})
+
+addCheck('MC20 demo page has no fetch or API call', () => {
+  const source = readDemoPage()
+  const forbidden = ['fetch(', 'axios(', 'XMLHttpRequest', '/api/']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC20 demo page has no browser storage', () => {
+  const source = readDemoPage()
+  return !source.includes('localStorage') &&
+    !source.includes('sessionStorage') &&
+    !source.includes('IndexedDB')
+})
+
+addCheck('MC20 demo page has no audit write calls', () => {
+  const source = readDemoPage()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditRepository', 'writeAudit', 'recordAudit']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC20 demo page has no PII field tokens', () => {
+  const source = readDemoPage()
+  const forbidden = ['email', 'phone', 'mobile', 'nationalId', 'bankAccount', 'privateEmail', 'personalEmail']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC20 demo page has no enabled official action buttons', () => {
+  const source = readDemoPage()
+  const forbidden = ['>Assign<', '>Approve<', '>Decision<', '>Submit<', '>Save<', '>Record<']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC20 demo data helper has no fetch or API call', () => {
+  const source = readDemoDataHelper()
+  const forbidden = ['fetch(', 'axios(', 'XMLHttpRequest', '/api/']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC20 demo data helper has no browser storage', () => {
+  const source = readDemoDataHelper()
+  return !source.includes('localStorage') &&
+    !source.includes('sessionStorage') &&
+    !source.includes('IndexedDB')
+})
+
+addCheck('MC20 demo data helper has no PII field tokens', () => {
+  const source = readDemoDataHelper()
+  const forbidden = ['email', 'phone', 'mobile', 'nationalId', 'bankAccount', 'privateEmail', 'personalEmail']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC20 demo data helper candidateIds use demo- prefix', () => {
+  const source = readDemoDataHelper()
+  return source.includes('"demo-advisor-001"') &&
+    source.includes('"demo-advisor-002"') &&
+    source.includes('"demo-staff-001"') &&
+    source.includes('"demo-staff-002"')
+})
+
+addCheck('MC20 index.ts exports createCandidateReviewDemoCandidates', () => {
+  const source = fs.readFileSync('src/lib/assignment/index.ts', 'utf-8')
+  return source.includes('candidateReviewDemoData')
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)

@@ -848,3 +848,41 @@ Recommended next:
 4. Future demo page runtime only on a separate explicitly approved branch.
 
 MC19 QA passed on feature branch (commit d6697bb). Docs-only scope confirmed. Build 40/40, tokens 4/4, audit checks 316/316, routes 5×200 OK, dev log clean. Merged to main as commit 420555d. Post-merge QA passed.
+## S²IMS Candidate Review Diagnostic Preview Demo Page Runtime MC20
+
+MC20 runtime implemented the MC19-planned read-only diagnostic preview demo page.
+
+Runtime guarantees:
+- isolated admin demo route only (`/admin/candidate-review-demo`)
+- readonly shell rendering only
+- safe mock data only
+- no audit writes
+- no persistence
+- no backend/API
+- no browser storage
+- no export
+- no notification
+- no official evidence
+- no PII
+- no real student or personnel data
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- all candidateIds use "demo-" prefix
+- isMock: true on all demo candidates
+- autoAssigned: false on all demo candidates
+- privacyLevel: "safe_display" on all demo candidates
+- "use client" added to shell (non-behavioral, required for app router)
+- MC1–MC19 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC20 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future official audit-write work requires a separate planning/approval phase.
+
+MC20 QA passed on feature branch (commit 434e911). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 341/341, routes 6×200 OK, dev log clean.
