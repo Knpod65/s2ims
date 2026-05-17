@@ -238,6 +238,14 @@ Completed: Staff `onReject` and `onRequestReplacement` wired to `sharedMockAudit
 
 ### AP-7 — Audit Persistence Strategy Plan
 
+### MC29 — Candidate Review Demo Feedback Backlog Samples
+
+Completed: MC29 merged to `main` (implementation `402b244`, QA `2635643`, merge `cff8f92`).
+
+Summary: Added a documentation-scoped pure TypeScript sample runtime providing safe demo feedback backlog items for planning and QA. Post-merge validations: build 41/41, tokens 4/4, audit checks 387/387, route smoke 6×200 OK. No audit writes, persistence, API, UI, or export changes were introduced.
+
+Follow-up: None required; retain MC29 docs in `docs/qa` and daily reports for reference.
+
 Completed: 7-stage migration sequence defined (Stage 0 mock-only → Stage 7 real persistence + reason validation). Repository abstraction, writer interface, Laravel/PHP mapping, and QA checklist defined.
 
 ### AP-8 — Audit Repository/Service Contract
