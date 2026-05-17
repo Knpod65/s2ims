@@ -732,4 +732,41 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future official audit-write work requires a separate planning/approval phase.
-EOF
+## S²IMS Candidate Review Audit Preview Interaction Polish Runtime Post-Merge QA MC17
+
+MC17 runtime post-merge QA completed on `main`.
+
+QA confirmed:
+- MC17 runtime present on main
+- MC17 QA checkpoint present on main
+- MC17 merge checkpoint present on main
+- UI interaction polish only
+- clear resets local review state to not_reviewed
+- clear removes diagnostic preview
+- latest preview only
+- previous and next review state visible
+- accessibility markers present
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC16 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 316/316
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Keep MC17 as diagnostic preview interaction polish only.
+2. Plan any official audit-write work in a separate approved phase.
+3. Do not introduce persistence, export, notification, assignment, approval, AP-10C, or AP-11 work from MC17.
