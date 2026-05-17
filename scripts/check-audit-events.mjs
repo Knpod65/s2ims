@@ -2330,6 +2330,44 @@ addCheck('MC4 index.ts exports combinedCandidatePool functions', () => {
   return indexSource.includes('./combinedCandidatePool')
 })
 
+// MC8 Candidate Review Local State Runtime checks
+addCheck('MC8 candidateReviewState file exists', () => {
+  const p = path.join(repoRoot, 'src/lib/assignment/candidateReviewState.ts')
+  return fs.existsSync(p) && fs.statSync(p).isFile()
+})
+
+addCheck('MC8 types and helpers present in candidateReviewState', () => {
+  const src = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewState.ts'), 'utf8')
+  const required = ['CandidateReviewState', 'CandidateReviewAction', 'CandidateReviewStateTransition', 'getNextCandidateReviewState', 'createCandidateReviewStateTransition', 'assertSafeCandidateReviewTransition']
+  return required.every(token => src.includes(token))
+})
+
+addCheck('MC8 forbidden action tokens absent', () => {
+  const forbidden = ['auto_assign_candidate', 'assign_candidate', 'approve_candidate', 'approve_scholarship', 'reject_scholarship', 'collect_ap10b_approval']
+  const shell = readCandidateSelectionShell()
+  const assignmentIndex = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/index.ts'), 'utf8')
+  const assignmentFiles = fs.readdirSync(path.join(repoRoot, 'src/lib/assignment')).filter(f => (f.endsWith('.ts') || f.endsWith('.tsx')) && f !== 'candidateReviewState.ts')
+  const assignmentSrc = assignmentFiles.map(f => fs.readFileSync(path.join(repoRoot, 'src/lib/assignment', f), 'utf8')).join('\n')
+  // Allow the canonical forbidden list to be declared in candidateReviewState.ts only.
+  return forbidden.every(token => !shell.includes(token) && !assignmentIndex.includes(token) && !assignmentSrc.includes(token))
+})
+
+addCheck('MC8 CandidateSelectionReviewShell uses local state only (no storage/session/indexeddb/fetch/audit)', () => {
+  const src = readCandidateSelectionShell()
+  const forbidden = ['localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB', 'fetch(', 'axios(', 'writeAudit', 'auditService', 'recordAudit', 'buildAuditEvent', 'sharedMockWriter']
+  return forbidden.every(t => !src.includes(t))
+})
+
+addCheck('MC8 Shell warning copy present', () => {
+  const src = readCandidateSelectionShell()
+  return src.includes('Review actions are local UI signals only. They do not assign, approve, reject scholarships, persist data, or collect AP-10B approvals.')
+})
+
+addCheck('MC8 initial state not_reviewed present in shell', () => {
+  const src = readCandidateSelectionShell()
+  return src.includes('"not_reviewed"') || src.includes('not_reviewed')
+})
+
 // MC6 Candidate Selection UI Shell checks
 const candidateSelectionShellPath = path.join(repoRoot, 'src/components/assignment/CandidateSelectionReviewShell.tsx')
 const candidateSelectionIndexPath = path.join(repoRoot, 'src/components/assignment/index.ts')

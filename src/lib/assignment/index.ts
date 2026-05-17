@@ -6,3 +6,4 @@ export * from "./candidatePoolBuilder";
 export * from "./advisorCandidateGenerator";
 export * from "./staffCandidateGenerator";
 export * from "./combinedCandidatePool";
+export * from "./candidateReviewState";
