@@ -958,3 +958,5 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future navigation exposure requires separate approval.
+
+MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean.
