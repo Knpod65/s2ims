@@ -4371,4 +4371,59 @@ MC4 runtime is merged and closed on main.
 Future UI integration is a separate explicitly approved branch and task.
 AP-10B owner candidate identification remains the only unblocked governance action.
 
+## S²IMS Candidate Selection Review Plan MC5
+
+MC5 planning created for a future manual candidate selection/review experience on top of MC4 combined candidate pool.
+
+Current status:
+- docs-only
+- no UI implementation
+- no runtime modification
+- no auto-assignment
+- no default selected candidate
+- candidate review states are UI planning states only
+- selected does not mean approved
+- advisor recommendation does not mean scholarship approval
+- staff selection does not mean scholarship decision
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- MC4 boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC5 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future UI implementation only on a separate explicitly approved branch.
+
+## S²IMS Candidate Selection Review Plan QA MC5
+
+MC5 QA completed for future manual candidate selection/review planning.
+
+QA confirmed:
+- docs-only scope
+- no UI implementation
+- no runtime modification
+- no auto-assignment
+- no default selected candidate
+- selected does not mean approved
+- advisor recommendation does not mean scholarship approval
+- staff selection does not mean scholarship decision
+- override reason boundary documented
+- filtering/sorting safety documented
+- audit-awareness documented but not implemented
+- MC1/MC2/MC3/MC4 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC5 plan after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future UI implementation only on a separate explicitly approved branch.
+
 ## End of AP-9B
