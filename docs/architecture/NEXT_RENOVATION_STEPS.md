@@ -770,3 +770,41 @@ Recommended next:
 1. Keep MC17 as diagnostic preview interaction polish only.
 2. Plan any official audit-write work in a separate approved phase.
 3. Do not introduce persistence, export, notification, assignment, approval, AP-10C, or AP-11 work from MC17.
+## S²IMS Candidate Review Diagnostic Preview Readiness Closure MC18
+
+MC18 documentation-only closure package for the MC13–MC17 diagnostic preview lifecycle.
+
+Closure scope:
+- docs-only
+- no source/runtime/UI changes
+- no audit writes
+- no persistence
+- no backend/API
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC13–MC17 lifecycle consolidated
+- what is complete documented
+- what is not implemented documented
+- safety boundary documented
+- AP-10B separation confirmed
+- allowed future options documented
+- blocked future work documented
+- closure verdict present
+- MC1–MC17 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Closure documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DIAGNOSTIC_PREVIEW_READINESS_CLOSURE_MC18.md` — Master closure doc
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DIAGNOSTIC_PREVIEW_DOC_INDEX_MC18.md` — Consolidated doc index
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DIAGNOSTIC_PREVIEW_CLOSURE_CHECKLIST_MC18.md` — Closure checklist
+
+Recommended next:
+1. Run MC18 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future official audit-write work requires a separate planning/approval phase.
