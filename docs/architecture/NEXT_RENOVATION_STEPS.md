@@ -263,3 +263,37 @@ Completed and merged to main: Local-only React state for candidate review. No pe
 ### MC9 — Candidate Review Audit Event Plan (this document)
 
 Completed: Master plan, metadata contract, and safety checklist created for future audit-write design. Docs-only branch; no runtime changes.
+
+---
+
+## S²IMS Candidate Review Audit Event Builder Runtime MC10
+
+MC10 runtime implemented a pure TypeScript diagnostic audit-event builder for candidate review transitions.
+
+Runtime guarantees:
+- event objects only
+- no audit writes
+- no persistence
+- no backend/API
+- no sharedMockWriter call
+- no AuditService call
+- no repository call
+- diagnosticOnly true
+- officialEvidence false
+- source candidate_review_local_state
+- safe metadata only
+- no PII
+- no assignment event
+- no approval event
+- no scholarship decision event
+- no AP-10B governance event
+- MC1–MC9 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC10 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future audit-write wiring only on a separate explicitly approved branch.
