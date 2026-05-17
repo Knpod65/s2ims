@@ -4223,4 +4223,39 @@ Recommended next:
 5. Do not start AP-10C.
 6. Do not start AP-11.
 
+## MC3 Staff Candidate Generator Runtime Post-Merge QA
+
+Date: 2026-05-16
+Branch: main
+Runtime commit: 17e6d4d
+Merge commit: f4e583b
+Merge checkpoint commit: 1fe619f
+
+Post-merge QA completed for MC3 staff candidate generator runtime on main.
+
+Confirmed:
+- All 9 runtime files present on main after merge commit f4e583b
+- Runtime safety boundary: git diff --name-only 17e6d4d^...17e6d4d returns exactly 6 files (2 src, 1 script, 3 docs) — all expected
+- All commits after 17e6d4d are docs-only (QA, merge checkpoint, post-merge QA)
+- Build: 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 178/178
+- Routes: /login /admin/audit-log /admin/dashboard /staff/applications/app_001 /staff/applications/app_002 — all 200 OK, dev log clean
+- autoAssigned: false literal on StaffCandidatePoolItem — confirmed on main
+- status: "suggested" literal — confirmed on main
+- isMock: true literal — confirmed on main
+- autoAssignedCount: 0 literal in StaffCandidatePoolBuildResult — confirmed on main
+- officialEmail uses normalizeOfficialEmail(record.cmu_mail) only — confirmed on main
+- mobile/phone/email/remark not on output type — confirmed on main
+- assertSafeStaffCandidate guard throws on 17 forbidden keys and wrong literals — confirmed on main
+- MC1 boundary preserved: all 5 MC1 modules unchanged
+- MC2 boundary preserved: advisorCandidateGenerator.ts unchanged
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+MC3 runtime is merged and closed on main.
+Future UI integration is a separate explicitly approved branch and task.
+AP-10B owner candidate identification remains the only unblocked governance action.
+
 ## End of AP-9B
