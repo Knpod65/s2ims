@@ -9,3 +9,4 @@ export * from "./combinedCandidatePool";
 export * from "./candidateReviewState";
 export * from "./candidateReviewAuditEvent";
 export * from "./candidateReviewAuditNoopWiring";
+export * from "./candidateReviewDemoData";

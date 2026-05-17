@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useMemo, useState } from "react";
 import type { CombinedCandidatePoolItem } from "@/lib/assignment";
 import {
