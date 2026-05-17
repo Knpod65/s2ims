@@ -3502,6 +3502,278 @@ addCheck('MC20 index.ts exports createCandidateReviewDemoCandidates', () => {
   return source.includes('candidateReviewDemoData')
 })
 
+// MC27 Candidate Review Demo Feedback Backlog Mock Runtime checks
+const demoFeedbackBacklogPath = path.join(repoRoot, 'src/lib/assignment/demoFeedbackBacklog.ts')
+function readDemoFeedbackBacklog() { return fs.readFileSync(demoFeedbackBacklogPath, 'utf-8') }
+
+addCheck('MC27 demoFeedbackBacklog.ts exists', () =>
+  fs.existsSync(demoFeedbackBacklogPath) && fs.statSync(demoFeedbackBacklogPath).isFile()
+)
+
+const demoFeedbackBacklogModule = loadTsModule(demoFeedbackBacklogPath)
+
+addCheck('MC27 required feedback backlog types exist', () => {
+  const source = readDemoFeedbackBacklog()
+  return source.includes('export type DemoFeedbackCategory') &&
+    source.includes('export type DemoFeedbackPriority') &&
+    source.includes('export type DemoFeedbackBacklogStatus') &&
+    source.includes('export type DemoFeedbackProposedBranchType') &&
+    source.includes('export type DemoFeedbackBacklogInput') &&
+    source.includes('export type DemoFeedbackBacklogItem')
+})
+
+addCheck('MC27 required feedback backlog functions exist', () => {
+  return typeof demoFeedbackBacklogModule.createDemoFeedbackBacklogItem === 'function' &&
+    typeof demoFeedbackBacklogModule.createDemoFeedbackBacklogItems === 'function' &&
+    typeof demoFeedbackBacklogModule.classifyDemoFeedbackPriority === 'function' &&
+    typeof demoFeedbackBacklogModule.deriveDemoFeedbackBacklogStatus === 'function' &&
+    typeof demoFeedbackBacklogModule.assertSafeDemoFeedbackBacklogItem === 'function' &&
+    typeof demoFeedbackBacklogModule.assertSafeDemoFeedbackBacklogInput === 'function' &&
+    typeof demoFeedbackBacklogModule.summarizeDemoFeedbackBacklogItem === 'function'
+})
+
+addCheck('MC27 safe input creates mock non-approval backlog item', () => {
+  const item = demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+    sourceSessionId: 'demo-session-001',
+    stakeholderGroup: 'internal-review-group',
+    category: 'copy_content',
+    summary: 'Clarify local review signal language for demo participants.',
+    safetyConcern: false,
+    proposedBranchType: 'copy_polish_runtime',
+    ap10bImpact: 'none',
+    nonApprovalConfirmed: true,
+  })
+
+  return item.backlogId === 'demo-feedback-backlog-demo-session-001-copy_content' &&
+    item.priority === 'P1_misleading_copy_or_workflow' &&
+    item.status === 'candidate' &&
+    item.nonApprovalConfirmed === true &&
+    item.isMock === true &&
+    item.officialEvidence === false &&
+    item.approvalCollected === false &&
+    item.persisted === false &&
+    item.exported === false &&
+    item.notified === false
+})
+
+addCheck('MC27 array builder produces deterministic indexed IDs', () => {
+  const items = demoFeedbackBacklogModule.createDemoFeedbackBacklogItems([
+    {
+      sourceSessionId: 'demo-session-001',
+      stakeholderGroup: 'internal-review-group',
+      category: 'ux_clarity',
+      summary: 'Improve demo hierarchy for facilitator review.',
+      safetyConcern: false,
+      proposedBranchType: 'demo_layout_polish_runtime',
+      ap10bImpact: 'none',
+      nonApprovalConfirmed: true,
+    },
+    {
+      sourceSessionId: 'demo-session-001',
+      stakeholderGroup: 'internal-review-group',
+      category: 'training_readiness',
+      summary: 'Add facilitator notes for walkthrough setup.',
+      safetyConcern: false,
+      proposedBranchType: 'training_doc_update',
+      ap10bImpact: 'none',
+      nonApprovalConfirmed: true,
+    },
+  ])
+
+  return items[0].backlogId.endsWith('-1') && items[1].backlogId.endsWith('-2')
+})
+
+addCheck('MC27 governance-sensitive input derives governance-sensitive status', () => {
+  const item = demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+    sourceSessionId: 'governance-review',
+    stakeholderGroup: 'internal-review-group',
+    category: 'future_enhancement',
+    summary: 'Escalate governance-sensitive planning concern.',
+    safetyConcern: false,
+    proposedBranchType: 'no_branch',
+    ap10bImpact: 'governance_sensitive',
+    nonApprovalConfirmed: true,
+  })
+
+  return item.priority === 'out_of_scope_governance' &&
+    item.status === 'governance_sensitive'
+})
+
+addCheck('MC27 out_of_scope_governance category derives out-of-scope status', () => {
+  const item = demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+    sourceSessionId: 'out-of-scope-review',
+    stakeholderGroup: 'internal-review-group',
+    category: 'out_of_scope_governance',
+    summary: 'Route governance-sensitive request outside product backlog.',
+    safetyConcern: false,
+    proposedBranchType: 'no_branch',
+    ap10bImpact: 'none',
+    nonApprovalConfirmed: true,
+  })
+
+  return item.priority === 'out_of_scope_governance' &&
+    item.status === 'out_of_scope'
+})
+
+addCheck('MC27 forbidden summary wording is rejected', () => {
+  try {
+    demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+      sourceSessionId: 'unsafe-summary',
+      stakeholderGroup: 'internal-review-group',
+      category: 'copy_content',
+      summary: 'Stakeholder approved the demo for production.',
+      safetyConcern: false,
+      proposedBranchType: 'copy_polish_docs',
+      ap10bImpact: 'none',
+      nonApprovalConfirmed: true,
+    })
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC27 forbidden PII-like input field is rejected', () => {
+  try {
+    demoFeedbackBacklogModule.assertSafeDemoFeedbackBacklogInput({
+      sourceSessionId: 'unsafe-field',
+      stakeholderGroup: 'internal-review-group',
+      category: 'ux_clarity',
+      summary: 'Clarify visual grouping for review session.',
+      safetyConcern: false,
+      proposedBranchType: 'demo_layout_polish_runtime',
+      ap10bImpact: 'none',
+      nonApprovalConfirmed: true,
+      phone: 'unsafe',
+    })
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC27 long summary is rejected', () => {
+  try {
+    demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+      sourceSessionId: 'long-summary',
+      stakeholderGroup: 'internal-review-group',
+      category: 'ux_clarity',
+      summary: 'x'.repeat(241),
+      safetyConcern: false,
+      proposedBranchType: 'demo_layout_polish_runtime',
+      ap10bImpact: 'none',
+      nonApprovalConfirmed: true,
+    })
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC27 nonApprovalConfirmed false is rejected', () => {
+  try {
+    demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+      sourceSessionId: 'unsafe-non-approval',
+      stakeholderGroup: 'internal-review-group',
+      category: 'ux_clarity',
+      summary: 'Clarify visual grouping for review session.',
+      safetyConcern: false,
+      proposedBranchType: 'demo_layout_polish_runtime',
+      ap10bImpact: 'none',
+      nonApprovalConfirmed: false,
+    })
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC27 summary helper returns planning-only safe summary', () => {
+  const item = demoFeedbackBacklogModule.createDemoFeedbackBacklogItem({
+    sourceSessionId: 'summary-helper',
+    stakeholderGroup: 'internal-review-group',
+    category: 'privacy_pdpa',
+    summary: 'Clarify safe mock privacy wording for the demo.',
+    safetyConcern: true,
+    proposedBranchType: 'privacy_wording_clarification',
+    ap10bImpact: 'none',
+    nonApprovalConfirmed: true,
+  })
+  const summary = demoFeedbackBacklogModule.summarizeDemoFeedbackBacklogItem(item)
+
+  return summary.planningOnly === true &&
+    summary.nonApprovalConfirmed === true &&
+    summary.officialEvidence === false &&
+    summary.approvalCollected === false &&
+    !('summary' in summary)
+})
+
+addCheck('MC27 source includes required fixed false safety flags', () => {
+  const source = readDemoFeedbackBacklog()
+  return source.includes('nonApprovalConfirmed: true') &&
+    source.includes('isMock: true') &&
+    source.includes('officialEvidence: false') &&
+    source.includes('approvalCollected: false') &&
+    source.includes('persisted: false') &&
+    source.includes('exported: false') &&
+    source.includes('notified: false')
+})
+
+addCheck('MC27 source guards forbidden feedback wording', () => {
+  const source = readDemoFeedbackBacklog()
+  return source.includes('forbiddenSummaryPatterns') &&
+    source.includes('official approval') &&
+    source.includes('AP-10B approved') &&
+    source.includes('authority verified') &&
+    source.includes('student ID') &&
+    source.includes('teacher ID')
+})
+
+addCheck('MC27 runtime has no fetch/API/browser storage', () => {
+  const source = readDemoFeedbackBacklog()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC27 runtime has no audit writer or repository calls', () => {
+  const source = readDemoFeedbackBacklog()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository', 'writeAudit', 'recordAudit']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC27 runtime has no export/download/notification behavior', () => {
+  const source = readDemoFeedbackBacklog()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC27 route/page/navigation files do not import demoFeedbackBacklog', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const navFiles = [
+    path.join(repoRoot, 'src/lib/navigation.ts'),
+    path.join(repoRoot, 'src/components/layout/Sidebar.tsx'),
+    path.join(repoRoot, 'src/components/layout/Topbar.tsx'),
+    path.join(repoRoot, 'src/components/layout/MobileBottomNav.tsx'),
+  ]
+
+  function scanDir(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanDir(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+
+  const files = [...scanDir(routeRoot), ...navFiles]
+  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('demoFeedbackBacklog'))
+})
+
+addCheck('MC27 index.ts exports demoFeedbackBacklog helpers', () => {
+  const source = fs.readFileSync('src/lib/assignment/index.ts', 'utf-8')
+  return source.includes('demoFeedbackBacklog')
+})
+
 // MC22 Candidate Review Demo Route Navigation Safety checks
 const navConfigPath = 'src/lib/navigation.ts'
 const sidebarPath = 'src/components/layout/Sidebar.tsx'

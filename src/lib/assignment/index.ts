@@ -10,3 +10,4 @@ export * from "./candidateReviewState";
 export * from "./candidateReviewAuditEvent";
 export * from "./candidateReviewAuditNoopWiring";
 export * from "./candidateReviewDemoData";
+export * from "./demoFeedbackBacklog";
