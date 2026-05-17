@@ -4461,4 +4461,70 @@ Recommended next:
 5. Do not start AP-10C.
 6. Do not start AP-11.
 
+## S²IMS Candidate Selection UI Shell MC6
+
+MC6 UI shell implemented for reviewing safe combined candidate pool items.
+
+Runtime/UI guarantees:
+- UI shell only
+- no backend/API
+- no persistence
+- no auto-assignment
+- no default selected candidate
+- no enabled assign/approve/decision action
+- candidates remain workflow suggestions only
+- selected/reviewed does not mean approved
+- advisor recommendation does not mean scholarship approval
+- staff selection does not mean scholarship decision
+- safe fields only
+- mobile/phone/personal email/remark/raw student ID not displayed
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- MC4 boundary preserved
+- MC5 planning boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC6 UI shell QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future action wiring only on a separate explicitly approved branch.
+
+## S²IMS Candidate Selection UI Shell QA MC6
+
+MC6 QA completed for the isolated candidate selection review UI shell.
+
+QA confirmed:
+- UI shell only
+- no route wiring
+- no navigation wiring
+- no action wiring
+- no enabled assign/approve/decision action
+- no default selected candidate
+- no API/fetch/network call
+- no persistence
+- no localStorage/sessionStorage
+- no audit writes
+- warning copy present
+- workflow suggestions only language present
+- no forbidden fields rendered
+- MC1/MC2/MC3/MC4/MC5 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 210/210
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Merge MC6 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future action wiring only on a separate explicitly approved branch.
+
 ## End of AP-9B

@@ -2330,6 +2330,98 @@ addCheck('MC4 index.ts exports combinedCandidatePool functions', () => {
   return indexSource.includes('./combinedCandidatePool')
 })
 
+// MC6 Candidate Selection UI Shell checks
+const candidateSelectionShellPath = path.join(repoRoot, 'src/components/assignment/CandidateSelectionReviewShell.tsx')
+const candidateSelectionIndexPath = path.join(repoRoot, 'src/components/assignment/index.ts')
+
+function readCandidateSelectionShell() {
+  return fs.readFileSync(candidateSelectionShellPath, 'utf8')
+}
+
+addCheck('MC6 CandidateSelectionReviewShell component file exists', () => {
+  return fs.existsSync(candidateSelectionShellPath) && fs.statSync(candidateSelectionShellPath).isFile()
+})
+
+addCheck('MC6 CandidateSelectionReviewShell is exported', () => {
+  const componentSource = readCandidateSelectionShell()
+  const indexSource = fs.readFileSync(candidateSelectionIndexPath, 'utf8')
+  return componentSource.includes('export default function CandidateSelectionReviewShell') &&
+    indexSource.includes('CandidateSelectionReviewShell')
+})
+
+addCheck('MC6 warning copy exists', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Suggested candidates are workflow suggestions only. Selecting or reviewing a candidate does not approve a scholarship, assign a person, or collect AP-10B approval.')
+})
+
+addCheck('MC6 workflow suggestions only language exists', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('workflow suggestions only')
+})
+
+addCheck('MC6 no-auto-assignment language exists', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Auto-assigned') &&
+    source.includes('Nothing is selected by default')
+})
+
+addCheck('MC6 shell has no Assign action button', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('>Assign<') &&
+    !source.includes('label="Assign"') &&
+    !source.includes('Assign button')
+})
+
+addCheck('MC6 shell has no Approve action button', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('>Approve<') &&
+    !source.includes('label="Approve"') &&
+    !source.includes('Approve button')
+})
+
+addCheck('MC6 shell has no Decision action button', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('>Decision<') &&
+    !source.includes('label="Decision"') &&
+    !source.includes('Decision button')
+})
+
+addCheck('MC6 shell does not fetch or call API/network', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'http://', 'https://']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC6 shell does not use browser storage', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('localStorage') && !source.includes('sessionStorage')
+})
+
+addCheck('MC6 shell does not write audit events', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['writeAudit', 'auditService', 'recordAudit', 'buildAuditEvent', 'sharedMockWriter']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC6 shell does not render forbidden field tokens', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = [
+    'mobile',
+    'phone',
+    'personalEmail',
+    'privateEmail',
+    'remark',
+    'rawStudentId',
+    'nationalId',
+    'approvalStatus',
+    'approvedBy',
+    'scholarshipDecision',
+    'assignedBy',
+    'assignedAt',
+  ]
+  return forbidden.every(token => !source.includes(token))
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
