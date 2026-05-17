@@ -1387,6 +1387,273 @@ addCheck('guard skips when prototype disabled', () => {
   return result.allowed === false && result.status === 'skipped' && result.reason === 'prototype_disabled'
 })
 
+// MC10 Candidate Review Audit Event Builder Runtime checks
+addCheck('MC10: candidateReviewAuditEvent.ts exists', () => {
+  return fs.existsSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+})
+
+addCheck('MC10: CandidateReviewAuditEventName type exists', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return source.includes('export type CandidateReviewAuditEventName =')
+})
+
+addCheck('MC10: CandidateReviewAuditEvent type exists', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return source.includes('export type CandidateReviewAuditEvent =')
+})
+
+addCheck('MC10: CandidateReviewAuditEventInput type exists', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return source.includes('export type CandidateReviewAuditEventInput =')
+})
+
+addCheck('MC10: mapCandidateReviewActionToAuditEventName exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  return typeof module.mapCandidateReviewActionToAuditEventName === 'function'
+})
+
+addCheck('MC10: createCandidateReviewAuditEvent exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  return typeof module.createCandidateReviewAuditEvent === 'function'
+})
+
+addCheck('MC10: assertSafeCandidateReviewAuditEvent exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  return typeof module.assertSafeCandidateReviewAuditEvent === 'function'
+})
+
+addCheck('MC10: summarizeCandidateReviewAuditEvent exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  return typeof module.summarizeCandidateReviewAuditEvent === 'function'
+})
+
+addCheck('MC10: allowed event names present', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  // Check that all allowed event names are mentioned in the type definition
+  const allowedEvents = [
+    "candidate.review.shortlisted",
+    "candidate.review.skipped",
+    "candidate.review.more_context_requested",
+    "candidate.review.rejected_for_assignment",
+    "candidate.review.manually_selected",
+    "candidate.review.state_cleared",
+    "candidate.review.entered_in_error"
+  ]
+  
+  // Check that each allowed event appears in the source (in the type definition)
+  for (const event of allowedEvents) {
+    if (!source.includes(event)) {
+      return false
+    }
+  }
+  return true
+})
+
+addCheck('MC10: forbidden event names absent from allowed type', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  const forbiddenEvents = [
+    "candidate.auto_assign",
+    "candidate.assign",
+    "candidate.approve",
+    "scholarship.approve",
+    "scholarship.reject",
+    "governance.collect_ap10b_approval",
+    "governance.verify_authority",
+    "governance.mark_as_owner",
+    "authority.verified",
+    "decision.recorded",
+    "notification.sent"
+  ]
+  
+  // Check that forbidden event names do NOT appear in the CandidateReviewAuditEventName type
+  // We'll look specifically at the type definition section
+  const typeMatch = source.match(/export type CandidateReviewAuditEventName =[\s\S]*?;/)
+  if (!typeMatch) return false
+  
+  const typeDefinition = typeMatch[0]
+  
+  // Check that none of the forbidden events are in the type definition
+  for (const event of forbiddenEvents) {
+    if (typeDefinition.includes(event)) {
+      return false
+    }
+  }
+  return true
+})
+
+addCheck('MC10: diagnosticOnly true exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  // Create a sample event and check it has diagnosticOnly: true
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const event = module.createCandidateReviewAuditEvent(input)
+    return event.diagnosticOnly === true
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC10: officialEvidence false exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  // Create a sample event and check it has officialEvidence: false
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const event = module.createCandidateReviewAuditEvent(input)
+    return event.officialEvidence === false
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC10: source candidate_review_local_state exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'))
+  // Create a sample event and check it has the correct source
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const event = module.createCandidateReviewAuditEvent(input)
+    return event.source === 'candidate_review_local_state'
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC10: no sharedMockWriter import', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return !source.includes('sharedMockWriter')
+})
+
+addCheck('MC10: no AuditService import', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return !source.includes('AuditService')
+})
+
+addCheck('MC10: no repository import', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return !source.includes('repository') && !source.includes('Repository')
+})
+
+addCheck('MC10: no fetch/API', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return !source.includes('fetch') && !source.includes('axios') && !source.includes('XMLHttpRequest')
+})
+
+addCheck('MC10: no localStorage/sessionStorage/IndexedDB', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  return !source.includes('localStorage') && !source.includes('sessionStorage') && !source.includes('indexedDB')
+})
+
+addCheck('MC10: no approval/scholarship decision fields in event type', () => {
+  // Check that forbidden fields are not in the event type definition
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  const forbiddenFields = [
+    "approvalStatus",
+    "approvedBy",
+    "assignedBy",
+    "assignedAt",
+    "scholarshipDecision"
+  ]
+  
+  // Look specifically at the CandidateReviewAuditEvent type definition
+  const typeMatch = source.match(/export type CandidateReviewAuditEvent =[\s\S]*?;/)
+  if (!typeMatch) return false
+  
+  const typeDefinition = typeMatch[0]
+  
+  // Check that none of the forbidden fields are in the event type definition
+  for (const field of forbiddenFields) {
+    if (typeDefinition.includes(field)) {
+      return false
+    }
+  }
+  return true
+})
+
+addCheck('MC10: forbidden key list includes PII and approval/decision keys', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditEvent.ts'), 'utf8')
+  const forbiddenKeys = [
+    "mobile",
+    "phone",
+    "email",
+    "personalEmail",
+    "rawEmail",
+    "privateEmail",
+    "remark",
+    "rawStudentId",
+    "studentId",
+    "nationalId",
+    "bankAccount",
+    "scholarshipDecision",
+    "approvalStatus",
+    "approvedBy",
+    "assignedBy",
+    "assignedAt",
+    "ap10bApproval",
+    "authorityEvidence",
+    "freeTextReason",
+    "reasonText",
+    "notificationSent"
+  ]
+  
+  // Check that all forbidden keys are in the source (in the assert function)
+  for (const key of forbiddenKeys) {
+    if (!source.includes(key)) {
+      return false
+    }
+  }
+  return true
+})
+
+addCheck('MC10: index.ts exports safe MC10 functions', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/index.ts'), 'utf8')
+  // Check that the export statement exists
+  return source.includes('export * from "./candidateReviewAuditEvent";')
+})
+
+// Final check: audit checks total increases above 216
+// We'll calculate this at the end by counting the checks
+
 addCheck('guard skips when shadow write disabled', () => {
   const event = buildStaffDocumentRejectEvent({
     actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',
