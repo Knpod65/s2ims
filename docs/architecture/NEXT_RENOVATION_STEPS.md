@@ -4527,4 +4527,49 @@ Recommended next:
 3. Run post-merge QA.
 4. Future action wiring only on a separate explicitly approved branch.
 
+## S²IMS Candidate Selection UI Shell Post-Merge QA MC6
+
+MC6 post-merge QA completed on `main` after merge commit `4a0d5c7` and merge checkpoint `a6eed40`.
+
+QA confirmed:
+- MC6 UI shell present on main
+- MC6 QA checkpoint present on main
+- MC6 merge checkpoint present on main
+- UI shell only
+- no route wiring
+- no navigation wiring
+- no action wiring
+- no API/fetch/network behavior
+- no persistence
+- no localStorage/sessionStorage
+- no audit writes
+- no auto-assignment
+- no default selected candidate
+- no enabled assign/approve/decision action
+- Review, Shortlist, and Skip placeholders remain disabled
+- safe fields only
+- mobile/phone/personal email/remark/raw student ID not displayed
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- MC4 boundary preserved
+- MC5 planning boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 210/210
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Keep MC6 as a display/review shell.
+2. Open future action wiring only on a separate explicitly approved branch.
+3. Do not auto-assign candidates.
+4. Do not introduce default selected candidate.
+5. Do not collect AP-10B approvals.
+6. Do not start AP-10C.
+7. Do not start AP-11.
+
 ## End of AP-9B
