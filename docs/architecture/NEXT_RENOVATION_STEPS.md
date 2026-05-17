@@ -1049,5 +1049,43 @@ Recommended next:
 4. Use feedback intake plan only for non-approval stakeholder feedback sessions.
 
 MC24 QA passed on feature branch (commit e0bf8c4). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 26fbafc. Post-merge QA passed.
+## S²IMS Candidate Review Demo Feedback Review Board Plan MC25
+
+MC25 created a safe feedback review board plan for stakeholder walkthrough feedback.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/navigation changes
+- no review board implementation
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- feedback review workflow documented (8 steps)
+- prioritization model documented (P0–P4 + Out of scope)
+- future branch decision rules documented
+- governance-sensitive handling documented
+- safe backlog template documented
+- MC1–MC24 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_REVIEW_BOARD_PLAN_MC25.md` — Master review board plan
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_PRIORITIZATION_MATRIX_MC25.md` — Prioritization matrix
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_SAFE_BACKLOG_TEMPLATE_MC25.md` — Safe backlog template
+
+Recommended next:
+1. Run MC25 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Use feedback review board only to create safe future planning/runtime branches, never approvals.
 
 MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 3af3e9a. Post-merge QA passed.
