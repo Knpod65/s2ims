@@ -1255,3 +1255,80 @@ Recommended next:
 2. Use MC27 output only for safe planning discussions.
 3. Create a separate approved branch for any future backlog UI.
 4. Create a separate approved branch for any future persistence.
+
+## S²IMS Candidate Review Demo Feedback Backlog Demo Data Plan MC28
+
+MC28 created a safe demo data plan for future feedback backlog demo/runtime use.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/navigation changes
+- no backlog data runtime
+- no feedback form runtime
+- no backlog UI
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- safe sample data rules documented
+- sample catalog documented
+- unsafe sample exclusions documented
+- sample QA checklist documented
+- MC1-MC27 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC28 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future demo backlog sample runtime only on a separate explicitly approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Demo Data Plan QA MC28
+
+MC28 QA completed for the documentation-only safe demo backlog sample data plan.
+
+QA confirmed:
+- docs-only scope
+- build 41/41
+- tokens 4/4
+- audit checks 372/372
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- no source/runtime/UI changes
+- no scripts changes
+- no route/navigation changes
+- no sample data runtime
+- no feedback form runtime
+- no backlog UI
+- safe sample data rules documented
+- sample catalog covers all nine MC27 categories
+- unsafe sample exclusions documented
+- sample QA checklist documented
+- no PII in safe samples
+- no approval wording in safe samples
+- no audit writes
+- no persistence
+- no backend/API
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC27 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC28 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future demo backlog sample runtime only on a separate explicitly approved branch.
