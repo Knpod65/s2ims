@@ -297,3 +297,30 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future audit-write wiring only on a separate explicitly approved branch.
+
+## S²IMS Candidate Review Audit No-op Wiring Plan MC11
+
+MC11 planning created for future no-op diagnostic audit-event wiring.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no audit writes
+- no persistence
+- no backend/API
+- no browser storage
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1–MC10 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC11 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future no-op runtime wiring only on a separate explicitly approved branch.
