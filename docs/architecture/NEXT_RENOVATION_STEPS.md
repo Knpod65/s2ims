@@ -621,4 +621,42 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future interaction polish runtime only on a separate explicitly approved branch.
+## S²IMS Candidate Review Audit Preview Interaction QA Plan Post-Merge QA MC16
+
+MC16 post-merge QA completed on `main`.
+
+QA confirmed:
+- MC16 package present on main
+- MC16 QA checkpoint present on main
+- MC16 merge checkpoint present on main
+- docs-only scope preserved
+- no source/runtime/UI changes
+- no audit writes
+- no persistence
+- no backend/API
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- interaction scenarios documented
+- empty-state QA documented
+- preview-state QA documented
+- negative-behavior QA documented
+- accessibility QA documented
+- copy QA documented
+- MC1-MC15 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 299/299
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Keep MC16 as interaction QA planning only.
+2. Future interaction polish runtime only on a separate explicitly approved branch.
+3. Do not introduce audit writes, persistence, backend/API, official evidence, assignment, approval, AP-10C, or AP-11 work from MC16.
 EOF
