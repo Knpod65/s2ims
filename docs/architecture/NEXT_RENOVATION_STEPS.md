@@ -1135,3 +1135,40 @@ MC26 QA passed on feature branch (commit 10cb11d). Docs-only scope confirmed. Bu
 MC26 merged to main as commit 03a007f. Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Baseline unchanged.
 
 MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 3af3e9a. Post-merge QA passed.
+
+## S²IMS Candidate Review Demo Feedback Backlog Mock Runtime MC27
+
+MC27 implemented a pure TypeScript mock feedback backlog runtime.
+
+Runtime guarantees:
+- mock/in-memory item builder only
+- no feedback form runtime
+- no backlog UI
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- nonApprovalConfirmed true required
+- officialEvidence false
+- approvalCollected false
+- persisted false
+- exported false
+- notified false
+- no route/navigation changes
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC26 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC27 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future backlog UI or persistence requires separate planning and approval.
