@@ -4461,4 +4461,36 @@ Recommended next:
 5. Do not start AP-10C.
 6. Do not start AP-11.
 
+## S²IMS Candidate Selection UI Shell MC6
+
+MC6 UI shell implemented for reviewing safe combined candidate pool items.
+
+Runtime/UI guarantees:
+- UI shell only
+- no backend/API
+- no persistence
+- no auto-assignment
+- no default selected candidate
+- no enabled assign/approve/decision action
+- candidates remain workflow suggestions only
+- selected/reviewed does not mean approved
+- advisor recommendation does not mean scholarship approval
+- staff selection does not mean scholarship decision
+- safe fields only
+- mobile/phone/personal email/remark/raw student ID not displayed
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- MC4 boundary preserved
+- MC5 planning boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC6 UI shell QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future action wiring only on a separate explicitly approved branch.
+
 ## End of AP-9B
