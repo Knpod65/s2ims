@@ -808,3 +808,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future official audit-write work requires a separate planning/approval phase.
+
+MC18 QA passed on feature branch (commit 56b2b1e). Docs-only scope confirmed. Build 40/40, tokens 4/4, audit checks 316/316, routes 5×200 OK, dev log clean.
