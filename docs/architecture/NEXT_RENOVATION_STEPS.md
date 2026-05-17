@@ -361,4 +361,40 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future UI preview integration only on a separate explicitly approved branch.
+
+## S²IMS Candidate Review Audit Preview UI MC13
+
+MC13 runtime integrated MC12 no-op diagnostic preview into the candidate review UI.
+
+Runtime guarantees:
+- preview UI only
+- local component state only
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export
+- no notification
+- no official evidence
+- persisted false
+- written false
+- exported false
+- notified false
+- diagnosticOnly true
+- officialEvidence false
+- discardedAfterPreview true
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance event
+- MC1–MC12 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC13 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future real audit-write integration only after a separate explicit approval phase.
 EOF
