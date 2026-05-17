@@ -1130,4 +1130,6 @@ Recommended next:
 3. Post-merge QA.
 4. Use backlog runtime plan only to create scoped implementation branches, never approvals.
 
+MC26 QA passed on feature branch (commit 10cb11d). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean.
+
 MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 3af3e9a. Post-merge QA passed.
