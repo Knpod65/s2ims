@@ -2549,6 +2549,143 @@ addCheck('MC13: shell does not call fetch or API', () => {
     !source.includes('XMLHttpRequest')
 })
 
+// MC15 Candidate Review Audit Preview UX Hardening checks
+addCheck('MC15: shell includes Diagnostic preview copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Diagnostic preview')
+})
+
+addCheck('MC15: shell includes Not saved badge copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Not saved')
+})
+
+addCheck('MC15: shell includes Not submitted badge copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Not submitted')
+})
+
+addCheck('MC15: shell includes Not official evidence badge copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Not official evidence')
+})
+
+addCheck('MC15: shell includes Not an approval badge copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Not an approval')
+})
+
+addCheck('MC15: shell includes Not an assignment badge copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Not an assignment')
+})
+
+addCheck('MC15: shell includes Local UI signal only badge copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Local UI signal only')
+})
+
+addCheck('MC15: shell includes exact diagnostic preview empty state copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('No diagnostic preview has been generated. Review actions remain local UI signals only.')
+})
+
+addCheck('MC15: shell includes persisted false text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('persisted: false')
+})
+
+addCheck('MC15: shell includes written false text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('written: false')
+})
+
+addCheck('MC15: shell includes exported false text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('exported: false')
+})
+
+addCheck('MC15: shell includes notified false text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('notified: false')
+})
+
+addCheck('MC15: shell includes officialEvidence false text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('officialEvidence: false')
+})
+
+addCheck('MC15: shell includes diagnosticOnly true text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('diagnosticOnly: true')
+})
+
+addCheck('MC15: shell includes discardedAfterPreview true text-visible flag', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('discardedAfterPreview: true')
+})
+
+addCheck('MC15: shell includes aria-live accessibility marker', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('aria-live="polite"') || source.includes("aria-live='polite'")
+})
+
+addCheck('MC15: shell does not use localStorage/sessionStorage/IndexedDB', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('localStorage') &&
+    !source.includes('sessionStorage') &&
+    !source.includes('IndexedDB') &&
+    !source.includes('indexedDB')
+})
+
+addCheck('MC15: shell does not fetch or call API/backend', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'http://', 'https://']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC15: shell does not call sharedMockWriter/AuditService/repository', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC15: shell has no enabled forbidden action button labels', () => {
+  const source = readCandidateSelectionShell()
+  const forbiddenLabelPatterns = [
+    /label=["']Assign["']/,
+    /label=["']Approve["']/,
+    /label=["']Decision["']/,
+    /label=["']Submit["']/,
+    /label=["']Save["']/,
+    /label=["']Record["']/,
+    />Assign</,
+    />Approve</,
+    />Decision</,
+    />Submit</,
+    />Save</,
+    />Record</,
+  ]
+  return forbiddenLabelPatterns.every(pattern => !pattern.test(source))
+})
+
+addCheck('MC15: shell does not render forbidden PII display fields', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = [
+    'mobile',
+    'phone',
+    'personalEmail',
+    'rawEmail',
+    'privateEmail',
+    'private remark',
+    'rawStudentId',
+    'nationalId',
+    'bankAccount',
+    'free-text PII reason',
+  ]
+  return forbidden.every(token => !source.includes(token))
+})
+
 // MC2 Advisor Candidate Generator Runtime checks
 const advisorGeneratorModule = loadTsModule(path.join(repoRoot, 'src/lib/assignment/advisorCandidateGenerator.ts'))
 const {
