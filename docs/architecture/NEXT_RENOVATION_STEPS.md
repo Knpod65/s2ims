@@ -4700,4 +4700,45 @@ Recommended next:
 6. Do not start AP-10C.
 7. Do not start AP-11.
 
+## S²IMS Candidate Review Local State Runtime Post-Merge QA MC8
+
+Date: 2026-05-16
+Branch: main
+Implementation commit: e604ca0
+Merge commit: eadda62
+Merge checkpoint commit: b02dc03
+
+Post-merge QA completed for MC8 candidate review local state runtime on main.
+
+Confirmed:
+- All 10 runtime files present on main after merge commit eadda62
+- Runtime safety boundary: git diff --name-only e604ca0^...e604ca0 returns exactly 7 files (3 src, 1 script, 3 docs) — all expected
+- All commits after e604ca0 are docs-only (QA, merge checkpoint, post-merge QA)
+- Build: 0 type errors
+- npm run check:tokens: 4/4
+- npm run check:audit-events: 216/216
+- Routes: /login /admin/audit-log /admin/dashboard /staff/applications/app_001 /staff/applications/app_002 — all 200 OK, dev log clean
+- reviewStateMap in React useState only — local to component — confirmed on main
+- No localStorage/sessionStorage/IndexedDB — grep: no hits — confirmed on main
+- No fetch() or API calls — grep: no hits — confirmed on main
+- No audit writes — grep: no hits — confirmed on main
+- FORBIDDEN_ACTIONS set (8 entries) present — confirmed on main
+- assertSafeCandidateReviewTransition throws on forbidden actions — confirmed on main
+- All action buttons disabled in readonly mode (default) — confirmed on main
+- Initial state "not_reviewed" for every candidate — confirmed on main
+- clear_review_state returns "not_reviewed" — confirmed on main
+- Warning copy present in shell — confirmed on main
+- Auto-assigned tile hardcoded to 0 — confirmed on main
+- safeReasonCode string only, no free-text PII — confirmed on main
+- No mobile/phone/email/remark/student ID rendered — confirmed on main
+- MC1–MC7 boundaries preserved — confirmed on main
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+MC8 runtime is merged and closed on main.
+Future real wire-up of review actions requires a separate explicitly approved branch.
+Future state persistence requires a separate explicitly approved branch and governance review.
+AP-10B owner candidate identification remains the only unblocked governance action.
+
 ## End of AP-9B
