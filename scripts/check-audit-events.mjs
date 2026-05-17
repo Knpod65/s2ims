@@ -2686,6 +2686,118 @@ addCheck('MC15: shell does not render forbidden PII display fields', () => {
   return forbidden.every(token => !source.includes(token))
 })
 
+// MC17 Candidate Review Audit Preview Interaction Polish checks
+addCheck('MC17: shell includes latest local review signal copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('This preview reflects the latest local review signal only.')
+})
+
+addCheck('MC17: shell includes Latest local review signal only label', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Latest local review signal only')
+})
+
+addCheck('MC17: shell includes Clear local review state copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Clear local review state')
+})
+
+addCheck('MC17: clear helper exists', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('function clearLocalReviewState(candidateId: string)')
+})
+
+addCheck('MC17: clear helper resets local state to not_reviewed', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('[candidateId]: "not_reviewed"') ||
+    source.includes("[candidateId]: 'not_reviewed'")
+})
+
+addCheck('MC17: clear helper clears diagnostic preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('clearLocalReviewState') &&
+    source.includes('setAuditPreview(null)')
+})
+
+addCheck('MC17: candidate row clear uses clearLocalReviewState', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('onClick={() => clearLocalReviewState(candidate.candidateId)}') &&
+    !source.includes('applyAction(candidate.candidateId, "clear_review_state"')
+})
+
+addCheck('MC17: preview uses aria-live polite', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('aria-live="polite"') || source.includes("aria-live='polite'")
+})
+
+addCheck('MC17: preview has diagnostic audit preview aria label', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('aria-label="Diagnostic audit preview status"')
+})
+
+addCheck('MC17: action buttons include local-only aria label', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('aria-label={`${label} for ${candidateName}. Local UI signal only.`}')
+})
+
+addCheck('MC17: previous and next review state remain visible', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Previous state') &&
+    source.includes('auditPreview.event.previousReviewState') &&
+    source.includes('Next state') &&
+    source.includes('auditPreview.event.nextReviewState')
+})
+
+addCheck('MC17: latest preview only copy exists', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Only the latest preview result is shown.')
+})
+
+addCheck('MC17: shell does not use localStorage/sessionStorage/IndexedDB', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('localStorage') &&
+    !source.includes('sessionStorage') &&
+    !source.includes('IndexedDB') &&
+    !source.includes('indexedDB')
+})
+
+addCheck('MC17: shell does not fetch or call API/backend', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'http://', 'https://']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC17: shell does not call sharedMockWriter/AuditService/repository', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC17: shell does not export or notify', () => {
+  const source = readCandidateSelectionShell()
+  const forbidden = ['download', 'exportData', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC17: shell has no enabled forbidden action button labels', () => {
+  const source = readCandidateSelectionShell()
+  const forbiddenLabelPatterns = [
+    /label=["']Assign["']/,
+    /label=["']Approve["']/,
+    /label=["']Decision["']/,
+    /label=["']Submit["']/,
+    /label=["']Save["']/,
+    /label=["']Record["']/,
+    />Assign</,
+    />Approve</,
+    />Decision</,
+    />Submit</,
+    />Save</,
+    />Record</,
+  ]
+  return forbiddenLabelPatterns.every(pattern => !pattern.test(source))
+})
+
 // MC2 Advisor Candidate Generator Runtime checks
 const advisorGeneratorModule = loadTsModule(path.join(repoRoot, 'src/lib/assignment/advisorCandidateGenerator.ts'))
 const {
