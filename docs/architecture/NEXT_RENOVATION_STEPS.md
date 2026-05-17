@@ -4258,4 +4258,81 @@ MC3 runtime is merged and closed on main.
 Future UI integration is a separate explicitly approved branch and task.
 AP-10B owner candidate identification remains the only unblocked governance action.
 
+## S²IMS Combined Candidate Pool Runtime MC4
+
+Date: 2026-05-16
+Branch: architecture/s2ims-combined-candidate-pool-runtime-mc4
+
+MC4 runtime implemented as a pure TypeScript combined candidate pool integration under src/lib/assignment.
+
+Files created: src/lib/assignment/combinedCandidatePool.ts
+Files modified: src/lib/assignment/index.ts, scripts/check-audit-events.mjs (178 → 198 checks)
+
+Runtime guarantees:
+- MC2 advisor candidates and MC3 staff candidates combine into one safe candidate pool
+- no auto-assignment
+- status remains suggested
+- isMock remains true
+- autoAssigned remains false
+- autoAssignedCount remains 0
+- mobile hidden
+- phone hidden
+- personal email hidden by default
+- remark excluded
+- raw student ID not accepted or emitted
+- no approval or scholarship decision fields
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC4 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA after merge.
+4. Future UI integration only on a separate explicitly approved branch.
+
+## S²IMS Combined Candidate Pool Runtime QA MC4
+
+Date: 2026-05-16
+Branch: architecture/s2ims-combined-candidate-pool-runtime-mc4
+Runtime commit: 7598f26
+
+Pre-merge QA completed for MC4 combined candidate pool runtime.
+
+QA confirmed:
+- pure TypeScript module only — no React, no Next.js, no API, no persistence, no network calls
+- no UI/backend/API/persistence changes
+- no auto-assignment
+- MC2 advisor candidates and MC3 staff candidates merge safely via combineCandidatePools
+- status always "suggested" (literal preserved)
+- autoAssigned always false (literal preserved)
+- isMock always true (literal preserved)
+- autoAssignedCount always 0 (literal)
+- mobile not emitted
+- phone not emitted
+- personal email not emitted
+- remark not emitted
+- raw student ID not in scope
+- no approval fields
+- no scholarship decision fields
+- assertSafeCombinedCandidate guard present; delegates to MC2/MC3 guards
+- audit checks pass at 198/198 (20 new MC4 checks added)
+- MC1 boundary preserved — all MC1 modules unchanged
+- MC2 boundary preserved — advisorCandidateGenerator unchanged
+- MC3 boundary preserved — staffCandidateGenerator unchanged
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge runtime after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future UI integration only on a separate explicitly approved branch.
+5. Do not start AP-10C.
+6. Do not start AP-11.
+
 ## End of AP-9B
