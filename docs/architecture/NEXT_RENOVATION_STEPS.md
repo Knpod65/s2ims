@@ -551,4 +551,35 @@ Recommended next:
 1. Keep MC15 as diagnostic preview UX hardening only.
 2. Plan any official audit-write work in a separate approved phase.
 3. Do not introduce persistence, export, notification, assignment, approval, AP-10C, or AP-11 work from MC15.
+## S²IMS Candidate Review Audit Preview Interaction QA Plan MC16
+
+MC16 planning created for future interaction QA of the MC15 diagnostic preview UI.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no audit writes
+- no persistence
+- no backend/API
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- interaction scenarios documented
+- empty state QA documented
+- preview state QA documented
+- negative behavior QA documented
+- accessibility QA documented
+- copy QA documented
+- MC1-MC15 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC16 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future interaction polish runtime only on a separate explicitly approved branch.
 EOF
