@@ -1332,3 +1332,48 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future demo backlog sample runtime only on a separate explicitly approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Demo Data Plan Post-Merge QA MC28
+
+MC28 post-merge QA completed on `main`.
+
+Post-merge QA confirmed:
+- MC28 package present on main
+- MC28 QA package present on main
+- MC28 merge checkpoint present on main
+- docs-only scope preserved
+- build 41/41
+- tokens 4/4
+- audit checks 372/372
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- no source/runtime/UI changes
+- no scripts changes
+- no route/navigation changes
+- no sample data runtime
+- no feedback form runtime
+- no backlog UI
+- safe sample data rules documented
+- sample catalog documented
+- unsafe sample exclusions documented
+- sample QA checklist documented
+- no PII in safe samples
+- no approval wording in safe samples
+- no audit writes
+- no persistence
+- no backend/API
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC27 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Keep MC28 as documentation-only sample planning.
+2. Use the sample catalog only as planning guidance.
+3. Create a separate approved branch for any future sample data runtime.
+4. Create a separate approved branch for any future backlog UI or persistence.
