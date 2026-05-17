@@ -810,3 +810,39 @@ Recommended next:
 4. Future official audit-write work requires a separate planning/approval phase.
 
 MC18 QA passed on feature branch (commit 56b2b1e). Docs-only scope confirmed. Build 40/40, tokens 4/4, audit checks 316/316, routes 5×200 OK, dev log clean. Merged to main as commit 44857d9. Post-merge QA passed.
+## S²IMS Candidate Review Diagnostic Preview Demo Page Plan MC19
+
+MC19 planning created for a future read-only diagnostic preview demo page.
+
+Current status:
+- docs-only
+- no route/page created
+- no source/runtime/UI changes
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- safe mock data rules documented
+- demo copy rules documented
+- access boundary documented
+- implementation checklist documented
+- MC1–MC18 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DIAGNOSTIC_PREVIEW_DEMO_PAGE_PLAN_MC19.md` — Master plan
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_SAFE_MOCK_DATA_SPEC_MC19.md` — Safe mock data spec
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_PAGE_IMPLEMENTATION_CHECKLIST_MC19.md` — Implementation checklist
+
+Recommended next:
+1. Run MC19 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future demo page runtime only on a separate explicitly approved branch.
