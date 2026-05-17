@@ -659,4 +659,77 @@ Recommended next:
 1. Keep MC16 as interaction QA planning only.
 2. Future interaction polish runtime only on a separate explicitly approved branch.
 3. Do not introduce audit writes, persistence, backend/API, official evidence, assignment, approval, AP-10C, or AP-11 work from MC16.
+## S²IMS Candidate Review Audit Preview Interaction Polish Runtime MC17
+
+MC17 runtime implemented interaction polish for the diagnostic preview UI.
+
+Runtime guarantees:
+- UI interaction polish only
+- local component state only
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export
+- no notification
+- no official evidence
+- clear resets local review state to not_reviewed
+- clear removes diagnostic preview
+- preview reflects latest local review signal only
+- repeated actions update latest preview only
+- previous/next review state visible
+- accessibility markers improved
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC16 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC17 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future official audit-write work requires a separate planning/approval phase.
+## S²IMS Candidate Review Audit Preview Interaction Polish Runtime QA MC17
+
+MC17 runtime QA completed for diagnostic preview interaction polish.
+
+QA confirmed:
+- UI interaction polish only
+- local component state only
+- clear resets local review state to not_reviewed
+- clear removes diagnostic preview
+- preview reflects latest local review signal only
+- repeated actions update latest preview only
+- previous/next review state visible
+- accessibility labels improved
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export
+- no notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC16 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- build 40/40
+- tokens 4/4
+- audit checks 316/316
+- routes 5/5 200 OK
+- dev log clean
+
+Recommended next:
+1. Merge MC17 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future official audit-write work requires a separate planning/approval phase.
 EOF

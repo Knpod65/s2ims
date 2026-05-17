@@ -79,6 +79,11 @@ export default function CandidateSelectionReviewShell({
   const [reviewStateMap, setReviewStateMap] = useState<Record<string, CandidateReviewState>>(initialMap);
   const [auditPreview, setAuditPreview] = useState<CandidateReviewAuditNoopWiringResult | null>(null);
 
+  function clearLocalReviewState(candidateId: string) {
+    setReviewStateMap((s) => ({ ...s, [candidateId]: "not_reviewed" }));
+    setAuditPreview(null);
+  }
+
   function applyAction(
     candidateId: string,
     action: CandidateReviewAction,
@@ -193,12 +198,12 @@ export default function CandidateSelectionReviewShell({
                       </>
                     ) : (
                       <>
-                        <ActionButton label="Shortlist" onClick={() => applyAction(candidate.candidateId, "shortlist_candidate", candidate)} />
-                        <ActionButton label="Skip" onClick={() => applyAction(candidate.candidateId, "skip_candidate", candidate)} />
-                        <ActionButton label="Needs more context" onClick={() => applyAction(candidate.candidateId, "request_more_context", candidate)} />
-                        <ActionButton label="Reject for assignment" onClick={() => applyAction(candidate.candidateId, "reject_for_assignment", candidate)} />
-                        <ActionButton label="Select for review" onClick={() => applyAction(candidate.candidateId, "manually_select_candidate", candidate)} />
-                        <ActionButton label="Clear" onClick={() => applyAction(candidate.candidateId, "clear_review_state", candidate)} />
+                        <ActionButton label="Shortlist" candidateName={candidate.displayName} onClick={() => applyAction(candidate.candidateId, "shortlist_candidate", candidate)} />
+                        <ActionButton label="Skip" candidateName={candidate.displayName} onClick={() => applyAction(candidate.candidateId, "skip_candidate", candidate)} />
+                        <ActionButton label="Needs more context" candidateName={candidate.displayName} onClick={() => applyAction(candidate.candidateId, "request_more_context", candidate)} />
+                        <ActionButton label="Reject for assignment" candidateName={candidate.displayName} onClick={() => applyAction(candidate.candidateId, "reject_for_assignment", candidate)} />
+                        <ActionButton label="Select for review" candidateName={candidate.displayName} onClick={() => applyAction(candidate.candidateId, "manually_select_candidate", candidate)} />
+                        <ActionButton label="Clear local review state" candidateName={candidate.displayName} onClick={() => clearLocalReviewState(candidate.candidateId)} />
                       </>
                     )}
                   </div>
@@ -212,13 +217,16 @@ export default function CandidateSelectionReviewShell({
       <div
         className="space-y-3 rounded-md border border-line bg-surface-low p-4"
         aria-live="polite"
-        aria-label="Diagnostic preview status"
+        aria-label="Diagnostic audit preview status"
       >
         <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
           <p className="font-semibold">Diagnostic preview</p>
           <p className="mt-1">{auditPreviewWarningCopy}</p>
+          <p className="mt-2 font-semibold">
+            This preview reflects the latest local review signal only.
+          </p>
           <p className="mt-2 text-xs font-semibold uppercase tracking-wide">
-            Local UI signal only
+            Latest local review signal only
           </p>
           <div className="mt-3 flex flex-wrap gap-2" aria-label="Diagnostic preview safety labels">
             {previewSafetyBadges.map((badge) => (
@@ -236,7 +244,7 @@ export default function CandidateSelectionReviewShell({
             <div>
               <h3 className="text-sm font-semibold text-ink-1">Diagnostic preview</h3>
               <p className="mt-1 text-xs text-ink-3">
-                These flags confirm that no data was persisted, no audit was written, and no official evidence was created.
+                These flags confirm that no data was persisted, no audit was written, and no official evidence was created. Only the latest preview result is shown.
               </p>
             </div>
             <dl className="grid gap-1 text-sm sm:grid-cols-2">
@@ -263,7 +271,8 @@ export default function CandidateSelectionReviewShell({
               type="button"
               onClick={() => setAuditPreview(null)}
               className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink-1 hover:bg-surface-hover"
-              title="Removes the preview from your local browser state. No data is deleted from the server."
+              aria-label="Clear diagnostic preview from local UI only"
+              title="Clears the diagnostic preview from this local UI only. No state is saved or deleted from a server."
             >
               Clear diagnostic preview
             </button>
@@ -323,11 +332,20 @@ function ShellButton({ label, readonly }: { label: string; readonly: boolean }) 
   );
 }
 
-function ActionButton({ label, onClick }: { label: string; onClick: () => void }) {
+function ActionButton({
+  label,
+  candidateName,
+  onClick,
+}: {
+  label: string;
+  candidateName: string;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
+      aria-label={`${label} for ${candidateName}. Local UI signal only.`}
       className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink-1 hover:bg-surface-hover"
     >
       {label}
