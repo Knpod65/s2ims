@@ -924,3 +924,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future navigation/exposure changes only on a separate explicitly approved branch.
+
+MC21 QA passed on feature branch (commit b7de109). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 341/341, routes 6×200 OK, dev log clean.
