@@ -1132,4 +1132,6 @@ Recommended next:
 
 MC26 QA passed on feature branch (commit 10cb11d). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean.
 
+MC26 merged to main as commit 03a007f. Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Baseline unchanged.
+
 MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 3af3e9a. Post-merge QA passed.
