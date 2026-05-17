@@ -847,4 +847,4 @@ Recommended next:
 3. Post-merge QA.
 4. Future demo page runtime only on a separate explicitly approved branch.
 
-MC19 QA passed on feature branch (commit d6697bb). Docs-only scope confirmed. Build 40/40, tokens 4/4, audit checks 316/316, routes 5×200 OK, dev log clean.
+MC19 QA passed on feature branch (commit d6697bb). Docs-only scope confirmed. Build 40/40, tokens 4/4, audit checks 316/316, routes 5×200 OK, dev log clean. Merged to main as commit 420555d. Post-merge QA passed.
