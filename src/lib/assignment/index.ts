@@ -8,3 +8,4 @@ export * from "./staffCandidateGenerator";
 export * from "./combinedCandidatePool";
 export * from "./candidateReviewState";
 export * from "./candidateReviewAuditEvent";
+export * from "./candidateReviewAuditNoopWiring";

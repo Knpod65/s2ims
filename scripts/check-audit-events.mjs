@@ -1654,6 +1654,295 @@ addCheck('MC10: index.ts exports safe MC10 functions', () => {
 // Final check: audit checks total increases above 216
 // We'll calculate this at the end by counting the checks
 
+// MC12 Candidate Review Audit No-op Wiring Runtime checks
+addCheck('MC12: candidateReviewAuditNoopWiring.ts exists', () => {
+  return fs.existsSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+})
+
+addCheck('MC12: CandidateReviewAuditNoopWiringInput type exists', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return source.includes('export type CandidateReviewAuditNoopWiringInput =')
+})
+
+addCheck('MC12: CandidateReviewAuditNoopWiringResult type exists', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return source.includes('export type CandidateReviewAuditNoopWiringResult =')
+})
+
+addCheck('MC12: buildCandidateReviewAuditNoopPreview exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  return typeof module.buildCandidateReviewAuditNoopPreview === 'function'
+})
+
+addCheck('MC12: assertSafeCandidateReviewAuditNoopResult exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  return typeof module.assertSafeCandidateReviewAuditNoopResult === 'function'
+})
+
+addCheck('MC12: summarizeCandidateReviewAuditNoopResult exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  return typeof module.summarizeCandidateReviewAuditNoopResult === 'function'
+})
+
+addCheck('MC12: buildCandidateReviewAuditNoopPreview calls createCandidateReviewAuditEvent', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return source.includes('createCandidateReviewAuditEvent(')
+})
+
+addCheck('MC12: buildCandidateReviewAuditNoopPreview calls assertSafeCandidateReviewAuditEvent', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return source.includes('assertSafeCandidateReviewAuditEvent(')
+})
+
+addCheck('MC12: result mode noop exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  // Test that the result object has mode: "noop"
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.mode === 'noop'
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: persisted false exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.persisted === false
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: written false exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.written === false
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: exported false exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.exported === false
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: notified false exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.notified === false
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: officialEvidence false exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.officialEvidence === false
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: diagnosticOnly true exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.diagnosticOnly === true
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: discardedAfterPreview true exists', () => {
+  const module = loadTsModule(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'))
+  try {
+    const transition = {
+      candidateId: 'test-001',
+      actionType: 'shortlist_candidate',
+      previousState: 'not_reviewed',
+      nextState: 'shortlisted'
+    }
+    
+    const input = {
+      transition,
+      poolType: 'advisor',
+      roleCategory: 'test',
+      actorRole: 'staff',
+      workflowContext: 'candidate_review'
+    }
+    
+    const result = module.buildCandidateReviewAuditNoopPreview(input)
+    return result.discardedAfterPreview === true
+  } catch (e) {
+    return false
+  }
+})
+
+addCheck('MC12: no sharedMockWriter import', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('sharedMockWriter')
+})
+
+addCheck('MC12: no AuditService import', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('AuditService')
+})
+
+addCheck('MC12: no repository import', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('repository') && !source.includes('Repository')
+})
+
+addCheck('MC12: no fetch/API', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('fetch') && !source.includes('axios') && !source.includes('XMLHttpRequest')
+})
+
+addCheck('MC12: no browser storage', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('localStorage') && !source.includes('sessionStorage') && !source.includes('indexedDB')
+})
+
+addCheck('MC12: no navigator.sendBeacon', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('navigator.sendBeacon')
+})
+
+addCheck('MC12: no export/download helper', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('Blob') && !source.includes('URL.createObjectURL') && !source.includes('download')
+})
+
+addCheck('MC12: no notification call', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/candidateReviewAuditNoopWiring.ts'), 'utf8')
+  return !source.includes('notification') && !source.includes('Notification')
+})
+
+addCheck('MC12: index.ts exports safe MC12 functions', () => {
+  const source = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/index.ts'), 'utf8')
+  return source.includes('export * from "./candidateReviewAuditNoopWiring";')
+})
+
+// Final check: audit checks total increases above 216
+// We'll calculate this at the end by counting the checks
+
 addCheck('guard skips when shadow write disabled', () => {
   const event = buildStaffDocumentRejectEvent({
     actorId: 'usr_001', actorRole: 'staff', actorDisplayName: 'Test',

@@ -324,3 +324,41 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future no-op runtime wiring only on a separate explicitly approved branch.
+
+## S²IMS Candidate Review Audit No-op Wiring Runtime MC12
+
+MC12 runtime implemented pure TypeScript no-op diagnostic audit-event wiring.
+
+Runtime guarantees:
+- no-op result only
+- no audit writes
+- no persistence
+- no backend/API
+- no browser storage
+- no sharedMockWriter call
+- no AuditService call
+- no repository call
+- no export
+- no notification
+- persisted false
+- written false
+- exported false
+- notified false
+- diagnosticOnly true
+- officialEvidence false
+- discardedAfterPreview true
+- no assignment event
+- no approval event
+- no scholarship decision event
+- no AP-10B governance event
+- MC1–MC11 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC12 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future UI preview integration only on a separate explicitly approved branch.
+EOF
