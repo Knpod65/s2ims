@@ -435,4 +435,40 @@ Recommended next:
 4. Future UX hardening runtime only on a separate explicitly approved branch.
 
 MC13 QA passed on feature branch (commit 9efdff7). Build 40/40, tokens 4/4, audit checks 278/278, routes 5×200 OK, dev log clean. Merged to main as commit 37d7df6. Post-merge QA passed.
+## S²IMS Candidate Review Audit Preview UX Hardening Runtime MC15
+
+MC15 runtime implemented UX hardening for the MC13 diagnostic preview UI.
+
+Runtime guarantees:
+- UI copy/layout hardening only
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export
+- no notification
+- no official evidence
+- diagnostic preview clearly labeled
+- not saved clearly labeled
+- not submitted clearly labeled
+- not official evidence clearly labeled
+- not approval clearly labeled
+- not assignment clearly labeled
+- false flags visible
+- empty state clarified
+- accessibility markers added
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC14 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC15 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future official audit-write work requires a separate planning/approval phase.
 EOF
