@@ -4572,4 +4572,33 @@ Recommended next:
 6. Do not start AP-10C.
 7. Do not start AP-11.
 
+## S²IMS Candidate Selection Action Boundary Plan MC7
+
+MC7 planning created for safe future candidate review action wiring.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no action wiring
+- no persistence
+- no auto-assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- MC4 boundary preserved
+- MC5 boundary preserved
+- MC6 boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC7 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future action wiring only on a separate explicitly approved branch.
+
 ## End of AP-9B
