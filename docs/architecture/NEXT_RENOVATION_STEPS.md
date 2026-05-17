@@ -1089,5 +1089,45 @@ Recommended next:
 4. Use feedback review board only to create safe future planning/runtime branches, never approvals.
 
 MC25 QA passed on feature branch (commit 149b941). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 7e2d970. Post-merge QA passed.
+## S²IMS Candidate Review Demo Feedback Backlog Runtime Plan MC26
+
+MC26 created a safe backlog-to-runtime-branch conversion plan for feedback backlog items from MC25.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no runtime branches implemented
+- no route/navigation changes
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- backlog-to-branch conversion workflow documented (7 steps)
+- 4 permitted runtime branch types documented with scope gates
+- forbidden branch types documented
+- runtime branch scope gates documented (per-branch allowed/forbidden paths)
+- branch proposal review checklist documented
+- branch proposal template documented
+- AP-10B separation documented
+- MC1–MC25 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_BACKLOG_RUNTIME_PLAN_MC26.md` — Master backlog runtime plan
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_RUNTIME_BRANCH_RULES_MC26.md` — Runtime branch rules
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_RUNTIME_BRANCH_TEMPLATE_MC26.md` — Runtime branch proposal template
+
+Recommended next:
+1. Run MC26 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Use backlog runtime plan only to create scoped implementation branches, never approvals.
 
 MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 3af3e9a. Post-merge QA passed.
