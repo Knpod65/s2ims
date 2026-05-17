@@ -1007,5 +1007,47 @@ Recommended next:
 4. Future navigation/exposure changes only on a separate explicitly approved branch.
 
 MC23 QA passed on feature branch (commit 878e60c). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 590d5fb. Post-merge QA passed.
+## S²IMS Candidate Review Demo Feedback Intake Plan MC24
+
+MC24 created a safe feedback intake plan for stakeholder walkthrough sessions from MC23.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/navigation changes
+- no feedback form/storage implementation
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- feedback intake rules documented
+- feedback classification model documented (9 categories)
+- non-approval boundary documented
+- action item rules documented
+- feedback record template documented
+- privacy exclusion list documented
+- AP-10B separation documented
+- MC1–MC23 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_INTAKE_PLAN_MC24.md` — Master intake plan
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_CLASSIFICATION_MATRIX_MC24.md` — Classification matrix
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_FEEDBACK_RECORD_TEMPLATE_MC24.md` — Feedback record template
+
+Recommended next:
+1. Run MC24 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Use feedback intake plan only for non-approval stakeholder feedback sessions.
+
+MC24 QA passed on feature branch (commit e0bf8c4). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean.
 
 MC22 QA passed on feature branch (commit b4a0d75). Runtime scope confirmed. Build 41/41, tokens 4/4, audit checks 353/353, routes 6×200 OK, dev log clean. Merged to main as commit 3af3e9a. Post-merge QA passed.
