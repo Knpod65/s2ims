@@ -3774,6 +3774,151 @@ addCheck('MC27 index.ts exports demoFeedbackBacklog helpers', () => {
   return source.includes('demoFeedbackBacklog')
 })
 
+// MC29 Candidate Review Demo Feedback Backlog Sample Runtime checks
+const demoFeedbackBacklogSamplesPath = path.join(repoRoot, 'src/lib/assignment/demoFeedbackBacklogSamples.ts')
+function readDemoFeedbackBacklogSamples() { return fs.readFileSync(demoFeedbackBacklogSamplesPath, 'utf-8') }
+
+addCheck('MC29 demoFeedbackBacklogSamples.ts exists', () =>
+  fs.existsSync(demoFeedbackBacklogSamplesPath) && fs.statSync(demoFeedbackBacklogSamplesPath).isFile()
+)
+
+const demoFeedbackBacklogSamplesModule = loadTsModule(demoFeedbackBacklogSamplesPath)
+
+addCheck('MC29 required sample runtime exports exist', () =>
+  Array.isArray(demoFeedbackBacklogSamplesModule.DEMO_FEEDBACK_BACKLOG_SAMPLE_INPUTS) &&
+  typeof demoFeedbackBacklogSamplesModule.createDemoFeedbackBacklogSamples === 'function' &&
+  typeof demoFeedbackBacklogSamplesModule.assertSafeDemoFeedbackBacklogSamples === 'function' &&
+  typeof demoFeedbackBacklogSamplesModule.summarizeDemoFeedbackBacklogSamples === 'function'
+)
+
+addCheck('MC29 sample runtime imports MC27 builder and safety assertion', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  return source.includes('createDemoFeedbackBacklogItems') &&
+    source.includes('assertSafeDemoFeedbackBacklogItem') &&
+    source.includes('./demoFeedbackBacklog')
+})
+
+addCheck('MC29 sample inputs preserve nonApprovalConfirmed true', () => {
+  const inputs = demoFeedbackBacklogSamplesModule.DEMO_FEEDBACK_BACKLOG_SAMPLE_INPUTS
+  return inputs.length === 9 && inputs.every((input) => input.nonApprovalConfirmed === true)
+})
+
+addCheck('MC29 sample runtime uses MC27 array builder', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  return source.includes('createDemoFeedbackBacklogItems(DEMO_FEEDBACK_BACKLOG_SAMPLE_INPUTS)')
+})
+
+addCheck('MC29 sample runtime asserts safe items', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  return source.includes('items.forEach((item) => assertSafeDemoFeedbackBacklogItem(item))')
+})
+
+addCheck('MC29 sample categories cover all MC28 categories', () => {
+  const samples = demoFeedbackBacklogSamplesModule.createDemoFeedbackBacklogSamples()
+  const categories = new Set(samples.map((item) => item.category))
+  const required = [
+    'ux_clarity',
+    'copy_content',
+    'accessibility',
+    'privacy_pdpa',
+    'workflow_understanding',
+    'training_readiness',
+    'risk_concern',
+    'future_enhancement',
+    'out_of_scope_governance',
+  ]
+  return samples.length === 9 && required.every((category) => categories.has(category))
+})
+
+addCheck('MC29 sample summaries avoid forbidden wording', () => {
+  const inputs = demoFeedbackBacklogSamplesModule.DEMO_FEEDBACK_BACKLOG_SAMPLE_INPUTS
+  const forbidden = [
+    'approved',
+    'assigned',
+    'submitted',
+    'official approval',
+    'AP-10B approved',
+    'authority verified',
+    'national ID',
+    'phone',
+    'email',
+    'bank account',
+    'student ID',
+    'teacher ID',
+  ]
+  return inputs.every((input) => {
+    const summary = input.summary.toLowerCase()
+    return forbidden.every((token) => !summary.includes(token.toLowerCase()))
+  })
+})
+
+addCheck('MC29 sample file has no forbidden PII/contact/id tokens', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  const forbidden = ['mobile', 'phone', 'email', 'personalEmail', 'rawEmail', 'privateEmail', 'rawStudentId', 'studentId', 'teacherId', 'nationalId', 'bankAccount']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC29 sample file has no fetch/API/browser storage', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC29 sample file has no audit writer or repository calls', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository', 'writeAudit', 'recordAudit']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC29 sample file has no export/download/notification behavior', () => {
+  const source = readDemoFeedbackBacklogSamples()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC29 route/page/navigation files do not import sample runtime', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const navFiles = [
+    path.join(repoRoot, 'src/lib/navigation.ts'),
+    path.join(repoRoot, 'src/components/layout/Sidebar.tsx'),
+    path.join(repoRoot, 'src/components/layout/Topbar.tsx'),
+    path.join(repoRoot, 'src/components/layout/MobileBottomNav.tsx'),
+  ]
+
+  function scanRuntimeDirs(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanRuntimeDirs(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+
+  const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
+  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('demoFeedbackBacklogSamples'))
+})
+
+addCheck('MC29 index.ts exports demoFeedbackBacklogSamples helpers', () => {
+  const source = fs.readFileSync('src/lib/assignment/index.ts', 'utf-8')
+  return source.includes('demoFeedbackBacklogSamples')
+})
+
+addCheck('MC29 summary helper returns aggregate planning-only metadata', () => {
+  const summary = demoFeedbackBacklogSamplesModule.summarizeDemoFeedbackBacklogSamples()
+  return summary.total === 9 &&
+    summary.categories.length === 9 &&
+    summary.priorities.length >= 5 &&
+    summary.governanceSensitiveCount === 1 &&
+    summary.planningOnly === true &&
+    summary.nonApprovalConfirmed === true &&
+    summary.officialEvidence === false &&
+    summary.approvalCollected === false &&
+    summary.persisted === false &&
+    summary.exported === false &&
+    summary.notified === false &&
+    !('summaries' in summary)
+})
+
 // MC22 Candidate Review Demo Route Navigation Safety checks
 const navConfigPath = 'src/lib/navigation.ts'
 const sidebarPath = 'src/components/layout/Sidebar.tsx'

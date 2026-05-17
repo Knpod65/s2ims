@@ -1377,3 +1377,74 @@ Recommended next:
 2. Use the sample catalog only as planning guidance.
 3. Create a separate approved branch for any future sample data runtime.
 4. Create a separate approved branch for any future backlog UI or persistence.
+
+## S²IMS Candidate Review Demo Feedback Backlog Sample Runtime MC29
+
+MC29 implemented safe sample runtime data for demo feedback backlog items.
+
+Runtime guarantees:
+- pure TypeScript sample inputs only
+- uses MC27 mock backlog builder
+- no feedback form runtime
+- no backlog UI
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no route/navigation changes
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC28 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC29 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future backlog preview UI requires separate planning and approval.
+
+## S²IMS Candidate Review Demo Feedback Backlog Sample Runtime QA MC29
+
+MC29 runtime QA completed for the safe sample runtime data package.
+
+QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 387/387
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- pure TypeScript runtime only
+- uses MC27 mock backlog builder
+- sample inputs cover all nine MC28 categories
+- generated sample items pass MC27 safety assertions
+- sample summaries avoid forbidden wording
+- no route/navigation changes
+- no feedback form runtime
+- no backlog UI
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC28 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC29 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future backlog preview UI requires separate planning and approval.
