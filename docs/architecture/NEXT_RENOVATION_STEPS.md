@@ -4399,4 +4399,31 @@ Recommended next:
 3. Post-merge QA.
 4. Future UI implementation only on a separate explicitly approved branch.
 
+## S²IMS Candidate Selection Review Plan QA MC5
+
+MC5 QA completed for future manual candidate selection/review planning.
+
+QA confirmed:
+- docs-only scope
+- no UI implementation
+- no runtime modification
+- no auto-assignment
+- no default selected candidate
+- selected does not mean approved
+- advisor recommendation does not mean scholarship approval
+- staff selection does not mean scholarship decision
+- override reason boundary documented
+- filtering/sorting safety documented
+- audit-awareness documented but not implemented
+- MC1/MC2/MC3/MC4 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC5 plan after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future UI implementation only on a separate explicitly approved branch.
+
 ## End of AP-9B
