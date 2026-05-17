@@ -1217,3 +1217,41 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future backlog UI or persistence requires separate planning and approval.
+
+## S²IMS Candidate Review Demo Feedback Backlog Mock Runtime Post-Merge QA MC27
+
+MC27 post-merge QA completed on `main`.
+
+Post-merge QA confirmed:
+- MC27 runtime package present on main
+- MC27 QA package present on main
+- MC27 merge checkpoint present on main
+- build 41/41
+- tokens 4/4
+- audit checks 372/372
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- pure TypeScript mock/in-memory item builder only
+- no feedback form runtime
+- no backlog UI
+- no route/navigation changes
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC26 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Keep MC27 as mock planning runtime only.
+2. Use MC27 output only for safe planning discussions.
+3. Create a separate approved branch for any future backlog UI.
+4. Create a separate approved branch for any future persistence.
