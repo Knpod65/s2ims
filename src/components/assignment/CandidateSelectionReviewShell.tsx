@@ -5,6 +5,10 @@ import {
   CandidateReviewAction,
   createCandidateReviewStateTransition,
 } from "@/lib/assignment/candidateReviewState";
+import {
+  buildCandidateReviewAuditNoopPreview,
+  type CandidateReviewAuditNoopWiringResult,
+} from "@/lib/assignment/candidateReviewAuditNoopWiring";
 
 export type CandidateSelectionReviewShellProps = {
   candidates: CombinedCandidatePoolItem[];
@@ -61,8 +65,14 @@ export default function CandidateSelectionReviewShell({
     [candidates]
   );
   const [reviewStateMap, setReviewStateMap] = useState<Record<string, CandidateReviewState>>(initialMap);
+  const [auditPreview, setAuditPreview] = useState<CandidateReviewAuditNoopWiringResult | null>(null);
 
-  function applyAction(candidateId: string, action: CandidateReviewAction, safeReasonCode?: string) {
+  function applyAction(
+    candidateId: string,
+    action: CandidateReviewAction,
+    candidate: CombinedCandidatePoolItem,
+    safeReasonCode?: string
+  ) {
     const prev = reviewStateMap[candidateId] ?? ("not_reviewed" as CandidateReviewState);
     const transition = createCandidateReviewStateTransition({
       candidateId,
@@ -71,6 +81,18 @@ export default function CandidateSelectionReviewShell({
       safeReasonCode,
     });
     setReviewStateMap((s) => ({ ...s, [candidateId]: transition.nextState }));
+    try {
+      const preview = buildCandidateReviewAuditNoopPreview({
+        transition,
+        poolType: candidate.poolType,
+        roleCategory: candidate.roleCategory,
+        actorRole: "system_preview",
+        workflowContext: "candidate_review",
+      });
+      setAuditPreview(preview);
+    } catch {
+      setAuditPreview(null);
+    }
   }
 
   return (
@@ -159,12 +181,12 @@ export default function CandidateSelectionReviewShell({
                       </>
                     ) : (
                       <>
-                        <ActionButton label="Shortlist" onClick={() => applyAction(candidate.candidateId, "shortlist_candidate")} />
-                        <ActionButton label="Skip" onClick={() => applyAction(candidate.candidateId, "skip_candidate")} />
-                        <ActionButton label="Needs more context" onClick={() => applyAction(candidate.candidateId, "request_more_context")} />
-                        <ActionButton label="Reject for assignment" onClick={() => applyAction(candidate.candidateId, "reject_for_assignment")} />
-                        <ActionButton label="Select for review" onClick={() => applyAction(candidate.candidateId, "manually_select_candidate")} />
-                        <ActionButton label="Clear" onClick={() => applyAction(candidate.candidateId, "clear_review_state")} />
+                        <ActionButton label="Shortlist" onClick={() => applyAction(candidate.candidateId, "shortlist_candidate", candidate)} />
+                        <ActionButton label="Skip" onClick={() => applyAction(candidate.candidateId, "skip_candidate", candidate)} />
+                        <ActionButton label="Needs more context" onClick={() => applyAction(candidate.candidateId, "request_more_context", candidate)} />
+                        <ActionButton label="Reject for assignment" onClick={() => applyAction(candidate.candidateId, "reject_for_assignment", candidate)} />
+                        <ActionButton label="Select for review" onClick={() => applyAction(candidate.candidateId, "manually_select_candidate", candidate)} />
+                        <ActionButton label="Clear" onClick={() => applyAction(candidate.candidateId, "clear_review_state", candidate)} />
                       </>
                     )}
                   </div>
@@ -174,6 +196,48 @@ export default function CandidateSelectionReviewShell({
           })}
         </div>
       )}
+
+      <div className="rounded-md border border-line bg-surface-low p-4 space-y-3">
+        <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          Audit preview is diagnostic only. It is not saved, not submitted, not official evidence, and not an approval or assignment.
+        </div>
+        {auditPreview ? (
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold text-ink-1">Diagnostic Preview</h3>
+            <dl className="grid gap-1 text-sm sm:grid-cols-2">
+              <PreviewField label="Event" value={auditPreview.event.eventName} />
+              <PreviewField label="Pool type" value={auditPreview.event.poolType} />
+              <PreviewField label="Role category" value={auditPreview.event.roleCategory} />
+              <PreviewField label="Workflow context" value={auditPreview.event.workflowContext} />
+              <PreviewField label="Previous state" value={auditPreview.event.previousReviewState} />
+              <PreviewField label="Next state" value={auditPreview.event.nextReviewState} />
+              {auditPreview.event.safeReasonCode ? (
+                <PreviewField label="Reason code" value={auditPreview.event.safeReasonCode} />
+              ) : null}
+              <PreviewField label="Mode" value={auditPreview.mode} />
+              <PreviewField label="Persisted" value={String(auditPreview.persisted)} />
+              <PreviewField label="Written" value={String(auditPreview.written)} />
+              <PreviewField label="Exported" value={String(auditPreview.exported)} />
+              <PreviewField label="Notified" value={String(auditPreview.notified)} />
+              <PreviewField label="Official evidence" value={String(auditPreview.officialEvidence)} />
+              <PreviewField label="Diagnostic only" value={String(auditPreview.diagnosticOnly)} />
+              <PreviewField label="Discarded after preview" value={String(auditPreview.discardedAfterPreview)} />
+            </dl>
+            <p className="text-xs text-ink-3">{auditPreview.message}</p>
+            <button
+              type="button"
+              onClick={() => setAuditPreview(null)}
+              className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink-1 hover:bg-surface-hover"
+            >
+              Clear Preview
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-ink-2">
+            No diagnostic preview has been generated. Review actions remain local UI signals only.
+          </p>
+        )}
+      </div>
     </section>
   );
 }
@@ -188,6 +252,15 @@ function SummaryTile({ label, value }: { label: string; value: number }) {
 }
 
 function SafeField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <dt className="text-xs font-semibold uppercase text-ink-3">{label}</dt>
+      <dd className="mt-0.5 break-words text-ink-1">{value}</dd>
+    </div>
+  );
+}
+
+function PreviewField({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="text-xs font-semibold uppercase text-ink-3">{label}</dt>

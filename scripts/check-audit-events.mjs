@@ -2461,6 +2461,94 @@ addCheck('AP-9G Stage 2 audit-log export remains on display rows only', () => {
     !source.includes('sourceCount')
 })
 
+// MC13 Candidate Review Audit Preview UI Integration checks
+addCheck('MC13: shell imports buildCandidateReviewAuditNoopPreview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('buildCandidateReviewAuditNoopPreview')
+})
+
+addCheck('MC13: shell has diagnostic preview warning copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('Audit preview is diagnostic only.')
+})
+
+addCheck('MC13: shell has not saved, not submitted, not official evidence copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('not saved') &&
+    source.includes('not submitted') &&
+    source.includes('not official evidence')
+})
+
+addCheck('MC13: shell displays persisted field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.persisted')
+})
+
+addCheck('MC13: shell displays written field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.written')
+})
+
+addCheck('MC13: shell displays exported field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.exported')
+})
+
+addCheck('MC13: shell displays notified field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.notified')
+})
+
+addCheck('MC13: shell displays officialEvidence field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.officialEvidence')
+})
+
+addCheck('MC13: shell displays diagnosticOnly field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.diagnosticOnly')
+})
+
+addCheck('MC13: shell displays discardedAfterPreview field in preview', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('auditPreview.discardedAfterPreview')
+})
+
+addCheck('MC13: shell has no-preview empty state copy', () => {
+  const source = readCandidateSelectionShell()
+  return source.includes('No diagnostic preview has been generated') &&
+    source.includes('Review actions remain local UI signals only')
+})
+
+addCheck('MC13: shell does not import or call sharedMockWriter', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('sharedMockWriter')
+})
+
+addCheck('MC13: shell does not import or call AuditService', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('AuditService')
+})
+
+addCheck('MC13: shell does not import or call repository', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('repository') && !source.includes('Repository')
+})
+
+addCheck('MC13: shell does not use browser storage', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('localStorage') &&
+    !source.includes('sessionStorage') &&
+    !source.includes('indexedDB')
+})
+
+addCheck('MC13: shell does not call fetch or API', () => {
+  const source = readCandidateSelectionShell()
+  return !source.includes('fetch(') &&
+    !source.includes('axios') &&
+    !source.includes('XMLHttpRequest')
+})
+
 // MC2 Advisor Candidate Generator Runtime checks
 const advisorGeneratorModule = loadTsModule(path.join(repoRoot, 'src/lib/assignment/advisorCandidateGenerator.ts'))
 const {
