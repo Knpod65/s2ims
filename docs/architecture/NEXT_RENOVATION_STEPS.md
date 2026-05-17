@@ -4258,4 +4258,40 @@ MC3 runtime is merged and closed on main.
 Future UI integration is a separate explicitly approved branch and task.
 AP-10B owner candidate identification remains the only unblocked governance action.
 
+## S²IMS Combined Candidate Pool Runtime MC4
+
+Date: 2026-05-16
+Branch: architecture/s2ims-combined-candidate-pool-runtime-mc4
+
+MC4 runtime implemented as a pure TypeScript combined candidate pool integration under src/lib/assignment.
+
+Files created: src/lib/assignment/combinedCandidatePool.ts
+Files modified: src/lib/assignment/index.ts, scripts/check-audit-events.mjs (178 → 198 checks)
+
+Runtime guarantees:
+- MC2 advisor candidates and MC3 staff candidates combine into one safe candidate pool
+- no auto-assignment
+- status remains suggested
+- isMock remains true
+- autoAssigned remains false
+- autoAssignedCount remains 0
+- mobile hidden
+- phone hidden
+- personal email hidden by default
+- remark excluded
+- raw student ID not accepted or emitted
+- no approval or scholarship decision fields
+- MC1 boundary preserved
+- MC2 boundary preserved
+- MC3 boundary preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC4 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA after merge.
+4. Future UI integration only on a separate explicitly approved branch.
+
 ## End of AP-9B

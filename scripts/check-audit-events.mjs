@@ -2186,6 +2186,150 @@ addCheck('MC3 index.ts exports staffCandidateGenerator functions', () => {
   return indexSource.includes('./staffCandidateGenerator')
 })
 
+// MC4 Combined Candidate Pool Runtime checks
+const combinedPoolModule = loadTsModule(path.join(repoRoot, 'src/lib/assignment/combinedCandidatePool.ts'))
+const {
+  combineCandidatePools,
+  assertSafeCombinedCandidate,
+  filterCombinedCandidatesByPoolType,
+  summarizeCombinedCandidatePool,
+} = combinedPoolModule
+
+addCheck('MC4 combinedCandidatePool module imports cleanly', () => {
+  return typeof combinedPoolModule === 'object' && combinedPoolModule !== null
+})
+
+addCheck('MC4 combineCandidatePools is a function', () => {
+  return typeof combineCandidatePools === 'function'
+})
+
+addCheck('MC4 assertSafeCombinedCandidate is a function', () => {
+  return typeof assertSafeCombinedCandidate === 'function'
+})
+
+addCheck('MC4 filterCombinedCandidatesByPoolType is a function', () => {
+  return typeof filterCombinedCandidatesByPoolType === 'function'
+})
+
+addCheck('MC4 summarizeCombinedCandidatePool is a function', () => {
+  return typeof summarizeCombinedCandidatePool === 'function'
+})
+
+addCheck('MC4 advisor item gets poolType "advisor"', () => {
+  const advisorRecord = { teacher_id: 'T001', name: 'Advisor', surname: 'Test', department: 'GOV' }
+  const advisorPool = buildAdvisorCandidatePool([advisorRecord])
+  const result = combineCandidatePools({ advisorPool })
+  return result.items.length === 1 && result.items[0].poolType === 'advisor'
+})
+
+addCheck('MC4 staff item gets poolType "staff"', () => {
+  const staffRecord = { employee_id: 'E001', name: 'Staff', surname: 'Test', unit: 'IT_Communication' }
+  const staffPool = buildStaffCandidatePool([staffRecord])
+  const result = combineCandidatePools({ staffPool })
+  return result.items.length === 1 && result.items[0].poolType === 'staff'
+})
+
+addCheck('MC4 combined candidateCount equals advisor + staff count', () => {
+  const advisorPool = buildAdvisorCandidatePool([
+    { teacher_id: 'T002', name: 'A', surname: 'B', department: 'PA' },
+    { teacher_id: 'T003', name: 'C', surname: 'D', department: 'IA' },
+  ])
+  const staffPool = buildStaffCandidatePool([
+    { employee_id: 'E002', name: 'E', surname: 'F', unit: 'Student_Development' },
+  ])
+  const result = combineCandidatePools({ advisorPool, staffPool })
+  return result.candidateCount === 3 &&
+    result.advisorCandidateCount === 2 &&
+    result.staffCandidateCount === 1
+})
+
+addCheck('MC4 combined result autoAssignedCount is 0', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T004', name: 'X', surname: 'Y' }])
+  const result = combineCandidatePools({ advisorPool })
+  return result.autoAssignedCount === 0
+})
+
+addCheck('MC4 combined unsafeRecordCount sums source unsafe counts', () => {
+  const advisorPool = { items: [], sourceRecordCount: 2, candidateCount: 0, autoAssignedCount: 0, unsafeRecordCount: 2 }
+  const staffPool = { items: [], sourceRecordCount: 3, candidateCount: 0, autoAssignedCount: 0, unsafeRecordCount: 1 }
+  const result = combineCandidatePools({ advisorPool, staffPool })
+  return result.unsafeRecordCount === 3
+})
+
+addCheck('MC4 advisor candidates retain status "suggested" after combine', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T005', name: 'A', surname: 'B', department: 'GOV' }])
+  const result = combineCandidatePools({ advisorPool })
+  return result.items.every(item => item.status === 'suggested')
+})
+
+addCheck('MC4 staff candidates retain status "suggested" after combine', () => {
+  const staffPool = buildStaffCandidatePool([{ employee_id: 'E003', name: 'S', surname: 'T', unit: 'Finance_Supplies' }])
+  const result = combineCandidatePools({ staffPool })
+  return result.items.every(item => item.status === 'suggested')
+})
+
+addCheck('MC4 advisor candidates retain autoAssigned false after combine', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T006', name: 'A', surname: 'B', department: 'PA' }])
+  const result = combineCandidatePools({ advisorPool })
+  return result.items.every(item => item.autoAssigned === false)
+})
+
+addCheck('MC4 staff candidates retain autoAssigned false after combine', () => {
+  const staffPool = buildStaffCandidatePool([{ employee_id: 'E004', name: 'S', surname: 'T' }])
+  const result = combineCandidatePools({ staffPool })
+  return result.items.every(item => item.autoAssigned === false)
+})
+
+addCheck('MC4 no mobile field in combined output', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T007', name: 'A', surname: 'B' }])
+  const staffPool = buildStaffCandidatePool([{ employee_id: 'E005', name: 'S', surname: 'T' }])
+  const result = combineCandidatePools({ advisorPool, staffPool })
+  return result.items.every(item => !('mobile' in item))
+})
+
+addCheck('MC4 no phone field in combined output', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T008', name: 'A', surname: 'B' }])
+  const staffPool = buildStaffCandidatePool([{ employee_id: 'E006', name: 'S', surname: 'T' }])
+  const result = combineCandidatePools({ advisorPool, staffPool })
+  return result.items.every(item => !('phone' in item))
+})
+
+addCheck('MC4 no approval fields in combined output', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T009', name: 'A', surname: 'B' }])
+  const staffPool = buildStaffCandidatePool([{ employee_id: 'E007', name: 'S', surname: 'T' }])
+  const result = combineCandidatePools({ advisorPool, staffPool })
+  const forbidden = ['approvalStatus', 'approvedBy', 'approvalCollected']
+  return result.items.every(item => forbidden.every(k => !(k in item)))
+})
+
+addCheck('MC4 no scholarshipDecision field in combined output', () => {
+  const advisorPool = buildAdvisorCandidatePool([{ teacher_id: 'T010', name: 'A', surname: 'B' }])
+  const staffPool = buildStaffCandidatePool([{ employee_id: 'E008', name: 'S', surname: 'T' }])
+  const result = combineCandidatePools({ advisorPool, staffPool })
+  return result.items.every(item => !('scholarshipDecision' in item))
+})
+
+addCheck('MC4 assertSafeCombinedCandidate throws on invalid poolType', () => {
+  const invalidCandidate = {
+    candidateId: 'advisor:T999', sourceType: 'personnel', sourceId: 'T999',
+    displayName: 'Test', roleCategory: 'academic_advisor', roleLabel: 'Academic Advisor',
+    unitOrDepartment: 'GOV', assignmentContexts: ['advisor_review'],
+    status: 'suggested', confidence: 'rule_based', isMock: true, autoAssigned: false,
+    privacyLevel: 'safe_display', poolType: 'unknown',
+  }
+  try {
+    assertSafeCombinedCandidate(invalidCandidate)
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC4 index.ts exports combinedCandidatePool functions', () => {
+  const indexSource = fs.readFileSync(path.join(repoRoot, 'src/lib/assignment/index.ts'), 'utf8')
+  return indexSource.includes('./combinedCandidatePool')
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
