@@ -398,5 +398,5 @@ Recommended next:
 3. Post-merge QA.
 4. Future real audit-write integration only after a separate explicit approval phase.
 
-MC13 QA passed on feature branch (commit 9efdff7). Build 40/40, tokens 4/4, audit checks 278/278, routes 5×200 OK, dev log clean. Ready to merge.
+MC13 QA passed on feature branch (commit 9efdff7). Build 40/40, tokens 4/4, audit checks 278/278, routes 5×200 OK, dev log clean. Merged to main as commit 37d7df6. Post-merge QA passed.
 EOF
