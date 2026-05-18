@@ -2114,3 +2114,42 @@ Recommended next:
 MC39 QA passed on the feature branch (package commit 9b8deda). Feedback synthesis planning confirmed: master synthesis plan, safe output template, classification matrix, governance-sensitive separation, and follow-up branch rules. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
 
 MC39 merged to main (merge commit 27d8599). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline remains 440/440. MC39 is complete.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Mock Runtime Plan MC40
+
+MC40 created a documentation-only plan for a future pure TypeScript mock/in-memory feedback synthesis runtime.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no feedback form runtime
+- no synthesis runtime implementation
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- input contract documented
+- output contract documented
+- runtime contract documented
+- implementation checklist documented
+- governance-sensitive separation documented
+- no-write/no-persistence guarantees documented
+- MC1-MC39 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC40 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future synthesis runtime implementation only on a separate explicitly approved branch.
+
+MC40 QA passed on the feature branch (package commit 6343b19). Feedback synthesis mock runtime planning confirmed: runtime plan, runtime contract, implementation checklist, input/output contracts, safety guards, and no-write/no-persistence guarantees. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
