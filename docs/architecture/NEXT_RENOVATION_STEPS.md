@@ -1780,3 +1780,42 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future route integration runtime only on a separate explicitly approved branch.
+
+## S2IMS Candidate Review Demo Feedback Backlog Preview Route Integration Plan Post-Merge QA MC32
+
+MC32 post-merge QA completed on `main`.
+
+Post-merge QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 406/406
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no component route wiring
+- no new route
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- existing hidden demo route remains the only planned future integration target
+- MC1-MC31 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Keep MC32 as route integration planning only.
+2. Use the existing hidden `/admin/candidate-review-demo` route for any future approved integration.
+3. Do not expose the demo route in navigation.
+4. Future runtime integration must remain read-only and use MC29 safe sample data only.
