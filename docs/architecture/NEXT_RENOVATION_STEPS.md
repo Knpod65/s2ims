@@ -1951,3 +1951,5 @@ Recommended next:
 4. Future stakeholder walkthrough should use the hardened combined demo route.
 
 MC35 QA passed on feature branch (commit ffbd21c). Route UX hardening confirmed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
+
+MC35 merged to main (merge commit d14f100). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline is now 440/440. MC35 is complete.
