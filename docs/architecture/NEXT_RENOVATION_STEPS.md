@@ -1860,3 +1860,49 @@ Recommended next:
 MC33 QA passed on feature branch (commit 694948b). Route integration confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
 
 MC33 merged to main as commit aa53f0c. Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean. Baseline unchanged.
+
+---
+
+## S²IMS Candidate Review Demo Combined Preview QA & UX Hardening Plan MC34
+
+MC34 created a documentation-only QA and UX hardening plan for the combined hidden demo route containing candidate review diagnostic preview and feedback backlog preview.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- combined route QA plan documented
+- QA scenario matrix documented (8 scenario groups)
+- UX hardening checklist documented (allowed/forbidden files, all checklist categories)
+- section separation rules documented
+- confusion risks documented
+- accessibility and responsive requirements documented
+- negative behavior checks documented
+- MC1–MC33 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_QA_UX_PLAN_MC34.md` — Master QA/UX hardening plan
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_QA_MATRIX_MC34.md` — QA scenario matrix
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_UX_HARDENING_CHECKLIST_MC34.md` — UX hardening checklist
+
+Recommended next:
+1. Run MC34 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future UX hardening runtime only on a separate explicitly approved branch following MC34 checklist.
+
+MC34 QA passed on feature branch (commit 6e0a4fb). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
