@@ -1908,3 +1908,46 @@ Recommended next:
 MC34 QA passed on feature branch (commit 6e0a4fb). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
 
 MC34 merged to main as commit 4bcd0b1. Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean. Baseline unchanged.
+
+---
+
+## S²IMS Candidate Review Demo Combined Preview UX Hardening Runtime MC35
+
+MC35 hardened the existing hidden `/admin/candidate-review-demo` route so the candidate review diagnostic preview and feedback backlog preview are more clearly separated.
+
+Runtime guarantees:
+- existing hidden demo route only
+- no new route/page created
+- no navigation exposure
+- no sidebar/topbar/mobile nav changes
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- route-level demo/read-only/non-official copy strengthened
+- h1 page heading added
+- candidate section h2 heading added with accessible label
+- backlog section h2 heading added with accessible label
+- per-section helper copy added
+- safe mock sample data only
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1–MC34 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+- 22 MC35 checks added — new total 440/440
+
+Recommended next:
+1. Run MC35 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future stakeholder walkthrough should use the hardened combined demo route.
+
+MC35 QA passed on feature branch (commit ffbd21c). Route UX hardening confirmed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
