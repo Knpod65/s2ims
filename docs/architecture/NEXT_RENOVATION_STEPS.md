@@ -2030,3 +2030,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Use dry-run package before any real stakeholder walkthrough.
+
+MC37 QA passed on feature branch (commit eb764ae). Dry-run package confirmed: master plan, facilitator checklist, readiness scorecard. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
