@@ -1592,3 +1592,78 @@ Recommended next:
 2. Create a separate approved branch for any future read-only backlog preview UI runtime.
 3. Preserve MC29 as the only approved future sample data source unless a later planning milestone changes it.
 4. Continue blocking persistence, audit writes, feedback intake, and AP-10B governance work until separately approved.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Runtime MC31
+
+MC31 implemented a reusable read-only feedback backlog preview component.
+
+Runtime guarantees:
+- React presentational component only
+- uses MC29 safe mock sample data helpers
+- no route/page creation
+- no route/navigation changes
+- no demo route navigation exposure
+- no feedback form runtime
+- no feedback collection
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- visible read-only planning labels
+- visible false safety flags
+- accessible section labels
+- static category grouping only
+- MC1-MC30 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC31 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future route/page wiring for this component requires a separate approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Runtime QA MC31
+
+MC31 runtime QA completed for the reusable read-only feedback backlog preview component.
+
+QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 406/406
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- read-only React component only
+- uses MC29 safe mock sample data helpers
+- no route/page creation
+- no route/navigation changes
+- no demo route navigation exposure
+- no feedback form runtime
+- no feedback collection
+- no action buttons
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- route/page/navigation files do not import `FeedbackBacklogPreview`
+- MC1-MC30 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC31 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future route/page wiring for this component requires a separate approved branch.

@@ -3919,6 +3919,165 @@ addCheck('MC29 summary helper returns aggregate planning-only metadata', () => {
     !('summaries' in summary)
 })
 
+// MC31 Candidate Review Demo Feedback Backlog Preview UI Runtime checks
+const feedbackBacklogPreviewPath = path.join(repoRoot, 'src/components/assignment/FeedbackBacklogPreview.tsx')
+function readFeedbackBacklogPreview() { return fs.readFileSync(feedbackBacklogPreviewPath, 'utf-8') }
+
+addCheck('MC31 FeedbackBacklogPreview.tsx exists', () =>
+  fs.existsSync(feedbackBacklogPreviewPath) && fs.statSync(feedbackBacklogPreviewPath).isFile()
+)
+
+addCheck('MC31 FeedbackBacklogPreview exports component and props type', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('export type FeedbackBacklogPreviewProps') &&
+    source.includes('export default function FeedbackBacklogPreview')
+})
+
+addCheck('MC31 FeedbackBacklogPreview imports MC29 safe sample helpers', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('DemoFeedbackBacklogItem') &&
+    source.includes('createDemoFeedbackBacklogSamples') &&
+    source.includes('summarizeDemoFeedbackBacklogSamples') &&
+    source.includes('@/lib/assignment')
+})
+
+addCheck('MC31 FeedbackBacklogPreview uses MC29 samples as default data source', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('items ?? createDemoFeedbackBacklogSamples()')
+})
+
+addCheck('MC31 FeedbackBacklogPreview includes required read-only boundary copy', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('Demo feedback backlog preview') &&
+    source.includes('Read-only planning preview') &&
+    source.includes('Uses safe mock sample data only') &&
+    source.includes('Feedback backlog preview items are mock planning artifacts only.')
+})
+
+addCheck('MC31 FeedbackBacklogPreview includes required safety labels', () => {
+  const source = readFeedbackBacklogPreview()
+  return [
+    'Not saved',
+    'Not submitted',
+    'Not official evidence',
+    'Not an approval',
+    'Not an assignment',
+    'No AP-10B gate change',
+  ].every((token) => source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview includes exact empty state copy', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('No demo feedback backlog preview items are available. This preview uses safe mock sample data only and does not collect or save feedback.')
+})
+
+addCheck('MC31 FeedbackBacklogPreview displays allowed safe fields', () => {
+  const source = readFeedbackBacklogPreview()
+  return [
+    'backlogId',
+    'sourceSessionId',
+    'stakeholderGroup',
+    'category',
+    'priority',
+    'summary',
+    'safetyConcern',
+    'proposedBranchType',
+    'ap10bImpact',
+    'status',
+  ].every((token) => source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview displays fixed safety flags', () => {
+  const source = readFeedbackBacklogPreview()
+  return [
+    'nonApprovalConfirmed',
+    'isMock',
+    'officialEvidence',
+    'approvalCollected',
+    'persisted',
+    'exported',
+    'notified',
+  ].every((token) => source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview includes static grouping by category', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('groupItemsByCategory') &&
+    source.includes('Object.entries(groupedItems)')
+})
+
+addCheck('MC31 FeedbackBacklogPreview has accessible labels and semantic sections', () => {
+  const source = readFeedbackBacklogPreview()
+  return source.includes('<section') &&
+    source.includes('aria-label="Read-only demo feedback backlog preview"') &&
+    source.includes('aria-label="Feedback backlog preview safety boundary"') &&
+    source.includes('aria-label="Feedback backlog preview summary"')
+})
+
+addCheck('MC31 FeedbackBacklogPreview does not render forbidden PII fields', () => {
+  const source = readFeedbackBacklogPreview()
+  const forbidden = ['mobile', 'phone', 'email', 'personalEmail', 'rawEmail', 'privateEmail', 'rawStudentId', 'studentId', 'teacherId', 'nationalId', 'bankAccount', 'privateRemark']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview has no form or action controls', () => {
+  const source = readFeedbackBacklogPreview()
+  const forbidden = ['<form', '<input', '<textarea', '<select', '<button', 'type="submit"', 'onSubmit', 'onClick']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview has no enabled official action wording', () => {
+  const source = readFeedbackBacklogPreview()
+  const forbidden = ['Submit feedback', 'Save feedback', 'Record feedback', 'Approve', 'Assign', 'Decision completed', 'AP-10B approval collected', 'Authority verified']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview has no fetch/API/browser storage', () => {
+  const source = readFeedbackBacklogPreview()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview has no audit writer or repository calls', () => {
+  const source = readFeedbackBacklogPreview()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository', 'writeAudit', 'recordAudit']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC31 FeedbackBacklogPreview has no export/download/notification behavior', () => {
+  const source = readFeedbackBacklogPreview()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC31 route/page/navigation files do not import FeedbackBacklogPreview', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const navFiles = [
+    path.join(repoRoot, 'src/lib/navigation.ts'),
+    path.join(repoRoot, 'src/components/layout/Sidebar.tsx'),
+    path.join(repoRoot, 'src/components/layout/Topbar.tsx'),
+    path.join(repoRoot, 'src/components/layout/MobileBottomNav.tsx'),
+  ]
+
+  function scanRuntimeDirs(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanRuntimeDirs(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+
+  const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
+  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('FeedbackBacklogPreview'))
+})
+
+addCheck('MC31 assignment component index exports FeedbackBacklogPreview', () => {
+  const source = fs.readFileSync('src/components/assignment/index.ts', 'utf-8')
+  return source.includes('FeedbackBacklogPreview') &&
+    source.includes('FeedbackBacklogPreviewProps')
+})
+
 // MC22 Candidate Review Demo Route Navigation Safety checks
 const navConfigPath = 'src/lib/navigation.ts'
 const sidebarPath = 'src/components/layout/Sidebar.tsx'
