@@ -2072,3 +2072,5 @@ Recommended next:
 4. Use MC38 only for feedback sessions, not approval collection.
 
 MC38 QA passed on the feature branch (package commit 1e831b5). Stakeholder feedback session planning confirmed: master session plan, safe feedback note template, readiness checklist, safe feedback boundaries, and governance-sensitive escalation rules. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
+
+MC38 merged to main (merge commit decf46a). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline remains 440/440. MC38 is complete.
