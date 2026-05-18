@@ -1904,3 +1904,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future UX hardening runtime only on a separate explicitly approved branch following MC34 checklist.
+
+MC34 QA passed on feature branch (commit 6e0a4fb). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
