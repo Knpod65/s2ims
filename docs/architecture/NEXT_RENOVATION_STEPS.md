@@ -1628,3 +1628,42 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future route/page wiring for this component requires a separate approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Runtime QA MC31
+
+MC31 runtime QA completed for the reusable read-only feedback backlog preview component.
+
+QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 406/406
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- read-only React component only
+- uses MC29 safe mock sample data helpers
+- no route/page creation
+- no route/navigation changes
+- no demo route navigation exposure
+- no feedback form runtime
+- no feedback collection
+- no action buttons
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- route/page/navigation files do not import `FeedbackBacklogPreview`
+- MC1-MC30 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC31 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future route/page wiring for this component requires a separate approved branch.
