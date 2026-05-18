@@ -1705,3 +1705,78 @@ Recommended next:
 2. Create a separate approved branch for any future route/page wiring.
 3. Preserve MC29 safe sample runtime as the only approved data source until a later milestone changes it.
 4. Continue blocking persistence, audit writes, feedback intake, and AP-10B governance work until separately approved.
+
+## S2IMS Candidate Review Demo Feedback Backlog Preview Route Integration Plan MC32
+
+MC32 created a future route integration plan for displaying the MC31 read-only feedback backlog preview component inside the existing hidden demo route.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no backlog preview route integration yet
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- existing hidden demo route selected as future integration target
+- route safety checklist documented
+- route QA matrix documented
+- MC1-MC31 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC32 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future route integration runtime only on a separate explicitly approved branch.
+
+## S2IMS Candidate Review Demo Feedback Backlog Preview Route Integration Plan QA MC32
+
+MC32 QA completed for the documentation-only future route integration plan.
+
+QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 406/406
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- existing hidden demo route selected as future integration target
+- no new route planned
+- allowed component documented
+- allowed MC29 sample runtime data source documented
+- required route copy documented
+- route safety checklist documented
+- route QA matrix documented
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC31 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC32 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future route integration runtime only on a separate explicitly approved branch.
