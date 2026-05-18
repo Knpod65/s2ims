@@ -1667,3 +1667,41 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future route/page wiring for this component requires a separate approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Runtime Post-Merge QA MC31
+
+MC31 post-merge QA completed on `main`.
+
+Post-merge QA confirmed:
+- build 41/41
+- tokens 4/4
+- audit checks 406/406
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- read-only component present on main
+- component export present
+- MC31 static checks present
+- no route/page creation
+- no route/navigation changes
+- no demo route navigation exposure
+- no feedback form runtime
+- no feedback collection
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- route/page/navigation files do not import `FeedbackBacklogPreview`
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Keep MC31 as an isolated reusable preview component.
+2. Create a separate approved branch for any future route/page wiring.
+3. Preserve MC29 safe sample runtime as the only approved data source until a later milestone changes it.
+4. Continue blocking persistence, audit writes, feedback intake, and AP-10B governance work until separately approved.
