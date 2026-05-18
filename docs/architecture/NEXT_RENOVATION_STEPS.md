@@ -1953,3 +1953,40 @@ Recommended next:
 MC35 QA passed on feature branch (commit ffbd21c). Route UX hardening confirmed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
 
 MC35 merged to main (merge commit d14f100). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline is now 440/440. MC35 is complete.
+
+## S²IMS Candidate Review Demo Combined Preview Stakeholder Walkthrough Update Plan MC36
+
+MC36 updates stakeholder walkthrough guidance for the hardened combined demo route containing candidate review diagnostic preview and feedback backlog preview.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- updated walkthrough script documented
+- two-section explanation documented
+- false safety flag explanation documented
+- stakeholder Q&A guardrails documented
+- production-readiness boundary documented
+- MC1–MC35 boundaries preserved
+- AP-10B gate unchanged: 0/7, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC36 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Use updated walkthrough only for non-approval stakeholder feedback sessions.
+
+MC36 QA passed on feature branch (commit 82b3f9b). Walkthrough docs confirmed: master plan, script, Q&A guardrails. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
