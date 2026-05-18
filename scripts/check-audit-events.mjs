@@ -4238,6 +4238,119 @@ addCheck('MC33 navigation remains hidden from demo route', () =>
   !readMobileNav().includes('candidate-review-demo')
 )
 
+// MC35 Candidate Review Demo Combined Preview UX Hardening Runtime checks
+addCheck('MC35 demo route has route-level h1 heading', () => {
+  const source = readDemoPage()
+  return source.includes('<h1')
+})
+
+addCheck('MC35 demo route route-level copy — read-only demo statement', () => {
+  const source = readDemoPage()
+  return source.includes('This page is a read-only demo')
+})
+
+addCheck('MC35 demo route route-level copy — does not save', () => {
+  const source = readDemoPage()
+  return source.includes('does not save')
+})
+
+addCheck('MC35 demo route route-level copy — does not submit', () => {
+  const source = readDemoPage()
+  return source.includes('does not submit')
+})
+
+addCheck('MC35 demo route route-level copy — does not approve', () => {
+  const source = readDemoPage()
+  return source.includes('does not approve')
+})
+
+addCheck('MC35 demo route route-level copy — does not assign', () => {
+  const source = readDemoPage()
+  return source.includes('does not assign')
+})
+
+addCheck('MC35 demo route route-level copy — does not export', () => {
+  const source = readDemoPage()
+  return source.includes('does not export')
+})
+
+addCheck('MC35 demo route route-level copy — does not notify', () => {
+  const source = readDemoPage()
+  return source.includes('does not notify')
+})
+
+addCheck('MC35 demo route route-level copy — does not create official evidence', () => {
+  const source = readDemoPage()
+  return source.includes('does not create official evidence')
+})
+
+addCheck('MC35 demo route route-level copy — not AP-10B evidence', () => {
+  const source = readDemoPage()
+  return source.includes('not AP-10B evidence')
+})
+
+addCheck('MC35 demo route has candidate section h2 heading', () => {
+  const source = readDemoPage()
+  return source.includes('Candidate Review Diagnostic Preview')
+})
+
+addCheck('MC35 demo route candidate section — local review signal only', () => {
+  const source = readDemoPage()
+  return source.includes('Local review signal only')
+})
+
+addCheck('MC35 demo route candidate section — no scholarship decision', () => {
+  const source = readDemoPage()
+  return source.includes('No scholarship decision')
+})
+
+addCheck('MC35 demo route candidate section — no candidate assignment', () => {
+  const source = readDemoPage()
+  return source.includes('No candidate assignment')
+})
+
+addCheck('MC35 demo route has backlog section h2 heading', () => {
+  const source = readDemoPage()
+  return source.includes('Feedback Backlog Preview')
+})
+
+addCheck('MC35 demo route backlog section — planning preview only', () => {
+  const source = readDemoPage()
+  return source.includes('Planning preview only')
+})
+
+addCheck('MC35 demo route backlog section — mock backlog items only', () => {
+  const source = readDemoPage()
+  return source.includes('Mock backlog items only')
+})
+
+addCheck('MC35 demo route backlog section — no feedback collection', () => {
+  const source = readDemoPage()
+  return source.includes('No feedback collection')
+})
+
+addCheck('MC35 demo route backlog section — no production backlog', () => {
+  const source = readDemoPage()
+  return source.includes('No production backlog')
+})
+
+addCheck('MC35 demo route candidate section has accessible label', () => {
+  const source = readDemoPage()
+  return source.includes('aria-label="Candidate review diagnostic preview section"')
+})
+
+addCheck('MC35 demo route backlog section has accessible label', () => {
+  const source = readDemoPage()
+  return source.includes('aria-label="Feedback backlog preview section"')
+})
+
+addCheck('MC35 navigation remains hidden from demo route', () =>
+  !readNavConfig().includes('candidate-review-demo') &&
+  !readSidebar().includes('candidate-review-demo') &&
+  !readTopbar().includes('candidate-review-demo') &&
+  !readMobileNav().includes('candidate-review-demo')
+)
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
