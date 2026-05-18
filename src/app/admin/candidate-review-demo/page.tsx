@@ -3,6 +3,7 @@ import {
   assertSafeCandidateReviewDemoData,
 } from "@/lib/assignment/candidateReviewDemoData";
 import CandidateSelectionReviewShell from "@/components/assignment/CandidateSelectionReviewShell";
+import { FeedbackBacklogPreview } from "@/components/assignment";
 
 export default function CandidateReviewDemoPage() {
   const candidates = createCandidateReviewDemoCandidates();
@@ -28,6 +29,12 @@ export default function CandidateReviewDemoPage() {
         description="Demo only. Uses safe mock data. Not an official workflow. Not saved. Not official evidence."
         readonly={true}
       />
+      <section className="mt-8" aria-label="Demo feedback backlog preview route section">
+        <FeedbackBacklogPreview
+          title="Demo backlog preview"
+          description="Safe mock data only. Read-only. Not saved. Not submitted. Not official evidence. Not approval. Not assignment. Not AP-10B evidence. No real stakeholder/student/personnel data."
+        />
+      </section>
     </main>
   );
 }

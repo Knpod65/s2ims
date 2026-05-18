@@ -4050,7 +4050,7 @@ addCheck('MC31 FeedbackBacklogPreview has no export/download/notification behavi
   return forbidden.every((token) => !source.includes(token))
 })
 
-addCheck('MC31 route/page/navigation files do not import FeedbackBacklogPreview', () => {
+addCheck('MC31 route/page/navigation files do not import FeedbackBacklogPreview outside MC33 demo route', () => {
   const routeRoot = path.join(repoRoot, 'src/app')
   const navFiles = [
     path.join(repoRoot, 'src/lib/navigation.ts'),
@@ -4069,7 +4069,10 @@ addCheck('MC31 route/page/navigation files do not import FeedbackBacklogPreview'
   }
 
   const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
-  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('FeedbackBacklogPreview'))
+  const allowedRoute = path.join(repoRoot, demoPagePath)
+  return files.every((file) =>
+    file === allowedRoute || !fs.readFileSync(file, 'utf-8').includes('FeedbackBacklogPreview')
+  )
 })
 
 addCheck('MC31 assignment component index exports FeedbackBacklogPreview', () => {
@@ -4134,6 +4137,105 @@ addCheck('MC22 Topbar exists', () =>
 
 addCheck('MC22 demo route not in Topbar', () =>
   !readTopbar().includes('candidate-review-demo')
+)
+
+// MC33 Candidate Review Demo Feedback Backlog Preview Route Runtime Integration checks
+addCheck('MC33 demo route imports FeedbackBacklogPreview from assignment barrel', () => {
+  const source = readDemoPage()
+  return source.includes('import { FeedbackBacklogPreview } from "@/components/assignment";')
+})
+
+addCheck('MC33 demo route renders FeedbackBacklogPreview', () => {
+  const source = readDemoPage()
+  return source.includes('<FeedbackBacklogPreview')
+})
+
+addCheck('MC33 demo route includes required backlog preview copy', () => {
+  const source = readDemoPage()
+  return [
+    'Demo backlog preview',
+    'Safe mock data only',
+    'Read-only',
+    'Not saved',
+    'Not submitted',
+    'Not official evidence',
+    'Not approval',
+    'Not assignment',
+    'Not AP-10B evidence',
+    'No real stakeholder/student/personnel data',
+  ].every((token) => source.includes(token))
+})
+
+addCheck('MC33 demo route uses FeedbackBacklogPreview default MC29 data source', () => {
+  const source = readDemoPage()
+  return !source.includes('items=') &&
+    !source.includes('createDemoFeedbackBacklogSamples') &&
+    !source.includes('demoFeedbackBacklogSamples')
+})
+
+addCheck('MC33 demo route preserves candidate review diagnostic demo shell', () => {
+  const source = readDemoPage()
+  return source.includes('CandidateSelectionReviewShell') &&
+    source.includes('createCandidateReviewDemoCandidates') &&
+    source.includes('assertSafeCandidateReviewDemoData') &&
+    source.includes('readonly={true}')
+})
+
+addCheck('MC33 demo route preserves existing demo warning copy', () => {
+  const source = readDemoPage()
+  return source.includes('Demo only. Diagnostic preview only. Uses safe mock data.') &&
+    source.includes('No real student or personnel data.') &&
+    source.includes('Not saved. Not submitted. Not official evidence.') &&
+    source.includes('Not an approval. Not an assignment. Not a scholarship decision.')
+})
+
+addCheck('MC33 demo route has no feedback form or action controls', () => {
+  const source = readDemoPage()
+  const forbidden = ['<form', '<input', '<textarea', '<select', '<button', 'type="submit"', 'onSubmit', 'onClick']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC33 demo route has no fetch/API/browser storage', () => {
+  const source = readDemoPage()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC33 demo route has no audit writer or repository calls', () => {
+  const source = readDemoPage()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'auditRepository', 'repository', 'Repository', 'writeAudit', 'recordAudit']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC33 demo route has no export/download/notification behavior', () => {
+  const source = readDemoPage()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC33 demo route is the only route/page importing FeedbackBacklogPreview', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const allowedRoute = path.join(repoRoot, demoPagePath)
+
+  function scanRuntimeDirs(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanRuntimeDirs(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+
+  return scanRuntimeDirs(routeRoot).every((file) =>
+    file === allowedRoute || !fs.readFileSync(file, 'utf-8').includes('FeedbackBacklogPreview')
+  )
+})
+
+addCheck('MC33 navigation remains hidden from demo route', () =>
+  !readNavConfig().includes('candidate-review-demo') &&
+  !readSidebar().includes('candidate-review-demo') &&
+  !readTopbar().includes('candidate-review-demo') &&
+  !readMobileNav().includes('candidate-review-demo')
 )
 
 await Promise.all(checkPromises)
