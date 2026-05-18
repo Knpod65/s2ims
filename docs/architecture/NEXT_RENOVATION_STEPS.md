@@ -1988,3 +1988,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Use updated walkthrough only for non-approval stakeholder feedback sessions.
+
+MC36 QA passed on feature branch (commit 82b3f9b). Walkthrough docs confirmed: master plan, script, Q&A guardrails. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
