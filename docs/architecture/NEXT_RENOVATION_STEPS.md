@@ -1858,3 +1858,5 @@ Recommended next:
 4. Future feedback intake, persistence, or official audit-write work requires a separate planning and approval phase.
 
 MC33 QA passed on feature branch (commit 694948b). Route integration confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
+
+MC33 merged to main as commit aa53f0c. Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean. Baseline unchanged.
