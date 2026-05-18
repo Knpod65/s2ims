@@ -1545,3 +1545,50 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future read-only backlog preview UI runtime requires a separate approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Plan Post-Merge QA MC30
+
+MC30 post-merge QA completed on `main`.
+
+Post-merge QA confirmed:
+- MC30 package present on main
+- MC30 QA package present on main
+- MC30 merge checkpoint present on main
+- docs-only scope preserved
+- build 41/41
+- tokens 4/4
+- audit checks 387/387
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- no source/runtime/UI changes
+- no scripts changes
+- no package changes
+- no routes/pages created
+- no route/navigation changes
+- no demo route navigation exposure
+- no backlog UI runtime
+- no feedback form runtime
+- no backend/API
+- no migrations, SQL, or schema implementation
+- no audit writes
+- no persistence
+- no browser storage
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- allowed data source remains MC29 sample runtime only
+- allowed/forbidden display field plan preserved
+- empty state plan preserved
+- grouping/filtering plan preserved
+- accessibility plan preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Keep MC30 as documentation-only planning.
+2. Create a separate approved branch for any future read-only backlog preview UI runtime.
+3. Preserve MC29 as the only approved future sample data source unless a later planning milestone changes it.
+4. Continue blocking persistence, audit writes, feedback intake, and AP-10B governance work until separately approved.
