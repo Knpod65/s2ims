@@ -1949,3 +1949,5 @@ Recommended next:
 2. Merge only after QA.
 3. Post-merge QA.
 4. Future stakeholder walkthrough should use the hardened combined demo route.
+
+MC35 QA passed on feature branch (commit ffbd21c). Route UX hardening confirmed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
