@@ -1819,3 +1819,42 @@ Recommended next:
 2. Use the existing hidden `/admin/candidate-review-demo` route for any future approved integration.
 3. Do not expose the demo route in navigation.
 4. Future runtime integration must remain read-only and use MC29 safe sample data only.
+
+## S2IMS Candidate Review Demo Feedback Backlog Preview Route Runtime MC33
+
+MC33 integrated the MC31 read-only feedback backlog preview component into the existing hidden demo route.
+
+Runtime guarantees:
+- existing hidden `/admin/candidate-review-demo` route only
+- no new route/page
+- no navigation changes
+- no sidebar/topbar/mobile nav exposure
+- uses `FeedbackBacklogPreview`
+- uses MC29 safe sample data through component default behavior
+- preserves existing candidate review diagnostic demo content
+- preserves demo-only/non-official warnings
+- no feedback form runtime
+- no feedback collection
+- no action buttons
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- MC1-MC32 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC33 runtime QA checkpoint.
+2. Merge only after QA.
+3. Post-merge QA.
+4. Future feedback intake, persistence, or official audit-write work requires a separate planning and approval phase.
+
+MC33 QA passed on feature branch (commit 694948b). Route integration confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
