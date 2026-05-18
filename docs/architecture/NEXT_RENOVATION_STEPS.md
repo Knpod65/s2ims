@@ -1456,3 +1456,92 @@ Recommended next:
 2. Create merge checkpoint.
 3. Run post-merge QA.
 4. Future backlog preview UI requires separate planning and approval.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Plan MC30
+
+MC30 created a documentation-only plan for a future read-only feedback backlog preview UI.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no scripts changes
+- no package changes
+- no routes/pages created
+- no route/navigation changes
+- no demo route navigation exposure
+- no backlog UI runtime
+- no feedback form runtime
+- no backend/API
+- no migrations, SQL, or schema implementation
+- no audit writes
+- no persistence
+- no browser storage
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- allowed data source is MC29 safe sample runtime only
+- allowed display fields documented
+- forbidden display fields documented
+- required preview copy documented
+- grouping/filtering expectations documented
+- empty state documented
+- accessibility expectations documented
+- future implementation checklist documented
+- MC1-MC29 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC30 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future read-only backlog preview UI runtime requires a separate approved branch.
+
+## S²IMS Candidate Review Demo Feedback Backlog Preview UI Plan QA MC30
+
+MC30 QA completed for the documentation-only future read-only feedback backlog preview UI plan.
+
+QA confirmed:
+- docs-only scope
+- build 41/41
+- tokens 4/4
+- audit checks 387/387
+- routes 6/6 200 OK, including `/admin/candidate-review-demo`
+- dev log clean
+- no source/runtime/UI changes
+- no scripts changes
+- no package changes
+- no routes/pages created
+- no route/navigation changes
+- no demo route navigation exposure
+- no backlog UI runtime
+- no feedback form runtime
+- no backend/API
+- no migrations, SQL, or schema implementation
+- no audit writes
+- no persistence
+- no browser storage
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- MC29 sample runtime is the only allowed future data source
+- allowed display fields reviewed
+- forbidden display fields reviewed
+- required copy reviewed
+- empty state reviewed
+- grouping/filtering expectations reviewed
+- accessibility expectations reviewed
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Merge MC30 after review.
+2. Create merge checkpoint.
+3. Run post-merge QA.
+4. Future read-only backlog preview UI runtime requires a separate approved branch.
