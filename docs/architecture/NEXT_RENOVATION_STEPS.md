@@ -2151,3 +2151,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future synthesis runtime implementation only on a separate explicitly approved branch.
+
+MC40 QA passed on the feature branch (package commit 6343b19). Feedback synthesis mock runtime planning confirmed: runtime plan, runtime contract, implementation checklist, input/output contracts, safety guards, and no-write/no-persistence guarantees. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
