@@ -2034,3 +2034,41 @@ Recommended next:
 MC37 QA passed on feature branch (commit eb764ae). Dry-run package confirmed: master plan, facilitator checklist, readiness scorecard. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
 
 MC37 merged to main (merge commit 77bae95). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline remains 440/440. MC37 is complete.
+
+## S²IMS Candidate Review Demo Combined Preview Stakeholder Feedback Session Plan MC38
+
+MC38 created a documentation-only stakeholder feedback session plan for reviewing the hardened combined demo route after internal dry-run readiness.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- session prerequisites documented
+- invitee categories documented
+- safe feedback boundaries documented
+- note-taking template documented
+- stakeholder session readiness checklist documented
+- governance-sensitive escalation documented
+- MC1-MC37 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC38 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Use MC38 only for feedback sessions, not approval collection.
+
+MC38 QA passed on the feature branch (package commit 1e831b5). Stakeholder feedback session planning confirmed: master session plan, safe feedback note template, readiness checklist, safe feedback boundaries, and governance-sensitive escalation rules. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
