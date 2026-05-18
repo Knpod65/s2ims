@@ -1906,3 +1906,5 @@ Recommended next:
 4. Future UX hardening runtime only on a separate explicitly approved branch following MC34 checklist.
 
 MC34 QA passed on feature branch (commit 6e0a4fb). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean.
+
+MC34 merged to main as commit 4bcd0b1. Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 418/418, routes 6×200 OK, dev log clean. Baseline unchanged.
