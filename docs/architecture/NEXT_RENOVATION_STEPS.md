@@ -2112,3 +2112,5 @@ Recommended next:
 4. Use MC39 only to synthesize feedback, not to collect approval.
 
 MC39 QA passed on the feature branch (package commit 9b8deda). Feedback synthesis planning confirmed: master synthesis plan, safe output template, classification matrix, governance-sensitive separation, and follow-up branch rules. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
+
+MC39 merged to main (merge commit 27d8599). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline remains 440/440. MC39 is complete.
