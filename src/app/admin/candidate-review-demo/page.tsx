@@ -3,7 +3,7 @@ import {
   assertSafeCandidateReviewDemoData,
 } from "@/lib/assignment/candidateReviewDemoData";
 import CandidateSelectionReviewShell from "@/components/assignment/CandidateSelectionReviewShell";
-import { FeedbackBacklogPreview } from "@/components/assignment";
+import { FeedbackBacklogPreview, FeedbackSynthesisPreview } from "@/components/assignment";
 
 export default function CandidateReviewDemoPage() {
   const candidates = createCandidateReviewDemoCandidates();
@@ -61,6 +61,19 @@ export default function CandidateReviewDemoPage() {
         <FeedbackBacklogPreview
           title="Demo backlog preview"
           description="Safe mock data only. Read-only. Not saved. Not submitted. Not official evidence. Not approval. Not assignment. Not AP-10B evidence. No real stakeholder/student/personnel data."
+        />
+      </section>
+
+      <section aria-label="Feedback synthesis preview section">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-ink-1">Feedback Synthesis Preview</h2>
+          <p className="mt-1 text-sm text-ink-2">
+            Safe mock synthesis records only. Read-only. Not saved. Not submitted. Not official evidence. Not approval. Not assignment. Not AP-10B evidence. No real stakeholder/student/personnel data.
+          </p>
+        </div>
+        <FeedbackSynthesisPreview
+          title="Feedback synthesis preview"
+          description="Safe mock synthesis records only. Read-only. Not saved. Not submitted. Not official evidence. Not approval. Not assignment. Not AP-10B evidence. No real stakeholder/student/personnel data."
         />
       </section>
     </main>

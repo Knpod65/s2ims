@@ -2504,6 +2504,55 @@ Recommended next:
 
 ---
 
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Route Integration Runtime MC47
+
+MC47 implemented route integration for the existing `FeedbackSynthesisPreview` component into the hidden `/admin/candidate-review-demo` route.
+
+### Runtime Guarantees
+- Existing hidden route only (`/admin/candidate-review-demo`)
+- No new route/page created
+- No navigation exposure
+- No feedback form runtime
+- No audit writes
+- No persistence
+- No browser storage
+- No backend/API
+- No export/notification
+- No official evidence
+- No assignment
+- No approval
+- No scholarship decision
+- No AP-10B governance action
+
+### Section Order (3-Section Demo)
+1. Candidate review diagnostic preview
+2. Feedback backlog preview
+3. Feedback synthesis preview
+
+### Validation
+- Build: 41/41
+- Tokens: 4/4
+- Audit checks: 490/490
+- Routes: 6×200 OK
+- Dev log: clean
+
+### AP-10B Status
+- Owners: 0/7
+- Approvals: 0/7
+- Blockers: 9/9 active
+- AP-10C: blocked
+- AP-11: blocked
+
+### Recommended Next
+1. Run MC47 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Create MC49 three-section final readiness closure.
+
+MC47 QA passed on feature branch (implementation commit 5b5d48b). Route integration verified. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean.
+
+---
+
 ## S²IMS Candidate Review Demo Combined Preview Final Readiness Closure MC48
 
 MC48 documentation-only closure for the MC41–MC46 feedback synthesis integration lifecycle. MC47 (route integration runtime) is pending a separate approved branch.
