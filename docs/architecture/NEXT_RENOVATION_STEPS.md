@@ -2155,3 +2155,43 @@ Recommended next:
 MC40 QA passed on the feature branch (package commit 6343b19). Feedback synthesis mock runtime planning confirmed: runtime plan, runtime contract, implementation checklist, input/output contracts, safety guards, and no-write/no-persistence guarantees. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean.
 
 MC40 merged to main (merge commit 203528e). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 440/440, routes 6×200 OK, dev log clean. Baseline remains 440/440. MC40 is complete.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Mock Runtime MC41
+
+MC41 implemented a pure TypeScript mock/in-memory feedback synthesis runtime for converting safe stakeholder feedback notes into safe synthesis records.
+
+Current status:
+- pure TypeScript runtime only
+- no source changes outside `src/lib/assignment/*` and audit checks
+- no route/page changes
+- no navigation changes
+- no feedback form runtime
+- no UI runtime
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- input/output contracts implemented
+- theme classification implemented
+- severity derivation implemented
+- runtime safety guard implemented
+- aggregate-only summary implemented
+- audit checks increased to 455/455
+- MC1-MC40 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC41 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future synthesis sample data or preview UI requires a separate explicitly approved branch.
+
+MC41 QA passed on the feature branch (package commit 164a497). Feedback synthesis mock runtime confirmed: pure TypeScript implementation, input/output contracts, deterministic mock IDs, theme classification, severity derivation, runtime safety guard, aggregate-only summary, and no-write/no-persistence guarantees. Build 41/41, tokens 4/4, audit checks 455/455, routes 6×200 OK, dev log clean.
