@@ -4582,6 +4582,157 @@ addCheck('MC41 index.ts exports demoFeedbackSynthesis helpers', () => {
   return source.includes('demoFeedbackSynthesis')
 })
 
+// MC43 Candidate Review Demo Combined Preview Feedback Synthesis Sample Runtime checks
+const demoFeedbackSynthesisSamplesPath = path.join(repoRoot, 'src/lib/assignment/demoFeedbackSynthesisSamples.ts')
+function readDemoFeedbackSynthesisSamples() { return fs.readFileSync(demoFeedbackSynthesisSamplesPath, 'utf-8') }
+
+addCheck('MC43 demoFeedbackSynthesisSamples.ts exists', () =>
+  fs.existsSync(demoFeedbackSynthesisSamplesPath) && fs.statSync(demoFeedbackSynthesisSamplesPath).isFile()
+)
+
+const demoFeedbackSynthesisSamplesModule = loadTsModule(demoFeedbackSynthesisSamplesPath)
+
+function safeSynthesisSampleInput(overrides = {}) {
+  return {
+    sessionId: 'mc43-session-001',
+    reviewerCategory: 'demo_review_group',
+    sectionReviewed: 'combined_route',
+    feedbackTheme: 'Safe sample for demo synthesis testing.',
+    confusionRisk: 'low sample note',
+    suggestedFollowUp: 'docs_copy_update',
+    governanceSensitive: false,
+    nonApprovalConfirmed: true,
+    ...overrides,
+  }
+}
+
+addCheck('MC43 required sample wrapper types exist', () => {
+  const source = readDemoFeedbackSynthesisSamples()
+  return source.includes('export type DemoFeedbackSynthesisSamplesSummary') &&
+    source.includes('DEMO_FEEDBACK_SYNTHESIS_SAMPLE_INPUTS')
+})
+
+addCheck('MC43 required sample wrapper functions exist', () =>
+  typeof demoFeedbackSynthesisSamplesModule.createDemoFeedbackSynthesisSamples === 'function' &&
+  typeof demoFeedbackSynthesisSamplesModule.assertSafeDemoFeedbackSynthesisSamples === 'function' &&
+  typeof demoFeedbackSynthesisSamplesModule.summarizeDemoFeedbackSynthesisSamples === 'function'
+)
+
+addCheck('MC43 exactly nine samples are defined', () => {
+  const inputs = demoFeedbackSynthesisSamplesModule.DEMO_FEEDBACK_SYNTHESIS_SAMPLE_INPUTS
+  return Array.isArray(inputs) && inputs.length === 9
+})
+
+addCheck('MC43 all nine theme categories are covered', () => {
+  const items = demoFeedbackSynthesisSamplesModule.createDemoFeedbackSynthesisSamples()
+  const categories = new Set(items.map(item => item.themeCategory))
+  return [
+    'clarity_copy',
+    'layout_navigation',
+    'accessibility',
+    'privacy_pdpa',
+    'workflow_understanding',
+    'training_support',
+    'stakeholder_confusion_risk',
+    'governance_sensitive',
+    'out_of_scope',
+  ].every(category => categories.has(category))
+})
+
+addCheck('MC43 governance-sensitive sample uses blocked severity', () => {
+  const items = demoFeedbackSynthesisSamplesModule.createDemoFeedbackSynthesisSamples()
+  const govItems = items.filter(item => item.governanceSensitive)
+  return govItems.length === 1 && govItems[0].severity === 'blocked'
+})
+
+addCheck('MC43 all samples use fixed safety flags', () => {
+  const items = demoFeedbackSynthesisSamplesModule.createDemoFeedbackSynthesisSamples()
+  return items.every(item =>
+    item.piiExcluded === true &&
+    item.nonApprovalConfirmed === true &&
+    item.officialEvidence === false &&
+    item.approvalCollected === false &&
+    item.persisted === false &&
+    item.exported === false &&
+    item.notified === false &&
+    item.isMock === true
+  )
+})
+
+addCheck('MC43 sample wrapper assertion enforces category coverage', () => {
+  try {
+    const items = demoFeedbackSynthesisSamplesModule.createDemoFeedbackSynthesisSamples()
+    demoFeedbackSynthesisSamplesModule.assertSafeDemoFeedbackSynthesisSamples(items)
+    return true
+  } catch {
+    return false
+  }
+})
+
+addCheck('MC43 sample summary returns aggregate-only metadata', () => {
+  const summary = demoFeedbackSynthesisSamplesModule.summarizeDemoFeedbackSynthesisSamples()
+  return summary.total === 9 &&
+    Array.isArray(summary.themeCategoryCovered) &&
+    summary.themeCategoryCovered.length === 9 &&
+    summary.governanceSensitiveCount === 1 &&
+    summary.allPiiExcluded === true &&
+    summary.allNonApprovalConfirmed === true &&
+    summary.officialEvidenceCount === 0 &&
+    summary.approvalCollectedCount === 0 &&
+    summary.persistedCount === 0 &&
+    summary.exportedCount === 0 &&
+    summary.notifiedCount === 0 &&
+    summary.planningOnly === true &&
+    !('sessionId' in summary) &&
+    !('feedbackTheme' in summary) &&
+    !('reviewerCategory' in summary)
+})
+
+addCheck('MC43 runtime has no fetch/API/browser storage', () => {
+  const source = readDemoFeedbackSynthesisSamples()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC43 runtime has no audit writer or repository calls', () => {
+  const source = readDemoFeedbackSynthesisSamples()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository', 'writeAudit', 'recordAudit']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC43 runtime has no export/download/notification behavior', () => {
+  const source = readDemoFeedbackSynthesisSamples()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC43 route/page/navigation files do not import sample runtime', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const navFiles = [
+    path.join(repoRoot, 'src/lib/navigation.ts'),
+    path.join(repoRoot, 'src/components/layout/Sidebar.tsx'),
+    path.join(repoRoot, 'src/components/layout/Topbar.tsx'),
+    path.join(repoRoot, 'src/components/layout/MobileBottomNav.tsx'),
+  ]
+
+  function scanRuntimeDirs(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanRuntimeDirs(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+
+  const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
+  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('demoFeedbackSynthesisSamples'))
+})
+
+addCheck('MC43 index.ts exports demoFeedbackSynthesisSamples helpers', () => {
+  const source = fs.readFileSync('src/lib/assignment/index.ts', 'utf-8')
+  return source.includes('demoFeedbackSynthesisSamples')
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
