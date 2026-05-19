@@ -4142,7 +4142,7 @@ addCheck('MC22 demo route not in Topbar', () =>
 // MC33 Candidate Review Demo Feedback Backlog Preview Route Runtime Integration checks
 addCheck('MC33 demo route imports FeedbackBacklogPreview from assignment barrel', () => {
   const source = readDemoPage()
-  return source.includes('import { FeedbackBacklogPreview } from "@/components/assignment";')
+  return source.includes('FeedbackBacklogPreview') && source.includes('from "@/components/assignment"')
 })
 
 addCheck('MC33 demo route renders FeedbackBacklogPreview', () => {
@@ -4345,6 +4345,71 @@ addCheck('MC35 demo route backlog section has accessible label', () => {
 })
 
 addCheck('MC35 navigation remains hidden from demo route', () =>
+  !readNavConfig().includes('candidate-review-demo') &&
+  !readSidebar().includes('candidate-review-demo') &&
+  !readTopbar().includes('candidate-review-demo') &&
+  !readMobileNav().includes('candidate-review-demo')
+)
+
+// MC47 Candidate Review Demo Combined Preview Feedback Synthesis Preview Route Integration Runtime checks
+addCheck('MC47 demo route imports FeedbackSynthesisPreview from assignment barrel', () => {
+  const source = readDemoPage()
+  return source.includes('FeedbackSynthesisPreview') && source.includes('from "@/components/assignment"')
+})
+
+addCheck('MC47 demo route renders FeedbackSynthesisPreview', () => {
+  const source = readDemoPage()
+  return source.includes('<FeedbackSynthesisPreview')
+})
+
+addCheck('MC47 demo route includes required synthesis preview copy', () => {
+  const source = readDemoPage()
+  return source.includes('Feedback Synthesis Preview') &&
+    source.includes('Safe mock synthesis records only')
+})
+
+addCheck('MC47 demo route preserves candidate review diagnostic demo shell', () => {
+  const source = readDemoPage()
+  return source.includes('CandidateSelectionReviewShell') && source.includes('Candidate Review Diagnostic Preview')
+})
+
+addCheck('MC47 demo route preserves feedback backlog preview', () => {
+  const source = readDemoPage()
+  return source.includes('FeedbackBacklogPreview') && source.includes('Feedback Backlog Preview')
+})
+
+addCheck('MC47 demo route has feedback synthesis preview section after feedback backlog', () => {
+  const source = readDemoPage()
+  const backlogIndex = source.indexOf('Feedback Backlog Preview')
+  const synthesisIndex = source.indexOf('Feedback Synthesis Preview')
+  return backlogIndex > -1 && synthesisIndex > -1 && synthesisIndex > backlogIndex
+})
+
+addCheck('MC47 demo route has no feedback form or action controls', () => {
+  const source = readDemoPage()
+  const forbidden = ['<form', '<input', '<textarea', '<select', 'type="submit"', 'onSubmit']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC47 demo route has no fetch/API/browser storage', () => {
+  const source = readDemoPage()
+  const forbidden = ['fetch(', 'axios(', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC47 demo route has no audit writer or repository calls', () => {
+  const source = readDemoPage()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditRepository', 'writeAudit', 'recordAudit']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC47 demo route has no export/download/notification behavior', () => {
+  const source = readDemoPage()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC47 navigation remains hidden from demo route', () =>
   !readNavConfig().includes('candidate-review-demo') &&
   !readSidebar().includes('candidate-review-demo') &&
   !readTopbar().includes('candidate-review-demo') &&
@@ -4810,7 +4875,10 @@ addCheck('MC45 — route/page/navigation files do not import or use FeedbackSynt
     })
   }
   const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
-  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('FeedbackSynthesisPreview'))
+  const allowedRoute = path.join(repoRoot, 'src/app/admin/candidate-review-demo/page.tsx')
+  return files.every((file) =>
+    file === allowedRoute || !fs.readFileSync(file, 'utf-8').includes('FeedbackSynthesisPreview')
+  )
 })
 
 addCheck('MC45 — assignment index.ts exports FeedbackSynthesisPreview', () => {
