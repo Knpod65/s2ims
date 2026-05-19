@@ -2237,3 +2237,5 @@ Recommended next:
 4. Future sample runtime implementation only on a separate explicitly approved branch.
 
 MC42 QA passed on the feature branch (package commit 360ff74). Feedback synthesis sample data planning confirmed: master sample data plan, safe sample catalog, sample QA checklist, theme coverage, severity coverage, follow-up coverage, governance-sensitive boundary, and docs-only scope. Build 41/41, tokens 4/4, audit checks 455/455, routes 6×200 OK, dev log clean.
+
+MC42 merged to main (merge commit 8afd40d). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 455/455, routes 6×200 OK, dev log clean. Baseline remains 455/455. MC42 is complete.
