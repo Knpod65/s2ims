@@ -2659,3 +2659,40 @@ Recommended next:
 MC49 QA passed on feature branch (package commit 6fec7eb). Documentation-only scope confirmed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean.
 
 MC49 merged to main (merge commit 6ed9983). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean. MC49 is complete.
+
+---
+
+## S²IMS AP-10B Blocked-Gate Handoff Package MC50
+
+MC50 created a documentation-only AP-10B blocked-gate handoff package after completion of the three-section demo route.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- AP-10B owners remain 0/7
+- AP-10B approvals remain 0/7
+- AP-10B blockers remain 9/9 active
+- AP-10C blocked
+- AP-11 blocked
+- blocked-gate handoff documented
+- blocker matrix documented
+- governance handoff checklist documented
+- MC1–MC49 boundaries preserved
+
+Recommended next:
+1. Run MC50 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Do not proceed to production/persistence/audit writes until AP-10B blockers are resolved in a separate approved governance process.
