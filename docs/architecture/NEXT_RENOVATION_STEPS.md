@@ -2298,3 +2298,58 @@ Recommended next:
 1. Keep MC43 artifacts as the final documentation record.
 2. Do not start MC44 from this completed lifecycle entry.
 3. Preserve AP-10B/AP-10C/AP-11 status as-is.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Preview UI Plan MC44
+
+MC44 created a documentation-only plan for a future read-only feedback synthesis preview UI component.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no scripts changes
+- no package changes
+- no routes/pages created
+- no route/navigation changes
+- no demo route navigation exposure
+- no synthesis preview UI planned yet (planning phase only)
+- no synthesis component created
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- no AP-10B governance action
+- future component name: `FeedbackSynthesisPreview`
+- future component path: `src/components/assignment/FeedbackSynthesisPreview.tsx` (planning reference only)
+- safe data source: MC43 `createDemoFeedbackSynthesisSamples()` or MC41 safe inputs only
+- allowed display fields documented (15 fields)
+- forbidden display fields documented
+- layout sections documented (5 sections)
+- required copy documented
+- false safety flag display rules documented
+- governance-sensitive display rules documented (9 rules)
+- aggregate summary display rules documented (9 rules)
+- accessibility requirements documented (12 requirements)
+- empty-state requirements documented (6 requirements)
+- negative behavior checks documented (12 checks)
+- future implementation QA checklist documented (§15, 47 checklist items)
+- MC1–MC43 boundaries preserved
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Planning documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_FEEDBACK_SYNTHESIS_PREVIEW_UI_PLAN_MC44.md` — Master plan
+- `docs/qa/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_FEEDBACK_SYNTHESIS_PREVIEW_UI_PLAN_QA_MC44.md` — QA checkpoint
+- `docs/daily-reports/2026-05-19-s2ims-candidate-review-demo-combined-preview-feedback-synthesis-preview-ui-plan-merge-mc44.md` — Merge checkpoint
+
+Recommended next:
+1. Run MC44 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future synthesis preview UI component runtime requires a separate explicitly approved branch.

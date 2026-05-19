@@ -4733,6 +4733,92 @@ addCheck('MC43 index.ts exports demoFeedbackSynthesisSamples helpers', () => {
   return source.includes('demoFeedbackSynthesisSamples')
 })
 
+addCheck('MC45 — component file exists', () => {
+  return fs.statSync('src/components/assignment/FeedbackSynthesisPreview.tsx').isFile()
+})
+
+addCheck('MC45 — component exports FeedbackSynthesisPreviewProps', () => {
+  const source = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  return source.includes('FeedbackSynthesisPreviewProps') &&
+         source.includes('DemoFeedbackSynthesisItem')
+})
+
+addCheck('MC45 — uses MC43 safe sample runtime by default', () => {
+  const source = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  return source.includes('createDemoFeedbackSynthesisSamples')
+})
+
+addCheck('MC45 — displays required READ-ONLY copy', () => {
+  const src = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  const required = [
+    'Demo only. Read-only preview.',
+    'Uses safe mock data only.',
+    'Not saved',
+    'Not submitted',
+    'Not official evidence',
+    'Not an approval',
+    'Not an assignment',
+    'AP-10B governance status',
+    'It does not collect feedback, save data, submit data, approve decisions, assign candidates, create official evidence, or change AP-10B status',
+  ]
+  return required.every(token => src.includes(token))
+})
+
+addCheck('MC45 — all false safety flags are visible in component source', () => {
+  const src = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  // Flags that start false
+  const falseFlags = ['officialEvidence', 'approvalCollected', 'persisted', 'exported', 'notified']
+  // These must both be present
+  const allFlags = ['officialEvidence', 'approvalCollected', 'persisted', 'exported', 'notified', 'isMock', 'nonApprovalConfirmed', 'piiExcluded']
+  return allFlags.every(f => src.includes(f))
+})
+
+addCheck('MC45 — component has empty-state div', () => {
+  const src = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  return src.includes('EMPTY_STATE_HEADING') && src.includes('No synthesis items available')
+})
+
+addCheck('MC45 — component has semantic section/aria-label', () => {
+  const src = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  return src.includes('aria-label') && src.includes('<section')
+})
+
+addCheck('MC45 — no forbidden tokens in component source', () => {
+  const src = fs.readFileSync('src/components/assignment/FeedbackSynthesisPreview.tsx', 'utf-8')
+  const forbidden = ['<form', '<input', '<textarea', '<select',
+                     'fetch(', 'axios', 'XMLHttpRequest',
+                     'localStorage', 'sessionStorage', 'IndexedDB',
+                     'sharedMockWriter', 'AuditService', 'auditService',
+                     'addCheck(']
+  return forbidden.every(token => !src.includes(token))
+})
+
+addCheck('MC45 — route/page/navigation files do not import or use FeedbackSynthesisPreview', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const navFiles = [
+    path.join(repoRoot, 'src/lib/navigation.ts'),
+    path.join(repoRoot, 'src/components/layout/Sidebar.tsx'),
+    path.join(repoRoot, 'src/components/layout/Topbar.tsx'),
+    path.join(repoRoot, 'src/components/layout/MobileBottomNav.tsx'),
+  ]
+  function scanRuntimeDirs(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanRuntimeDirs(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+  const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
+  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('FeedbackSynthesisPreview'))
+})
+
+addCheck('MC45 — assignment index.ts exports FeedbackSynthesisPreview', () => {
+  const source = fs.readFileSync('src/components/assignment/index.ts', 'utf-8')
+  return source.includes('FeedbackSynthesisPreview')
+})
+
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)
