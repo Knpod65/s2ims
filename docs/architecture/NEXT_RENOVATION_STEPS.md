@@ -2193,3 +2193,5 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future synthesis sample data or preview UI requires a separate explicitly approved branch.
+
+MC41 QA passed on the feature branch (package commit 164a497). Feedback synthesis mock runtime confirmed: pure TypeScript implementation, input/output contracts, deterministic mock IDs, theme classification, severity derivation, runtime safety guard, aggregate-only summary, and no-write/no-persistence guarantees. Build 41/41, tokens 4/4, audit checks 455/455, routes 6×200 OK, dev log clean.
