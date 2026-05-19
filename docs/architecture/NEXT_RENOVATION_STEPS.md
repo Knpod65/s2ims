@@ -2197,3 +2197,41 @@ Recommended next:
 MC41 QA passed on the feature branch (package commit 164a497). Feedback synthesis mock runtime confirmed: pure TypeScript implementation, input/output contracts, deterministic mock IDs, theme classification, severity derivation, runtime safety guard, aggregate-only summary, and no-write/no-persistence guarantees. Build 41/41, tokens 4/4, audit checks 455/455, routes 6×200 OK, dev log clean.
 
 MC41 merged to main (merge commit 9963341). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 455/455, routes 6×200 OK, dev log clean. Baseline is now 455/455. MC41 is complete.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Safe Sample Data Plan MC42
+
+MC42 created a documentation-only plan for safe sample input data for the MC41 feedback synthesis runtime.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no sample runtime implementation
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- sample input contract documented
+- sample catalog documented
+- theme coverage documented
+- severity coverage documented
+- follow-up type coverage documented
+- governance-sensitive boundary documented
+- sample QA checklist documented
+- MC1-MC41 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC42 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future sample runtime implementation only on a separate explicitly approved branch.
