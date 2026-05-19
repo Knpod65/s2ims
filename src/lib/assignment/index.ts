@@ -13,3 +13,4 @@ export * from "./candidateReviewDemoData";
 export * from "./demoFeedbackBacklog";
 export * from "./demoFeedbackBacklogSamples";
 export * from "./demoFeedbackSynthesis";
+export * from "./demoFeedbackSynthesisSamples";
