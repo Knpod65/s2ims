@@ -53,8 +53,7 @@ Documentation-only closure for MC41–MC46 feedback synthesis integration lifecy
 ---
 
 ## Next Task
-
 - [x] QA checkpoint README created at docs/qa/s2ims-candidate-review-demo-combined-preview-final-readiness-closure-mc48/README.md
-- [ ] Commit QA checkpoint
+- [x] Commit QA checkpoint (3d5b1b8)
 - [ ] Merge to main after review
 - [ ] Run post-merge QA
