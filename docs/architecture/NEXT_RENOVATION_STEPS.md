@@ -2353,3 +2353,34 @@ Recommended next:
 2. Merge after review.
 3. Post-merge QA.
 4. Future synthesis preview UI component runtime requires a separate explicitly approved branch.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Preview UI Runtime MC45
+
+MC45 implemented the read-only `FeedbackSynthesisPreview` React component for displaying safe synthesis records from the MC43 sample runtime using the MC41 summary helper.
+
+Runtime guarantees:
+- React presentational component only
+- uses MC43 safe sample runtime by default
+- no route/page creation
+- no route/navigation changes
+- no demo route navigation exposure
+- no feedback form runtime
+- no feedback collection
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- no scholarship decision
+- visible read-only planning labels
+- visible false safety flags (all 8)
+- accessible section labels
+- severity-based grouping
+- governance-sensitive items in distinct container
+
+Recommended next:
+1. Push MC45 feature branch.
+2. Merge to main after final QA.
