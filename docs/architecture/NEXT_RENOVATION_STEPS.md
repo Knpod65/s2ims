@@ -2657,3 +2657,5 @@ Recommended next:
 4. Optional MC50 AP-10B blocked-gate handoff package if governance handoff is desired.
 
 MC49 QA passed on feature branch (package commit 6fec7eb). Documentation-only scope confirmed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean.
+
+MC49 merged to main (merge commit 6ed9983). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean. MC49 is complete.
