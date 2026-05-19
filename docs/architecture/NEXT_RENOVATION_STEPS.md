@@ -2384,3 +2384,48 @@ Runtime guarantees:
 Recommended next:
 1. Push MC45 feature branch.
 2. Merge to main after final QA.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Preview UI Runtime Merge MC45
+
+MC45 merged to `main`.
+
+Validation after merge:
+- build 41/41 ✅
+- tokens 4/4 ✅
+- audit checks 479/479 ✅
+
+AP-10B unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers.
+AP-10C blocked. AP-11 blocked.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Preview UI Runtime Post-Merge QA MC45
+
+Post-merge QA completed.
+
+QA confirmed:
+- MC45 runtime present on main
+- MC45 QA checkpoint present on main
+- MC45 merge checkpoint present on main
+- MC45 post-merge QA present on main
+- build 41/41 ✅
+- tokens 4/4 ✅
+- audit checks 479/479 ✅
+- read-only component confirmed
+- all 8 safety flags visible
+- no route/page changes
+- no navigation changes
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- MC1-MC44 boundaries preserved
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Keep MC45 as read-only component only.
+2. Create a separate approved branch for any future route wiring.
