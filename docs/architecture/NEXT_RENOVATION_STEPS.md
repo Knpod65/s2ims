@@ -2551,6 +2551,8 @@ MC47 implemented route integration for the existing `FeedbackSynthesisPreview` c
 
 MC47 QA passed on feature branch (implementation commit 5b5d48b). Route integration verified. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean.
 
+MC47 merged to main (merge commit fcde955). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean. Baseline is now 490/490. MC47 is complete.
+
 ---
 
 ## S²IMS Candidate Review Demo Combined Preview Final Readiness Closure MC48
