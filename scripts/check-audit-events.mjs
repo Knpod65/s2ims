@@ -4351,6 +4351,237 @@ addCheck('MC35 navigation remains hidden from demo route', () =>
   !readMobileNav().includes('candidate-review-demo')
 )
 
+// MC41 Candidate Review Demo Combined Preview Feedback Synthesis Mock Runtime checks
+const demoFeedbackSynthesisPath = path.join(repoRoot, 'src/lib/assignment/demoFeedbackSynthesis.ts')
+function readDemoFeedbackSynthesis() { return fs.readFileSync(demoFeedbackSynthesisPath, 'utf-8') }
+
+addCheck('MC41 demoFeedbackSynthesis.ts exists', () =>
+  fs.existsSync(demoFeedbackSynthesisPath) && fs.statSync(demoFeedbackSynthesisPath).isFile()
+)
+
+const demoFeedbackSynthesisModule = loadTsModule(demoFeedbackSynthesisPath)
+
+function safeSynthesisInput(overrides = {}) {
+  return {
+    sessionId: 'mc41-session-001',
+    reviewerCategory: 'scholarship_operations_group',
+    sectionReviewed: 'feedback_backlog_preview',
+    feedbackTheme: 'Clarify copy for mock planning feedback themes.',
+    confusionRisk: 'low wording note',
+    suggestedFollowUp: 'docs_copy_update',
+    governanceSensitive: false,
+    nonApprovalConfirmed: true,
+    ...overrides,
+  }
+}
+
+addCheck('MC41 required synthesis runtime types exist', () => {
+  const source = readDemoFeedbackSynthesis()
+  return source.includes('export type DemoFeedbackSynthesisThemeCategory') &&
+    source.includes('export type DemoFeedbackSynthesisSeverity') &&
+    source.includes('export type DemoFeedbackSynthesisFollowUpType') &&
+    source.includes('export type DemoFeedbackSynthesisInput') &&
+    source.includes('export type DemoFeedbackSynthesisItem') &&
+    source.includes('export type DemoFeedbackSynthesisSummary')
+})
+
+addCheck('MC41 required synthesis runtime functions exist', () =>
+  typeof demoFeedbackSynthesisModule.classifyDemoFeedbackTheme === 'function' &&
+  typeof demoFeedbackSynthesisModule.deriveDemoFeedbackSeverity === 'function' &&
+  typeof demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems === 'function' &&
+  typeof demoFeedbackSynthesisModule.assertSafeDemoFeedbackSynthesisItem === 'function' &&
+  typeof demoFeedbackSynthesisModule.summarizeDemoFeedbackSynthesisItems === 'function'
+)
+
+addCheck('MC41 safe input creates deterministic mock synthesis item', () => {
+  const [item] = demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems([
+    safeSynthesisInput({
+      sessionId: 'mc41-session-001',
+      feedbackTheme: 'Clarify copy for planning-only synthesis.',
+      confusionRisk: 'low copy note',
+      suggestedFollowUp: 'docs_copy_update',
+    }),
+  ])
+
+  return item.synthesisId === 'demo-feedback-synthesis-mc41-session-001-1' &&
+    item.sourceSessionId === 'mc41-session-001' &&
+    item.themeCategory === 'clarity_copy' &&
+    item.severity === 'low' &&
+    item.suggestedFollowUpType === 'docs_copy_update' &&
+    item.piiExcluded === true &&
+    item.nonApprovalConfirmed === true &&
+    item.officialEvidence === false &&
+    item.approvalCollected === false &&
+    item.persisted === false &&
+    item.exported === false &&
+    item.notified === false &&
+    item.isMock === true
+})
+
+addCheck('MC41 classification covers all synthesis categories', () => {
+  const inputs = [
+    safeSynthesisInput({ feedbackTheme: 'Clarify copy language.', suggestedFollowUp: 'docs_copy_update' }),
+    safeSynthesisInput({ feedbackTheme: 'Improve layout grouping between sections.', suggestedFollowUp: 'ux_hardening_plan' }),
+    safeSynthesisInput({ feedbackTheme: 'Add keyboard focus explanation.', suggestedFollowUp: 'accessibility_plan' }),
+    safeSynthesisInput({ feedbackTheme: 'Clarify PDPA mock data wording.', suggestedFollowUp: 'demo_route_copy_polish' }),
+    safeSynthesisInput({ feedbackTheme: 'Explain workflow process boundaries.', suggestedFollowUp: 'docs_copy_update' }),
+    safeSynthesisInput({ feedbackTheme: 'Add facilitator walkthrough support.', suggestedFollowUp: 'walkthrough_update' }),
+    safeSynthesisInput({ feedbackTheme: 'Reduce confusion risk about planning boundary.', suggestedFollowUp: 'docs_copy_update' }),
+    safeSynthesisInput({ feedbackTheme: 'Escalate governance planning blocker.', suggestedFollowUp: 'governance_escalation_plan', governanceSensitive: true }),
+    safeSynthesisInput({ feedbackTheme: 'Unrelated out of scope request.', suggestedFollowUp: 'no_action' }),
+  ]
+  const categories = inputs.map((input) => demoFeedbackSynthesisModule.classifyDemoFeedbackTheme(input))
+  return [
+    'clarity_copy',
+    'layout_navigation',
+    'accessibility',
+    'privacy_pdpa',
+    'workflow_understanding',
+    'training_support',
+    'stakeholder_confusion_risk',
+    'governance_sensitive',
+    'out_of_scope',
+  ].every((category) => categories.includes(category))
+})
+
+addCheck('MC41 governance-sensitive records use blocked severity', () => {
+  const [item] = demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems([
+    safeSynthesisInput({
+      feedbackTheme: 'Escalate governance planning blocker.',
+      confusionRisk: 'governance boundary risk',
+      suggestedFollowUp: 'governance_escalation_plan',
+      governanceSensitive: true,
+    }),
+  ])
+  return item.themeCategory === 'governance_sensitive' &&
+    item.severity === 'blocked' &&
+    item.governanceSensitive === true
+})
+
+addCheck('MC41 forbidden PII/contact/id fields are rejected', () => {
+  try {
+    demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems([
+      safeSynthesisInput({ phone: 'unsafe' }),
+    ])
+    return false
+  } catch {
+    return true
+  }
+})
+
+addCheck('MC41 forbidden approval and official workflow wording is rejected', () => {
+  const unsafeTexts = [
+    'Reviewer approved this demo.',
+    'Record official evidence for this feedback.',
+    'Production authorization was granted.',
+    'Scholarship decision should be automated.',
+    'Assignment instruction should be added.',
+  ]
+
+  return unsafeTexts.every((feedbackTheme) => {
+    try {
+      demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems([
+        safeSynthesisInput({ feedbackTheme }),
+      ])
+      return false
+    } catch {
+      return true
+    }
+  })
+})
+
+addCheck('MC41 fixed false safety flags are enforced', () => {
+  const [item] = demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems([
+    safeSynthesisInput(),
+  ])
+
+  try {
+    demoFeedbackSynthesisModule.assertSafeDemoFeedbackSynthesisItem({
+      ...item,
+      persisted: true,
+    })
+    return false
+  } catch {
+    return item.officialEvidence === false &&
+      item.approvalCollected === false &&
+      item.persisted === false &&
+      item.exported === false &&
+      item.notified === false
+  }
+})
+
+addCheck('MC41 summary helper returns aggregate-only metadata', () => {
+  const items = demoFeedbackSynthesisModule.createDemoFeedbackSynthesisItems([
+    safeSynthesisInput({ suggestedFollowUp: 'docs_copy_update' }),
+    safeSynthesisInput({ feedbackTheme: 'Escalate governance planning blocker.', suggestedFollowUp: 'governance_escalation_plan', governanceSensitive: true }),
+  ])
+  const summary = demoFeedbackSynthesisModule.summarizeDemoFeedbackSynthesisItems(items)
+
+  return summary.total === 2 &&
+    summary.themeCategoryCounts.clarity_copy === 1 &&
+    summary.themeCategoryCounts.governance_sensitive === 1 &&
+    summary.severityCounts.low === 1 &&
+    summary.severityCounts.blocked === 1 &&
+    summary.followUpTypeCounts.docs_copy_update === 1 &&
+    summary.followUpTypeCounts.governance_escalation_plan === 1 &&
+    summary.governanceSensitiveCount === 1 &&
+    summary.allPiiExcluded === true &&
+    summary.allNonApprovalConfirmed === true &&
+    summary.officialEvidenceCount === 0 &&
+    summary.approvalCollectedCount === 0 &&
+    summary.persistedCount === 0 &&
+    summary.exportedCount === 0 &&
+    summary.notifiedCount === 0 &&
+    !('feedbackTheme' in summary) &&
+    !('reviewerCategory' in summary) &&
+    !('summary' in summary)
+})
+
+addCheck('MC41 runtime has no fetch/API/browser storage', () => {
+  const source = readDemoFeedbackSynthesis()
+  const forbidden = ['fetch(', 'axios', 'XMLHttpRequest', '/api/', 'localStorage', 'sessionStorage', 'IndexedDB', 'indexedDB']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC41 runtime has no audit writer or repository calls', () => {
+  const source = readDemoFeedbackSynthesis()
+  const forbidden = ['sharedMockWriter', 'AuditService', 'auditService', 'repository', 'Repository', 'writeAudit', 'recordAudit']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC41 runtime has no export/download/notification behavior', () => {
+  const source = readDemoFeedbackSynthesis()
+  const forbidden = ['download', 'exportCsv', 'exportPdf', 'sendBeacon', 'Notification', 'notify(', 'notificationService']
+  return forbidden.every(token => !source.includes(token))
+})
+
+addCheck('MC41 route/page/navigation files do not import synthesis runtime', () => {
+  const routeRoot = path.join(repoRoot, 'src/app')
+  const navFiles = [
+    path.join(repoRoot, 'src/lib/navigation.ts'),
+    path.join(repoRoot, 'src/components/layout/Sidebar.tsx'),
+    path.join(repoRoot, 'src/components/layout/Topbar.tsx'),
+    path.join(repoRoot, 'src/components/layout/MobileBottomNav.tsx'),
+  ]
+
+  function scanRuntimeDirs(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) return scanRuntimeDirs(fullPath)
+      if (!/\.(ts|tsx)$/.test(entry.name)) return []
+      return [fullPath]
+    })
+  }
+
+  const files = [...scanRuntimeDirs(routeRoot), ...navFiles]
+  return files.every((file) => !fs.readFileSync(file, 'utf-8').includes('demoFeedbackSynthesis'))
+})
+
+addCheck('MC41 index.ts exports demoFeedbackSynthesis helpers', () => {
+  const source = fs.readFileSync('src/lib/assignment/index.ts', 'utf-8')
+  return source.includes('demoFeedbackSynthesis')
+})
+
 await Promise.all(checkPromises)
 
 const failures = checks.filter((check) => !check.passed)

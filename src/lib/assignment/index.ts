@@ -12,3 +12,4 @@ export * from "./candidateReviewAuditNoopWiring";
 export * from "./candidateReviewDemoData";
 export * from "./demoFeedbackBacklog";
 export * from "./demoFeedbackBacklogSamples";
+export * from "./demoFeedbackSynthesis";
