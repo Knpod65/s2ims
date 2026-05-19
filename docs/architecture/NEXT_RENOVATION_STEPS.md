@@ -2501,3 +2501,40 @@ QA confirmed:
 Recommended next:
 1. Keep MC46 as documentation-only planning.
 2. Create a separate approved branch for any future route integration runtime (MC47).
+
+---
+
+## S²IMS Candidate Review Demo Combined Preview Final Readiness Closure MC48
+
+MC48 documentation-only closure for the MC41–MC47 feedback synthesis integration lifecycle.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no audit writes
+- no persistence
+- no backend/API
+- no export/notification
+- no official evidence
+- no assignment
+- no approval
+- no scholarship decision
+- no AP-10B governance action
+- combined demo route ready for stakeholder review (1. candidate review, 2. backlog, 3. synthesis)
+- MC1-MC47 boundaries preserved
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Closure documents:
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_FINAL_READINESS_CLOSURE_MC48.md` — Master closure doc
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_FINAL_ROUTE_QA_MATRIX_MC48.md` — Final QA matrix
+- `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_STAKEHOLDER_DEMO_READINESS_DECISION_MC48.md` — Stakeholder demo decision
+
+Recommended next:
+1. Run MC48 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Demo route remains read-only until separately approved for any future changes.
