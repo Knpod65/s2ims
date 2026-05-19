@@ -4,7 +4,7 @@
 2026-05-19
 
 ## Scope
-Documentation-only closure for MC41–MC47 feedback synthesis integration lifecycle.
+Documentation-only closure for MC41–MC46 feedback synthesis integration lifecycle.
 
 ---
 
@@ -29,9 +29,9 @@ Documentation-only closure for MC41–MC47 feedback synthesis integration lifecy
 
 | Check | Result |
 |-------|--------|
-| Build | 41/41 routes (clean) |
-| Tokens | 4/4 (will verify after MC47 merge) |
-| Audit | 479/479 (MC47 adds 5 checks → 484) |
+| Build | 41/41 routes (clean) ✅ |
+| Tokens | 4/4 ✅ |
+| Audit | 479/479 (main baseline; MC47 pending) |
 | Route smoke | 6×200 OK |
 
 ---
@@ -54,4 +54,7 @@ Documentation-only closure for MC41–MC47 feedback synthesis integration lifecy
 
 ## Next Task
 
-Update NEXT_RENOVATION_STEPS.md with MC48 completion entry.
+- [x] QA checkpoint README created at docs/qa/s2ims-candidate-review-demo-combined-preview-final-readiness-closure-mc48/README.md
+- [ ] Commit QA checkpoint
+- [ ] Merge to main after review
+- [ ] Run post-merge QA

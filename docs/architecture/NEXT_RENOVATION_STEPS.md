@@ -2506,7 +2506,7 @@ Recommended next:
 
 ## S²IMS Candidate Review Demo Combined Preview Final Readiness Closure MC48
 
-MC48 documentation-only closure for the MC41–MC47 feedback synthesis integration lifecycle.
+MC48 documentation-only closure for the MC41–MC46 feedback synthesis integration lifecycle. MC47 (route integration runtime) is pending a separate approved branch.
 
 Current status:
 - docs-only
@@ -2522,8 +2522,8 @@ Current status:
 - no approval
 - no scholarship decision
 - no AP-10B governance action
-- combined demo route ready for stakeholder review (1. candidate review, 2. backlog, 3. synthesis)
-- MC1-MC47 boundaries preserved
+- combined demo route ready for stakeholder review (candidate review, feedback backlog; synthesis pending MC47)
+- MC1-MC46 boundaries preserved
 - AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
 - AP-10C blocked
 - AP-11 blocked

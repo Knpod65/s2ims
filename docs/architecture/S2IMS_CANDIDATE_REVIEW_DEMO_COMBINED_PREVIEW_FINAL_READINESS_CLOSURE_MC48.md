@@ -2,7 +2,7 @@
 
 ## Purpose
 
-MC48 closes and consolidates the MC41–MC47 feedback synthesis integration lifecycle into a readiness closure package.
+MC48 closes and consolidates the MC41–MC46 feedback synthesis integration lifecycle into a readiness closure package.
 
 MC48 does NOT authorize:
 - Audit writes
@@ -27,21 +27,19 @@ MC48 is documentation-only. No `src/*`, no `scripts/*`, no `package.json` change
 | MC43 | Feedback Synthesis Sample Runtime | Runtime | Complete |
 | MC45 | Feedback Synthesis Preview UI | Runtime | Complete |
 | MC46 | Feedback Synthesis Route Integration Plan | Planning | Complete |
-| MC47 | Feedback Synthesis Route Integration | Runtime | Complete |
 
-All five milestones are complete. MC48 closes this lifecycle group.
+MC45 and MC46 are merged to main. MC47 (route integration runtime) is pending a separate approved branch. MC48 closes the MC41–MC46 lifecycle. The combined demo route currently has 2 sections (candidate review → feedback backlog). Feedback synthesis preview (MC47) will add the 3rd section when approved.
 
 ---
 
 ## What Is Complete
 
-### Runtime (MC41 + MC43 + MC45 + MC47)
+### Runtime (MC41 + MC43 + MC45)
 
 - Pure TypeScript mock feedback synthesis runtime (MC41)
 - Safe sample runtime generating 9 synthesis items (MC43)
 - Read-only `FeedbackSynthesisPreview` React component (588 lines, MC45)
-- Component integrated into hidden `/admin/candidate-review-demo` route (MC47)
-- Route contains 3 sections: candidate review → feedback backlog → feedback synthesis
+- Component exported and ready for integration (MC45)
 - All 9 MC41 theme categories covered in samples
 - All safety flags visible: piiExcluded, nonApprovalConfirmed, officialEvidence, approvalCollected, persisted, exported, notified, isMock
 - Required copy present: "Demo only. Read-only preview." etc.
@@ -62,16 +60,16 @@ All five milestones are complete. MC48 closes this lifecycle group.
 
 ### Audit Checks
 
-- Audit checks passing (MC47 branch adds 5 checks for route integration)
+- Audit checks passing (479/479 on main)
 - All prior checks (MC1–MC46) intact
 
-### Validation Baseline (MC47 branch)
+### Current Technical Baseline (MC45 post-merge)
 
 | Check | Result |
 |-------|--------|
 | Build | 41/41 routes |
 | Token check | 4/4 |
-| Audit/event checks | 484/484 |
+| Audit checks | 479/479 |
 | Routes | 6×200 OK |
 | Dev log | Clean |
 
@@ -109,13 +107,13 @@ The combined demo preview is:
 
 ---
 
-## Current Technical Baseline (MC47 branch)
+## Current Technical Baseline (MC45 post-merge)
 
 | Item | Value |
 |------|-------|
 | Build | 41/41 pages |
 | Token check | 4/4 |
-| Audit checks | 484/484 |
+| Audit checks | 479/479 |
 | Routes | 6×200 OK |
 | Dev log | Clean |
 
@@ -132,19 +130,20 @@ The combined demo preview is:
 
 ---
 
-## Current State (3-Section Combined Demo)
+## Current State (2-Section Demo, MC47 Pending)
 
 | Section Order | Component | Description |
 |---------------|-----------|-------------|
 | 1 | CandidateSelectionReviewShell | Candidate review diagnostic preview |
 | 2 | FeedbackBacklogPreview | Feedback backlog preview |
-| 3 | FeedbackSynthesisPreview | Feedback synthesis preview |
+
+(Feedback synthesis preview will be added when MC47 is approved)
 
 ---
 
 ## Closure Verdict
 
-The S²IMS Candidate Review Demo Combined Preview lifecycle (MC41–MC47) is complete as a read-only, safe mock-data, non-official preview. The demonstration correctly shows what planning themes could emerge from feedback synthesis without suggesting it drives candidate review or approval.
+The S²IMS Candidate Review Demo Combined Preview lifecycle (MC41–MC46) is complete as a read-only, safe mock-data, non-official preview. The demonstration correctly shows what planning themes could emerge from feedback synthesis without suggesting it drives candidate review or approval.
 
 **The combined demo is ready for internal stakeholder review only, not for production workflow.**
 
