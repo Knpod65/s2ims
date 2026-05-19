@@ -2429,3 +2429,42 @@ QA confirmed:
 Recommended next:
 1. Keep MC45 as read-only component only.
 2. Create a separate approved branch for any future route wiring.
+
+## S²IMS Candidate Review Demo Combined Preview Feedback Synthesis Route Integration Plan MC46
+
+MC46 created a documentation-only plan for integrating the existing `FeedbackSynthesisPreview` component into the hidden `/admin/candidate-review-demo` route.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no scripts changes
+- no package changes
+- no route navigation exposure
+- no route wiring changes
+- no feedback form runtime
+- no audit writes
+- no persistence
+- no browser storage
+- no backend/API
+- no export/notification
+- no official evidence
+- no approval collection
+- no assignment
+- future target route: `/admin/candidate-review-demo` (existing hidden route)
+- future placement order: candidate review → feedback backlog → feedback synthesis
+- future component import: `FeedbackSynthesisPreview` from `@/components/assignment`
+- future component usage: default props only (MC43 safe samples)
+- no-navigation-exposure rule documented
+- no-form/action behavior rules documented
+- safety checks for MC47 documented
+- route QA checklist for MC47 documented
+- MC1-MC45 boundaries preserved
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC46 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future route integration runtime only on a separate explicitly approved branch.
