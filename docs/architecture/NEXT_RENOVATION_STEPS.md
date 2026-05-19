@@ -2698,3 +2698,5 @@ Recommended next:
 4. Do not proceed to production/persistence/audit writes until AP-10B blockers are resolved in a separate approved governance process.
 
 MC50 QA passed on feature branch (package commit d58094d). Documentation-only scope confirmed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean.
+
+MC50 merged to main (merge commit 54f0911). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean. MC50 is complete.
