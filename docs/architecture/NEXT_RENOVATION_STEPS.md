@@ -2533,8 +2533,35 @@ Closure documents:
 - `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_FINAL_ROUTE_QA_MATRIX_MC48.md` — Final QA matrix
 - `docs/architecture/S2IMS_CANDIDATE_REVIEW_DEMO_COMBINED_PREVIEW_STAKEHOLDER_DEMO_READINESS_DECISION_MC48.md` — Stakeholder demo decision
 
+MC48 QA passed on feature branch (package commit 2d8449e, QA commit 3d5b1b8). Docs-only scope confirmed. Build 41/41, tokens 4/4, audit checks 479/479, routes 6×200 OK, dev log clean.
+
+MC48 merged to main (merge commit 3f70174). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 479/479, routes 6×200 OK, dev log clean. Baseline remains 479/479.
+
+---
+
+## S²IMS Candidate Review Demo Combined Preview Final Readiness Post-Merge QA MC48
+
+Post-merge QA confirmed MC48 documentation-only closure complete on `main`.
+
+Post-merge QA verified:
+- MC48 package present on main
+- MC48 QA checkpoint present on main
+- MC48 merge checkpoint present on main
+- MC48 post-merge QA present on main
+- build 41/41 ✅
+- tokens 4/4 ✅
+- audit checks 479/479 ✅
+- docs-only scope preserved
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- current demo: 2-section (candidate review + feedback backlog)
+- MC47 FeedbackSynthesisPreview route integration remains pending
+- AP-10B gate unchanged
+- AP-10C blocked
+- AP-11 blocked
+
 Recommended next:
-1. Run MC48 QA checkpoint.
-2. Merge after review.
-3. Post-merge QA.
-4. Demo route remains read-only until separately approved for any future changes.
+1. Keep MC48 as documentation-only lifecycle closure.
+2. Create a separate approved branch for MC47 route integration runtime.
+3. Do not introduce persistence, audit writes, feedback intake, or AP-10B governance work from MC48.
