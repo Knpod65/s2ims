@@ -55,6 +55,12 @@ Recommended next step after MC9 merge:
 - Purpose: documentation-only closure package for synthetic workbook testing cycle and controlled internal demo readiness
 - Status: merged to main (merge commit 7fa8f19)
 
+### MC65 — Import preview controlled internal demo feedback plan (authoring)
+
+- Branch: architecture/s2ims-import-preview-controlled-internal-demo-feedback-plan-mc65
+- Purpose: documentation-only controlled internal demo feedback plan for import preview
+- Status: authoring
+
 
 
 
