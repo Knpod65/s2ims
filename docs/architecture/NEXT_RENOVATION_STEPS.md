@@ -2888,3 +2888,33 @@ Recommended next:
 3. Post-merge QA.
 4. Future MC68: Controlled Internal Demo Feedback Execution Report, only after the demo session actually occurs and the user explicitly approves report creation.
 
+## S²IMS Role-Based User Manual and Screenshot Journey Pack MC68
+
+MC68 created a role-based user manual, route inventory, journey map, screenshot capture plan, screenshot evidence index, and handoff guide for the current S²IMS web app.
+
+Current status:
+- documentation/manual package committed
+- QA checkpoint drafted
+- no source/runtime/UI behavior changes
+- no tools changes
+- no package changes
+- no dependency updates
+- no npm audit fix
+- no real data import
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- no approval collection
+- no sign-off collection
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC68 QA checkpoint.
+2. Review the role manual with internal owners.
+3. Refresh screenshots only if routes change later.
+4. Future MC69: export the role-based manual to Word/PDF after final content review.
+
