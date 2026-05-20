@@ -2700,3 +2700,27 @@ Recommended next:
 MC50 QA passed on feature branch (package commit d58094d). Documentation-only scope confirmed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean.
 
 MC50 merged to main (merge commit 54f0911). Post-merge QA passed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6×200 OK, dev log clean. MC50 is complete.
+
+---
+
+## S2IMS MC52 — Master Data Intake Contract & Seed Runtime Plan
+
+MC52 drafts a documentation-only master data intake contract and a seed preview-first runtime plan for Staff_Master and Teacher_Master. No runtime imports, no persistence, and no audit writes are performed in MC52. The package defines source-file requirements, normalization rules, duplicate resolution strategy, and an admin registry plan.
+
+Current status:
+- docs-only
+- files created: S2IMS_MASTER_DATA_INTAKE_CONTRACT_MC52.md, S2IMS_MASTER_DATA_SEED_RUNTIME_PLAN_MC52.md, S2IMS_SOURCE_FILE_REQUIREMENTS_MC52.md, S2IMS_ADMIN_RESPONSIBLE_PERSON_REGISTRY_PLAN_MC52.md
+- QA README created under docs/qa/s2ims-master-data-intake-contract-seed-runtime-plan-mc52
+- daily report created
+- AP-10B gate unchanged: 0/7 owners, 0/7 approvals, 9/9 blockers
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC52 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Do NOT implement runtime imports, persistence, migrations, or audit writes until AP-10B blockers are resolved via governance.
+
+MC52 planned branch: architecture/s2ims-master-data-intake-contract-seed-runtime-plan-mc52
+
