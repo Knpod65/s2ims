@@ -4,6 +4,7 @@ import {
   inferRecordTypeForRow,
   normalizeEmail,
 } from './normalization'
+import { FORBIDDEN_COLUMN_ALIASES } from './config'
 import type {
   MasterDataImportMappingCase,
   MasterDataImportMessage,
