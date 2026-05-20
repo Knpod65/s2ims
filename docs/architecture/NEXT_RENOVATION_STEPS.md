@@ -49,11 +49,11 @@ Recommended next step after MC9 merge:
 - Purpose: record results from manual preview testing using MC61-generated synthetic workbooks
 - Status: merged to main (merge commit 3d085dd)
 
-### MC64 — Import preview synthetic test closure & controlled demo readiness (authoring)
+### MC64 — Import preview synthetic test closure & controlled demo readiness (merged)
 
 - Branch: architecture/s2ims-import-preview-synthetic-test-closure-demo-readiness-mc64
 - Purpose: documentation-only closure package for synthetic workbook testing cycle and controlled internal demo readiness
-- Status: authoring
+- Status: merged to main (merge commit 7fa8f19)
 
 
 
