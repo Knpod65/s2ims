@@ -2724,3 +2724,36 @@ Recommended next:
 
 MC52 planned branch: architecture/s2ims-master-data-intake-contract-seed-runtime-plan-mc52
 
+---
+
+## S²IMS Master Data Import Preview Runtime Plan MC53
+
+MC53 created a documentation-only future runtime plan for preview-first Staff_Master / Teacher_Master master data import.
+
+Current status:
+- docs-only
+- no source/runtime/UI changes
+- no route/page changes
+- no navigation changes
+- no upload/import runtime
+- no real data import
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- no AP-10B opening
+- import preview workflow documented
+- validation model documented
+- preview UI specification documented
+- import session/rollback plan documented
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC53 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future MC54: Master Data Import Preview Runtime Implementation, only if explicitly approved.
+
+MC53 QA passed on feature branch (package commit `a574beb`). Documentation-only scope confirmed. Build 41/41, tokens 4/4, audit checks 490/490, routes 6x200 OK, dev log clean. No runtime import, upload UI, parser, persistence, audit write, official evidence, or AP-10B gate change was introduced.
