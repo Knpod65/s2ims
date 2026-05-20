@@ -4886,6 +4886,160 @@ addCheck('MC45 — assignment index.ts exports FeedbackSynthesisPreview', () => 
   return source.includes('FeedbackSynthesisPreview')
 })
 
+// MC54 Master Data Import Preview Runtime checks
+const mc54RoutePath = path.join(repoRoot, 'src/app/admin/master-data/import-preview/page.tsx')
+const mc54TypesPath = path.join(repoRoot, 'src/lib/master-data-import/types.ts')
+const mc54ParserPath = path.join(repoRoot, 'src/lib/master-data-import/excelParser.ts')
+const mc54ValidatorPath = path.join(repoRoot, 'src/lib/master-data-import/validator.ts')
+const mc54NormalizationPath = path.join(repoRoot, 'src/lib/master-data-import/normalization.ts')
+const mc54IndexPath = path.join(repoRoot, 'src/lib/master-data-import/index.ts')
+
+function readMc54Route() { return fs.readFileSync(mc54RoutePath, 'utf-8') }
+function readMc54Parser() { return fs.readFileSync(mc54ParserPath, 'utf-8') }
+function readMc54Validator() { return fs.readFileSync(mc54ValidatorPath, 'utf-8') }
+function readMc54Normalization() { return fs.readFileSync(mc54NormalizationPath, 'utf-8') }
+function readMc54RuntimeFiles() {
+  return [
+    mc54RoutePath,
+    mc54TypesPath,
+    mc54ParserPath,
+    mc54ValidatorPath,
+    mc54NormalizationPath,
+    mc54IndexPath,
+  ].map((file) => fs.readFileSync(file, 'utf-8')).join('\n')
+}
+
+addCheck('MC54 import preview route exists', () =>
+  fs.existsSync(mc54RoutePath) && fs.statSync(mc54RoutePath).isFile()
+)
+
+addCheck('MC54 route contains required safety copy', () => {
+  const source = readMc54Route()
+  return [
+    'Preview only',
+    'No data has been imported yet',
+    'This does not open AP-10B',
+    'This does not create official evidence',
+    'Student PII import is not allowed in this flow',
+    'Confirm Import disabled in MC54',
+  ].every((token) => source.includes(token))
+})
+
+addCheck('MC54 route remains hidden from navigation', () =>
+  !readNavConfig().includes('/admin/master-data/import-preview') &&
+  !readSidebar().includes('/admin/master-data/import-preview') &&
+  !readTopbar().includes('/admin/master-data/import-preview') &&
+  !readMobileNav().includes('/admin/master-data/import-preview')
+)
+
+addCheck('MC54 parser and validator modules exist', () =>
+  [mc54TypesPath, mc54ParserPath, mc54ValidatorPath, mc54NormalizationPath, mc54IndexPath]
+    .every((file) => fs.existsSync(file) && fs.statSync(file).isFile())
+)
+
+addCheck('MC54 parser uses browser memory ExcelJS loading', () => {
+  const source = readMc54Parser()
+  return source.includes("import('exceljs')") &&
+    source.includes('file.arrayBuffer()') &&
+    source.includes('workbook.xlsx.load(data)') &&
+    !source.includes('readFile(')
+})
+
+addCheck('MC54 runtime has no API/storage/audit/export behavior', () => {
+  const source = readMc54RuntimeFiles()
+  const forbidden = [
+    'fetch(',
+    'axios(',
+    'XMLHttpRequest',
+    '/api/',
+    'localStorage',
+    'sessionStorage',
+    'IndexedDB',
+    'sharedMockWriter',
+    'AuditService',
+    'auditRepository',
+    'writeAudit',
+    'recordAudit',
+    'URL.createObjectURL',
+    'new Blob',
+    'download',
+    'Notification',
+    'notify(',
+  ]
+  return forbidden.every((token) => !source.includes(token))
+})
+
+addCheck('MC54 normalization detects student PII headers', () => {
+  const source = readMc54Normalization()
+  return source.includes('student_id') &&
+    source.includes('student_name') &&
+    source.includes('student_email') &&
+    source.includes('hasStudentPiiHeaders')
+})
+
+const mc54ValidatorModule = loadTsModule(mc54ValidatorPath)
+const { createMasterDataImportPreview } = mc54ValidatorModule
+
+addCheck('MC54 validator duplicate cmu_mail blocks preview', () => {
+  const result = createMasterDataImportPreview('mc54-safe.xlsx', 'staff_master', [
+    {
+      sheetName: 'staff',
+      headerMap: { name_th: 'name_th', cmu_mail: 'cmu_mail', unit: 'unit' },
+      rows: [
+        { sourceRowNumber: 2, values: { name_th: 'Staff One', cmu_mail: 'same@cmu.ac.th', unit: 'Education_Services' } },
+        { sourceRowNumber: 3, values: { name_th: 'Staff Two', cmu_mail: 'same@cmu.ac.th', unit: 'Student_Development' } },
+      ],
+    },
+  ])
+  return result.summary.duplicate_email_count === 2 &&
+    result.summary.blocked_rows === 2 &&
+    result.rows.every((row) => row.messages.some((message) => message.code === 'duplicate_cmu_mail'))
+})
+
+addCheck('MC54 validator missing cmu_mail creates manual mapping', () => {
+  const result = createMasterDataImportPreview('mc54-safe.xlsx', 'teacher_master', [
+    {
+      sheetName: 'teacher',
+      headerMap: { name_th: 'name_th', department: 'department' },
+      rows: [
+        { sourceRowNumber: 2, values: { name_th: 'Teacher One', department: 'GOV' } },
+      ],
+    },
+  ])
+  return result.summary.missing_email_count === 1 &&
+    result.summary.unresolved_mapping_count >= 1 &&
+    result.mappingQueue.some((item) => item.caseType === 'missing_cmu_mail')
+})
+
+addCheck('MC54 validator blocks student PII source rows', () => {
+  const result = createMasterDataImportPreview('mc54-student.xlsx', 'combined_personnel', [
+    {
+      sheetName: 'student',
+      headerMap: { student_id: 'student_id', student_name: 'student_name' },
+      rows: [
+        { sourceRowNumber: 2, values: { student_id: '650912345', student_name: 'Hidden Student' } },
+      ],
+    },
+  ])
+  return result.summary.error_rows === 1 &&
+    result.rows[0].blocked === true &&
+    result.rows[0].messages.some((message) => message.code === 'student_pii_detected')
+})
+
+addCheck('MC54 confirm import remains disabled no-op', () => {
+  const source = readMc54Route()
+  return source.includes('Confirm Import disabled in MC54') &&
+    source.includes('disabled') &&
+    source.includes('No import session is created') &&
+    !source.includes('createImportSession') &&
+    !source.includes('import_confirmed')
+})
+
+addCheck('MC54 package includes exceljs dependency', () => {
+  const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf-8'))
+  return pkg.dependencies && pkg.dependencies.exceljs === '^4.4.0'
+})
+
 
 await Promise.all(checkPromises)
 

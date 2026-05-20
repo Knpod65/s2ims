@@ -2761,3 +2761,51 @@ MC53 QA passed on feature branch (package commit `a574beb`). Documentation-only 
 MC53 merged to main (merge commit `25bcc5f`). Merge checkpoint created. Post-merge QA remains next.
 
 MC53 post-merge QA passed on main. Build 41/41, tokens 4/4, audit checks 490/490, routes 6x200 OK, dev log clean. MC53 is complete as documentation-only planning. Future MC54 may implement the import preview runtime only if explicitly approved; AP-10B remains blocked, and AP-10C/AP-11 remain blocked.
+
+---
+
+## S²IMS Master Data Import Preview Runtime MC54
+
+MC54 implements the guarded admin-only master data import preview runtime for `/admin/master-data/import-preview`.
+
+Current status:
+- runtime preview implemented
+- hidden admin route created
+- no sidebar/mobile navigation exposure
+- browser-memory `.xlsx` parsing only
+- Staff_Master preview supported
+- Teacher_Master preview supported
+- combined personnel preview separated by row/sheet detection
+- validation summary model implemented
+- row-level error/warning model implemented
+- duplicate `cmu_mail` blocks preview confirmation
+- missing `cmu_mail` creates manual mapping
+- student PII source rows blocked
+- manual mapping queue displayed
+- Confirm Import remains disabled/no-op
+- no backend/API
+- no database migration
+- no SQL
+- no persistence
+- no browser storage
+- no audit writes
+- no official evidence
+- no real data import committed
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Validation:
+- Build 42/42
+- Tokens 4/4
+- Audit checks 502/502
+- Routes 7x200 OK
+- Dev log clean
+
+Recommended next:
+1. Run MC54 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future persistence/import-session/rollback/audit work only if explicitly approved after governance review.
+
+MC54 QA passed on feature branch (implementation commit `021f62a`). Build 42/42, tokens 4/4, audit checks 502/502, routes 7x200 OK, dev log clean. Runtime remains preview-only with no navigation exposure, no persistence, no audit writes, no official evidence, and no AP-10B/AP-10C/AP-11 change.
