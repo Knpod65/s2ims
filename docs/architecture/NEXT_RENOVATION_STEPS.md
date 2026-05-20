@@ -43,11 +43,11 @@ Recommended next step after MC9 merge:
 - Purpose: documentation-only manual test execution plan for using MC61-generated synthetic workbooks against the preview-only import route
 - Status: merged to main (merge commit e0bbc2f)
 
-### MC63 — Synthetic workbook manual preview test execution report (authoring)
+### MC63 — Synthetic workbook manual preview test execution report (merged)
 
 - Branch: architecture/s2ims-synthetic-workbook-manual-preview-test-execution-report-mc63
 - Purpose: record results from manual preview testing using MC61-generated synthetic workbooks
-- Status: authoring
+- Status: merged to main (merge commit 3d085dd)
 
 
 
