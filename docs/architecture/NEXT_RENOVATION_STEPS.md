@@ -2852,3 +2852,39 @@ MC54 QA passed on feature branch (implementation commit `021f62a`). Build 42/42,
 MC54 merged to main (merge commit `b28b4d4`). Merge checkpoint created. Post-merge QA remains next.
 
 MC54 post-merge QA passed on main. Build 42/42, tokens 4/4, audit checks 502/502, routes 7x200 OK, dev log clean. MC54 is complete as a guarded preview-only runtime: no persistence, no import session creation, no audit writes, no official evidence, no AP-10B opening, and AP-10C/AP-11 remain blocked. Future persistence/import-session/rollback/audit work requires explicit governance approval.
+
+## S²IMS Import Preview Controlled Demo Session Logistics and Materials MC67
+
+MC67 created a documentation-only logistics and materials package for a future controlled internal demo feedback session.
+
+Current status:
+- docs-only
+- session not executed
+- no feedback collected
+- no approval collection
+- no sign-off collection
+- no source/runtime/UI changes
+- no tools changes
+- no route/page changes
+- no navigation changes
+- no package changes
+- no dependency updates
+- no npm audit fix
+- no Excel files created
+- no generated files committed
+- no real data import
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Recommended next:
+1. Run MC67 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future MC68: Controlled Internal Demo Feedback Execution Report, only after the demo session actually occurs and the user explicitly approves report creation.
+
