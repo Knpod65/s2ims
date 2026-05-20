@@ -2893,7 +2893,8 @@ Recommended next:
 MC68 created a role-based user manual, route inventory, journey map, screenshot capture plan, screenshot evidence index, and handoff guide for the current S²IMS web app.
 
 Current status:
-- documentation/manual package
+- documentation/manual package committed
+- QA checkpoint drafted
 - no source/runtime/UI behavior changes
 - no tools changes
 - no package changes
