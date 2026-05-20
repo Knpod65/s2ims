@@ -31,6 +31,14 @@ Recommended next step after MC9 merge:
 
 ## Recommended Phase 2 Sequence
 
+### MC61 — Synthetic workbook generator runtime (authoring)
+
+- Branch: architecture/s2ims-synthetic-workbook-generator-runtime-mc61
+- Purpose: provide a local-only tool to generate deterministic synthetic master-data workbooks for manual QA of the import-preview route. Artifacts are local-only and must not be committed without governance approval.
+- Status: authoring
+
+
+
 ### 1. Centralize read-only config first
 
 Safest targets:

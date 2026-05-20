@@ -19,3 +19,5 @@ stitch_s_ims_intelligent_scholarship_platform/
 .claude/
 s2ims.code-workspace
 tsconfig.tsbuildinfo
+# MC61 artifacts
+artifacts/synthetic-master-data-workbooks/
