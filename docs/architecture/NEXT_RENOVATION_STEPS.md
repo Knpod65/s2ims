@@ -2809,3 +2809,5 @@ Recommended next:
 4. Future persistence/import-session/rollback/audit work only if explicitly approved after governance review.
 
 MC54 QA passed on feature branch (implementation commit `021f62a`). Build 42/42, tokens 4/4, audit checks 502/502, routes 7x200 OK, dev log clean. Runtime remains preview-only with no navigation exposure, no persistence, no audit writes, no official evidence, and no AP-10B/AP-10C/AP-11 change.
+
+MC54 merged to main (merge commit `b28b4d4`). Merge checkpoint created. Post-merge QA remains next.
