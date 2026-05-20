@@ -57,6 +57,8 @@ export type MasterDataImportMessage = {
     | 'advisor_candidate_unresolved'
     | 'sheet_inferred_requires_confirmation'
     | 'source_context'
+    | 'formula_detected'
+    | 'forbidden_column_detected'
   field?: string
   reason: string
   suggestedAction: string
