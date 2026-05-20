@@ -357,6 +357,7 @@ export default function MasterDataImportPreviewPage() {
                   <Upload size={18} className="text-role-primary" />
                   <span className="mt-2 text-sm font-medium text-ink-1">Choose .xlsx for preview</span>
                   <span className="mt-1 text-xs text-ink-3">No data has been imported yet</span>
+                  <div className="mt-2 text-xs text-ink-3">File size limit: 5 MB (warning at 2 MB). Row limit: 1,000 rows (warning at 500 rows).</div>
                 </label>
                 <input
                   id="xlsx-upload"

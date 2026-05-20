@@ -56,6 +56,25 @@ const STUDENT_PII_HEADERS = new Set([
   'mobile',
 ])
 
+// Additional forbidden column alias detection
+const EXTRA_FORBIDDEN_ALIASES = new Set([
+  'citizen_id',
+  'id_card',
+  'bank_account',
+  'account_number',
+  'bank_no',
+  'signature',
+  'family_income',
+  'income',
+  'raw_document',
+  'attachment_raw',
+])
+
+export function hasForbiddenColumns(headerMap: Record<string, string>) {
+  const keys = Object.keys(headerMap)
+  return keys.some((k) => STUDENT_PII_HEADERS.has(k) || EXTRA_FORBIDDEN_ALIASES.has(k))
+}
+
 export function normalizeToken(value: string): string {
   return value
     .trim()

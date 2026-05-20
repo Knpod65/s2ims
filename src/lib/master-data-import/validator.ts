@@ -46,14 +46,41 @@ function buildPreviewRow(
   const messages: MasterDataImportMessage[] = []
 
   if (sheetBlocked) {
-    messages.push(makeMessage({
-      severity: 'error',
-      code: sheetReason.includes('Student') ? 'student_pii_detected' : sheetReason.includes('future') ? 'future_source_blocked' : 'unknown_source_type',
-      field: 'source_type',
-      reason: sheetReason,
-      suggestedAction: 'Use Staff_Master or Teacher_Master source only for MC54 preview.',
-    }))
-  }
+     messages.push(makeMessage({
+       severity: 'error',
+       code: sheetReason.includes('Student') ? 'student_pii_detected' : sheetReason.includes('future') ? 'future_source_blocked' : 'unknown_source_type',
+       field: 'source_type',
+       reason: sheetReason,
+       suggestedAction: 'Use Staff_Master or Teacher_Master source only for MC54 preview.',
+     }))
+   }
+
+   // Detect forbidden columns in row values (additional hardening)
+   const forbiddenKeys = Object.keys(values).filter((k) => {
+     return FORBIDDEN_COLUMN_ALIASES.includes(k) || k.includes('national') || k.includes('bank') || k.includes('student')
+   })
+
+   if (forbiddenKeys.length > 0) {
+     messages.push(makeMessage({
+       severity: 'error',
+       code: 'forbidden_column_detected',
+       field: forbiddenKeys.join(', '),
+       reason: 'Detected forbidden/PII-like column(s) in source row.',
+       suggestedAction: 'Remove forbidden columns before attempting any import.',
+     }))
+   }
+
+   // Detect formula-like or unsafe cell content
+   const unsafeValues = Object.values(values).filter((v) => typeof v === 'string' && /^\s*[=+\-@]/.test(v))
+   if (unsafeValues.length > 0) {
+     messages.push(makeMessage({
+       severity: 'warning',
+       code: 'formula_detected',
+       field: 'cell_value',
+       reason: 'Formula-like content detected in cell values; formulas are not evaluated and are displayed as text.',
+       suggestedAction: 'Review formula cells and sanitize before future import.',
+     }))
+   }
 
   if (sheetInferred && !sheetBlocked) {
     messages.push(makeMessage({
