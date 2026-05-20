@@ -37,11 +37,11 @@ Recommended next step after MC9 merge:
 - Purpose: provide a local-only tool to generate deterministic synthetic master-data workbooks for manual QA of the import-preview route. Artifacts are local-only and must not be committed without governance approval.
 - Status: authoring
 
-### MC62 — Synthetic workbook manual preview test execution plan (authoring)
+### MC62 — Synthetic workbook manual preview test execution plan (merged)
 
 - Branch: architecture/s2ims-synthetic-workbook-manual-preview-test-execution-plan-mc62
 - Purpose: documentation-only manual test execution plan for using MC61-generated synthetic workbooks against the preview-only import route
-- Status: authoring
+- Status: merged to main (merge commit e0bbc2f)
 
 
 
