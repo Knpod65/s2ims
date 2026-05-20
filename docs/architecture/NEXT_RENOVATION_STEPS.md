@@ -59,6 +59,12 @@ Recommended next step after MC9 merge:
 
 - Branch: architecture/s2ims-import-preview-controlled-internal-demo-feedback-plan-mc65
 - Purpose: documentation-only controlled internal demo feedback plan for import preview
+- Status: merged to main
+
+### MC66 — Import preview controlled demo feedback session execution plan (authoring)
+
+- Branch: architecture/s2ims-import-preview-controlled-demo-feedback-session-execution-plan-mc66
+- Purpose: session execution plan only (no session executed)
 - Status: authoring
 
 
