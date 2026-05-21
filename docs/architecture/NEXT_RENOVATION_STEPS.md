@@ -3234,4 +3234,39 @@ Recommended next (MC76+):
 2. MC77: Synthesize feedback after real session with forms completed.
 3. MC78: Hold governance owner workshop; create formal assignment records.
 4. MC79: Compile AP-10B readiness package; convene go/no-go meeting (trigger: all 25 checklist items + owners).
-5. MC80: Wave 1 UX migration (trigger: explicit written approval from Project Lead).
+5. MC80: Wave 1 UX migration (trigger: explicit written approval from Project Lead). ← IN PROGRESS
+
+## S²IMS Limited UX Migration to Shared Button and StatusBadge MC80
+
+**STATUS**: In progress — branch `architecture/s2ims-limited-ux-migration-button-statusbadge-mc80`
+
+MC80 performs the first runtime adoption of the shared `Button` and `StatusBadge` primitives (introduced in MC71) on two existing pages. Trigger condition met: explicit written approval from Project Lead received 2026-05-22.
+
+Scope:
+- 2 src page files modified (visual layer only)
+- No business logic changes
+- No handler changes
+- No disabled-state changes
+- No AP gate impact
+- Confirm Import remains disabled
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+
+Pages modified:
+- `src/app/admin/master-data/import-preview/page.tsx` — Reset button + 3× StatusBadge `color`/`dot` → `status` enum
+- `src/app/login/page.tsx` — language toggle + "Selected" badge migrated to shared primitives
+
+Files to be added on main (MC80):
+- docs/design/S2IMS_LIMITED_UX_MIGRATION_BUTTON_STATUSBADGE_MC80.md
+- docs/design/S2IMS_LIMITED_UX_MIGRATION_BUTTON_STATUSBADGE_MC80_QA_SUMMARY.md
+- docs/design/S2IMS_LIMITED_UX_MIGRATION_BUTTON_STATUSBADGE_MC80_POST_MERGE_QA_SUMMARY.md
+- docs/qa/s2ims-limited-ux-migration-button-statusbadge-mc80/README.md
+- docs/qa/s2ims-limited-ux-migration-button-statusbadge-post-merge-mc80/README.md
+- docs/daily-reports/2026-05-22-s2ims-limited-ux-migration-button-statusbadge-mc80.md
+- docs/daily-reports/2026-05-22-s2ims-limited-ux-migration-button-statusbadge-qa-mc80.md
+- docs/daily-reports/2026-05-22-s2ims-limited-ux-migration-button-statusbadge-merge-mc80.md
+- docs/daily-reports/2026-05-22-s2ims-limited-ux-migration-button-statusbadge-post-merge-qa-mc80.md
+
+Recommended next (MC81+):
+1. MC81: Migrate login main button + role cards to shared Button primitive (trigger: design review session complete).
+2. MC82: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
+3. Continue MC76–MC79 governance track in parallel.
