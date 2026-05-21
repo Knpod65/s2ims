@@ -3268,7 +3268,7 @@ Files to be added on main (MC80):
 
 Recommended next (MC81+):
 1. MC81: Visual QA and screenshot regression review after MC80. ← LIFECYCLE COMPLETE
-2. MC82: Limited UX Migration Round 2 — admin/audit-log to shared Button + StatusBadge. ← IN PROGRESS
+2. MC82: Limited UX Migration Round 2 — admin/audit-log to shared Button + StatusBadge. ← LIFECYCLE COMPLETE
 3. Continue MC76–MC79 governance track in parallel.
 
 ## S²IMS MC80 Visual QA and Screenshot Regression Review MC81
@@ -3308,7 +3308,7 @@ Files added on main (MC81):
 
 ## S²IMS Limited UX Migration Round 2 — MC82
 
-**STATUS**: In progress — branch `architecture/s2ims-limited-ux-migration-round2-button-statusbadge-mc82`
+**STATUS**: LIFECYCLE COMPLETE — merged to main at `c71e954` · post-merge QA HEAD `393e5a9`
 
 MC82 performs a second limited UX migration to the shared Button and StatusBadge primitives (MC71). After inspecting 5 candidate pages, only `admin/audit-log` had a clean, low-risk migration profile.
 
