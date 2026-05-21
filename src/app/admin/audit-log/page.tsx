@@ -1,7 +1,9 @@
 'use client'
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
-import { PageHeader, StatusBadge } from '@/components/ui/index'
+import { PageHeader } from '@/components/ui/index'
+import { Button } from '@/components/shared/Button'
+import { StatusBadge } from '@/components/shared/StatusBadge'
 import { mockAuditLogs } from '@/data/mock/audit-logs'
 import { Download, AlertCircle } from 'lucide-react'
 import { useState } from 'react'
@@ -54,7 +56,7 @@ export default function AuditLogPage() {
       <PageHeader
         title={t==='th'?'ประวัติการใช้งาน (Audit Log)':'Audit Log'}
         subtitle={t==='th'?'เหตุการณ์การตรวจสอบแบบเดโม — ไม่ใช่การบันทึกอย่างเป็นทางการ':'Demo audit events — not official persistence'}
-        actions={<button onClick={exportAuditCSV} className="btn-secondary text-xs flex items-center gap-1.5 py-1.5"><Download size={13}/>{t==='th'?'ส่งออก CSV':'Export CSV'}</button>}
+        actions={<Button variant="secondary" size="sm" onClick={exportAuditCSV} iconStart={<Download size={13}/>}>{t==='th'?'ส่งออก CSV':'Export CSV'}</Button>}
       />
       <div className="flex items-center gap-2 mb-4 p-3 bg-purple-500/[0.05] border border-purple-500/20 rounded-lg">
         <AlertCircle size={13} className="text-purple-600"/>
@@ -124,27 +126,25 @@ export default function AuditLogPage() {
                   <div className="flex flex-col gap-1">
                     <StatusBadge
                       label={t==='th'?'เหตุการณ์เดโม':'Mock event'}
-                      color="bg-purple-500/10 text-purple-600 border-purple-500/20"
-                      dot
+                      status="preview"
                     />
-                    <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border w-fit ${
-                      row.source === 'writer'
-                        ? 'text-indigo-700 bg-indigo-50 border-indigo-200'
-                        : 'text-slate-600 bg-slate-100 border-slate-200'
-                    }`}>
-                      {t==='th'
+                    <StatusBadge
+                      label={t==='th'
                         ? (row.source === 'writer' ? 'เดโม (สร้างขึ้น)' : 'เดโม (ฟิกซ์เจอร์)')
                         : (row.source === 'writer' ? 'Demo (generated)' : 'Demo (fixture)')}
-                    </span>
+                      status={row.source === 'writer' ? 'info' : 'neutral'}
+                      size="sm"
+                    />
                   </div>
                 </td>
                 <td className="p-3">
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setSelectedLog(row)}
-                    className="text-[11px] px-2 py-1 rounded border border-line text-ink-2 hover:bg-surface-low hover:text-ink-1 transition-colors whitespace-nowrap"
                   >
                     {t==='th'?'ดูรายละเอียด':'View details'}
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
