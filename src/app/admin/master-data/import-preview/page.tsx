@@ -2,7 +2,9 @@
 
 import { useMemo, useState, type ChangeEvent } from 'react'
 import AppShell from '@/components/layout/AppShell'
-import { PageHeader, StatusBadge } from '@/components/ui/index'
+import { PageHeader } from '@/components/ui/index'
+import { Button } from '@/components/shared/Button'
+import { StatusBadge } from '@/components/shared/StatusBadge'
 import { useLang } from '@/lib/i18n'
 import {
   parseMasterDataImportWorkbook,
@@ -190,8 +192,7 @@ function SheetDetectionPanel({ result }: { result: MasterDataImportPreviewResult
               </div>
               <StatusBadge
                 label={sheet.blocked ? 'Blocked' : sheet.inferred ? 'Inferred' : 'Detected'}
-                color={sheet.blocked ? 'bg-red-50 text-red-700 border-red-200' : sheet.inferred ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-emerald-50 text-emerald-700 border-emerald-200'}
-                dot
+                status={sheet.blocked ? 'blocked' : sheet.inferred ? 'warning' : 'success'}
               />
             </div>
             <p className="mt-2 text-xs text-ink-2">{sheet.reason}</p>
@@ -242,7 +243,10 @@ function PreviewTable({ rows }: { rows: MasterDataImportPreviewRow[] }) {
                 <td className="p-3 text-xs text-ink-2">{row.position || '—'}</td>
                 <td className="p-3 text-xs text-ink-2">{row.status || '—'}</td>
                 <td className="p-3">
-                  <StatusBadge label={row.validationStatus} color={statusColor(row.validationStatus)} dot />
+                  <StatusBadge
+                    label={row.validationStatus}
+                    status={row.validationStatus === 'error' ? 'error' : row.validationStatus === 'warning' ? 'warning' : row.validationStatus === 'info' ? 'info' : 'success'}
+                  />
                 </td>
                 <td className="p-3 text-xs text-ink-2">
                   {row.messages.length > 0 ? (
@@ -318,7 +322,7 @@ export default function MasterDataImportPreviewPage() {
       <PageHeader
         title={lang === 'th' ? 'ตัวอย่างนำเข้าข้อมูลหลัก' : 'Master Data Import Preview'}
         subtitle={lang === 'th' ? 'ตรวจสอบไฟล์บุคลากรแบบพรีวิวเท่านั้น ไม่มีการบันทึกข้อมูล' : 'Preview staff and teacher master data files without importing or persisting data.'}
-        badge={<StatusBadge label="Preview only" color="bg-amber-50 text-amber-700 border-amber-200" dot />}
+        badge={<StatusBadge label="Preview only" status="preview" />}
       />
 
       <SafetyBanner />
@@ -501,14 +505,14 @@ export default function MasterDataImportPreviewPage() {
             </div>
           </section>
 
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={resetPreview}
-            className="btn-secondary w-full justify-center text-sm"
+            iconStart={<RotateCcw size={14} />}
+            className="w-full"
           >
-            <RotateCcw size={14} />
             Reset preview
-          </button>
+          </Button>
         </aside>
       </div>
     </AppShell>

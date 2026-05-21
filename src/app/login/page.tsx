@@ -7,6 +7,8 @@ import { useAuth } from '@/lib/auth'
 import { useLang } from '@/lib/i18n'
 import { ROLE_HOME, ROLE_LABELS } from '@/lib/navigation'
 import type { Role } from '@/lib/types'
+import { Button } from '@/components/shared/Button'
+import { StatusBadge } from '@/components/shared/StatusBadge'
 
 const ROLE_META: { role: Role; icon: LucideIcon; desc_th: string; desc_en: string }[] = [
   { role: 'student',  icon: BookOpen,   desc_th: 'สมัครทุน ติดตามสถานะ เช็คผล',   desc_en: 'Apply for scholarships, track status, view results' },
@@ -35,13 +37,14 @@ export default function LoginPage() {
     <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-4">
       {/* Lang toggle */}
       <div className="absolute top-4 right-4">
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
-          className="flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-md bg-white border border-line text-ink-2 hover:text-ink-1 hover:bg-surface-low transition-all"
+          iconStart={<Globe size={12} />}
         >
-          <Globe size={12} />
           {lang === 'th' ? 'EN' : 'ภาษาไทย'}
-        </button>
+        </Button>
       </div>
 
       <div className="w-full max-w-lg page-animate">
@@ -99,9 +102,11 @@ export default function LoginPage() {
                       {lang === 'th' ? rl.th : rl.en}
                     </span>
                     {isSelected && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full border border-[#0055FF]/20 bg-[#E5EDFF] text-[#0055FF] font-semibold">
-                        {lang === 'th' ? 'เลือกแล้ว' : 'Selected'}
-                      </span>
+                      <StatusBadge
+                        status="info"
+                        label={lang === 'th' ? 'เลือกแล้ว' : 'Selected'}
+                        size="sm"
+                      />
                     )}
                   </div>
                   <div className="text-xs text-ink-3">{lang === 'th' ? desc_th : desc_en}</div>
