@@ -4,6 +4,14 @@
 
 **When to use**: After every implementation commit, before every PR, and after every merge.
 
+**Framework detection — run first**:
+```bash
+# Detect framework before choosing verification commands
+ls artisan 2>/dev/null && echo "Laravel detected" || echo "Not Laravel"
+# S²IMS result: "Not Laravel" — use npm commands only
+# Do NOT run php artisan commands in this repo
+```
+
 **Files to check**:
 - `git status --short`
 - `git diff --name-only HEAD~1..HEAD` (or against origin/main)
@@ -40,5 +48,9 @@
 
 ### Verdict: ✅ VERIFIED / ❌ BLOCKED
 ```
+
+**Laravel/PHP rule**: If repo is Laravel/PHP (artisan file + laravel/framework in composer.json), run `php artisan route:list` and `composer validate` instead. Do NOT run Laravel commands in a Next.js repo like S²IMS.
+
+**Route verification standard**: See `docs/architecture/S2IMS_ROUTE_VERIFICATION_STANDARD_MC75.md` for full framework detection flow, smoke set, and report format.
 
 **Safety boundaries**: Runs npm check commands (read-only). Does not edit files.

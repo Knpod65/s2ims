@@ -3181,3 +3181,47 @@ Recommended next (MC75+):
 3. Designate governance owners using MC74 governance owner prep doc.
 4. Begin filling AP-10B questionnaire with designated owners.
 5. MC76: Post-demo report and feedback analysis (after real session).
+
+## S²IMS Remaining Readiness Completion Pack, Route Verification Standard, and Next Action Decision Gate MC75
+
+MC75 closes the remaining documentation gaps after MC74: permanent route verification standard, Claude resource usage standard, final readiness scorecard, executive status brief (non-technical), governance owner assignment workshop agenda, and next action decision gate (MC76–MC82).
+
+Current status:
+- docs-only (+ .claude/commands minor updates)
+- no src/* changes
+- no runtime changes
+- no route/page changes
+- no navigation changes
+- no tools changes
+- no scripts changes
+- no package changes
+- no dependency updates
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+- No actual demo session conducted
+- No stakeholder feedback collected
+- No approvals or sign-offs collected
+- No governance owners designated
+
+Files created in MC75:
+- docs/architecture/S2IMS_ROUTE_VERIFICATION_STANDARD_MC75.md (Next.js + Laravel/PHP framework detection; smoke set; report format)
+- docs/architecture/S2IMS_CLAUDE_RESOURCE_USAGE_STANDARD_MC75.md (command-first flow; connector rules; session report format; anti-patterns)
+- docs/architecture/S2IMS_FINAL_READINESS_COMPLETION_SCORECARD_MC75.md (36-item full matrix; 5 items 0%→100% in MC75)
+- docs/architecture/S2IMS_NEXT_ACTION_DECISION_GATE_MC75.md (MC76–MC82 trigger conditions, evidence, allowed/forbidden actions)
+- docs/executive/S2IMS_EXECUTIVE_STATUS_BRIEF_AFTER_MC74_MC75.md (non-technical one-page brief; 3 decisions needed)
+- docs/governance/S2IMS_GOVERNANCE_OWNER_ASSIGNMENT_WORKSHOP_AGENDA_MC75.md (90-min workshop agenda; 5 governance roles; per-role questions)
+- .claude/commands/verify-change.md (added framework detection block + Laravel/PHP rule)
+- .claude/commands/project-orient.md (added resource discovery table format)
+
+Recommended next:
+1. MC76: Run actual controlled demo session and file execution report.
+2. MC77: Synthesize feedback (after real session with forms completed).
+3. MC78: Hold governance owner workshop; create formal assignment records.
+4. MC79: Compile AP-10B readiness package; convene go/no-go meeting.
+5. MC80: Wave 1 UX migration (requires explicit written approval from Project Lead).

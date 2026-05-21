@@ -33,6 +33,19 @@
 [1-2 sentences on what to do next]
 ```
 
+**Resource discovery** — include this table in orientation output:
+```
+| Resource | Available? | Will Use? | Reason |
+|----------|-----------|-----------|--------|
+| /commands | List found | [Y/N] | ... |
+| Skills    | List found | [Y/N] | ... |
+| Subagents | List available | [Y/N] | ... |
+| Connectors| List relevant | [Y/N] | ... |
+```
+Run: `find .claude -maxdepth 4 -type f 2>/dev/null | sort` to discover available commands and skills.
+
+**Resource usage standard**: See `docs/architecture/S2IMS_CLAUDE_RESOURCE_USAGE_STANDARD_MC75.md` for full connector decision table and session report format.
+
 **Token-saving rules**:
 - Read ONLY the last 60 lines of NEXT_RENOVATION_STEPS.md (not the full 3000+ lines)
 - Read ONLY 2 most recent daily reports
