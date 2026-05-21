@@ -3090,3 +3090,52 @@ Recommended next:
 
 MC72 lifecycle status: ✅ Complete and closed (all phases complete, all deliverables on main branch).
 
+
+
+## S²IMS Executive Readiness, Governance Checklist & Operating Layer Pack MC73
+
+MC73 integrates the Claude Code operating layer (11 commands + skill update) into main and creates executive-facing readiness materials, governance checklists, and demo templates.
+
+Current status:
+- docs/ops only
+- no src/* changes
+- no runtime changes
+- no route/page changes
+- no navigation changes
+- no tools changes
+- no scripts changes
+- no package changes
+- no dependency updates
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+- No demo has occurred — demo execution report is a template only
+- No feedback has been collected — feedback collection form is a template only
+
+New directories created in MC73:
+- docs/executive/ (new)
+- docs/governance/ (new)
+
+Files created in MC73:
+- docs/executive/S2IMS_EXECUTIVE_ONE_PAGE_READINESS_SUMMARY_MC73.md
+- docs/governance/S2IMS_IMPORT_PERSISTENCE_READINESS_GOVERNANCE_CHECKLIST_MC73.md
+- docs/governance/S2IMS_AP10B_READINESS_DECISION_MATRIX_MC73.md
+- docs/architecture/S2IMS_REMAINING_GAPS_TO_100_PERCENT_MC73.md
+- docs/architecture/S2IMS_CONTROLLED_DEMO_EXECUTION_REPORT_TEMPLATE_MC73.md
+- docs/architecture/S2IMS_CONTROLLED_DEMO_FEEDBACK_COLLECTION_TEMPLATE_MC73.md
+- docs/architecture/S2IMS_POST_DEMO_NEXT_STEP_ROADMAP_MC73.md
+- .claude/commands/ (11 slash commands: project-orient, safe-explore, plan-change, renovate-ui, sync-design-system, audit-rbac, audit-api-contract, bilingual-check, pdpa-review, verify-change, handoff-summary)
+- .claude/skills/s2ims-full-stack-ux-renovation-reviewer/SKILL.md (updated: MC69-71 references added)
+
+Recommended next:
+1. Run MC73 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future MC74: UX Wave 1 page migration (3-5 high-traffic pages to Button/StatusBadge) only after explicit approval.
+5. Schedule first controlled demo session using templates from MC73.
+6. Designate governance owners for AP-10B/C/11 using MC73 governance checklist.
