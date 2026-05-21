@@ -3267,6 +3267,46 @@ Files to be added on main (MC80):
 - docs/daily-reports/2026-05-22-s2ims-limited-ux-migration-button-statusbadge-post-merge-qa-mc80.md
 
 Recommended next (MC81+):
-1. MC81: Migrate login main button + role cards to shared Button primitive (trigger: design review session complete).
+1. MC81: Visual QA and screenshot regression review after MC80. ← IN PROGRESS
 2. MC82: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
 3. Continue MC76–MC79 governance track in parallel.
+
+## S²IMS MC80 Visual QA and Screenshot Regression Review MC81
+
+**STATUS**: In progress — branch `architecture/s2ims-mc80-visual-qa-screenshot-regression-mc81`
+
+MC81 performs a visual QA and screenshot regression review of the MC80 limited UX migration. No src changes — docs/screenshots only.
+
+Review method: Live dev server via Claude Preview MCP + accessibility snapshot.
+
+Pages reviewed:
+- `/login` — language toggle Button + "Selected" StatusBadge
+- `/admin/master-data/import-preview` — Reset Button + 3× StatusBadge
+
+Result: PASS — no regressions found.
+
+Safety:
+- No src changes
+- No business logic changes
+- No persistence / backend / API
+- No audit writes
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+- Confirm Import remains disabled
+
+Files to be added on main (MC81):
+- docs/design/S2IMS_MC80_VISUAL_QA_SCREENSHOT_REGRESSION_MC81.md
+- docs/design/S2IMS_MC80_VISUAL_QA_SCREENSHOT_REGRESSION_MC81_QA_SUMMARY.md
+- docs/design/S2IMS_MC80_VISUAL_QA_SCREENSHOT_REGRESSION_MC81_POST_MERGE_QA_SUMMARY.md
+- docs/architecture/S2IMS_MC80_RUNTIME_BOUNDARY_RECHECK_MC81.md
+- docs/qa/s2ims-mc80-visual-qa-screenshot-regression-mc81/README.md
+- docs/qa/s2ims-mc80-visual-qa-screenshot-regression-post-merge-mc81/README.md
+- docs/screenshots/mc81-mc80-visual-qa/VISUAL_REVIEW_NOTES.md
+- docs/daily-reports/2026-05-22-s2ims-mc80-visual-qa-screenshot-regression-mc81.md
+- docs/daily-reports/2026-05-22-s2ims-mc80-visual-qa-screenshot-regression-qa-mc81.md
+- docs/daily-reports/2026-05-22-s2ims-mc80-visual-qa-screenshot-regression-merge-mc81.md
+- docs/daily-reports/2026-05-22-s2ims-mc80-visual-qa-screenshot-regression-post-merge-qa-mc81.md
+
+Recommended next (MC82+):
+1. MC82: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
+2. Continue MC76–MC79 governance track in parallel.
+3. MC83+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
