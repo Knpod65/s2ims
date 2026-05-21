@@ -3267,13 +3267,13 @@ Files to be added on main (MC80):
 - docs/daily-reports/2026-05-22-s2ims-limited-ux-migration-button-statusbadge-post-merge-qa-mc80.md
 
 Recommended next (MC81+):
-1. MC81: Visual QA and screenshot regression review after MC80. ← IN PROGRESS
+1. MC81: Visual QA and screenshot regression review after MC80. ← LIFECYCLE COMPLETE
 2. MC82: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
 3. Continue MC76–MC79 governance track in parallel.
 
 ## S²IMS MC80 Visual QA and Screenshot Regression Review MC81
 
-**STATUS**: In progress — branch `architecture/s2ims-mc80-visual-qa-screenshot-regression-mc81`
+**STATUS**: LIFECYCLE COMPLETE — merged to main at `95deb9a` · post-merge QA HEAD `7c279ec`
 
 MC81 performs a visual QA and screenshot regression review of the MC80 limited UX migration. No src changes — docs/screenshots only.
 
