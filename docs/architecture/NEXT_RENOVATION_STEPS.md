@@ -3012,5 +3012,5 @@ Recommended next:
 3. Post-merge QA.
 4. Future MC71: implement Wave 1 shared UI primitives only after explicit approval.
 
-MC70 QA status: ✅ Phase 5 QA checkpoint complete — approved for merge to main.
+MC70 lifecycle status: ✅ Complete and closed (Phases 5-8 complete, all deliverables on main branch).
 
