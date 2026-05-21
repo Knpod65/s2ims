@@ -3268,7 +3268,7 @@ Files to be added on main (MC80):
 
 Recommended next (MC81+):
 1. MC81: Visual QA and screenshot regression review after MC80. ← LIFECYCLE COMPLETE
-2. MC82: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
+2. MC82: Limited UX Migration Round 2 — admin/audit-log to shared Button + StatusBadge. ← IN PROGRESS
 3. Continue MC76–MC79 governance track in parallel.
 
 ## S²IMS MC80 Visual QA and Screenshot Regression Review MC81
@@ -3293,7 +3293,7 @@ Safety:
 - AP-10B / AP-10C / AP-11 remain BLOCKED
 - Confirm Import remains disabled
 
-Files to be added on main (MC81):
+Files added on main (MC81):
 - docs/design/S2IMS_MC80_VISUAL_QA_SCREENSHOT_REGRESSION_MC81.md
 - docs/design/S2IMS_MC80_VISUAL_QA_SCREENSHOT_REGRESSION_MC81_QA_SUMMARY.md
 - docs/design/S2IMS_MC80_VISUAL_QA_SCREENSHOT_REGRESSION_MC81_POST_MERGE_QA_SUMMARY.md
@@ -3306,7 +3306,31 @@ Files to be added on main (MC81):
 - docs/daily-reports/2026-05-22-s2ims-mc80-visual-qa-screenshot-regression-merge-mc81.md
 - docs/daily-reports/2026-05-22-s2ims-mc80-visual-qa-screenshot-regression-post-merge-qa-mc81.md
 
-Recommended next (MC82+):
-1. MC82: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
+## S²IMS Limited UX Migration Round 2 — MC82
+
+**STATUS**: In progress — branch `architecture/s2ims-limited-ux-migration-round2-button-statusbadge-mc82`
+
+MC82 performs a second limited UX migration to the shared Button and StatusBadge primitives (MC71). After inspecting 5 candidate pages, only `admin/audit-log` had a clean, low-risk migration profile.
+
+Page selected:
+- `src/app/admin/audit-log/page.tsx` — 2 buttons (Export CSV, View details) + 1 legacy StatusBadge + 1 hardcoded span pill
+
+Deferred pages:
+- `staff/applications` — APP_STATUS_MAP color strings unmappable; CSS-var count chips not StatusBadge candidates
+- `staff/applications/[id]` — MEDIUM-HIGH risk (audit event builders, shadow write service)
+- `provider/dashboard` — Links only, no button elements
+- `staff/dashboard` — Nothing to migrate
+- Login main button + role cards — deferred to MC83+ (complex styling, deferred from MC80)
+
+Safety:
+- No new components created
+- No business logic changed
+- No persistence / backend / API
+- No audit writes
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+- Confirm Import remains disabled
+
+Recommended next (MC83+):
+1. MC83: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
 2. Continue MC76–MC79 governance track in parallel.
-3. MC83+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
+3. MC84+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
