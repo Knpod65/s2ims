@@ -3014,3 +3014,38 @@ Recommended next:
 
 MC70 lifecycle status: ✅ Complete and closed (Phases 5-8 complete, all deliverables on main branch).
 
+## S²IMS UX Renovation Wave 1 Foundation Primitives MC71
+
+MC71 implements the smallest safe foundation for Wave 1 shared UI primitives based on MC70 planning documents.
+
+Current status:
+- branch: architecture/s2ims-ux-renovation-wave1-foundation-primitives-mc71
+- implementation complete — source files created
+- no existing pages migrated
+- no route/page changes
+- no navigation changes
+- no tools changes
+- no scripts changes
+- no package changes
+- no dependency updates
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Files created in MC71:
+- src/config/theme.ts (design token scaffold — pure constants)
+- src/components/shared/Button.tsx (Button with 4 variants × 3 sizes)
+- src/components/shared/StatusBadge.tsx (StatusBadge with 8 semantic statuses)
+- src/components/shared/index.ts (barrel export)
+
+Recommended next:
+1. Run MC71 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future MC72: migrate existing pages to use Button + StatusBadge primitives only after explicit approval.
+
