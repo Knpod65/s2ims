@@ -2969,3 +2969,48 @@ Recommended next:
 2. MC70: Implementation planning phase (safe configuration, component extraction prep).
 3. MC71+: Phased implementation execution per wave plan.
 
+## S²IMS UX Renovation Wave 1 Shared UI Primitives Plan MC70
+
+MC70 creates a documentation-only future implementation plan for Wave 1 shared UI primitives based on MC69 full-stack UX renovation audit findings.
+
+Current status:
+- docs-only
+- planning only
+- no component implementation
+- no source/runtime changes
+- no route/page changes
+- no navigation changes
+- no tools changes
+- no scripts changes
+- no package changes
+- no dependency updates
+- no npm audit fix
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Future MC71 candidate components, not created in MC70:
+- Button
+- StatusBadge
+- DataTable
+- FormShell
+- DashboardShell
+- SafetyBanner
+- EmptyState
+- DisabledActionHint
+- PreviewOnlyNotice
+- GovernanceBlockedNotice
+
+Recommended next:
+1. Run MC70 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future MC71: implement Wave 1 shared UI primitives only after explicit approval.
+
+MC70 QA status: ✅ Phase 5 QA checkpoint complete — approved for merge to main.
+
