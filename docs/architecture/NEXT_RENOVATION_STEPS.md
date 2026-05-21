@@ -3049,3 +3049,5 @@ Recommended next:
 3. Post-merge QA.
 4. Future MC72: migrate existing pages to use Button + StatusBadge primitives only after explicit approval.
 
+MC71 lifecycle status: ✅ Complete and closed (all phases complete, source files and docs on main branch).
+
