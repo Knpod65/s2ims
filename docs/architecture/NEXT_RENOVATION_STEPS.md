@@ -3234,11 +3234,11 @@ Recommended next (MC76+):
 2. MC77: Synthesize feedback after real session with forms completed.
 3. MC78: Hold governance owner workshop; create formal assignment records.
 4. MC79: Compile AP-10B readiness package; convene go/no-go meeting (trigger: all 25 checklist items + owners).
-5. MC80: Wave 1 UX migration (trigger: explicit written approval from Project Lead). ← IN PROGRESS
+5. MC80: Wave 1 UX migration (trigger: explicit written approval from Project Lead). ← COMPLETE
 
 ## S²IMS Limited UX Migration to Shared Button and StatusBadge MC80
 
-**STATUS**: In progress — branch `architecture/s2ims-limited-ux-migration-button-statusbadge-mc80`
+**LIFECYCLE COMPLETE** — Merged to main `0d8bd4e` on 2026-05-22. Post-merge QA passed.
 
 MC80 performs the first runtime adoption of the shared `Button` and `StatusBadge` primitives (introduced in MC71) on two existing pages. Trigger condition met: explicit written approval from Project Lead received 2026-05-22.
 
