@@ -3184,9 +3184,11 @@ Recommended next (MC75+):
 
 ## S²IMS Remaining Readiness Completion Pack, Route Verification Standard, and Next Action Decision Gate MC75
 
+**LIFECYCLE COMPLETE** — Merged to main `9739922` on 2026-05-21. Post-merge QA passed.
+
 MC75 closes the remaining documentation gaps after MC74: permanent route verification standard, Claude resource usage standard, final readiness scorecard, executive status brief (non-technical), governance owner assignment workshop agenda, and next action decision gate (MC76–MC82).
 
-Current status:
+Final status:
 - docs-only (+ .claude/commands minor updates)
 - no src/* changes
 - no runtime changes
@@ -3209,19 +3211,27 @@ Current status:
 - No approvals or sign-offs collected
 - No governance owners designated
 
-Files created in MC75:
-- docs/architecture/S2IMS_ROUTE_VERIFICATION_STANDARD_MC75.md (Next.js + Laravel/PHP framework detection; smoke set; report format)
-- docs/architecture/S2IMS_CLAUDE_RESOURCE_USAGE_STANDARD_MC75.md (command-first flow; connector rules; session report format; anti-patterns)
-- docs/architecture/S2IMS_FINAL_READINESS_COMPLETION_SCORECARD_MC75.md (36-item full matrix; 5 items 0%→100% in MC75)
-- docs/architecture/S2IMS_NEXT_ACTION_DECISION_GATE_MC75.md (MC76–MC82 trigger conditions, evidence, allowed/forbidden actions)
-- docs/executive/S2IMS_EXECUTIVE_STATUS_BRIEF_AFTER_MC74_MC75.md (non-technical one-page brief; 3 decisions needed)
-- docs/governance/S2IMS_GOVERNANCE_OWNER_ASSIGNMENT_WORKSHOP_AGENDA_MC75.md (90-min workshop agenda; 5 governance roles; per-role questions)
-- .claude/commands/verify-change.md (added framework detection block + Laravel/PHP rule)
-- .claude/commands/project-orient.md (added resource discovery table format)
+Files added on main (MC75):
+- docs/architecture/S2IMS_ROUTE_VERIFICATION_STANDARD_MC75.md
+- docs/architecture/S2IMS_CLAUDE_RESOURCE_USAGE_STANDARD_MC75.md
+- docs/architecture/S2IMS_FINAL_READINESS_COMPLETION_SCORECARD_MC75.md
+- docs/architecture/S2IMS_NEXT_ACTION_DECISION_GATE_MC75.md
+- docs/architecture/S2IMS_REMAINING_READINESS_ROUTE_VERIFICATION_DECISION_GATE_MC75_QA_SUMMARY.md
+- docs/architecture/S2IMS_REMAINING_READINESS_ROUTE_VERIFICATION_DECISION_GATE_MC75_POST_MERGE_QA_SUMMARY.md
+- docs/executive/S2IMS_EXECUTIVE_STATUS_BRIEF_AFTER_MC74_MC75.md
+- docs/governance/S2IMS_GOVERNANCE_OWNER_ASSIGNMENT_WORKSHOP_AGENDA_MC75.md
+- docs/qa/s2ims-remaining-readiness-route-verification-decision-gate-mc75/README.md
+- docs/qa/s2ims-remaining-readiness-route-verification-decision-gate-post-merge-mc75/README.md
+- docs/daily-reports/2026-05-21-s2ims-remaining-readiness-route-verification-decision-gate-mc75.md
+- docs/daily-reports/2026-05-21-s2ims-remaining-readiness-route-verification-decision-gate-qa-mc75.md
+- docs/daily-reports/2026-05-21-s2ims-remaining-readiness-route-verification-decision-gate-merge-mc75.md
+- docs/daily-reports/2026-05-21-s2ims-remaining-readiness-route-verification-decision-gate-post-merge-qa-mc75.md
+- .claude/commands/verify-change.md (updated — framework detection added)
+- .claude/commands/project-orient.md (updated — resource discovery table added)
 
-Recommended next:
-1. MC76: Run actual controlled demo session and file execution report.
-2. MC77: Synthesize feedback (after real session with forms completed).
+Recommended next (MC76+):
+1. MC76: Run actual controlled demo session and file execution report (trigger: real session held).
+2. MC77: Synthesize feedback after real session with forms completed.
 3. MC78: Hold governance owner workshop; create formal assignment records.
-4. MC79: Compile AP-10B readiness package; convene go/no-go meeting.
-5. MC80: Wave 1 UX migration (requires explicit written approval from Project Lead).
+4. MC79: Compile AP-10B readiness package; convene go/no-go meeting (trigger: all 25 checklist items + owners).
+5. MC80: Wave 1 UX migration (trigger: explicit written approval from Project Lead).
