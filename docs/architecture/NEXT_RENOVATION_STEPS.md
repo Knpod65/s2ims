@@ -3051,3 +3051,42 @@ Recommended next:
 
 MC71 lifecycle status: ✅ Complete and closed (all phases complete, source files and docs on main branch).
 
+## S²IMS Figma Redesign Brief & Role Screen Plan MC72
+
+MC72 creates documentation-only Figma redesign briefs, screen frame plans, component library specs, page-level AI design prompts, and design review checklists for all S²IMS role screens.
+
+Current status:
+- docs-only
+- design briefs only — no component implementation
+- no page migrations
+- no source/runtime changes
+- no route/page changes
+- no navigation changes
+- no tools changes
+- no scripts changes
+- no package changes
+- no dependency updates
+- no persistence
+- no backend/API
+- no audit writes
+- no official evidence
+- Confirm Import remains disabled
+- AP-10B remains blocked
+- AP-10C blocked
+- AP-11 blocked
+
+Files created in MC72:
+- docs/design/S2IMS_FIGMA_REDESIGN_MASTER_BRIEF_MC72.md (product context, design principles, token reference)
+- docs/design/S2IMS_ROLE_BASED_SCREEN_FRAME_PLAN_MC72.md (16 screen groups, all 6 roles)
+- docs/design/S2IMS_FIGMA_COMPONENT_LIBRARY_BRIEF_MC72.md (14 components — 2 implemented + 12 planned)
+- docs/design/S2IMS_PAGE_LEVEL_DESIGN_PROMPTS_MC72.md (14 ready-to-paste Figma AI prompts)
+- docs/design/S2IMS_DESIGN_REVIEW_CHECKLIST_MC72.md (7 checklists, 57+ items)
+
+Recommended next:
+1. Run MC72 QA checkpoint.
+2. Merge after review.
+3. Post-merge QA.
+4. Future MC73: page migration (migrate 3-5 high-traffic pages to use Button + StatusBadge) only after explicit approval.
+
+MC72 lifecycle status: In progress — Phase 3 complete, QA pending.
+
