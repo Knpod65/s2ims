@@ -3088,5 +3088,5 @@ Recommended next:
 3. Post-merge QA.
 4. Future MC73: page migration (migrate 3-5 high-traffic pages to use Button + StatusBadge) only after explicit approval.
 
-MC72 lifecycle status: In progress — Phase 3 complete, QA pending.
+MC72 lifecycle status: ✅ Complete and closed (all phases complete, all deliverables on main branch).
 
