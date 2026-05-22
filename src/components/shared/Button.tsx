@@ -18,15 +18,17 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset'
   onClick?: React.MouseEventHandler<HTMLButtonElement>
   className?: string
+  /** Optional governance context — forwarded as data-ap-code attribute. No behavior change in MC87. */
+  apCode?: 'AP-10B' | 'AP-10C' | 'AP-11'
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-blue-500 text-white border-transparent hover:bg-blue-600 focus-visible:ring-blue-500',
+    'bg-[#2E5B4A] text-white border-transparent hover:bg-[#1F3D32] focus-visible:ring-[#2E5B4A]',
   secondary:
-    'bg-transparent text-gray-700 border-gray-300 hover:bg-gray-100 focus-visible:ring-blue-500',
+    'bg-[#FBFAF6] text-[#1B1D1F] border-[#4A4E52] hover:bg-[#F4F0E6] focus-visible:ring-[#2E5B4A]',
   ghost:
-    'bg-transparent text-gray-700 border-transparent hover:bg-gray-50 focus-visible:ring-blue-500',
+    'bg-transparent text-[#1B1D1F] border-transparent hover:bg-[#F4F0E6] focus-visible:ring-[#2E5B4A]',
   danger:
     'bg-red-500 text-white border-transparent hover:bg-red-600 focus-visible:ring-red-500',
 }
@@ -49,6 +51,7 @@ export function Button({
   type = 'button',
   onClick,
   className = '',
+  apCode,
 }: ButtonProps) {
   const isDisabled = disabled || loading
 
@@ -70,6 +73,7 @@ export function Button({
       disabled={isDisabled}
       onClick={onClick}
       className={classes}
+      data-ap-code={apCode}
     >
       {loading && (
         <Loader2

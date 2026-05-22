@@ -24,14 +24,16 @@ export interface StatusBadgeProps {
 }
 
 const statusClasses: Record<StatusBadgeStatus, string> = {
-  success:  'bg-emerald-100 text-emerald-800 border-emerald-200',
-  warning:  'bg-amber-100   text-amber-800   border-amber-200',
-  error:    'bg-red-100     text-red-800     border-red-200',
-  info:     'bg-sky-100     text-sky-800     border-sky-200',
-  neutral:  'bg-gray-100    text-gray-700    border-gray-200',
-  blocked:  'bg-gray-200    text-gray-600    border-gray-300',
-  preview:  'bg-purple-100  text-purple-800  border-purple-200',
-  disabled: 'bg-gray-100    text-gray-400    border-gray-200',
+  success:  'bg-[#E8F1ED] text-[#1F3D32] border-[#2E5B4A]',
+  warning:  'bg-[#F5EDE3] text-[#5C3E1C] border-[#8B5E2B]',
+  error:    'bg-[#F5E9E9] text-[#5C2727] border-[#8B3B3B]',
+  info:     'bg-[#E8EEF6] text-[#1F3D5C] border-[#2E5B8C]',
+  neutral:  'bg-gray-100  text-gray-700  border-gray-200',
+  // blocked = soft civic gray — distinct from disabled
+  blocked:  'bg-[#F0F0F0] text-[#3A3A3A] border-[#5C5C5C]',
+  // preview = magenta-violet — NEVER amber/warning
+  preview:  'bg-[#F3E9F8] text-[#4A2A5C] border-[#6B3B8C]',
+  disabled: 'bg-gray-100  text-gray-400  border-gray-200',
 }
 
 const sizeClasses: Record<StatusBadgeSize, string> = {
@@ -54,6 +56,9 @@ export function StatusBadge({
     className,
   ].filter(Boolean).join(' ')
 
+  // Non-color signal icons ensure preview/blocked are distinguishable without color.
+  const statusIcon = !icon && status === 'preview' ? '○' : !icon && status === 'blocked' ? '⊘' : null
+
   return (
     <span
       className={classes}
@@ -61,6 +66,7 @@ export function StatusBadge({
       role="img"
     >
       {icon && <span className="shrink-0" aria-hidden="true">{icon}</span>}
+      {statusIcon && <span className="shrink-0 mr-0.5" aria-hidden="true">{statusIcon}</span>}
       {label}
     </span>
   )

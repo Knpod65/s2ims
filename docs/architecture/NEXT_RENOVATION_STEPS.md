@@ -3428,3 +3428,37 @@ Safety (repeated):
 MC86 lifecycle: package + QA + merge + post-merge QA all created and validated on main.
 
 ---
+
+## S²IMS Soft Civic Intelligence Foundation Primitives MC87
+
+MC87 implemented the first visual wave of the Soft Civic Intelligence design system.
+
+Runtime changes (allowed scope only):
+- `src/config/theme.ts` — additive Soft Civic token exports (softCivicColors, softCivicRoles, softCivicGovernance, softCivicRadius, softCivicShadow, softCivicTypography, softCivicSpacing, softCivicTheme + 2 types)
+- `src/components/shared/Button.tsx` — visual polish to Soft Civic palette; optional apCode prop added; all existing API preserved
+- `src/components/shared/StatusBadge.tsx` — Soft Civic color tokens; preview → distinct magenta-violet; non-color signals added; all existing API preserved
+- `src/components/shared/index.ts` — 7 new component + type exports added
+- `src/components/shared/SafetyBanner.tsx` — NEW safety banner (preview/blocked/warning/info tones)
+- `src/components/shared/DisabledActionHint.tsx` — NEW hint wrapping disabled controls
+- `src/components/shared/RoleBadge.tsx` — NEW role pill using Soft Civic role palette
+- `src/components/shared/PreviewOnlyNotice.tsx` — NEW inline preview callout (bilingual)
+- `src/components/shared/GovernanceBlockedNotice.tsx` — NEW AP gate blocked notice
+- `src/components/shared/PageHeader.tsx` — NEW h1 page header
+- `src/components/shared/SectionHeader.tsx` — NEW h2 section header
+
+Skill: s2ims-full-stack-ux-renovation-reviewer — simulated (5-phase checklist applied manually). No violations found.
+
+IBM Plex font strategy: CSS-first / Google Fonts deferred to future milestone. No npm package added.
+
+Validation: Build 42/42, Tokens 4/4, Audit 502/502. No package/page/storage/API/audit changes.
+
+AP gate status: AP-10B blocked · AP-10C blocked · AP-11 blocked.
+No page migration performed. No persistence. No audit writes. No official evidence.
+
+Recommended next:
+1. MC88 — limited page integration. One low-risk page using new primitives (e.g., /staff/applications list). Full rollback plan required.
+2. Before any page migration: 10-boundary governance checklist + screenshot regression vs 31 MC68 references.
+3. IBM Plex @font-face loading in globals.css (MC88+ CSS-only, no npm).
+4. Do NOT migrate /login or /admin/audit-log until MC88 baseline proven.
+
+MC87 lifecycle: package + QA + merge + post-merge QA all created and validated on main.
