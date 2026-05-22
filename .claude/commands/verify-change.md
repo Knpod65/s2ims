@@ -49,8 +49,12 @@ ls artisan 2>/dev/null && echo "Laravel detected" || echo "Not Laravel"
 ### Verdict: ✅ VERIFIED / ❌ BLOCKED
 ```
 
-**Laravel/PHP rule**: If repo is Laravel/PHP (artisan file + laravel/framework in composer.json), run `php artisan route:list` and `composer validate` instead. Do NOT run Laravel commands in a Next.js repo like S²IMS.
+**Laravel/PHP rule**: If repo is Laravel/PHP (artisan file + laravel/framework in composer.json), run `php artisan route:list` and `composer validate` instead. Do NOT run Laravel commands in a Next.js repo like S²IMS. For the full Laravel/PHP standard see `docs/architecture/S2IMS_LARAVEL_PHP_ROUTE_VERIFICATION_STANDARD_MC84.md`.
 
-**Route verification standard**: See `docs/architecture/S2IMS_ROUTE_VERIFICATION_STANDARD_MC75.md` for full framework detection flow, smoke set, and report format.
+**Cross-repo decision tree**: When repo type is unknown or mixed, use `docs/architecture/S2IMS_CROSS_REPO_ROUTE_VERIFICATION_DECISION_TREE_MC84.md` to select the correct verification method.
+
+**Route verification standard**: See `docs/architecture/S2IMS_ROUTE_VERIFICATION_STANDARD_MC75.md` for full Next.js framework detection flow, smoke set, and report format.
+
+**Report template**: Use `docs/architecture/S2IMS_ROUTE_VERIFICATION_REPORT_TEMPLATE_MC84.md` for structured verification reports.
 
 **Safety boundaries**: Runs npm check commands (read-only). Does not edit files.

@@ -3332,9 +3332,39 @@ Safety:
 
 Recommended next (MC83+):
 1. MC83: Visual QA and runtime boundary recheck after MC82. ← LIFECYCLE COMPLETE
-2. MC84: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
+2. MC84: Laravel/PHP route verification standard. ← IN PROGRESS
 3. Continue MC76–MC79 governance track in parallel.
 4. MC85+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
+
+## S²IMS Laravel/PHP Route Verification Standard — MC84
+
+**STATUS**: IN PROGRESS — branch `architecture/s2ims-laravel-php-route-verification-standard-mc84` · main HEAD `6f03f0c`
+
+MC84 creates a comprehensive Laravel/PHP dry route verification standard and cross-repo route protocol, extending the MC75 route verification standard (which had a basic Part B for Laravel) into four standalone documents.
+
+Documents created:
+- `docs/architecture/S2IMS_LARAVEL_PHP_ROUTE_VERIFICATION_STANDARD_MC84.md` — full Laravel/PHP standard
+- `docs/architecture/S2IMS_CROSS_REPO_ROUTE_VERIFICATION_DECISION_TREE_MC84.md` — decision tree for all project types
+- `docs/architecture/S2IMS_ROUTE_VERIFICATION_REPORT_TEMPLATE_MC84.md` — reusable report template
+- `docs/architecture/S2IMS_BACKEND_API_ROUTE_AUDIT_SKILL_PROPOSAL_MC84.md` — skill proposal (proposal only)
+
+Commands updated:
+- `.claude/commands/verify-change.md` — references MC84 standard and decision tree
+- `.claude/commands/project-orient.md` — framework detection section added
+
+Framework detection result for S²IMS:
+- artisan: NOT FOUND
+- laravel/framework: NOT FOUND
+- S²IMS remains Next.js verification baseline
+- Laravel commands not executed in S²IMS
+
+Safety:
+- Docs/ops-only — no src changes
+- No PHP files created
+- No Laravel commands run
+- No package.json changes
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+- Confirm Import remains disabled
 
 ## S²IMS MC82 Visual QA and Runtime Boundary Recheck — MC83
 

@@ -4,6 +4,18 @@
 
 **When to use**: First command in any new Claude Code session on S²IMS.
 
+**Framework detection** — run before choosing verification method:
+```bash
+# Detect repo type at session start
+test -f artisan && echo "ARTISAN: FOUND" || echo "ARTISAN: NOT FOUND"
+test -f composer.json && grep -q '"laravel/framework"' composer.json \
+  && echo "LARAVEL: DETECTED" || echo "LARAVEL: NOT DETECTED"
+test -f package.json && grep -q '"next"' package.json \
+  && echo "NEXT.JS: DETECTED" || echo "NEXT.JS: NOT DETECTED"
+```
+S²IMS result: NEXT.JS DETECTED — use npm verification only. Never run `php artisan` in S²IMS.
+For unknown or mixed repos: see `docs/architecture/S2IMS_CROSS_REPO_ROUTE_VERIFICATION_DECISION_TREE_MC84.md`.
+
 **Files to read (in order)**:
 1. `docs/architecture/NEXT_RENOVATION_STEPS.md` — last 60 lines only (current MC status)
 2. Most recent `docs/daily-reports/*.md` — last 2 files by name (what was done recently)
