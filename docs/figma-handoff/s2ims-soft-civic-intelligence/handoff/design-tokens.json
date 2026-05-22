@@ -1,0 +1,183 @@
+{
+  "meta": {
+    "name": "S2IMS Soft Civic Intelligence Design Tokens",
+    "version": "1.0",
+    "date": "2026-05-22",
+    "source": "Claude Design Rounds 1-3 + MC72 Figma briefs",
+    "bundle": "docs/figma-handoff/s2ims-soft-civic-intelligence/"
+  },
+  "colors": {
+    "surface": {
+      "paper": "#FBFAF6",
+      "warm": "#F4F0E6",
+      "card": "#FFFFFF",
+      "overlay": "rgba(27, 29, 31, 0.04)"
+    },
+    "text": {
+      "ink": "#1B1D1F",
+      "muted": "#4A4E52",
+      "inverse": "#FFFFFF",
+      "link": "#2E5B8C"
+    },
+    "role": {
+      "admin": {
+        "base": "#3B2E7E",
+        "light": "#EDE9F8",
+        "oklch": "oklch(42% 0.18 280)"
+      },
+      "staff": {
+        "base": "#2E5B4A",
+        "light": "#E8F1ED",
+        "oklch": "oklch(45% 0.15 160)"
+      },
+      "provider": {
+        "base": "#8B5E2B",
+        "light": "#F5EDE3",
+        "oklch": "oklch(48% 0.16 55)"
+      },
+      "student": {
+        "base": "#2E5B8C",
+        "light": "#E8EEF6",
+        "oklch": "oklch(45% 0.17 240)"
+      },
+      "esq": {
+        "base": "#6B3B6B",
+        "light": "#F3E9F3",
+        "oklch": "oklch(44% 0.17 320)"
+      },
+      "public": {
+        "base": "#4A5B3A",
+        "light": "#EEF2E8",
+        "oklch": "oklch(48% 0.14 130)"
+      }
+    },
+    "status": {
+      "success": {
+        "base": "#2E5B4A",
+        "light": "#E8F1ED",
+        "text": "#1F3D32"
+      },
+      "warning": {
+        "base": "#8B5E2B",
+        "light": "#F5EDE3",
+        "text": "#5C3E1C"
+      },
+      "error": {
+        "base": "#8B3B3B",
+        "light": "#F5E9E9",
+        "text": "#5C2727"
+      },
+      "info": {
+        "base": "#2E5B8C",
+        "light": "#E8EEF6",
+        "text": "#1F3D5C"
+      },
+      "preview": {
+        "base": "#6B3B8C",
+        "light": "#F3E9F8",
+        "text": "#4A2A5C",
+        "note": "Magenta-violet — reserved exclusively for AP-10B preview contexts. Distinct from warning amber."
+      },
+      "blocked": {
+        "base": "#5C5C5C",
+        "light": "#F0F0F0",
+        "text": "#3A3A3A"
+      },
+      "disabled": {
+        "base": "#8A8A8A",
+        "light": "#F5F5F5",
+        "text": "#5C5C5C"
+      }
+    },
+    "governance": {
+      "ap10b": {
+        "base": "#6B3B8C",
+        "light": "#F3E9F8",
+        "text": "#4A2A5C"
+      },
+      "ap10c": {
+        "base": "#8B5E2B",
+        "light": "#F5EDE3",
+        "text": "#5C3E1C"
+      },
+      "ap11": {
+        "base": "#8B3B3B",
+        "light": "#F5E9E9",
+        "text": "#5C2727"
+      }
+    }
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "thai": "'IBM Plex Sans Thai', 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      "mono": "'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+    },
+    "scale": {
+      "xs": "12px",
+      "sm": "14px",
+      "base": "16px",
+      "lg": "18px",
+      "xl": "20px",
+      "2xl": "24px",
+      "3xl": "28px",
+      "4xl": "32px"
+    },
+    "weight": {
+      "regular": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    },
+    "lineHeight": {
+      "tight": 1.2,
+      "normal": 1.5,
+      "relaxed": 1.7
+    }
+  },
+  "spacing": {
+    "unit": 8,
+    "0": "0px",
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px"
+  },
+  "radius": {
+    "small": "4px",
+    "control": "8px",
+    "card": "14px",
+    "full": "9999px"
+  },
+  "shadow": {
+    "soft": "0 2px 8px rgba(27, 29, 31, 0.08)",
+    "medium": "0 4px 16px rgba(27, 29, 31, 0.12)",
+    "strong": "0 8px 32px rgba(27, 29, 31, 0.16)"
+  },
+  "motion": {
+    "duration": {
+      "fast": "120ms",
+      "normal": "200ms",
+      "slow": "320ms"
+    },
+    "easing": {
+      "standard": "cubic-bezier(0.2, 0, 0, 1)",
+      "emphasized": "cubic-bezier(0.05, 0.7, 0.1, 1)"
+    }
+  },
+  "zIndex": {
+    "base": 0,
+    "dropdown": 100,
+    "sticky": 200,
+    "fixed": 300,
+    "modalBackdrop": 400,
+    "modal": 500,
+    "toast": 600
+  }
+}
