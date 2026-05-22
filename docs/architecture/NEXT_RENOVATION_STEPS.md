@@ -3389,3 +3389,42 @@ Safety:
 - No audit writes
 - AP-10B / AP-10C / AP-11 remain BLOCKED
 - Confirm Import remains disabled
+
+## S²IMS Design Handoff Intake and Implementation Readiness Review — MC86
+
+MC86 completed the full lifecycle intake and readiness review of the Claude Design "Soft Civic Intelligence" developer handoff package (commit 4d1971b).
+
+Current status:
+- docs-only review + 7 planning artifacts + daily report + QA checkpoint
+- All 8 required handoff files verified present in docs/figma-handoff/s2ims-soft-civic-intelligence/handoff/
+- Wider bundle (screenshots, briefs, prompts) remains mostly untracked on this machine (as expected; does not block MC86)
+- Next.js confirmed; Laravel/PHP references (MC84) are planning docs only
+- Build 42/42, Tokens 4/4, Audit 502/502
+- No src/, tools/, scripts/, or package.json changes
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+- Confirm Import remains disabled
+
+Key deliverables:
+- S2IMS_DESIGN_HANDOFF_INTAKE_REVIEW_MC86.md (master)
+- Token code mapping, component gap analysis, page priority, governance UI mapping, MC87 scope recommendation
+- 8-phase safe implementation plan (Phase 0 tokens → Phase 8 screenshot QA)
+- 10 enforceable governance boundaries with verification/failure conditions
+- Tier 1 screens: /login, /admin/audit-log, /admin/master-data/import-preview, /staff/applications, /admin/dashboard, /esq/*
+- Strong partial alignment noted (StatusBadge already has preview/blocked; Tailwind role CSS vars exist)
+- Major gaps: warm paper surfaces, OKLCH role accents, 14/8/4 radius, distinct preview violet, 16 missing safety components
+
+Recommended next:
+1. Merge MC86 (this lifecycle complete).
+2. Start MC87 on new branch: Phase 0-2 primitives + first visual application to /login + audit-log + import-preview.
+3. Before any visual PR: full 10-boundary checklist + screenshot regression vs 31 MC68 references.
+4. IBM Plex font loading and full role journeys deferred until after MC87 primitives stable.
+
+Safety (repeated):
+- Docs-only — no runtime changes
+- No persistence / backend / API / audit writes / official evidence
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+- Confirm Import remains disabled
+
+MC86 lifecycle: package + QA + merge + post-merge QA all created and validated on main.
+
+---
