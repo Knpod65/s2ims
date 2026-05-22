@@ -3331,6 +3331,31 @@ Safety:
 - Confirm Import remains disabled
 
 Recommended next (MC83+):
-1. MC83: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
-2. Continue MC76–MC79 governance track in parallel.
-3. MC84+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
+1. MC83: Visual QA and runtime boundary recheck after MC82. ← IN PROGRESS
+2. MC84: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
+3. Continue MC76–MC79 governance track in parallel.
+4. MC85+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
+
+## S²IMS MC82 Visual QA and Runtime Boundary Recheck — MC83
+
+**STATUS**: IN PROGRESS — branch `architecture/s2ims-mc82-visual-qa-runtime-boundary-recheck-mc83` · main HEAD `f5652b7`
+
+MC83 is a docs-only visual QA and runtime boundary recheck following MC82 (Limited UX Migration Round 2 to shared Button and StatusBadge on `admin/audit-log`).
+
+Visual QA method: Claude Preview MCP (live dev server screenshots + accessibility snapshots).
+
+Findings:
+- All 4 migrated elements render correctly in TH and EN
+- No regressions found
+- Legacy class patterns absent
+- All handlers (exportAuditCSV, setSelectedLog, ROLE_COLOR, persistenceFilter) unchanged
+- AP gates remain BLOCKED
+
+Safety:
+- Docs-only — no src changes
+- No new components
+- No business logic changes
+- No persistence / backend / API
+- No audit writes
+- AP-10B / AP-10C / AP-11 remain BLOCKED
+- Confirm Import remains disabled
