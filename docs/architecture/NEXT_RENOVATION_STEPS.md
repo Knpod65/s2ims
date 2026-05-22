@@ -3331,14 +3331,14 @@ Safety:
 - Confirm Import remains disabled
 
 Recommended next (MC83+):
-1. MC83: Visual QA and runtime boundary recheck after MC82. ← IN PROGRESS
+1. MC83: Visual QA and runtime boundary recheck after MC82. ← LIFECYCLE COMPLETE
 2. MC84: Laravel/PHP route verification standard (trigger: separate Laravel repo identified).
 3. Continue MC76–MC79 governance track in parallel.
 4. MC85+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
 
 ## S²IMS MC82 Visual QA and Runtime Boundary Recheck — MC83
 
-**STATUS**: IN PROGRESS — branch `architecture/s2ims-mc82-visual-qa-runtime-boundary-recheck-mc83` · main HEAD `f5652b7`
+**STATUS**: LIFECYCLE COMPLETE — merged to main at `fa406fe` · post-merge QA HEAD `4c67d27`
 
 MC83 is a docs-only visual QA and runtime boundary recheck following MC82 (Limited UX Migration Round 2 to shared Button and StatusBadge on `admin/audit-log`).
 
