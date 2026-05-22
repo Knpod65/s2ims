@@ -3332,13 +3332,13 @@ Safety:
 
 Recommended next (MC83+):
 1. MC83: Visual QA and runtime boundary recheck after MC82. ← LIFECYCLE COMPLETE
-2. MC84: Laravel/PHP route verification standard. ← IN PROGRESS
+2. MC84: Laravel/PHP route verification standard. ← LIFECYCLE COMPLETE
 3. Continue MC76–MC79 governance track in parallel.
 4. MC85+ (future): Migrate login main button + role cards to shared Button (trigger: design review session complete).
 
 ## S²IMS Laravel/PHP Route Verification Standard — MC84
 
-**STATUS**: IN PROGRESS — branch `architecture/s2ims-laravel-php-route-verification-standard-mc84` · main HEAD `6f03f0c`
+**STATUS**: LIFECYCLE COMPLETE — merged to main at `0cf1f1f` · post-merge QA HEAD `d07b2db`
 
 MC84 creates a comprehensive Laravel/PHP dry route verification standard and cross-repo route protocol, extending the MC75 route verification standard (which had a basic Part B for Laravel) into four standalone documents.
 
