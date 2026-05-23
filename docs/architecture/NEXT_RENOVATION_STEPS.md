@@ -3654,6 +3654,7 @@ Recommended next:
 MC95 polishes `/staff/applications` as a clearer Staff work queue.
 
 Current status:
+- LIFECYCLE COMPLETE — merged to main at `144efba`, merge checkpoint `5edd63c`, post-merge QA complete
 - staff applications list now uses Staff Work Queue page copy with role indicator
 - AP-11 SafetyBanner clarifies the list is mock decision-support only
 - summary cards show visible items, needs attention, document issues, and documents clear
