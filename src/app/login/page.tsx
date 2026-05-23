@@ -8,6 +8,10 @@ import { useLang } from '@/lib/i18n'
 import { ROLE_HOME, ROLE_LABELS } from '@/lib/navigation'
 import type { Role } from '@/lib/types'
 import { Button } from '@/components/shared/Button'
+import { PageHeader } from '@/components/shared/PageHeader'
+import { RoleBadge } from '@/components/shared/RoleBadge'
+import { SafetyBanner } from '@/components/shared/SafetyBanner'
+import { SectionHeader } from '@/components/shared/SectionHeader'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 
 const ROLE_META: { role: Role; icon: LucideIcon; desc_th: string; desc_en: string }[] = [
@@ -48,28 +52,37 @@ export default function LoginPage() {
       </div>
 
       <div className="w-full max-w-lg page-animate">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div
-            className="font-display font-bold text-4xl tracking-tight mb-2 inline-block"
-            style={{
-              background: 'linear-gradient(135deg, #0055FF, #8B5CF6)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            S²IMS
-          </div>
-          <div className="text-ink-2 text-sm">
-            {lang === 'th'
-              ? 'ระบบจับคู่ทุนการศึกษาอัจฉริยะ — เลือกบทบาทเพื่อเข้าสู่ระบบ'
-              : 'Scholarship Intelligence & Management System — Select your role to continue'
-            }
-          </div>
-        </div>
+        <PageHeader
+          eyebrow={lang === 'th' ? 'โปรโตไทป์' : 'Prototype'}
+          title="S²IMS"
+          description={lang === 'th'
+            ? 'ระบบจับคู่ทุนการศึกษาอัจฉริยะ — เลือกบทบาทเพื่อเข้าสู่ระบบ'
+            : 'Scholarship Intelligence & Management System — Select your role to continue'
+          }
+          badge={<StatusBadge status="preview" label={lang === 'th' ? 'Prototype only' : 'Prototype only'} size="sm" />}
+          className="mb-5"
+        />
+
+        <SafetyBanner
+          tone="info"
+          title={lang === 'th' ? 'เข้าสู่ระบบแบบจำลอง' : 'Mock sign-in only'}
+          description={lang === 'th'
+            ? 'หน้านี้ใช้ local mock auth เพื่อเลือกบทบาทเท่านั้น ไม่มี authentication จริงหรือการบันทึกข้อมูล'
+            : 'This screen uses local mock auth only to pick a role. No real authentication or persistence occurs.'
+          }
+          className="mb-5"
+        />
 
         {/* Role cards */}
+        <SectionHeader
+          title={lang === 'th' ? 'เลือกบทบาท' : 'Choose your role'}
+          description={lang === 'th'
+            ? 'บทบาทที่เลือกจะกำหนดหน้าเริ่มต้นหลังเข้าสู่ระบบ'
+            : 'The selected role determines your starting page after sign-in.'
+          }
+          className="mb-3"
+        />
+
         <div className="space-y-2 mb-6">
           {ROLE_META.map(({ role, icon: Icon, desc_th, desc_en }) => {
             const rl = ROLE_LABELS[role]
@@ -102,11 +115,14 @@ export default function LoginPage() {
                       {lang === 'th' ? rl.th : rl.en}
                     </span>
                     {isSelected && (
-                      <StatusBadge
-                        status="info"
-                        label={lang === 'th' ? 'เลือกแล้ว' : 'Selected'}
-                        size="sm"
-                      />
+                      <>
+                        <RoleBadge role={role} size="sm" />
+                        <StatusBadge
+                          status="info"
+                          label={lang === 'th' ? 'เลือกแล้ว' : 'Selected'}
+                          size="sm"
+                        />
+                      </>
                     )}
                   </div>
                   <div className="text-xs text-ink-3">{lang === 'th' ? desc_th : desc_en}</div>

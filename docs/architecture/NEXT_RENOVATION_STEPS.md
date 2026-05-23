@@ -3462,3 +3462,32 @@ Recommended next:
 4. Do NOT migrate /login or /admin/audit-log until MC88 baseline proven.
 
 MC87 lifecycle: package + QA + merge + post-merge QA all created and validated on main.
+
+## S²IMS Login Soft Civic Visual Integration MC88
+
+MC88 integrated the Soft Civic visual primitives into the `/login` page only.
+
+Current status:
+- login visual integration complete
+- `PageHeader` integrated
+- `SafetyBanner` integrated
+- `SectionHeader` integrated
+- `RoleBadge` integrated
+- auth behavior unchanged
+- role routing unchanged
+- no persistence/API/audit writes
+- no official evidence
+- no AP gate opening
+- Confirm Import remains disabled
+
+Validation:
+- build passed
+- token checks passed
+- audit-event checks passed
+- localhost route smoke passed
+- browser inspection confirmed the login page updates
+
+Recommended next:
+1. MC89 — staff applications visual integration, if the login slice remains stable.
+2. Alternatively, admin audit-log visual integration if governance review needs that surface first.
+3. Keep the scope limited to one page at a time.
