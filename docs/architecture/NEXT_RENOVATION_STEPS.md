@@ -3717,3 +3717,40 @@ Recommended next:
 - MC97+ can address any additional polish identified in future audits.
 
 MC96 lifecycle complete (package + QA + merge + post-merge QA).
+
+## S²IMS Mock Data Query Layer and Data Engineering Foundation — MC98
+
+MC98 introduces the first slice of a pure frontend mock query layer (`src/lib/queries/`) to eliminate duplicated filter/map/reduce/status-count/deadline logic across role pages while preserving 100% of existing UI behavior, mock semantics, and safety boundaries.
+
+**Batch 1 (this package):**
+- Created `src/lib/queries/` (index.ts + utils.ts + applications.ts + studentApplications.ts)
+- Pure helpers (accept data as args, no runtime mock imports, no side effects):
+  - Staff: `filterStaffApplications`, `getStaffQueueStats`, `getDocumentStatusSummary`, `isActionNeeded`
+  - Student: `listStudentApplications`, `getStudentApplicationStats`, `computeDaysUntil`, `STUDENT_APPLICATION_FILTERS`
+- Refactored only `/staff/applications` and `/student/applications` (highest duplication, lowest risk)
+- All other pages (provider, esq, public scholarships, student dashboard/recommendations) untouched — deferred to Batch 2
+
+**Validation (Batch 1):**
+- Build 42/42 ✅
+- Tokens 4/4 ✅
+- Audit events 502/502 ✅
+- Staff queue counts, filters, document badges, action borders, links — identical
+- Student stats (total/revisions/missing-docs/deadline), filter list, cards — identical
+- No visual regression, no count changes, no semantic drift
+- AP-10B/AP-10C/AP-11 remain blocked; Confirm Import no-op
+- ESQ “recommendation not approval” language untouched
+
+**Docs delivered:**
+- `S2IMS_MOCK_DATA_QUERY_LAYER_MC98.md` (full plan + Batch 1 record)
+- Daily report: `2026-05-23-s2ims-mock-data-query-layer-mc98-batch1.md`
+- This entry in NEXT_RENOVATION_STEPS.md
+
+**Status:** Batch 1 complete and validated. Ready for commit `refactor(data): add S2IMS mock query layer MC98`. Batch 2 (remaining pages) only after commit + re-validation.
+
+Recommended next:
+- Commit Batch 1
+- Re-run full checks on main after merge
+- Proceed to Batch 2 (provider/dashboard, esq/dashboard, scholarships, student dashboard + recommendations)
+- Continue data-engineering foundation for future real query adapter
+
+MC98 Batch 1 lifecycle (implementation + validation) complete.
