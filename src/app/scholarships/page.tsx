@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Search, Globe } from 'lucide-react'
 import { mockScholarships } from '@/data/mock/scholarships'
+import { filterPublicScholarships } from '@/lib/queries'
 import ScholarshipCard from '@/components/ScholarshipCard'
 import { useLang } from '@/lib/i18n'
 import { useAuth } from '@/lib/auth'
@@ -25,12 +26,7 @@ export default function ScholarshipsPage() {
     })
   }
 
-  const filtered = mockScholarships.filter(s => {
-    const q = search.toLowerCase()
-    const matchSearch = s.title_th.toLowerCase().includes(q) || s.title_en.toLowerCase().includes(q)
-    const matchFilter = filter === 'all' || s.type === filter
-    return matchSearch && matchFilter
-  })
+  const filtered = filterPublicScholarships(mockScholarships, search, filter)
 
   return (
     <div className="min-h-screen bg-bg-000">

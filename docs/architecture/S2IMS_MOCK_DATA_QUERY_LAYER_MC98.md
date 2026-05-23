@@ -285,6 +285,51 @@ All diffs will be small and reviewable. Existing component contracts (StatusBadg
 
 **Ready for commit per instructions. Batch 2 (provider, esq, scholarships, student dashboard/recommendations) deferred until after commit + re-validation.**
 
+## 11. Batch 2 Implementation Complete (Provider / ESQ / Public Scholarships)
+
+**Branch:** refactor/s2ims-mock-data-query-layer-batch2-mc98  
+**Base:** main @ 18632a4 (post-Batch 1 full lifecycle)  
+**Date:** 2026-05-23
+
+**Scope executed (exactly as planned):**
+- Created three new pure query modules:
+  - `src/lib/queries/provider.ts`
+    - `getActiveScholarships(scholarships)`
+    - `getPendingShortlistRequests(scholarships)`
+  - `src/lib/queries/esq.ts`
+    - `getPendingAnnouncements`, `getApprovedAnnouncements`, `getUrgentAnnouncements`
+    - `getEsqReviewQueueSummary`
+  - `src/lib/queries/scholarships.ts`
+    - `filterPublicScholarships(scholarships, search, typeFilter)`
+- Updated barrel: `src/lib/queries/index.ts`
+- Refactored exactly three pages (low-risk, high-duplication):
+  - `src/app/provider/dashboard/page.tsx` — now uses the two provider helpers
+  - `src/app/esq/dashboard/page.tsx` — now uses the ESQ helpers (recommendation/review language preserved)
+  - `src/app/scholarships/page.tsx` — now uses the public filter helper
+
+**Behavior Preservation (Batch 2):**
+- All visible counts, filters, cards, links, and status semantics identical
+- ESQ copy remains "recommendation / review support" / "Pending Review" (never "approval")
+- Provider data stays aggregate/anonymized
+- Public page has no auth/PII
+- Batch 1 pages (staff/student applications) untouched — no regression
+
+**Validation:**
+- `npm run build`: 42/42 ✅ (public scholarships page size 6.83 kB)
+- `npm run check:tokens`: 4/4 ✅
+- `npm run check:audit-events`: 502/502 ✅
+- Static safety checks passed (no fetch, no audit, no storage, only type imports from mock data)
+- Route smoke + manual verification on target pages + regression check on Batch 1 surfaces: PASS
+
+**Safety & Scope:**
+- No backend/API/persistence/audit writes
+- No PII expansion
+- AP-10B / AP-10C / AP-11 remain blocked
+- Confirm Import remains disabled/no-op
+- No unrelated files staged
+
+Batch 2 package ready for commit: `refactor(data): extend S2IMS mock query layer Batch 2 MC98`
+
 ---
 *MC98 – Mock Data Query Layer – Data Engineering Foundation*
 *Frontend-only, mock-only, behavior-preserving extraction*
