@@ -5,6 +5,9 @@ import AppShell from '@/components/layout/AppShell'
 import { PageHeader } from '@/components/ui/index'
 import { Button } from '@/components/shared/Button'
 import { StatusBadge } from '@/components/shared/StatusBadge'
+import { SafetyBanner } from '@/components/shared/SafetyBanner'
+import { SectionHeader } from '@/components/shared/SectionHeader'
+import { DisabledActionHint } from '@/components/shared/DisabledActionHint'
 import { useLang } from '@/lib/i18n'
 import {
   parseMasterDataImportWorkbook,
@@ -90,14 +93,6 @@ const FILTER_OPTIONS: Array<{ value: MasterDataImportFilter; label: string }> = 
   { value: 'blocked', label: 'Blocked rows' },
 ]
 
-const REQUIRED_SAFETY_COPY = [
-  'Preview only',
-  'No data has been imported yet',
-  'This does not open AP-10B',
-  'This does not create official evidence',
-  'Student PII import is not allowed in this flow',
-]
-
 function rowMatchesFilter(row: MasterDataImportPreviewRow, filter: MasterDataImportFilter) {
   if (filter === 'all') return true
   if (filter === 'valid') return row.validationStatus === 'valid'
@@ -138,28 +133,6 @@ function SummaryCard({
       <div className={`text-2xl font-bold font-display ${toneClass}`}>{value}</div>
       <div className="mt-1 text-xs text-ink-2">{label}</div>
     </div>
-  )
-}
-
-function SafetyBanner() {
-  return (
-    <section aria-label="Master data import safety boundary" className="mb-5 rounded-lg border border-amber-200 bg-amber-50 p-4">
-      <div className="flex items-start gap-3">
-        <Shield size={18} className="mt-0.5 shrink-0 text-amber-700" />
-        <div className="space-y-2">
-          <div className="flex flex-wrap gap-2">
-            {REQUIRED_SAFETY_COPY.map((copy) => (
-              <span key={copy} className="rounded-full border border-amber-300 bg-white px-2.5 py-1 text-xs font-semibold text-amber-800">
-                {copy}
-              </span>
-            ))}
-          </div>
-          <p className="text-sm text-amber-900">
-            MC54 parses files in browser memory for preview only. It does not persist rows, create sessions, write audit events, create official evidence, or change AP-10B/AP-10C/AP-11 status.
-          </p>
-        </div>
-      </div>
-    </section>
   )
 }
 
@@ -325,7 +298,19 @@ export default function MasterDataImportPreviewPage() {
         badge={<StatusBadge label="Preview only" status="preview" />}
       />
 
-      <SafetyBanner />
+      <SafetyBanner
+        tone="preview"
+        title="AP-10B Gate — Preview Only"
+        description="This page parses .xlsx files in browser memory for validation preview only. No data is persisted, no import session is created, no audit events are written, and no official evidence is produced."
+        apCodes={['AP-10B']}
+        items={[
+          'Synthetic / mock data only',
+          'No persistence',
+          'No backend/API import',
+          'No official evidence',
+          'Confirm Import remains disabled'
+        ]}
+      />
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-4">
@@ -489,16 +474,23 @@ export default function MasterDataImportPreviewPage() {
                 />
                 <span>This import is master-data seed only</span>
               </label>
-            </div>
-            <button
-              type="button"
-              disabled
-              className="mt-4 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-line bg-bg-200 px-3 py-2 text-sm font-semibold text-ink-3"
-              aria-disabled="true"
-            >
-              <Ban size={14} />
-              Confirm Import disabled in MC54
-            </button>
+             </div>
+
+             <DisabledActionHint
+               apCode="AP-10B"
+               reason="Confirm Import is blocked pending AP-10B governance approval. This page performs validation preview only."
+             >
+               <button
+                 type="button"
+                 disabled
+                 className="mt-2 flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-line bg-bg-200 px-3 py-2 text-sm font-semibold text-ink-3"
+                 aria-disabled="true"
+               >
+                 <Ban size={14} />
+                 Confirm Import disabled in MC54
+               </button>
+             </DisabledActionHint>
+
             <div className="mt-3 flex items-start gap-2 rounded-lg border border-line bg-bg-100 p-3 text-xs text-ink-2">
               <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-700" />
               <span>Preview state is discarded on reset or page reload. No import session is created.</span>
