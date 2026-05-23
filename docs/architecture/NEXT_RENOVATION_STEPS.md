@@ -3493,3 +3493,31 @@ Recommended next:
 1. MC89 — staff applications visual integration, if the login slice remains stable.
 2. Alternatively, admin audit-log visual integration if governance review needs that surface first.
 3. Keep the scope limited to one page at a time.
+
+## S²IMS Login Sign-in Performance & Role Theme MC89
+
+MC89 investigated slow sign-in and role theme color consistency on the `/login` page.
+
+Current status:
+- 600ms artificial mock delay removed from `handleLogin`
+- role-specific selection colors applied to login cards via `softCivicRoles` tokens
+- merged to `main`
+- post-merge QA committed
+- sign-in is now immediate (< 50ms)
+- role cards show per-role border/icon/chevron colors (admin: purple, student: blue, staff: green, provider: amber, esq: mauve)
+- app shell / topbar / sidebar role theming confirmed correct (data-role CSS vars)
+- no real auth / no API / no persistence added
+- no audit writes
+- no AP gate opening
+- Confirm Import remains disabled
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+- no API/fetch/storage calls in login
+- AP-10B / AP-10C / AP-11 remain blocked
+
+Recommended next:
+1. MC90 — visual integration of staff/applications or admin/audit-log page using MC87 primitives.
+2. Keep one-page-at-a-time scope discipline.

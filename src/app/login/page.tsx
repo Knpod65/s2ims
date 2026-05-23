@@ -7,6 +7,8 @@ import { useAuth } from '@/lib/auth'
 import { useLang } from '@/lib/i18n'
 import { ROLE_HOME, ROLE_LABELS } from '@/lib/navigation'
 import type { Role } from '@/lib/types'
+import { softCivicRoles } from '@/config/theme'
+import type { SoftCivicRoleKey } from '@/config/theme'
 import { Button } from '@/components/shared/Button'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { SafetyBanner } from '@/components/shared/SafetyBanner'
@@ -31,7 +33,6 @@ export default function LoginPage() {
   const handleLogin = async () => {
     if (!selected) return
     setLoading(true)
-    await new Promise(r => setTimeout(r, 600)) // mock delay
     login(selected)
     router.push(ROLE_HOME[selected])
   }
@@ -86,21 +87,28 @@ export default function LoginPage() {
           {ROLE_META.map(({ role, icon: Icon, desc_th, desc_en }) => {
             const rl = ROLE_LABELS[role]
             const isSelected = selected === role
+            const roleColors = softCivicRoles[role as SoftCivicRoleKey]
             return (
               <button
                 key={role}
                 onClick={() => setSelected(role)}
                 className={`w-full rounded-xl p-4 flex items-center gap-4 text-left transition-all border bg-white shadow-card ${
                   isSelected
-                    ? 'border-[#2E5B4A]/40 shadow-[0_18px_45px_rgba(46,91,74,.12)]'
+                    ? 'border-transparent'
                     : 'border-[#E0DDD6] hover:border-[#C8C4BC] hover:bg-[#F4F0E6]'
                 }`}
+                style={isSelected
+                  ? {
+                      borderColor: `${roleColors.base}66`,
+                      boxShadow: `0 18px 45px ${roleColors.base}1F`,
+                    }
+                  : undefined}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border border-[#E0DDD6] bg-[#F4F0E6]"
                   style={isSelected
                     ? {
-                        background: 'linear-gradient(135deg, #2E5B4A, #1F3D32)',
+                        background: `linear-gradient(135deg, ${roleColors.base}, ${roleColors.base}CC)`,
                         color: '#FFFFFF',
                         borderColor: 'transparent',
                       }
@@ -123,7 +131,7 @@ export default function LoginPage() {
                   </div>
                   <div className="text-xs text-ink-3">{lang === 'th' ? desc_th : desc_en}</div>
                 </div>
-                {isSelected && <ChevronRight size={16} className="text-[#2E5B4A] flex-shrink-0" />}
+                {isSelected && <ChevronRight size={16} style={{ color: roleColors.base }} className="flex-shrink-0" />}
               </button>
             )
           })}
