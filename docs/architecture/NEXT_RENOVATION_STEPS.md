@@ -3627,6 +3627,7 @@ Recommended next:
 MC94 polishes `/admin/audit-log` as a read-only mock evidence-boundary surface.
 
 Current status:
+- LIFECYCLE COMPLETE — merged to main at `1797e17`, merge checkpoint `f64b52e`, post-merge QA complete
 - admin audit log now has a permanent evidence-boundary SafetyBanner
 - page copy identifies the route as a mock audit log and read-only prototype surface
 - functional CSV export behavior removed from the page
