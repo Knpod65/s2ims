@@ -3521,3 +3521,29 @@ Validation:
 Recommended next:
 1. MC90 — visual integration of staff/applications or admin/audit-log page using MC87 primitives.
 2. Keep one-page-at-a-time scope discipline.
+
+## S²IMS Role Theme Propagation & Smoothness Optimization MC90
+
+MC90 wired the login button to role-specific colors and audited app-wide smoothness.
+
+Current status:
+- login button now reflects selected role color immediately using MC87 softCivicRoles tokens
+- role card + badge + login button now fully cohesive for all 5 roles
+- notification bell read-state investigated and deferred to MC91
+- app-wide delays documented (1000–1500ms on non-login pages) — deferred to MC91
+- merged to `main`
+- post-merge QA committed
+- Laravel/PHP dry detection: negative (Next.js only)
+- no real auth / no API / no persistence added
+- no audit writes / no AP gate opening / Confirm Import remains disabled
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+- AP-10B / AP-10C / AP-11 remain blocked
+
+Recommended next:
+1. MC91 — notification read-state shared context (NotificationProvider + Topbar + notification pages).
+2. MC91 also — reduce 1000–1500ms mock delays on student/staff/admin pages to 200–400ms.
+3. Keep AP gates blocked.
