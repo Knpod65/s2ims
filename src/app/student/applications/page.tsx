@@ -12,38 +12,26 @@ import {
 } from '@/data/mock/studentApplicationData'
 import { studentDataFreshness } from '@/data/mock/studentMatchingData'
 import {
+  getStudentApplicationStats,
+  listStudentApplications,
+  STUDENT_APPLICATION_FILTERS as FILTERS,
+} from '@/lib/queries'
+import {
   ApplicationStatusCard,
   DataFreshnessIndicator,
   StudentPrivacyNotice,
 } from '@/components/student'
 
-const FILTERS: Array<StudentApplicationState | 'all'> = [
-  'all',
-  'draft',
-  'revision_requested',
-  'in_review',
-  'approved',
-]
-
-function daysUntil(date: string) {
-  return Math.ceil((new Date(date).getTime() - Date.now()) / 86400000)
-}
-
 export default function StudentApplicationsPage() {
   const { lang } = useLang()
   const [filter, setFilter] = useState<StudentApplicationState | 'all'>('all')
 
-  const filteredApplications = useMemo(() => {
-    if (filter === 'all') return studentApplications
-    return studentApplications.filter(application => application.state === filter)
-  }, [filter])
-
-  const missingDocumentCount = studentApplications.reduce(
-    (count, application) => count + application.documents.filter(doc => ['missing', 'invalid_file_type', 'rejected', 'needs_replacement'].includes(doc.state)).length,
-    0,
+  const filteredApplications = useMemo(
+    () => listStudentApplications(studentApplications, filter),
+    [filter]
   )
-  const nearestDeadline = Math.min(...studentApplications.map(application => Math.max(0, daysUntil(application.deadline))))
-  const revisionCount = studentApplications.filter(application => application.state === 'revision_requested').length
+
+  const stats = getStudentApplicationStats(studentApplications)
 
   return (
     <AppShell requiredRole="student">
@@ -58,23 +46,23 @@ export default function StudentApplicationsPage() {
         <main className="space-y-5">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <StatCard
-              value={studentApplications.length}
+              value={stats.total}
               label={lang === 'th' ? 'ใบสมัครทั้งหมด' : 'Applications'}
               roleAccent
             />
             <StatCard
-              value={revisionCount}
+              value={stats.revisionCount}
               label={lang === 'th' ? 'ขอแก้ไข' : 'Revisions'}
               color="text-status-warning"
               icon={<FileWarning size={16} />}
             />
             <StatCard
-              value={missingDocumentCount}
+              value={stats.missingDocumentCount}
               label={lang === 'th' ? 'เอกสารที่เติมได้' : 'Document next steps'}
               color="text-role-primary"
             />
             <StatCard
-              value={nearestDeadline}
+              value={stats.nearestDeadline}
               label={lang === 'th' ? 'วันสู่กำหนดใกล้สุด' : 'Days to nearest deadline'}
               color="text-status-info"
               icon={<CalendarDays size={16} />}

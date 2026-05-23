@@ -4,6 +4,12 @@ import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { mockApplications } from '@/data/mock/applications'
 import { mockDocumentStates } from '@/data/mock/staffData'
+import {
+  filterStaffApplications,
+  getDocumentStatusSummary,
+  getStaffQueueStats,
+  isActionNeeded,
+} from '@/lib/queries'
 import { EmptyState, PageHeader, StatusBadge } from '@/components/ui/index'
 import { SafetyBanner } from '@/components/shared/SafetyBanner'
 import { SectionHeader } from '@/components/shared/SectionHeader'
@@ -16,33 +22,9 @@ export default function StaffApplicationsPage() {
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
 
-  const getDocumentStatus = (appId: string) => {
-    const docs = mockDocumentStates[appId] || []
-    if (docs.length === 0) return null
-    const pending = docs.filter((d) => d.status === 'pending').length
-    const rejected = docs.filter((d) => d.status === 'rejected').length
-    const verified = docs.filter((d) => d.status === 'verified').length
-    return { pending, rejected, verified, total: docs.length }
-  }
+  const filtered = filterStaffApplications(mockApplications, search, statusFilter, lang)
 
-  const filtered = mockApplications.filter(a => {
-    const title = lang==='th' ? a.scholarship_title_th : a.scholarship_title_en
-    const matchSearch = title.toLowerCase().includes(search.toLowerCase()) || a.student_id.includes(search)
-    const matchStatus = statusFilter === 'all' || a.status === statusFilter
-    return matchSearch && matchStatus
-  })
-
-  const queueStats = filtered.reduce(
-    (acc, app) => {
-      const docStatus = getDocumentStatus(app.id)
-      const actionNeeded = ['NEEDS_DOCS','FOLLOW_UP_REQUIRED','REPORT_OVERDUE'].includes(app.status)
-      if (actionNeeded) acc.needsAttention += 1
-      if (docStatus && (docStatus.rejected > 0 || docStatus.pending > 0)) acc.documentIssues += 1
-      if (docStatus && docStatus.total > 0 && docStatus.rejected === 0 && docStatus.pending === 0) acc.allClear += 1
-      return acc
-    },
-    { total: filtered.length, needsAttention: 0, documentIssues: 0, allClear: 0 }
-  )
+  const queueStats = getStaffQueueStats(filtered, mockDocumentStates)
 
   const summaryCards = [
     {
@@ -175,8 +157,8 @@ export default function StaffApplicationsPage() {
             {filtered.map((app, i) => {
               const si = APP_STATUS_MAP[app.status]
               const title = lang==='th' ? app.scholarship_title_th : app.scholarship_title_en
-              const actionNeeded = ['NEEDS_DOCS','FOLLOW_UP_REQUIRED','REPORT_OVERDUE'].includes(app.status)
-              const docStatus = getDocumentStatus(app.id)
+              const actionNeeded = isActionNeeded(app.status)
+              const docStatus = getDocumentStatusSummary(app.id, mockDocumentStates)
               return (
                 <tr key={app.id} className={`border-b border-line hover:bg-surface-low transition-all ${i%2===1?'bg-surface-low/60':''} ${actionNeeded?'border-l-2 border-l-status-danger':''}`}>
                   <td className="p-3">
