@@ -101,7 +101,7 @@ export default function StudentProfilePage() {
 
   const handleSave = async () => {
     setSaving(true)
-    await new Promise(r => setTimeout(r, 600))
+    await new Promise(r => setTimeout(r, 200))
     setSaving(false)
     addToast(lang === 'th' ? 'บันทึกโปรไฟล์แล้ว' : 'Profile saved successfully', 'success')
   }

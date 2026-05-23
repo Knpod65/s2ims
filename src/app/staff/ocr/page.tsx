@@ -27,8 +27,8 @@ export default function OcrPage() {
     setJobStatus('uploading')
     setTimeout(() => {
       setJobStatus('extracting')
-      setTimeout(() => setJobStatus('needs_review'), 1500)
-    }, 800)
+      setTimeout(() => setJobStatus('needs_review'), 400)
+    }, 400)
   }
 
   const handleConfirm = () => setJobStatus('confirmed')

@@ -48,7 +48,7 @@ export default function AdminExportPage() {
   const handleExport = async (type: string, format: string) => {
     const key = `${type}-${format}`
     setLoading(key)
-    await new Promise(r => setTimeout(r, 600))
+    await new Promise(r => setTimeout(r, 200))
 
     const stamp = new Date().toISOString().slice(0, 10)
 
