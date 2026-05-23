@@ -3621,3 +3621,29 @@ Validation:
 
 Recommended next:
 1. MC94 — provider edit save feedback, staff announcements create flow polish, or public scholarship filter clarity.
+
+## S2IMS Admin Audit Log Evidence Boundary Polish MC94
+
+MC94 polishes `/admin/audit-log` as a read-only mock evidence-boundary surface.
+
+Current status:
+- admin audit log now has a permanent evidence-boundary SafetyBanner
+- page copy identifies the route as a mock audit log and read-only prototype surface
+- functional CSV export behavior removed from the page
+- Export CSV remains visible but disabled with AP-10C DisabledActionHint
+- diagnostic records section label added for scanability
+- real-persistence filter copy now says real persistence is not connected
+- empty state no longer implies official persisted records exist
+- no data source, filter semantics, debug panel flag, route guard, or detail drawer behavior changed
+- no backend API / no persistence added
+- no audit writes / no official evidence
+- AP-10B / AP-10C / AP-11 remain blocked
+- untracked Figma handoff files remain uncommitted
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+
+Recommended next:
+1. MC95 — continue low-risk mock-readiness polish on provider edit save feedback, staff announcements create flow, or public scholarship filter clarity.
