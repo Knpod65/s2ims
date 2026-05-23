@@ -2,6 +2,8 @@
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { PageHeader, StatCard } from '@/components/ui/index'
+import { SectionHeader } from '@/components/shared/SectionHeader'
+import { SafetyBanner } from '@/components/shared/SafetyBanner'
 import { mockAuditLogs } from '@/data/mock/audit-logs'
 import { Users, Activity, Database, Shield } from 'lucide-react'
 import Link from 'next/link'
@@ -11,12 +13,28 @@ export default function AdminDashboard() {
   return (
     <AppShell requiredRole="admin">
       <PageHeader title={lang==='th'?'แดชบอร์ดผู้ดูแลระบบ':'Admin Dashboard'} subtitle={lang==='th'?'ภาพรวมระบบและสุขภาพข้อมูล':'System overview and data health'}/>
+      <SafetyBanner
+        tone="preview"
+        title={lang==='th'?'ข้อมูลจำลอง — ไม่ใช่ข้อมูลจริง':'Mock data — not production'}
+        description={lang==='th'
+          ?'แดชบอร์ดนี้แสดงข้อมูลจำลองเท่านั้น ตัวเลขและสถิติไม่ใช่ข้อมูลจริง'
+          :'This dashboard shows prototype data only. Metrics and statistics are not real.'}
+        className="mb-6"
+      />
+      <SectionHeader
+        title={lang==='th'?'ตัวชี้วัดระบบ':'System Metrics'}
+        className="mb-3"
+      />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         <StatCard value="5" label={lang==='th'?'ผู้ใช้ทั้งหมด':'Total Users'} icon={<Users size={16}/>} color="text-status-info"/>
         <StatCard value="3" label={lang==='th'?'เซสชันที่ใช้งาน':'Active Sessions'} icon={<Activity size={16}/>} color="text-status-success"/>
         <StatCard value="99.8%" label={lang==='th'?'ความพร้อมใช้งาน':'Uptime'} icon={<Database size={16}/>} color="text-status-track"/>
         <StatCard value={mockAuditLogs.length} label={lang==='th'?'เหตุการณ์ล่าสุด':'Audit Events'} icon={<Shield size={16}/>} color="text-role-primary"/>
       </div>
+      <SectionHeader
+        title={lang==='th'?'ข้อมูลอ้างอิง':'Quick Reference'}
+        className="mb-3"
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4"><h3 className="font-semibold text-sm text-ink-1">{lang==='th'?'ผู้ใช้งานตามบทบาท':'Users by Role'}</h3><Link href="/admin/users" className="text-xs text-role-primary">{lang==='th'?'จัดการ':'Manage'} →</Link></div>

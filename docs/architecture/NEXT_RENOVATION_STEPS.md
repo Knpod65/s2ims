@@ -3575,3 +3575,26 @@ Validation:
 Recommended next:
 1. MC92 — SafetyBanner to staff/admin dashboards + SectionHeader adoption + provider/new form validation feedback.
 3. Keep AP gates blocked.
+
+## S²IMS Soft Civic Page Pattern Adoption MC92
+
+MC92 applied SectionHeader and SafetyBanner to 3 pages.
+
+Current status:
+- `admin/dashboard` — SafetyBanner (preview) + SectionHeader "System Metrics" + SectionHeader "Quick Reference"
+- `staff/dashboard` — SafetyBanner (preview) + SectionHeader "Priority Actions" + SectionHeader "Other Operations" (replaced raw h3)
+- `provider/scholarships/new` — SafetyBanner (info) clarifying staff-review workflow
+- discovery: two `PageHeader` versions exist (ui/index with subtitle/roleIndicator; shared/ with description/eyebrow) — both intentional, no prop bugs
+- merged to `main`
+- post-merge QA committed
+- no real auth / no API / no persistence added
+- no audit writes / no AP gate opening / Confirm Import remains disabled
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+- AP-10B / AP-10C / AP-11 remain blocked
+
+Recommended next:
+1. MC93 — ProviderScholarshipForm section headers (h2 inside cards → SectionHeader), provider/new additional UX improvements, ESQ history rich empty state.

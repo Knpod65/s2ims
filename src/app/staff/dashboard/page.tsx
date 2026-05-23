@@ -2,6 +2,8 @@
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { PageHeader, StatCard } from '@/components/ui/index'
+import { SectionHeader } from '@/components/shared/SectionHeader'
+import { SafetyBanner } from '@/components/shared/SafetyBanner'
 import Link from 'next/link'
 import { FileText, ScanLine, Clock, Users, FilePlus, TrendingUp, Mail, AlertTriangle } from 'lucide-react'
 import { mockMatchReviews, mockStaffDisclosureRequests, mockDataQualityIssues } from '@/data/mock/staffData'
@@ -29,7 +31,16 @@ export default function StaffDashboard() {
         }
       />
 
-      {/* Phase 6 & Legacy Stats */}
+      <SafetyBanner
+        tone="preview"
+        title={lang === 'th' ? 'ข้อมูลจำลอง — รอการผสาน backend' : 'Mock data — pending backend integration'}
+        description={lang === 'th'
+          ? 'ตัวเลขการจับคู่ คำขอเปิดเผย และปัญหาข้อมูลเป็นข้อมูลจำลองเท่านั้น'
+          : 'Match counts, disclosure requests, and data quality figures are prototype data.'}
+        className="mb-6"
+      />
+
+      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
         <StatCard
           value={3}
@@ -57,7 +68,10 @@ export default function StaffDashboard() {
         />
       </div>
 
-      {/* Quick Action Cards */}
+      <SectionHeader
+        title={lang === 'th' ? 'งานที่ต้องดำเนินการ' : 'Priority Actions'}
+        className="mb-3"
+      />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
         {[
           {
@@ -104,10 +118,10 @@ export default function StaffDashboard() {
         ))}
       </div>
 
-      {/* Legacy Section */}
-      <h3 className="font-semibold text-sm text-ink-1 mb-4">
-        {lang === 'th' ? 'อื่น ๆ' : 'Other Operations'}
-      </h3>
+      <SectionHeader
+        title={lang === 'th' ? 'อื่น ๆ' : 'Other Operations'}
+        className="mb-3"
+      />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {[
           {
