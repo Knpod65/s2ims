@@ -24,8 +24,8 @@ export default function ESQReviewPage({ params }: { params: { id: string } }) {
   if (confirmed && decision) {
     const colors = { approved: 'status-success', revision: 'role-primary', rejected: 'status-danger' }
     const icons = { approved: '✅', revision: '✏️', rejected: '❌' }
-    const labels_th = { approved: 'อนุมัติแล้ว', revision: 'ส่งกลับเพื่อแก้ไข', rejected: 'ไม่อนุมัติ' }
-    const labels_en = { approved: 'Approved', revision: 'Revision Requested', rejected: 'Rejected' }
+    const labels_th = { approved: 'แนะนำให้เผยแพร่', revision: 'ส่งกลับเพื่อแก้ไข', rejected: 'ไม่แนะนำ' }
+    const labels_en = { approved: 'Recommended for publish', revision: 'Revision Requested', rejected: 'Not recommended' }
     return (
       <AppShell requiredRole="esq">
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -98,7 +98,7 @@ export default function ESQReviewPage({ params }: { params: { id: string } }) {
                 onClick={() => { setDecision('approved'); setConfirmed(true) }}
                 className="btn-success w-full flex items-center justify-center gap-2 py-3 text-sm"
               >
-                <CheckCircle2 size={16}/>{lang==='th'?'อนุมัติ':'Approve'}
+                <CheckCircle2 size={16}/>{lang==='th'?'แนะนำให้เผยแพร่':'Recommend for publish'}
               </button>
               <button
                 onClick={() => setDecision(decision === 'revision' ? null : 'revision')}
@@ -110,7 +110,7 @@ export default function ESQReviewPage({ params }: { params: { id: string } }) {
                 onClick={() => setDecision(decision === 'rejected' ? null : 'rejected')}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 text-sm rounded-xl border transition-all ${decision==='rejected'?'border-red-300 bg-red-50 text-red-700':'btn-danger'}`}
               >
-                <XCircle size={15}/>{lang==='th'?'ไม่อนุมัติ':'Reject'}
+                <XCircle size={15}/>{lang==='th'?'ไม่แนะนำ':'Do not recommend'}
               </button>
             </div>
 
