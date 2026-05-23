@@ -4,10 +4,12 @@ import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { mockApplications } from '@/data/mock/applications'
 import { mockDocumentStates } from '@/data/mock/staffData'
-import { PageHeader, StatusBadge } from '@/components/ui/index'
+import { EmptyState, PageHeader, StatusBadge } from '@/components/ui/index'
+import { SafetyBanner } from '@/components/shared/SafetyBanner'
+import { SectionHeader } from '@/components/shared/SectionHeader'
 import { APP_STATUS_MAP } from '@/lib/utils'
 import Link from 'next/link'
-import { Search, Filter, FileCheck, FileX, Clock } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ClipboardList, Clock, FileCheck, FileX, Search } from 'lucide-react'
 
 export default function StaffApplicationsPage() {
   const { lang } = useLang()
@@ -30,14 +32,92 @@ export default function StaffApplicationsPage() {
     return matchSearch && matchStatus
   })
 
+  const queueStats = filtered.reduce(
+    (acc, app) => {
+      const docStatus = getDocumentStatus(app.id)
+      const actionNeeded = ['NEEDS_DOCS','FOLLOW_UP_REQUIRED','REPORT_OVERDUE'].includes(app.status)
+      if (actionNeeded) acc.needsAttention += 1
+      if (docStatus && (docStatus.rejected > 0 || docStatus.pending > 0)) acc.documentIssues += 1
+      if (docStatus && docStatus.total > 0 && docStatus.rejected === 0 && docStatus.pending === 0) acc.allClear += 1
+      return acc
+    },
+    { total: filtered.length, needsAttention: 0, documentIssues: 0, allClear: 0 }
+  )
+
+  const summaryCards = [
+    {
+      label: lang === 'th' ? 'รายการที่แสดง' : 'Visible items',
+      value: queueStats.total,
+      icon: ClipboardList,
+      note: lang === 'th' ? 'หลังใช้ตัวกรอง' : 'after filters',
+    },
+    {
+      label: lang === 'th' ? 'ต้องดูแลก่อน' : 'Needs attention',
+      value: queueStats.needsAttention,
+      icon: AlertTriangle,
+      note: lang === 'th' ? 'สถานะที่ควรติดตาม' : 'follow-up statuses',
+    },
+    {
+      label: lang === 'th' ? 'ประเด็นเอกสาร' : 'Document issues',
+      value: queueStats.documentIssues,
+      icon: FileX,
+      note: lang === 'th' ? 'รอหรือควรเปลี่ยน' : 'pending or rejected',
+    },
+    {
+      label: lang === 'th' ? 'เอกสารพร้อม' : 'Documents clear',
+      value: queueStats.allClear,
+      icon: CheckCircle2,
+      note: lang === 'th' ? 'ไม่มี pending/rejected' : 'no pending/rejected',
+    },
+  ]
+
   return (
     <AppShell requiredRole="staff">
       <PageHeader
-        title={lang==='th'?'จัดการใบสมัคร':'Application Manager'}
-        subtitle={`${filtered.length} ${lang==='th'?'รายการ':'applications'}`}
+        title={lang==='th'?'คิวงานใบสมัครเจ้าหน้าที่':'Staff Work Queue'}
+        subtitle={lang==='th'
+          ? `แสดง ${filtered.length} รายการจากข้อมูลต้นแบบ เพื่อเตรียมการตรวจเอกสารและติดตามสถานะ`
+          : `${filtered.length} applications shown from prototype data for document review preparation and status follow-up`}
+        roleIndicator
       />
 
-      {/* Filters */}
+      <SafetyBanner
+        tone="info"
+        title={lang==='th'?'Mock work queue — decision-support only':'Mock work queue — decision-support only'}
+        description={lang==='th'
+          ? 'คิวนี้ใช้ข้อมูลต้นแบบเพื่อช่วยจัดลำดับการตรวจเอกสารเท่านั้น ไม่มีการบันทึก approval จากหน้านี้ และไม่มีการเขียน audit event หรือ persistence'
+          : 'This queue uses prototype data to help staff prepare document review only. No approval is recorded from this screen, and no audit event or persistence is written.'}
+        apCodes={['AP-11']}
+        className="mb-5"
+      />
+
+      <div className="grid gap-3 mb-5 sm:grid-cols-2 xl:grid-cols-4">
+        {summaryCards.map((item) => {
+          const Icon = item.icon
+          return (
+            <div key={item.label} className="card p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="font-display text-2xl font-bold leading-none text-ink-1">{item.value}</div>
+                  <div className="mt-1 text-xs font-semibold text-ink-2">{item.label}</div>
+                  <div className="mt-0.5 text-xs text-ink-3">{item.note}</div>
+                </div>
+                <div className="rounded-lg bg-role-tint p-2 text-role-primary">
+                  <Icon size={16} aria-hidden="true" />
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <SectionHeader
+        title={lang==='th'?'ตัวกรองคิวงาน':'Queue Filters'}
+        description={lang==='th'
+          ? 'ค้นหาด้วยชื่อทุนหรือรหัสนักศึกษาเดิม โดยไม่เปลี่ยนข้อมูลต้นแบบ'
+          : 'Search by scholarship or existing student identifier without changing prototype data.'}
+      />
+
       <div className="flex gap-3 mb-5 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-3"/>
@@ -58,6 +138,13 @@ export default function StaffApplicationsPage() {
         </select>
       </div>
 
+      <SectionHeader
+        title={lang==='th'?'รายการใบสมัคร':'Application Queue'}
+        description={lang==='th'
+          ? 'เอกสารและสถานะแสดงเพื่อเตรียมการตรวจเท่านั้น ไม่ใช่การอนุมัติหรือการตัดสินใจอย่างเป็นทางการ'
+          : 'Documents and statuses are shown for review preparation only, not approval or official decision-making.'}
+      />
+
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -73,7 +160,17 @@ export default function StaffApplicationsPage() {
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr><td colSpan={6} className="p-8 text-center text-ink-3 text-sm">{lang==='th'?'ไม่พบรายการ':'No applications found'}</td></tr>
+              <tr>
+                <td colSpan={7}>
+                  <EmptyState
+                    icon={<Search size={36} />}
+                    title={lang==='th'?'ไม่พบรายการที่ตรงกับตัวกรอง':'No applications match these filters'}
+                    description={lang==='th'
+                      ? 'ลองปรับคำค้นหาหรือสถานะ ตัวกรองนี้ไม่เปลี่ยนข้อมูลและไม่สร้างการตัดสินใจ'
+                      : 'Try adjusting the search or status filter. Filtering does not change data or create a decision.'}
+                  />
+                </td>
+              </tr>
             )}
             {filtered.map((app, i) => {
               const si = APP_STATUS_MAP[app.status]
@@ -93,23 +190,23 @@ export default function StaffApplicationsPage() {
                   </td>
                   <td className="p-3">
                     {docStatus ? (
-                      <div className="flex items-center gap-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         {docStatus.rejected > 0 && (
-                          <div className="flex items-center gap-0.5 text-xs bg-status-danger/10 text-status-danger px-2 py-1 rounded">
+                          <div className="flex items-center gap-1 text-xs bg-status-danger/10 text-status-danger px-2 py-1 rounded">
                             <FileX size={12} />
-                            {docStatus.rejected}
+                            <span>{docStatus.rejected} {lang==='th'?'ควรเปลี่ยน':'rejected'}</span>
                           </div>
                         )}
                         {docStatus.pending > 0 && (
-                          <div className="flex items-center gap-0.5 text-xs bg-role-tint text-role-primary px-2 py-1 rounded">
+                          <div className="flex items-center gap-1 text-xs bg-role-tint text-role-primary px-2 py-1 rounded">
                             <Clock size={12} />
-                            {docStatus.pending}
+                            <span>{docStatus.pending} {lang==='th'?'รอตรวจ':'pending'}</span>
                           </div>
                         )}
                         {docStatus.rejected === 0 && docStatus.pending === 0 && (
-                          <div className="flex items-center gap-0.5 text-xs bg-status-success/10 text-status-success px-2 py-1 rounded">
+                          <div className="flex items-center gap-1 text-xs bg-status-success/10 text-status-success px-2 py-1 rounded">
                             <FileCheck size={12} />
-                            {docStatus.verified}
+                            <span>{docStatus.verified}/{docStatus.total} {lang==='th'?'พร้อม':'verified'}</span>
                           </div>
                         )}
                       </div>
