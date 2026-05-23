@@ -5,7 +5,7 @@ import { Bell, Globe } from 'lucide-react'
 import { useLang } from '@/lib/i18n'
 import { useAuth } from '@/lib/auth'
 import { ROLE_LABELS } from '@/lib/navigation'
-import { mockNotifications } from '@/data/mock/notifications'
+import { useNotifications } from '@/lib/notification-context'
 import {
   createTopbarNotificationPayload,
   notificationNavigationPresenter,
@@ -29,7 +29,7 @@ export default function Topbar({ title }: { title?: string }) {
   const { lang, setLang } = useLang()
   const { user, role } = useAuth()
   const router = useRouter()
-  const unread = mockNotifications.filter((n) => !n.is_read).length
+  const { unread } = useNotifications()
   const roleLabel = role ? ROLE_LABELS[role] : null
   const displayName = user ? (lang === 'th' ? user.name_th : user.name_en) : ''
   const notificationNavigation = useMemo(() => {

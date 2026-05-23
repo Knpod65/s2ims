@@ -3546,4 +3546,32 @@ Validation:
 Recommended next:
 1. MC91 — notification read-state shared context (NotificationProvider + Topbar + notification pages).
 2. MC91 also — reduce 1000–1500ms mock delays on student/staff/admin pages to 200–400ms.
+
+## S²IMS Full-App Mock Excellence MC91
+
+MC91 fixed notification read-state reactivity and reduced mock delays across 6 pages.
+
+Current status:
+- `src/lib/notification-context.tsx` created — `NotificationProvider` + `useNotifications()` hook (in-memory, zero persistence)
+- `AppShell.tsx` wraps content with `NotificationProvider`
+- `Topbar.tsx` now reads `useNotifications().unread` — bell badge is reactive
+- `student/notifications/page.tsx` uses inner component pattern, reads from context — bell syncs when user marks read
+- 8 mock delays reduced (600–1500ms → 200–400ms) across 6 files: student/profile, student/applications/new, admin/settings, admin/export, staff/ocr, staff/announcements/preview
+- full-app route inventory documented (52 routes, 42 static)
+- page quality scorecard produced — all 42 pages rated on DS/UX/Mock/Delay
+- 100% mock-ready roadmap published
+- full-stack layer review published
+- merged to `main`
+- post-merge QA committed
+- no real auth / no API / no persistence added
+- no audit writes / no AP gate opening / Confirm Import remains disabled
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+- AP-10B / AP-10C / AP-11 remain blocked
+
+Recommended next:
+1. MC92 — SafetyBanner to staff/admin dashboards + SectionHeader adoption + provider/new form validation feedback.
 3. Keep AP gates blocked.

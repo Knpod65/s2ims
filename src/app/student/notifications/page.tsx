@@ -1,9 +1,8 @@
 'use client'
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
-import { mockNotifications } from '@/data/mock/notifications'
+import { useNotifications } from '@/lib/notification-context'
 import { PageHeader } from '@/components/ui/index'
 import { useToast } from '@/components/ui/Toast'
 import type { Notification } from '@/lib/types'
@@ -24,18 +23,14 @@ const TYPE_ICON: Record<string, string> = {
   ANNOUNCEMENT_APPROVED: '✔️',
 }
 
-export default function NotificationsPage() {
+function NotificationsContent() {
   const { lang } = useLang()
   const router = useRouter()
   const { addToast } = useToast()
-  const [notifications, setNotifications] = useState<Notification[]>(mockNotifications)
-
-  const markRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n))
-  }
+  const { notifications, markRead, markAllRead: ctxMarkAllRead } = useNotifications()
 
   const markAllRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
+    ctxMarkAllRead()
     addToast(lang === 'th' ? 'อ่านทั้งหมดแล้ว' : 'All marked as read', 'info')
   }
 
@@ -48,7 +43,7 @@ export default function NotificationsPage() {
   const read = notifications.filter(n => n.is_read)
 
   return (
-    <AppShell requiredRole="student">
+    <>
       <PageHeader
         title={lang === 'th' ? 'การแจ้งเตือน' : 'Notifications'}
         subtitle={`${unread.length} ${lang === 'th' ? 'ใหม่' : 'unread'}`}
@@ -139,6 +134,14 @@ export default function NotificationsPage() {
           <div className="text-sm">{lang === 'th' ? 'ไม่มีการแจ้งเตือน' : 'No notifications'}</div>
         </div>
       )}
+    </>
+  )
+}
+
+export default function NotificationsPage() {
+  return (
+    <AppShell requiredRole="student">
+      <NotificationsContent />
     </AppShell>
   )
 }

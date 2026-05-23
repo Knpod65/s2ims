@@ -21,7 +21,7 @@ export default function AnnouncementPreviewPage({ params }: { params: { id: stri
 
   const handleSubmitToESQ = async () => {
     setSubmitting(true)
-    await new Promise(r => setTimeout(r, 700))
+    await new Promise(r => setTimeout(r, 200))
     setSubmitted(true)
     setSubmitting(false)
     addToast(
@@ -30,7 +30,7 @@ export default function AnnouncementPreviewPage({ params }: { params: { id: stri
         : 'Submitted to ESQ for approval — awaiting response',
       'success'
     )
-    setTimeout(() => router.push('/staff/dashboard'), 1500)
+    setTimeout(() => router.push('/staff/dashboard'), 400)
   }
 
   const handleDownloadPDF = () => {

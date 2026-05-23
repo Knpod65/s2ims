@@ -20,7 +20,7 @@ export default function AdminSettingsPage() {
 
   const handleSave = async () => {
     setSaving(true)
-    await new Promise(r => setTimeout(r, 700))
+    await new Promise(r => setTimeout(r, 200))
     setSaving(false)
     addToast(lang === 'th' ? 'บันทึกการตั้งค่าแล้ว' : 'Settings saved', 'success')
   }
