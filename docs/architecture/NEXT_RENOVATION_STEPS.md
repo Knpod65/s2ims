@@ -3754,3 +3754,13 @@ Recommended next:
 - Continue data-engineering foundation for future real query adapter
 
 MC98 Batch 1 lifecycle (implementation + validation) complete.
+
+**Post-merge QA (2026-05-23):**  
+- Merge commit 2e6e1d5, checkpoint 9278e72  
+- All post-merge validations passed (build 42/42, tokens 4/4, audit 502/502)  
+- Behavior on staff/applications and student/applications pages confirmed identical  
+- No backend, persistence, audit writes, or PII expansion  
+- AP-10B / AP-10C / AP-11 remain blocked  
+- **Batch 2 is now unblocked** and may proceed (provider/dashboard → esq/dashboard → public scholarships → remaining student pages)
+
+MC98 full lifecycle (package + QA + merge + checkpoint + post-merge QA) complete on main.
