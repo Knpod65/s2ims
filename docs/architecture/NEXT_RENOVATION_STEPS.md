@@ -3469,6 +3469,8 @@ MC88 integrated the Soft Civic visual primitives into the `/login` page only.
 
 Current status:
 - login visual integration complete
+- merged to `main`
+- post-merge QA committed
 - `PageHeader` integrated
 - `SafetyBanner` integrated
 - `SectionHeader` integrated
