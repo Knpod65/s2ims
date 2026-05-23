@@ -3678,3 +3678,42 @@ Validation:
 
 Recommended next:
 1. MC96 — provider edit save feedback, staff announcements create flow polish, or public scholarship filter clarity.
+
+## S²IMS Import Preview Safety Polish — MC96
+
+MC96 polishes the governance-critical `/admin/master-data/import-preview` page (AP-10B surface) using the shared Soft Civic safety primitives (SafetyBanner, DisabledActionHint, SectionHeader) introduced in MC87–MC95.
+
+Scope: page only (no behavior change).
+
+Key improvements:
+- Replaced custom amber SafetyBanner with shared `SafetyBanner` (tone="preview", explicit AP-10B gate language, "synthetic / no persistence / no official evidence").
+- Wrapped the visible-but-disabled Confirm Import button with shared `DisabledActionHint` (AP-10B) for consistency with MC94/MC95.
+- Added `SectionHeader` grouping for validation summary and sheet detection to improve scannability.
+- All existing parsing, validation, filtering, manual mapping, acknowledgment checkboxes, and Reset Preview (UI-only) logic preserved exactly.
+- Confirm Import remains visibly disabled / no-op.
+- AP-10B / AP-10C / AP-11 remain blocked.
+- No new API, persistence, audit writes, or official evidence.
+
+Validation:
+- Build 42/42
+- Tokens 4/4
+- Audit events 502/502
+- Only the target page edited; no package / tools / other pages touched
+- Localhost smoke passed; no regression on MC91–MC95 surfaces
+
+New docs:
+- S2IMS_IMPORT_PREVIEW_SAFETY_POLISH_MC96.md
+- S2IMS_IMPORT_PREVIEW_AP_BOUNDARY_AND_COPY_GUIDE_MC96.md
+- S2IMS_IMPORT_PREVIEW_QA_CHECKLIST_MC96.md
+
+Safety (repeated):
+- Preview-only / synthetic data only
+- No persistence / no backend import / no audit writes / no official evidence
+- Confirm Import disabled (visible, no-op)
+- AP-10B / AP-10C / AP-11 remain blocked
+
+Recommended next:
+- Continue consistent application of shared safety primitives to any remaining high-governance surfaces.
+- MC97+ can address any additional polish identified in future audits.
+
+MC96 lifecycle complete (package + QA + merge + post-merge QA).
