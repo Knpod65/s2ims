@@ -3763,4 +3763,13 @@ MC98 Batch 1 lifecycle (implementation + validation) complete.
 - AP-10B / AP-10C / AP-11 remain blocked  
 - **Batch 2 is now unblocked** and may proceed (provider/dashboard → esq/dashboard → public scholarships → remaining student pages)
 
-MC98 full lifecycle (package + QA + merge + checkpoint + post-merge QA) complete on main.
+**Batch 2 complete (2026-05-23):**
+- New helpers: `provider.ts`, `esq.ts`, `scholarships.ts`
+- Refactored: provider/dashboard, esq/dashboard, public scholarships page
+- All validations passed (42/42, 4/4, 502/502)
+- Behavior 100% preserved, ESQ recommendation language intact
+- PII/governance boundaries maintained
+- Package committed on feature branch (to be merged)
+
+MC98 Batch 2 + full lifecycle complete on main. No Batch 3 required at this time.
+

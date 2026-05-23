@@ -10,6 +10,7 @@ import {
   mockProviderOrganization,
   mockProviderScholarships,
 } from '@/data/mock/providerData'
+import { getActiveScholarships, getPendingShortlistRequests } from '@/lib/queries'
 import ProviderDashboardSummary from '@/components/provider/ProviderDashboardSummary'
 import ProviderPrivacyNotice from '@/components/provider/ProviderPrivacyNotice'
 import ProviderScholarshipCard from '@/components/provider/ProviderScholarshipCard'
@@ -17,8 +18,8 @@ import ProviderImpactCard from '@/components/provider/ProviderImpactCard'
 
 export default function ProviderDashboard() {
   const { lang } = useLang()
-  const activeScholarships = mockProviderScholarships.filter(s => s.status === 'ACTIVE')
-  const pendingShortlists = mockProviderScholarships.filter(s => s.shortlistStatus === 'pending_staff_approval')
+  const activeScholarships = getActiveScholarships(mockProviderScholarships)
+  const pendingShortlists = getPendingShortlistRequests(mockProviderScholarships)
 
   return (
     <AppShell requiredRole="provider">

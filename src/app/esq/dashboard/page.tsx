@@ -2,6 +2,11 @@
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { mockAnnouncements } from '@/data/mock/announcements'
+import {
+  getApprovedAnnouncements,
+  getPendingAnnouncements,
+  getUrgentAnnouncements,
+} from '@/lib/queries'
 import { PageHeader, StatCard, StatusBadge } from '@/components/ui/index'
 import { ANN_STATUS_MAP } from '@/lib/utils'
 import { Clock, CheckCircle2, AlertTriangle } from 'lucide-react'
@@ -9,21 +14,21 @@ import Link from 'next/link'
 
 export default function ESQDashboard() {
   const { lang } = useLang()
-  const pending = mockAnnouncements.filter(a => a.status === 'SUBMITTED')
-  const approved = mockAnnouncements.filter(a => a.status === 'APPROVED')
-  const urgent = pending.filter(a => a.sla_hours !== undefined && a.sla_hours < 24)
+  const pending = getPendingAnnouncements(mockAnnouncements)
+  const approved = getApprovedAnnouncements(mockAnnouncements)
+  const urgent = getUrgentAnnouncements(pending)
 
   return (
     <AppShell requiredRole="esq">
       <PageHeader
-        title={lang==='th'?'แดชบอร์ดการอนุมัติ':'Approval Dashboard'}
-        subtitle={lang==='th'?'ประกาศที่รออนุมัติก่อนเผยแพร่':'Announcements pending approval before publishing'}
+        title={lang==='th'?'แดชบอร์ดการตรวจสอบ':'ESQ Review Dashboard'}
+        subtitle={lang==='th'?'ประกาศที่รอการตรวจสอบและแนะนำก่อนเผยแพร่ (แบบจำลอง)':'Review and recommendation support for announcements before publishing (mock)'}
       />
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
         <StatCard
           value={pending.length}
-          label={lang==='th'?'รออนุมัติ':'Pending Approvals'}
+          label={lang==='th'?'รอการตรวจสอบ':'Pending Review'}
           icon={<Clock size={16}/>}
           color="text-role-primary"
           delta={urgent.length > 0 ? `${urgent.length} ด่วน · ต่ำกว่า 24h` : undefined}
@@ -31,7 +36,7 @@ export default function ESQDashboard() {
         />
         <StatCard
           value={5}
-          label={lang==='th'?'อนุมัติสัปดาห์นี้':'Approved This Week'}
+          label={lang==='th'?'แนะนำสัปดาห์นี้':'Recommendations This Week'}
           icon={<CheckCircle2 size={16}/>}
           color="text-status-success"
           delta="+2 vs last week"
@@ -103,20 +108,20 @@ export default function ESQDashboard() {
         )}
       </div>
 
-      {/* Recently approved */}
+      {/* Recently recommended */}
       <div>
         <h2 className="text-xs font-semibold text-ink-3 uppercase tracking-widest mb-3">
-          {lang==='th'?'อนุมัติล่าสุด':'Recently Approved'}
+          {lang==='th'?'แนะนำล่าสุด':'Recently Recommended'}
         </h2>
         <div className="space-y-2">
           {mockAnnouncements.filter(a=>a.status==='APPROVED').map(ann => (
             <div key={ann.id} className="card-sm p-3 flex items-center justify-between gap-3">
               <div className="text-xs text-ink-2 line-clamp-1 flex-1">{lang==='th'?ann.title_th:ann.title_en}</div>
-              <StatusBadge label={lang==='th'?'อนุมัติแล้ว':'Approved'} color="bg-emerald-50 text-emerald-700 border-emerald-200"/>
+              <StatusBadge label={lang==='th'?'แนะนำแล้ว':'Recommended'} color="bg-emerald-50 text-emerald-700 border-emerald-200"/>
             </div>
           ))}
           {mockAnnouncements.filter(a=>a.status==='APPROVED').length === 0 && (
-            <div className="text-xs text-ink-3 py-3">{lang==='th'?'ยังไม่มีประกาศที่อนุมัติแล้ว':'No approved announcements yet'}</div>
+            <div className="text-xs text-ink-3 py-3">{lang==='th'?'ยังไม่มีประกาศที่แนะนำแล้ว':'No recommendations yet'}</div>
           )}
         </div>
       </div>
