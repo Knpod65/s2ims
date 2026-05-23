@@ -3648,3 +3648,32 @@ Validation:
 
 Recommended next:
 1. MC95 — continue low-risk mock-readiness polish on provider edit save feedback, staff announcements create flow, or public scholarship filter clarity.
+
+## S2IMS Staff Applications Work Queue Polish MC95
+
+MC95 polishes `/staff/applications` as a clearer Staff work queue.
+
+Current status:
+- staff applications list now uses Staff Work Queue page copy with role indicator
+- AP-11 SafetyBanner clarifies the list is mock decision-support only
+- summary cards show visible items, needs attention, document issues, and documents clear
+- filters and application queue are grouped with SectionHeader
+- document completeness chips now include readable text plus icons
+- no-results state explains filters can be adjusted without changing data
+- detail route remains untouched and regression-smoked only
+- no search/filter/status semantics changed
+- no new PII displayed
+- no approval/rejection enabled
+- no backend API / no persistence added
+- no audit writes / no official evidence
+- AP-10B / AP-10C / AP-11 remain blocked
+- untracked Figma handoff files remain uncommitted
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+- localhost smoke passed 11/11
+
+Recommended next:
+1. MC96 — provider edit save feedback, staff announcements create flow polish, or public scholarship filter clarity.
