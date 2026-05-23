@@ -3604,6 +3604,7 @@ Recommended next:
 MC93 polishes selected provider, ESQ, and admin mock UI surfaces.
 
 Current status:
+- LIFECYCLE COMPLETE — merged to main at `404f72b`, merge checkpoint `ce42d6a`, post-merge QA complete
 - `provider/scholarships/new` — ProviderScholarshipForm section structure and field guidance improved with shared SectionHeader and visible mock submit hint
 - `esq/history` — recommendation-not-approval language added, AP-11 context surfaced, and rich empty state added
 - `admin/users` — mock/prototype actions clarified; Export/Add/Edit remain visible but disabled with reasons
