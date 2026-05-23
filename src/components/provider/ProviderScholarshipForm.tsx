@@ -6,6 +6,7 @@ import { CheckCircle2, FileText, Save, Send } from 'lucide-react'
 import { useLang } from '@/lib/i18n'
 import type { Scholarship } from '@/data/mock/providerData'
 import ProviderPrivacyNotice from './ProviderPrivacyNotice'
+import { DisabledActionHint, SectionHeader } from '@/components/shared'
 
 type ProviderScholarshipFormProps = {
   mode: 'new' | 'edit'
@@ -90,20 +91,25 @@ export default function ProviderScholarshipForm({ mode, scholarship }: ProviderS
       )}
 
       <section className="card p-5">
-        <div className="mb-4 flex items-center gap-2">
-          <FileText size={17} className="text-role-primary" />
-          <h2 className="font-semibold text-ink-1">{lang === 'th' ? 'ข้อมูลทุนพื้นฐาน' : 'Basic scholarship information'}</h2>
-        </div>
+        <SectionHeader
+          title={lang === 'th' ? 'ข้อมูลทุนพื้นฐาน' : 'Basic scholarship information'}
+          description={lang === 'th'
+            ? 'เริ่มจากชื่อทุน องค์กรผู้ให้ทุน และคำอธิบายที่นักศึกษาจะเห็นหลังผ่านการตรวจสอบ'
+            : 'Start with the name, provider identity, and student-facing description for staff review.'}
+          action={<FileText size={17} className="text-role-primary" aria-hidden="true" />}
+        />
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'ชื่อทุน (ไทย)' : 'Scholarship name (Thai)'}</span>
             <input className={fieldClass('title_th')} value={formData.title_th} onChange={e => update('title_th', e.target.value)} />
             {errors.title_th && <span className="mt-1 block text-xs text-[#B45309]">{errors.title_th}</span>}
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'จำเป็นสำหรับการแสดงผลภาษาไทย' : 'Required for Thai-language display.'}</span>
           </label>
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'ชื่อทุน (อังกฤษ)' : 'Scholarship name (English)'}</span>
             <input className={fieldClass('title_en')} value={formData.title_en} onChange={e => update('title_en', e.target.value)} />
             {errors.title_en && <span className="mt-1 block text-xs text-[#B45309]">{errors.title_en}</span>}
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'จำเป็นสำหรับการแสดงผลภาษาอังกฤษ' : 'Required for English-language display.'}</span>
           </label>
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'องค์กรผู้ให้ทุน (ไทย)' : 'Provider organization (Thai)'}</span>
@@ -125,36 +131,51 @@ export default function ProviderScholarshipForm({ mode, scholarship }: ProviderS
       </section>
 
       <section className="card p-5">
-        <h2 className="mb-4 font-semibold text-ink-1">{lang === 'th' ? 'จำนวนทุนและกำหนดเวลา' : 'Amount, awards, and deadline'}</h2>
+        <SectionHeader
+          title={lang === 'th' ? 'จำนวนทุนและกำหนดเวลา' : 'Amount, awards, and deadline'}
+          description={lang === 'th'
+            ? 'ระบุจำนวนเงิน จำนวนผู้รับทุน และวันปิดรับ เพื่อให้เจ้าหน้าที่ตรวจสอบความพร้อม'
+            : 'Provide award value, award count, and deadline so staff can review readiness.'}
+        />
         <div className="grid gap-4 md:grid-cols-3">
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'จำนวนเงิน (บาท)' : 'Amount (THB)'}</span>
             <input type="number" className={fieldClass('amount')} value={formData.amount} onChange={e => update('amount', e.target.value)} min="0" />
             {errors.amount && <span className="mt-1 block text-xs text-[#B45309]">{errors.amount}</span>}
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'ต้องมากกว่า 0 บาท' : 'Must be greater than 0 THB.'}</span>
           </label>
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'จำนวนทุน' : 'Award count'}</span>
             <input type="number" className={fieldClass('num_awards')} value={formData.num_awards} onChange={e => update('num_awards', e.target.value)} min="1" />
             {errors.num_awards && <span className="mt-1 block text-xs text-[#B45309]">{errors.num_awards}</span>}
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'จำนวนผู้รับทุนอย่างน้อย 1 คน' : 'At least 1 award recipient.'}</span>
           </label>
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'วันปิดรับสมัคร' : 'Deadline'}</span>
             <input type="date" className={fieldClass('deadline')} value={formData.deadline} onChange={e => update('deadline', e.target.value)} />
             {errors.deadline && <span className="mt-1 block text-xs text-[#B45309]">{errors.deadline}</span>}
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'ใช้สำหรับการตรวจสอบจำลองเท่านั้น' : 'Used for mock review only.'}</span>
           </label>
         </div>
       </section>
 
       <section className="card p-5">
-        <h2 className="mb-4 font-semibold text-ink-1">{lang === 'th' ? 'เงื่อนไขและเอกสาร' : 'Eligibility and required documents'}</h2>
+        <SectionHeader
+          title={lang === 'th' ? 'เงื่อนไขและเอกสาร' : 'Eligibility and required documents'}
+          description={lang === 'th'
+            ? 'ช่วยให้นักศึกษารู้ว่าเข้าเกณฑ์หรือไม่ และต้องเตรียมเอกสารใดก่อนสมัคร'
+            : 'Help students understand eligibility and the documents they should prepare.'}
+        />
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'เกณฑ์ GPA ขั้นต่ำ' : 'Minimum GPA gate'}</span>
             <input type="number" className={fieldClass('gpa_min')} min="0" max="4" step="0.1" value={formData.gpa_min} onChange={e => update('gpa_min', e.target.value)} />
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'ใส่ค่า 0.00-4.00 ตามเกณฑ์ทุน' : 'Use a 0.00-4.00 value that matches the scholarship rule.'}</span>
           </label>
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'ชั้นปีที่เข้าเกณฑ์' : 'Eligible academic years'}</span>
             <input className={fieldClass('academic_year')} value={formData.academic_year} onChange={e => update('academic_year', e.target.value)} />
+            <span className="mt-1 block text-xs text-ink-3">{lang === 'th' ? 'ตัวอย่าง: 2, 3, 4' : 'Example: 2, 3, 4.'}</span>
           </label>
           <label className="block md:col-span-2">
             <span className="mb-1.5 block text-xs font-semibold text-ink-2">{lang === 'th' ? 'ตัวสร้างเอกสารที่ต้องใช้' : 'Required document builder'}</span>
@@ -175,12 +196,19 @@ export default function ProviderScholarshipForm({ mode, scholarship }: ProviderS
             <Save size={15} />
             {lang === 'th' ? 'บันทึกร่าง' : 'Save draft'}
           </button>
-          <button type="button" onClick={() => setSubmitted(true)} disabled={!isValid} className="btn-primary min-h-11 flex-1 justify-center text-sm disabled:opacity-50">
-            <Send size={15} />
-            {mode === 'new'
-              ? (lang === 'th' ? 'ส่งให้เจ้าหน้าที่ตรวจสอบ' : 'Submit for staff review')
-              : (lang === 'th' ? 'ส่งการอัปเดตให้ตรวจสอบ' : 'Submit update for review')}
-          </button>
+          <DisabledActionHint
+            className="flex-1"
+            reason={isValid
+              ? (lang === 'th' ? 'การส่งนี้เป็นสถานะจำลอง ไม่มี backend write หรือการเผยแพร่จริง' : 'This submission is mock-only. No backend write or real publication occurs.')
+              : (lang === 'th' ? 'กรอกฟิลด์ที่จำเป็นให้ครบก่อนส่งให้เจ้าหน้าที่ตรวจสอบ' : 'Complete the required fields before submitting for staff review.')}
+          >
+            <button type="button" onClick={() => setSubmitted(true)} disabled={!isValid} className="btn-primary min-h-11 w-full justify-center text-sm disabled:opacity-50">
+              <Send size={15} />
+              {mode === 'new'
+                ? (lang === 'th' ? 'ส่งให้เจ้าหน้าที่ตรวจสอบ' : 'Submit for staff review')
+                : (lang === 'th' ? 'ส่งการอัปเดตให้ตรวจสอบ' : 'Submit update for review')}
+            </button>
+          </DisabledActionHint>
         </div>
       </div>
     </div>

@@ -3598,3 +3598,25 @@ Validation:
 
 Recommended next:
 1. MC93 — ProviderScholarshipForm section headers (h2 inside cards → SectionHeader), provider/new additional UX improvements, ESQ history rich empty state.
+
+## S2IMS Provider Form, ESQ History, and Admin Users Polish MC93
+
+MC93 polishes selected provider, ESQ, and admin mock UI surfaces.
+
+Current status:
+- `provider/scholarships/new` — ProviderScholarshipForm section structure and field guidance improved with shared SectionHeader and visible mock submit hint
+- `esq/history` — recommendation-not-approval language added, AP-11 context surfaced, and rich empty state added
+- `admin/users` — mock/prototype actions clarified; Export/Add/Edit remain visible but disabled with reasons
+- no submit/save behavior changes
+- no real auth / no backend API / no persistence added
+- no audit writes / no official evidence
+- AP-10B / AP-10C / AP-11 remain blocked
+- untracked Figma handoff files remain uncommitted
+
+Validation:
+- build passed 42/42
+- token checks passed 4/4
+- audit-event checks passed 502/502
+
+Recommended next:
+1. MC94 — provider edit save feedback, staff announcements create flow polish, or public scholarship filter clarity.
