@@ -3,9 +3,12 @@ import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { PageHeader } from '@/components/ui/index'
 import { Button } from '@/components/shared/Button'
+import { DisabledActionHint } from '@/components/shared/DisabledActionHint'
+import { SafetyBanner } from '@/components/shared/SafetyBanner'
+import { SectionHeader } from '@/components/shared/SectionHeader'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { mockAuditLogs } from '@/data/mock/audit-logs'
-import { Download, AlertCircle } from 'lucide-react'
+import { Download, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import AdminAuditEventDetailDrawer from '@/components/admin/AdminAuditEventDetailDrawer'
 import AdminAuditComparisonDebugPanel from '@/components/admin/AdminAuditComparisonDebugPanel'
@@ -18,22 +21,8 @@ type PersistenceMode = 'all' | 'mock_only' | 'real_persisted'
 // Combined fixture + writer demo rows — computed once at module level.
 // mockAuditLogs is static; DEMO_WRITER_EVENTS inside adapter are static.
 // No runtime writes occur from this call.
+// AP-9G source invariant retained for any future gated export projection: const rows = ALL_DISPLAY_ROWS.map
 const ALL_DISPLAY_ROWS = getAdminAuditDisplayRows(mockAuditLogs)
-
-function exportAuditCSV() {
-  const header = 'Time,Actor,Role,Action,Entity,Source,Status'
-  const warningRow = '# Export contains demo/mock audit data — not official persistence'
-  const rows = ALL_DISPLAY_ROWS.map(r =>
-    `"${r.formattedTime ?? r.createdAt}","${r.actorLabel}","${r.actorRoleLabel}","${r.actionLabel}","${r.targetLabel}","${r.sourceLabel}","${r.persistenceLabel}"`
-  )
-  const blob = new Blob([[warningRow, header, ...rows].join('\n')], { type: 'text/csv' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `audit-log-demo-${new Date().toISOString().split('T')[0]}.csv`
-  a.click()
-  URL.revokeObjectURL(url)
-}
 
 const ROLE_COLOR: Record<string, string> = {
   student: 'text-blue-700', staff: 'text-amber-700',
@@ -53,17 +42,43 @@ export default function AuditLogPage() {
 
   return (
     <AppShell requiredRole="admin">
-      <PageHeader
-        title={t==='th'?'ประวัติการใช้งาน (Audit Log)':'Audit Log'}
-        subtitle={t==='th'?'เหตุการณ์การตรวจสอบแบบเดโม — ไม่ใช่การบันทึกอย่างเป็นทางการ':'Demo audit events — not official persistence'}
-        actions={<Button variant="secondary" size="sm" onClick={exportAuditCSV} iconStart={<Download size={13}/>}>{t==='th'?'ส่งออก CSV':'Export CSV'}</Button>}
+      <SafetyBanner
+        tone="blocked"
+        title={t==='th'?'ขอบเขตหลักฐาน — Audit log แบบเดโมเท่านั้น':'Evidence Boundary — Mock audit log only'}
+        description={t==='th'
+          ? 'หน้านี้เป็นพื้นผิวต้นแบบแบบอ่านอย่างเดียว ไม่ใช่หลักฐานอย่างเป็นทางการ ไม่มีการเขียน audit event จากหน้านี้ และการส่งออกยังถูกบล็อกจนกว่า AP-10C จะได้รับอนุมัติ'
+          : 'This is a read-only prototype surface, not official evidence. No audit events are written from this screen, and export remains blocked until AP-10C governance approval.'}
+        apCodes={['AP-10C']}
+        className="mb-4"
       />
-      <div className="flex items-center gap-2 mb-4 p-3 bg-purple-500/[0.05] border border-purple-500/20 rounded-lg">
-        <AlertCircle size={13} className="text-purple-600"/>
-        <span className="text-xs text-purple-600">
+      <PageHeader
+        title={t==='th'?'Mock Audit Log':'Mock Audit Log'}
+        subtitle={t==='th'?'พื้นผิวต้นแบบแบบอ่านอย่างเดียว — ไม่ใช่หลักฐานการตรวจสอบอย่างเป็นทางการ':'Read-only prototype surface — not official audit evidence'}
+        actions={(
+          <DisabledActionHint
+            apCode="AP-10C"
+            reason={t==='th'
+              ? 'การส่งออกถูกบล็อกจนกว่า AP-10C จะได้รับอนุมัติด้านธรรมาภิบาล'
+              : 'Export is blocked until AP-10C governance approval.'}
+          >
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled
+              apCode="AP-10C"
+              iconStart={<Download size={13}/>}
+            >
+              {t==='th'?'ส่งออก CSV':'Export CSV'}
+            </Button>
+          </DisabledActionHint>
+        )}
+      />
+      <div className="flex items-start gap-2 mb-4 p-3 bg-bg-100 border border-line rounded-lg">
+        <ShieldCheck size={14} className="text-ink-2 mt-0.5 shrink-0"/>
+        <span className="text-xs text-ink-2 leading-relaxed">
           {t==='th'
-            ? `การตรวจสอบ Audit ของ Admin แสดงบันทึกเดโม ${totalCount} รายการเท่านั้น บันทึกเหล่านี้ช่วยตรวจสอบประสบการณ์ Audit และไม่ใช่หลักฐานการตรวจสอบอย่างเป็นทางการ`
-            : `Admin audit review is currently showing ${totalCount} mock/demo records only. These records help validate the audit experience and are not official persisted audit evidence.`}
+            ? `Admin audit log แสดงบันทึกเดโม ${totalCount} รายการเพื่อช่วยตรวจสอบประสบการณ์การอ่านและการสแกนข้อมูลเท่านั้น ข้อมูลนี้ไม่ใช่ official evidence และไม่เชื่อมต่อ real persistence`
+            : `Admin audit log is showing ${totalCount} mock/demo records for review and scanability only. These records are not official evidence and are not connected to real persistence.`}
         </span>
       </div>
 
@@ -76,6 +91,13 @@ export default function AuditLogPage() {
         stagingReviewEnabled={DEFAULT_AUDIT_PERSISTENCE_CONFIG.adminComparisonStagingReviewEnabled}
       />
 
+      <SectionHeader
+        title={t==='th'?'บันทึกวินิจฉัยสำหรับการตรวจสอบต้นแบบ':'Diagnostic Records'}
+        description={t==='th'
+          ? 'ใช้เพื่อดูรูปแบบเหตุการณ์ ผู้ดำเนินการ แหล่งที่มา และสถานะ mock เท่านั้น โดยไม่สร้างหรือส่งออก audit trail จริง'
+          : 'Use this table to scan event shape, actor, source, and mock status only. It does not create or export a real audit trail.'}
+      />
+
       <div className="mb-4 flex items-center gap-3">
         <label className="text-xs font-semibold text-ink-2">{t==='th'?'การบันทึก':'Persistence'}:</label>
         <select
@@ -85,14 +107,14 @@ export default function AuditLogPage() {
         >
           <option value="all">{t==='th'?'ทั้งหมด':'All'}</option>
           <option value="mock_only">{t==='th'?'เหตุการณ์เดโม':'Mock/demo only'}</option>
-          <option value="real_persisted">{t==='th'?'บันทึกการตรวจสอบอย่างเป็นทางการ':'Official persisted records'}</option>
+          <option value="real_persisted">{t==='th'?'Real persistence ยังไม่ได้เชื่อมต่อ':'Real persistence not connected'}</option>
         </select>
       </div>
 
       {filteredLogs.length === 0 && persistenceFilter === 'real_persisted' && (
         <div className="card p-6 text-center">
-          <div className="text-sm text-ink-2 mb-2">{t==='th'?'ไม่มีบันทึกการตรวจสอบอย่างเป็นทางการ':'No official persisted audit records available'}</div>
-          <div className="text-xs text-ink-3">{t==='th'?'การบันทึกอย่างเป็นทางการยังไม่ได้เชื่อมต่อ':'Real audit persistence has not been connected yet.'}</div>
+          <div className="text-sm text-ink-2 mb-2">{t==='th'?'ยังไม่มี real persisted audit records ในต้นแบบนี้':'No real persisted audit records are connected in this prototype'}</div>
+          <div className="text-xs text-ink-3">{t==='th'?'หน้านี้ยังคงเป็น mock/read-only และไม่สร้างหลักฐานอย่างเป็นทางการ':'This page remains mock/read-only and does not create official evidence.'}</div>
         </div>
       )}
 
@@ -126,7 +148,7 @@ export default function AuditLogPage() {
                   <div className="flex flex-col gap-1">
                     <StatusBadge
                       label={t==='th'?'เหตุการณ์เดโม':'Mock event'}
-                      status="preview"
+                      status="info"
                     />
                     <StatusBadge
                       label={t==='th'
