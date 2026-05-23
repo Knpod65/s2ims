@@ -9,7 +9,6 @@ import { ROLE_HOME, ROLE_LABELS } from '@/lib/navigation'
 import type { Role } from '@/lib/types'
 import { Button } from '@/components/shared/Button'
 import { PageHeader } from '@/components/shared/PageHeader'
-import { RoleBadge } from '@/components/shared/RoleBadge'
 import { SafetyBanner } from '@/components/shared/SafetyBanner'
 import { SectionHeader } from '@/components/shared/SectionHeader'
 import { StatusBadge } from '@/components/shared/StatusBadge'
@@ -38,7 +37,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-[#FBFAF6] flex flex-col items-center justify-center p-4">
       {/* Lang toggle */}
       <div className="absolute top-4 right-4">
         <Button
@@ -93,15 +92,15 @@ export default function LoginPage() {
                 onClick={() => setSelected(role)}
                 className={`w-full rounded-xl p-4 flex items-center gap-4 text-left transition-all border bg-white shadow-card ${
                   isSelected
-                    ? 'border-[#0055FF]/40 shadow-[0_18px_45px_rgba(0,85,255,.12)]'
-                    : 'border-line hover:border-line-strong hover:bg-surface-low'
+                    ? 'border-[#2E5B4A]/40 shadow-[0_18px_45px_rgba(46,91,74,.12)]'
+                    : 'border-[#E0DDD6] hover:border-[#C8C4BC] hover:bg-[#F4F0E6]'
                 }`}
               >
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border border-line bg-surface-low"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 border border-[#E0DDD6] bg-[#F4F0E6]"
                   style={isSelected
                     ? {
-                        background: 'linear-gradient(135deg, #0055FF, #8B5CF6)',
+                        background: 'linear-gradient(135deg, #2E5B4A, #1F3D32)',
                         color: '#FFFFFF',
                         borderColor: 'transparent',
                       }
@@ -115,19 +114,16 @@ export default function LoginPage() {
                       {lang === 'th' ? rl.th : rl.en}
                     </span>
                     {isSelected && (
-                      <>
-                        <RoleBadge role={role} size="sm" />
-                        <StatusBadge
-                          status="info"
-                          label={lang === 'th' ? 'เลือกแล้ว' : 'Selected'}
-                          size="sm"
-                        />
-                      </>
+                      <StatusBadge
+                        status="info"
+                        label={lang === 'th' ? 'เลือกแล้ว' : 'Selected'}
+                        size="sm"
+                      />
                     )}
                   </div>
                   <div className="text-xs text-ink-3">{lang === 'th' ? desc_th : desc_en}</div>
                 </div>
-                {isSelected && <ChevronRight size={16} className="text-[#0055FF] flex-shrink-0" />}
+                {isSelected && <ChevronRight size={16} className="text-[#2E5B4A] flex-shrink-0" />}
               </button>
             )
           })}
@@ -139,11 +135,11 @@ export default function LoginPage() {
           disabled={!selected || loading}
           className={`w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center ${
             selected && !loading
-              ? 'text-white shadow-[0_18px_45px_rgba(0,85,255,.18)] hover:brightness-105'
+              ? 'text-white shadow-[0_18px_45px_rgba(46,91,74,.18)] hover:brightness-105'
               : 'bg-white border border-line text-ink-3 cursor-not-allowed'
           }`}
           style={selected && !loading
-            ? { background: 'linear-gradient(135deg, #0055FF, #8B5CF6)' }
+            ? { background: 'linear-gradient(135deg, #2E5B4A, #1F3D32)' }
             : undefined}
         >
           {loading
