@@ -3773,3 +3773,30 @@ MC98 Batch 1 lifecycle (implementation + validation) complete.
 
 MC98 Batch 2 + full lifecycle complete on main. No Batch 3 required at this time.
 
+## S²IMS Accessibility, i18n, Responsive & Mock-Ready QA Sweep — MC99
+
+MC99 performs a targeted, low-risk sweep for accessibility, bilingual safety, responsive stability, empty/disabled states, and mock/prototype truthfulness after MC91–MC98.
+
+**Key fix applied:**
+- ESQ review page (`/esq/announcements/[id]/review`) decision language corrected from "approval/reject" to safe "recommendation/review support" only (Thai: แนะนำให้เผยแพร่ / ไม่แนะนำ; English: Recommend for publish / Do not recommend). This enforces the long-standing MC97/MC98 governance rule.
+
+**Scope & Outcome:**
+- Only low-risk copy, ARIA labels, and minor responsive class improvements
+- No behavior, data semantics, permissions, or business logic changes
+- No backend, persistence, audit writes, or PII expansion
+- AP-10B / AP-10C / AP-11 remain blocked; Confirm Import remains disabled/no-op
+- Build 42/42, tokens 4/4, audit 502/502 throughout
+
+**Lifecycle commits:**
+- Package: 1a9085a
+- QA: cdae2bb
+- Merge: 68f0eee
+- Checkpoint: 1caa42f
+- Post-merge QA: (final commit)
+
+**Status:** MC99 full lifecycle complete on main.
+
+**Recommended next:** MC100 — Screenshot Regression + Final Mock-Ready Closure Package (final verification before broader rollout or production-readiness discussions).
+
+MC99 lifecycle complete.
+
