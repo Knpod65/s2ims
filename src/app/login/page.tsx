@@ -29,6 +29,7 @@ export default function LoginPage() {
   const router = useRouter()
   const [selected, setSelected] = useState<Role | null>(null)
   const [loading, setLoading] = useState(false)
+  const selectedRoleColors = selected ? softCivicRoles[selected as SoftCivicRoleKey] : null
 
   const handleLogin = async () => {
     if (!selected) return
@@ -143,11 +144,14 @@ export default function LoginPage() {
           disabled={!selected || loading}
           className={`w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center ${
             selected && !loading
-              ? 'text-white shadow-[0_18px_45px_rgba(46,91,74,.18)] hover:brightness-105'
+              ? 'text-white hover:brightness-105'
               : 'bg-white border border-line text-ink-3 cursor-not-allowed'
           }`}
-          style={selected && !loading
-            ? { background: 'linear-gradient(135deg, #2E5B4A, #1F3D32)' }
+          style={selected && !loading && selectedRoleColors
+            ? {
+                background: `linear-gradient(135deg, ${selectedRoleColors.base}, ${selectedRoleColors.base}CC)`,
+                boxShadow: `0 18px 45px ${selectedRoleColors.base}2E`,
+              }
             : undefined}
         >
           {loading
