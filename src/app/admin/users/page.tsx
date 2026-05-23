@@ -2,23 +2,55 @@
 import AppShell from '@/components/layout/AppShell'
 import { useLang } from '@/lib/i18n'
 import { PageHeader } from '@/components/ui/index'
+import { Button, DisabledActionHint, RoleBadge, SafetyBanner, SectionHeader, StatusBadge } from '@/components/shared'
 import { mockUsers } from '@/data/mock/users'
 import { ROLE_LABELS } from '@/lib/navigation'
-import { UserPlus, Download } from 'lucide-react'
+import { Download, Lock, UserPlus, Users } from 'lucide-react'
 
 export default function AdminUsersPage() {
   const { lang } = useLang()
+  const t = lang === 'th' ? 'th' : 'en'
+
   return (
     <AppShell requiredRole="admin">
       <PageHeader
         title={lang==='th'?'จัดการผู้ใช้':'User Management'}
         subtitle={`${mockUsers.length} ${lang==='th'?'ผู้ใช้ทั้งหมด':'total users'}`}
         actions={
-          <div className="flex gap-2">
-            <button className="btn-secondary text-xs flex items-center gap-1.5 py-1.5"><Download size={13}/>{lang==='th'?'ส่งออก':'Export'}</button>
-            <button className="btn-primary text-xs flex items-center gap-1.5 py-1.5"><UserPlus size={13}/>{lang==='th'?'เพิ่มผู้ใช้':'Add User'}</button>
+          <div className="flex flex-wrap gap-3">
+            <DisabledActionHint
+              apCode="AP-10C"
+              reason={lang === 'th' ? 'การส่งออกผู้ใช้ยังปิดไว้ในต้นแบบ' : 'User export is disabled in the prototype.'}
+            >
+              <Button variant="secondary" size="sm" disabled apCode="AP-10C" iconStart={<Download size={13}/>}>
+                {lang==='th'?'ส่งออก':'Export'}
+              </Button>
+            </DisabledActionHint>
+            <DisabledActionHint
+              reason={lang === 'th' ? 'การเพิ่มผู้ใช้เป็น mock action ไม่มีการสร้างบัญชีจริง' : 'Add user is a mock action. No real account is created.'}
+            >
+              <Button variant="primary" size="sm" disabled iconStart={<UserPlus size={13}/>}>
+                {lang==='th'?'เพิ่มผู้ใช้':'Add User'}
+              </Button>
+            </DisabledActionHint>
           </div>
         }
+      />
+      <SafetyBanner
+        tone="blocked"
+        title={lang === 'th' ? 'การจัดการผู้ใช้เป็นต้นแบบเท่านั้น' : 'User management is prototype-only'}
+        description={lang === 'th'
+          ? 'ข้อมูลในหน้านี้เป็น mock data ปุ่มส่งออก เพิ่มผู้ใช้ และแก้ไขยังไม่เปลี่ยนบัญชีจริง ไม่สร้าง audit event และไม่เปิด AP-10C/AP-11'
+          : 'This page uses mock data. Export, add, and edit controls do not mutate real accounts, write audit events, or open AP-10C/AP-11.'}
+        apCodes={['AP-10C', 'AP-11']}
+        className="mb-4"
+      />
+      <SectionHeader
+        title={lang === 'th' ? 'บัญชีผู้ใช้จำลอง' : 'Mock user accounts'}
+        description={lang === 'th'
+          ? 'แสดงบทบาทและสถานะสำหรับการสาธิตเท่านั้น การดำเนินการถูกแสดงไว้แต่ยังปิดใช้งาน'
+          : 'Shows role and status for demo review only. Actions remain visible but disabled.'}
+        action={<Users size={17} className="text-role-primary" aria-hidden="true" />}
       />
       <div className="card overflow-hidden">
         <table className="w-full text-sm">
@@ -47,20 +79,32 @@ export default function AdminUsersPage() {
                   </td>
                   <td className="p-3 text-xs text-ink-3 font-mono">{user.email}</td>
                   <td className="p-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${rl.color}`}>
-                      {lang==='th'?rl.th:rl.en}
-                    </span>
+                    <RoleBadge role={user.role} label={rl[t]} size="sm" />
                   </td>
                   <td className="p-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full border ${user.is_active?'bg-emerald-50 text-emerald-700 border-emerald-200':'bg-white text-ink-3 border-line'}`}>
-                      {user.is_active?(lang==='th'?'ใช้งาน':'Active'):(lang==='th'?'ปิดใช้':'Inactive')}
-                    </span>
+                    <StatusBadge
+                      label={user.is_active?(lang==='th'?'ใช้งาน':'Active'):(lang==='th'?'ปิดใช้':'Inactive')}
+                      status={user.is_active ? 'success' : 'disabled'}
+                      size="sm"
+                    />
                   </td>
                   <td className="p-3 text-xs text-ink-3 font-mono">
                     {user.last_login ? new Date(user.last_login).toLocaleDateString(lang==='th'?'th-TH':'en-US') : '-'}
                   </td>
                   <td className="p-3">
-                    <button className="text-xs text-role-primary hover:text-role-primary">{lang==='th'?'แก้ไข':'Edit'}</button>
+                    <DisabledActionHint
+                      reason={lang === 'th' ? 'ปิดไว้ในต้นแบบ ไม่มีการเปลี่ยนบัญชีจริง' : 'Disabled in prototype. No real account mutation.'}
+                    >
+                      <button
+                        type="button"
+                        disabled
+                        aria-disabled="true"
+                        className="inline-flex items-center gap-1 rounded border border-line bg-bg-200 px-2 py-1 text-xs font-medium text-ink-3"
+                      >
+                        <Lock size={12} />
+                        {lang==='th'?'แก้ไข':'Edit'}
+                      </button>
+                    </DisabledActionHint>
                   </td>
                 </tr>
               )
