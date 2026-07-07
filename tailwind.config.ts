@@ -30,6 +30,17 @@ const config: Config = {
           ai: '#8B5CF6',
           track: '#14B8A6',
         },
+        cyber: {
+          bg: 'var(--pastel-bg)',
+          cyan: 'var(--pastel-neon-cyan)',
+          violet: 'var(--pastel-violet)',
+          mint: 'var(--pastel-mint)',
+          blush: 'var(--pastel-blush)',
+          peach: 'var(--pastel-peach)',
+          slate: 'var(--pastel-slate-text)',
+          glass: 'var(--pastel-glass-surface)',
+          border: 'var(--pastel-glowing-border)',
+        },
       },
       fontFamily: {
         display: ['var(--font-display)', 'sans-serif'],
@@ -47,6 +58,16 @@ const config: Config = {
         card: '0 1px 3px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06)',
         lifted: '0 8px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(245,158,11,.15)',
         glow: '0 0 24px rgba(245,158,11,.15)',
+        'cyber-soft': 'var(--pastel-subtle-shadow)',
+        'cyber-glow': '0 0 0 1px var(--pastel-glowing-border), 0 0 28px rgba(103,232,249,.22)',
+      },
+      transitionDuration: {
+        fast: 'var(--motion-fast)',
+        base: 'var(--motion-base)',
+        slow: 'var(--motion-slow)',
+      },
+      transitionTimingFunction: {
+        cyber: 'var(--motion-ease)',
       },
       animation: {
         'pulse-soft': 'pulse-soft 2.5s ease-in-out infinite',

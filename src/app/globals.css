@@ -8,6 +8,20 @@
   --font-display: 'Syne', sans-serif;
   --font-body: 'DM Sans', 'Noto Sans Thai', sans-serif;
   --font-mono: 'DM Mono', monospace;
+  --pastel-bg: #f7fbff;
+  --pastel-neon-cyan: #67e8f9;
+  --pastel-violet: #c4b5fd;
+  --pastel-mint: #a7f3d0;
+  --pastel-blush: #fecdd3;
+  --pastel-peach: #fed7aa;
+  --pastel-slate-text: #172033;
+  --pastel-glass-surface: rgba(255, 255, 255, 0.72);
+  --pastel-glowing-border: rgba(103, 232, 249, 0.48);
+  --pastel-subtle-shadow: 0 18px 48px rgba(23, 32, 51, 0.12);
+  --motion-fast: 150ms;
+  --motion-base: 220ms;
+  --motion-slow: 360ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * { box-sizing: border-box; }

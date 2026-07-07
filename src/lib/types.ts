@@ -196,3 +196,96 @@ export interface NavItem {
 
 // ── Lang ───────────────────────────────────────────────────────────
 export type Lang = 'th' | 'en'
+
+// Scholarship Matching
+export type EligibilityStatus =
+  | 'PASS'
+  | 'FAIL'
+  | 'MISSING'
+  | 'PENDING'
+  | 'UNCLEAR'
+  | 'NOT_VERIFIED'
+
+export type MatchStatus = 'MATCHED' | 'NEAR_MATCH' | 'PENDING_REVIEW' | 'NOT_ELIGIBLE'
+
+export interface EligibilityCriterion {
+  id: string
+  label_th: string
+  label_en: string
+  mandatory: boolean
+  status: EligibilityStatus
+  requirement: string
+  observed_value?: string | number | boolean | null
+  score_contribution: number
+  reason?: string
+}
+
+export interface MatchReason {
+  id: string
+  type: 'strength' | 'missing_requirement' | 'review_flag' | 'disqualifier'
+  label_th: string
+  label_en: string
+  detail?: string
+  criterion_id?: string
+}
+
+export interface ScholarshipMatchResult {
+  scholarship_id: string
+  student_id: string
+  matchStatus: MatchStatus
+  matchScore: number
+  criteria: EligibilityCriterion[]
+  reasons: MatchReason[]
+  missingRequirements: string[]
+  reviewFlags: string[]
+}
+
+// TA / Work Scholarship
+export type WorkLogStatus = 'DRAFT' | 'SUBMITTED' | 'CONFIRMED' | 'RETURNED' | 'REJECTED'
+
+export type WorkCategory =
+  | 'TEACHING_ASSISTANT'
+  | 'RESEARCH_ASSISTANT'
+  | 'ADMIN_SUPPORT'
+  | 'EVENT_SUPPORT'
+  | 'COMMUNITY_SERVICE'
+
+export type SupervisorRole = 'FACULTY_SUPERVISOR' | 'STAFF_SUPERVISOR' | 'PROGRAM_COORDINATOR'
+
+export interface WorkLog {
+  id: string
+  assignment_id: string
+  student_id: string
+  category: WorkCategory
+  task_description: string
+  start_at: string
+  end_at: string
+  submittedHours: number
+  evidence_reference?: string
+  status: WorkLogStatus
+  createdAt: string
+  updatedAt?: string
+  submittedAt?: string
+  reviewedAt?: string
+  supervisor_id?: string
+  supervisor_name?: string
+  supervisor_role?: SupervisorRole
+  actualConfirmedHours?: number
+  supervisor_note?: string
+}
+
+export interface WorkScholarshipAssignment {
+  id: string
+  scholarship_id: string
+  student_id: string
+  supervisor_id: string
+  supervisor_name: string
+  supervisor_role: SupervisorRole
+  category: WorkCategory
+  title: string
+  required_hours: number
+  accumulatedConfirmedHours: number
+  starts_at: string
+  ends_at: string
+  status: 'ACTIVE' | 'COMPLETED' | 'PAUSED'
+}
