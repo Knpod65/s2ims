@@ -10,9 +10,11 @@ interface ScholarshipMatchCardProps {
   scholarship: Scholarship
   matchResult: ScholarshipMatchResult
   isSaved: boolean
+  isStarted?: boolean
   isSelected: boolean
   onViewDetails: () => void
   onSave: () => void
+  onStart?: () => void
   onDismiss: () => void
 }
 
@@ -26,9 +28,11 @@ export default function ScholarshipMatchCard({
   scholarship,
   matchResult,
   isSaved,
+  isStarted = false,
   isSelected,
   onViewDetails,
   onSave,
+  onStart,
   onDismiss,
 }: ScholarshipMatchCardProps) {
   return (
@@ -45,6 +49,11 @@ export default function ScholarshipMatchCard({
           </div>
           <h2 className="break-words text-base font-bold leading-snug text-cyber-slate">{scholarship.title_en}</h2>
           <p className="mt-1 break-words text-xs text-cyber-slate/70">{scholarship.provider}</p>
+          {isStarted && (
+            <div className="mt-2 inline-flex rounded-full border border-cyber-violet/45 bg-cyber-violet/20 px-2.5 py-1 text-[10px] font-bold text-cyber-slate">
+              เริ่มสมัครแล้ว
+            </div>
+          )}
         </div>
         <div className="w-full rounded-lg border border-cyber-border/45 bg-white/60 px-3 py-2 sm:w-auto sm:min-w-[116px] sm:text-right">
           <div className="text-[10px] font-medium text-cyber-slate/70">มูลค่า</div>
@@ -111,6 +120,7 @@ export default function ScholarshipMatchCard({
         </button>
         <Link
           href={`/student/applications/new?scholarship=${scholarship.id}`}
+          onClick={onStart}
           className={`inline-flex min-h-11 items-center justify-center rounded-lg bg-cyber-slate px-3 py-2.5 text-center text-xs font-bold text-white shadow-sm transition-transform duration-fast ease-cyber hover:-translate-y-0.5 ${focusClass}`}
           aria-label={`สมัครหรือไปต่อสำหรับ ${scholarship.title_en}`}
         >
