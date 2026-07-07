@@ -3,7 +3,7 @@ import type { NavItem, Role } from './types'
 export const NAV_CONFIG: Record<Role, NavItem[]> = {
   student: [
     { label_th: 'แดชบอร์ด', label_en: 'Dashboard', href: '/student/dashboard', icon: 'LayoutDashboard' },
-    { label_th: 'ทุนการศึกษา', label_en: 'Scholarships', href: '/scholarships', icon: 'BookOpen' },
+    { label_th: 'ทุนการศึกษา', label_en: 'Scholarships', href: '/student/scholarships', icon: 'BookOpen' },
     { label_th: 'ใบสมัครของฉัน', label_en: 'My Applications', href: '/student/applications', icon: 'FileText' },
     { label_th: 'โปรไฟล์', label_en: 'My Profile', href: '/student/profile', icon: 'User' },
     { label_th: 'การแจ้งเตือน', label_en: 'Notifications', href: '/student/notifications', icon: 'Bell' },
@@ -40,7 +40,7 @@ export const NAV_CONFIG: Record<Role, NavItem[]> = {
 export const MOBILE_NAV: Record<Role, NavItem[]> = {
   student: [
     { label_th: 'หน้าหลัก', label_en: 'Home', href: '/student/dashboard', icon: 'Home' },
-    { label_th: 'ทุน', label_en: 'Scholarships', href: '/scholarships', icon: 'BookOpen' },
+    { label_th: 'ทุน', label_en: 'Scholarships', href: '/student/scholarships', icon: 'BookOpen' },
     { label_th: 'ใบสมัคร', label_en: 'Apply', href: '/student/applications', icon: 'FileText' },
     { label_th: 'แจ้งเตือน', label_en: 'Alerts', href: '/student/notifications', icon: 'Bell' },
     { label_th: 'โปรไฟล์', label_en: 'Profile', href: '/student/profile', icon: 'User' },
