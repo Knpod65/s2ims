@@ -12,6 +12,7 @@ interface ScholarshipMatchCardProps {
   isSaved: boolean
   isStarted?: boolean
   isSelected: boolean
+  recentAction?: 'saved' | 'started'
   onViewDetails: () => void
   onSave: () => void
   onStart?: () => void
@@ -30,6 +31,7 @@ export default function ScholarshipMatchCard({
   isSaved,
   isStarted = false,
   isSelected,
+  recentAction,
   onViewDetails,
   onSave,
   onStart,
@@ -38,10 +40,16 @@ export default function ScholarshipMatchCard({
   return (
     <article
       aria-current={isSelected ? 'true' : undefined}
-      className={`rounded-xl border bg-cyber-glass p-4 text-cyber-slate shadow-cyber-soft backdrop-blur transition-all duration-base ease-cyber hover:-translate-y-0.5 ${
-        isSelected ? 'border-cyber-cyan/90 ring-2 ring-cyber-cyan/35' : 'border-cyber-border/50'
+      className={`relative overflow-hidden rounded-xl border bg-cyber-glass p-4 text-cyber-slate shadow-cyber-soft backdrop-blur transition-all duration-base ease-cyber motion-reduce:transition-none motion-reduce:transform-none hover:-translate-y-0.5 ${
+        isSelected ? 'border-cyber-cyan/90 shadow-cyber-glow ring-2 ring-cyber-cyan/30' : 'border-cyber-border/50'
       }`}
     >
+      {isSelected && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-8 top-0 h-1 rounded-b-full bg-gradient-to-r from-cyber-cyan via-cyber-violet to-cyber-mint opacity-70"
+        />
+      )}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0 flex-1">
           <div className="mb-2">
@@ -52,6 +60,11 @@ export default function ScholarshipMatchCard({
           {isStarted && (
             <div className="mt-2 inline-flex rounded-full border border-cyber-violet/45 bg-cyber-violet/20 px-2.5 py-1 text-[10px] font-bold text-cyber-slate">
               เริ่มสมัครแล้ว
+            </div>
+          )}
+          {recentAction && (
+            <div className="mt-2 inline-flex rounded-full border border-cyber-cyan/50 bg-cyber-cyan/20 px-2.5 py-1 text-[10px] font-bold text-cyber-slate shadow-sm transition-opacity duration-base ease-cyber motion-reduce:transition-none">
+              {recentAction === 'saved' ? 'บันทึกล่าสุด' : 'เริ่มล่าสุด'}
             </div>
           )}
         </div>
@@ -98,7 +111,7 @@ export default function ScholarshipMatchCard({
         <button
           type="button"
           onClick={onViewDetails}
-          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-cyber-border/60 bg-white/70 px-3 py-2.5 text-xs font-bold text-cyber-slate transition-colors duration-fast ease-cyber hover:bg-white ${focusClass}`}
+          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-cyber-border/60 bg-white/70 px-3 py-2.5 text-xs font-bold text-cyber-slate transition-colors duration-fast ease-cyber motion-reduce:transition-none hover:bg-white ${focusClass}`}
           aria-label={`ดูรายละเอียด ${scholarship.title_en}`}
         >
           <Eye size={14} aria-hidden="true" />
@@ -107,7 +120,7 @@ export default function ScholarshipMatchCard({
         <button
           type="button"
           onClick={onSave}
-          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-bold transition-colors duration-fast ease-cyber ${focusClass} ${
+          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-xs font-bold transition-colors duration-fast ease-cyber motion-reduce:transition-none ${focusClass} ${
             isSaved
               ? 'border-cyber-mint/80 bg-cyber-mint/45 text-emerald-950'
               : 'border-cyber-border/60 bg-white/70 text-cyber-slate hover:bg-white'
@@ -121,7 +134,7 @@ export default function ScholarshipMatchCard({
         <Link
           href={`/student/applications/new?scholarship=${scholarship.id}`}
           onClick={onStart}
-          className={`inline-flex min-h-11 items-center justify-center rounded-lg bg-cyber-slate px-3 py-2.5 text-center text-xs font-bold text-white shadow-sm transition-transform duration-fast ease-cyber hover:-translate-y-0.5 ${focusClass}`}
+          className={`inline-flex min-h-11 items-center justify-center rounded-lg bg-cyber-slate px-3 py-2.5 text-center text-xs font-bold text-white shadow-sm transition-transform duration-fast ease-cyber motion-reduce:transition-none motion-reduce:transform-none hover:-translate-y-0.5 ${focusClass}`}
           aria-label={`สมัครหรือไปต่อสำหรับ ${scholarship.title_en}`}
         >
           สมัคร / ไปต่อ
@@ -129,7 +142,7 @@ export default function ScholarshipMatchCard({
         <button
           type="button"
           onClick={onDismiss}
-          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-cyber-blush/80 bg-cyber-blush/35 px-3 py-2.5 text-xs font-bold text-rose-950 transition-colors duration-fast ease-cyber hover:bg-cyber-blush/55 ${focusClass}`}
+          className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg border border-cyber-blush/80 bg-cyber-blush/35 px-3 py-2.5 text-xs font-bold text-rose-950 transition-colors duration-fast ease-cyber motion-reduce:transition-none hover:bg-cyber-blush/55 ${focusClass}`}
           aria-label={`ไม่เหมาะกับฉัน ${scholarship.title_en}`}
         >
           <X size={14} aria-hidden="true" />

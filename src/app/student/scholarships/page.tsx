@@ -16,6 +16,7 @@ const focusClass = 'focus-visible:outline-none focus-visible:ring-2 focus-visibl
 
 type StatusFilter = 'ALL' | MatchStatus
 type DeckAction = 'viewed' | 'saved' | 'unsaved' | 'started' | 'dismissed'
+type RecentAction = 'saved' | 'started' | null
 
 interface DeckHistoryItem {
   id: string
@@ -23,6 +24,12 @@ interface DeckHistoryItem {
   scholarshipTitle: string
   action: DeckAction
   createdAt: string
+}
+
+interface FeedbackState {
+  scholarshipId: string
+  action: RecentAction
+  message: string
 }
 
 const ACTION_LABELS: Record<DeckAction, string> = {
@@ -60,6 +67,49 @@ function HistoryPanel({ items }: { items: DeckHistoryItem[] }) {
   )
 }
 
+function DeckPreview({
+  activeTitle,
+  nextTitle,
+  feedback,
+}: {
+  activeTitle?: string
+  nextTitle?: string
+  feedback: FeedbackState | null
+}) {
+  return (
+    <section className="mb-5 rounded-xl border border-cyber-border/45 bg-cyber-glass p-4 text-cyber-slate shadow-cyber-soft backdrop-blur">
+      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,0.82fr)]">
+        <div className="relative min-h-[86px]">
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-6 top-5 h-16 rounded-xl border border-cyber-violet/25 bg-cyber-violet/15 shadow-sm"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-3 top-2 h-16 rounded-xl border border-cyber-cyan/25 bg-cyber-cyan/15 shadow-sm"
+          />
+          <div className="relative rounded-xl border border-cyber-border/45 bg-white/70 p-3 shadow-cyber-soft">
+            <div className="text-[10px] font-bold uppercase tracking-wide text-cyber-slate/60">Active card</div>
+            <div className="mt-1 break-words text-sm font-bold leading-snug">
+              {activeTitle ?? 'ยังไม่ได้เลือกทุน'}
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-cyber-border/35 bg-white/60 p-3">
+          <div className="text-[10px] font-bold uppercase tracking-wide text-cyber-slate/60">Next preview</div>
+          <div className="mt-1 break-words text-sm font-semibold leading-snug text-cyber-slate/80">
+            {nextTitle ?? 'ไม่มีรายการถัดไปในตัวกรองนี้'}
+          </div>
+          <div aria-live="polite" className="mt-2 min-h-5 break-words text-[11px] font-semibold text-cyber-slate/70">
+            {feedback?.message ?? 'ใช้ปุ่มบนการ์ดเพื่อบันทึก เริ่มสมัคร หรือซ่อนทุน'}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function StudentScholarshipsPage() {
   const matches = useMemo(() => {
     return mockScholarships
@@ -82,6 +132,7 @@ export default function StudentScholarshipsPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
   const [savedOnly, setSavedOnly] = useState(false)
   const [history, setHistory] = useState<DeckHistoryItem[]>([])
+  const [feedback, setFeedback] = useState<FeedbackState | null>(null)
 
   const visibleMatches = matches.filter((item) => {
     if (hidden.has(item.scholarship.id)) return false
@@ -94,6 +145,12 @@ export default function StudentScholarshipsPage() {
     visibleMatches.find((item) => item.scholarship.id === selectedId) ??
     visibleMatches[0] ??
     null
+  const selectedIndex = selectedItem
+    ? visibleMatches.findIndex((item) => item.scholarship.id === selectedItem.scholarship.id)
+    : -1
+  const nextItem = selectedIndex >= 0
+    ? visibleMatches[selectedIndex + 1] ?? visibleMatches[0]
+    : null
 
   useEffect(() => {
     if (!visibleMatches.length) {
@@ -143,6 +200,11 @@ export default function StudentScholarshipsPage() {
       return next
     })
     recordAction(wasSaved ? 'unsaved' : 'saved', id, title)
+    setFeedback({
+      scholarshipId: id,
+      action: wasSaved ? null : 'saved',
+      message: wasSaved ? 'ยกเลิกการบันทึกแล้ว' : 'บันทึกทุนนี้ไว้แล้ว',
+    })
   }
 
   const viewDetails = (id: string, title: string) => {
@@ -153,6 +215,11 @@ export default function StudentScholarshipsPage() {
   const startApplication = (id: string, title: string) => {
     setStarted((current) => new Set(current).add(id))
     recordAction('started', id, title)
+    setFeedback({
+      scholarshipId: id,
+      action: 'started',
+      message: 'ทำเครื่องหมายว่าเริ่มสมัครแล้ว',
+    })
   }
 
   const dismiss = (id: string, title: string) => {
@@ -162,6 +229,11 @@ export default function StudentScholarshipsPage() {
       return next
     })
     recordAction('dismissed', id, title)
+    setFeedback({
+      scholarshipId: id,
+      action: null,
+      message: 'ซ่อนทุนนี้จากรายการชั่วคราวแล้ว',
+    })
 
     if (selectedId === id) {
       const nextVisible = visibleMatches.find((item) => item.scholarship.id !== id)
@@ -200,6 +272,12 @@ export default function StudentScholarshipsPage() {
               </div>
             </div>
           </header>
+
+          <DeckPreview
+            activeTitle={selectedItem?.scholarship.title_en}
+            nextTitle={nextItem && nextItem.scholarship.id !== selectedItem?.scholarship.id ? nextItem.scholarship.title_en : undefined}
+            feedback={feedback}
+          />
 
           <section className="mb-5 rounded-xl border border-cyber-border/45 bg-cyber-glass p-4 shadow-cyber-soft backdrop-blur">
             <div className="mb-3 flex items-center gap-2 text-sm font-bold text-cyber-slate">
@@ -325,6 +403,7 @@ export default function StudentScholarshipsPage() {
                           isSaved={saved.has(id)}
                           isStarted={started.has(id)}
                           isSelected={isSelected}
+                          recentAction={feedback?.scholarshipId === id ? feedback.action ?? undefined : undefined}
                           onViewDetails={() => viewDetails(id, title)}
                           onSave={() => toggleSaved(id, title)}
                           onStart={() => startApplication(id, title)}
