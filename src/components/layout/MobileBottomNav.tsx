@@ -23,11 +23,11 @@ export default function MobileBottomNav() {
   const pathname = usePathname()
 
   if (!role) return null
-  const items = MOBILE_NAV[role]?.slice(0, 5) ?? []
+  const items = MOBILE_NAV[role] ?? []
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-bg-100 border-t border-white/[0.08] z-50 pb-safe">
-      <div className="flex">
+      <div className="flex overflow-x-auto">
         {items.map((item) => {
           const Icon = ICONS[item.icon] || Home
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/')
@@ -35,7 +35,7 @@ export default function MobileBottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex-1 flex flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-all ${
+              className={`flex min-w-[72px] flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-all ${
                 isActive ? 'text-brand' : 'text-ink-3'
               }`}
             >
