@@ -15,7 +15,7 @@ export default function ProviderScholarshipsPage() {
   const scholarships = mockProviderScholarships
 
   return (
-    <AppShell requiredRole="provider">
+    <AppShell requiredRole="provider" enableDemoAccess demoAccessLabel="ผู้ให้ทุน">
       <PageHeader
         title={lang === 'th' ? 'พอร์ตโฟลิโอทุน' : 'Scholarship Portfolio'}
         subtitle={lang === 'th' ? 'จัดการและติดตามทุนการศึกษาของคุณ' : 'Manage and track your scholarships'}

@@ -4,7 +4,7 @@ import { scholarshipRoleShells } from '@/data/mock/scholarshipRoleShells'
 
 export default function EsQScholarshipsPage() {
   return (
-    <AppShell requiredRole="esq" title="มุมมองกำกับคุณภาพทุน">
+    <AppShell requiredRole="esq" title="มุมมองกำกับคุณภาพทุน" enableDemoAccess demoAccessLabel="ผู้บริหาร">
       <RoleScholarshipShell config={scholarshipRoleShells.esq} />
     </AppShell>
   )

@@ -3,7 +3,7 @@ import WorkStudyDashboard from '@/components/work-study/WorkStudyDashboard'
 
 export default function StudentWorkStudyPage() {
   return (
-    <AppShell requiredRole="student" title="บันทึกชั่วโมงทุนทำงาน">
+    <AppShell requiredRole="student" title="บันทึกชั่วโมงทุนทำงาน" enableDemoAccess demoAccessLabel="นักศึกษา">
       <WorkStudyDashboard />
     </AppShell>
   )

@@ -4,7 +4,7 @@ import { scholarshipRoleShells } from '@/data/mock/scholarshipRoleShells'
 
 export default function AdminScholarshipsPage() {
   return (
-    <AppShell requiredRole="admin" title="ภาพรวมธรรมาภิบาลทุน">
+    <AppShell requiredRole="admin" title="ภาพรวมธรรมาภิบาลทุน" enableDemoAccess demoAccessLabel="ผู้ดูแลระบบ">
       <RoleScholarshipShell config={scholarshipRoleShells.admin} />
     </AppShell>
   )

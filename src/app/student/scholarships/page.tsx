@@ -242,7 +242,7 @@ export default function StudentScholarshipsPage() {
   }
 
   return (
-    <AppShell requiredRole="student" title="ทุนที่เหมาะกับฉัน">
+    <AppShell requiredRole="student" title="ทุนที่เหมาะกับฉัน" enableDemoAccess demoAccessLabel="นักศึกษา">
       <div className="-m-4 min-h-[calc(100vh-52px)] overflow-x-hidden bg-cyber-bg px-4 py-5 text-cyber-slate md:-m-6 md:px-6 md:py-6">
         <div className="mx-auto max-w-7xl">
           <header className="mb-5 rounded-xl border border-cyber-border/50 bg-cyber-glass p-4 shadow-cyber-soft backdrop-blur">
