@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#f6f3ee;font-family:'Prompt',system-ui,sans-serif;}
+  .dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(20,30,50,.08);scroll-margin-top:16px}
+  .dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+  .dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1e2a4a;color:#fff;border-radius:4px;text-decoration:none}
+  .dv-tname{font:600 14px/1.2 'Kanit',system-ui,sans-serif;color:#1e2a4a}
+  .dv-note{margin:0 0 24px;font:13px/1.6 'Prompt',sans-serif;color:rgba(30,42,74,.6);max-width:640px}
+  .dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+  .dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+  .dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(30,42,74,.08);color:#1e2a4a;border-radius:5px;text-decoration:none}
+  .dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 'Prompt',sans-serif;color:rgba(30,42,74,.55)}
+  .dv-card{max-width:100%;overflow:visible}
+  .dv-opt:target .dv-oid{background:#2a6fd6;color:#fff}
+  .dv-next{margin:22px 0 0;font:12px/1.6 'Prompt',sans-serif;color:rgba(30,42,74,.5)}
+  .pill-btn{border:none;cursor:pointer;font:500 10px Prompt,sans-serif;padding:4px 8px;border-radius:999px;transition:all .15s ease}
+  .reason-chip{display:inline-flex;align-items:center;gap:4px;font:500 11px Prompt,sans-serif;color:#1e2a4a;background:#fff;border:1px solid rgba(30,42,74,.1);border-radius:999px;padding:5px 10px;box-shadow:0 2px 6px rgba(30,42,74,.06);animation:floatIn .35s ease both}
+  .fab{border:none;cursor:pointer;box-shadow:0 4px 10px rgba(30,42,74,.1);transition:transform .15s ease}
+  .fab:hover{transform:translateY(-3px) scale(1.06)}
+  @keyframes floatIn{from{opacity:0;transform:translateY(6px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes popCheck{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">ScholarshipCard — 2 visual directions</span></div>
+  <p class="dv-note">ทั้งสองแบบใช้ตรรกะเดียวกัน: <b>สถานะการแมตช์ (Matched / ใกล้แมตช์ / ยังไม่เข้าเงื่อนไข / รอตรวจสอบ)</b> เป็นตัวคุมภาษา ไม่ใช่แค่ % คะแนน — กดปุ่มเล็ก ๆ เหนือการ์ดเพื่อสลับสถานะดูได้ กด "ดูเหตุผลการแมตช์" เพื่อเปิดฟองเหตุผล</p>
+  <div class="dv-opts">
+
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Sticker Stack — playful, badge-forward</div>
+      <div class="dv-card" style="width:340px">
+        <div style="position:relative;background:#ffffff;border-radius:28px;box-shadow:0 14px 30px rgba(30,42,74,.12);padding:22px 20px 26px;font-family:Prompt,sans-serif;color:#1e2a4a">
+
+          <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+            <sc-for list="{{ pillsA }}" as="opt" hint-placeholder-count="4">
+              <button class="pill-btn" onClick="{{ opt.onClick }}" style="background:{{ opt.bg }};color:{{ opt.fg }}">{{ opt.label }}</button>
+            </sc-for>
+          </div>
+
+          <div style="position:absolute;top:-10px;left:18px;transform:rotate(-6deg);background:#e7f1fd;color:#2a78d6;font:600 11px Kanit,sans-serif;padding:6px 12px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.08);border:2px solid #fff">ขาดแคลน</div>
+
+          <div style="position:absolute;top:44px;right:20px;width:54px;height:54px">
+            <svg width="54" height="54" viewBox="0 0 54 54">
+              <circle cx="27" cy="27" r="23" fill="none" stroke="#f0ede6" stroke-width="6"></circle>
+              <circle cx="27" cy="27" r="23" fill="none" stroke="{{ meterColorA }}" stroke-width="6" stroke-dasharray="144.5" stroke-dashoffset="11.6" stroke-linecap="round" transform="rotate(-90 27 27)" style="transition:stroke .3s ease"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 14px Kanit,sans-serif">92%</div>
+          </div>
+
+          <div style="margin-top:30px;padding-right:60px">
+            <div style="font:600 17px Kanit,sans-serif;line-height:1.3">ทุนขาดแคลนคณะรัฐศาสตร์ฯ</div>
+            <div style="font:400 12px Prompt,sans-serif;color:rgba(30,42,74,.55);margin-top:2px">กองทุนมหาวิทยาลัย · ต่อเนื่อง</div>
+          </div>
+
+          <div style="display:flex;align-items:baseline;gap:8px;margin:14px 0 10px">
+            <span style="font:700 22px Kanit,sans-serif;color:#1e2a4a">15,000</span>
+            <span style="font:500 12px Prompt,sans-serif;color:rgba(30,42,74,.55)">บาท / ภาคการศึกษา</span>
+          </div>
+
+          <div style="display:inline-flex;flex-direction:column;gap:1px;background:{{ statusBgA }};color:{{ statusColorA }};border-radius:14px;padding:7px 12px;font:600 12.5px Prompt,sans-serif;animation:popCheck .3s ease both">
+            <span>{{ statusLabelA }}</span>
+            <span style="font:400 10.5px Prompt,sans-serif;opacity:.85">{{ statusSubA }}</span>
+          </div>
+
+          <button onClick="{{ toggleOpenA }}" style="display:block;margin-top:12px;background:none;border:none;color:#2a78d6;font:500 12px Prompt,sans-serif;cursor:pointer;padding:0;text-decoration:underline">{{ reasonLabelA }}</button>
+
+          <sc-if value="{{ openA }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+              <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="3">
+                <span class="reason-chip">{{ r }}</span>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <div style="font:400 10.5px Prompt,sans-serif;color:rgba(30,42,74,.4);margin-top:14px">ระบบแนะนำจากข้อมูลที่มี แต่ยังไม่ใช่ผลอนุมัติ</div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:18px;padding-top:14px;border-top:1px solid rgba(30,42,74,.08)">
+            <sc-for list="{{ fabButtons }}" as="b" hint-placeholder-count="4">
+              <button class="fab" title="{{ b.label }}" style="width:44px;height:44px;border-radius:50%;background:{{ b.bg }};color:{{ b.color }};font:16px Prompt,sans-serif">{{ b.icon }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Soft Glass Panel — calmer, ribbon status</div>
+      <div class="dv-card" style="width:340px">
+        <div style="position:relative;border-radius:24px;overflow:hidden;background:linear-gradient(160deg, #eaf2fd 0%, #ffffff 55%);box-shadow:0 14px 30px rgba(30,42,74,.1);font-family:Prompt,sans-serif;color:#1e2a4a">
+
+          <div style="padding:12px 18px 0;display:flex;gap:6px;flex-wrap:wrap">
+            <sc-for list="{{ pillsB }}" as="opt" hint-placeholder-count="4">
+              <button class="pill-btn" onClick="{{ opt.onClick }}" style="background:{{ opt.bg }};color:{{ opt.fg }}">{{ opt.label }}</button>
+            </sc-for>
+          </div>
+
+          <div style="margin:12px 0 0;padding:8px 18px;background:{{ statusColorB }};color:#fff;font:600 12px Prompt,sans-serif;display:flex;justify-content:space-between;align-items:center">
+            <span>{{ statusLabelB }} · {{ statusSubB }}</span>
+            <span style="font:700 12px Kanit,sans-serif">92%</span>
+          </div>
+
+          <div style="margin:14px;margin-top:16px;padding:16px;border-radius:18px;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.8)">
+
+            <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="font:600 10.5px Prompt,sans-serif;color:#2a78d6;background:#e7f1fd;padding:4px 9px;border-radius:999px">ขาดแคลน</span>
+              <span style="font:600 10.5px Prompt,sans-serif;color:#6a4fb0;background:#efe8fb;padding:4px 9px;border-radius:999px">กองทุนมหาวิทยาลัย</span>
+            </div>
+
+            <div style="font:600 17px Kanit,sans-serif;line-height:1.3">ทุนขาดแคลนคณะรัฐศาสตร์ฯ</div>
+
+            <div style="display:flex;align-items:baseline;gap:8px;margin:10px 0">
+              <span style="font:700 20px Kanit,sans-serif">15,000</span>
+              <span style="font:500 11px Prompt,sans-serif;color:rgba(30,42,74,.55)">บาท / ภาคการศึกษา</span>
+            </div>
+
+            <div style="height:8px;border-radius:999px;background:rgba(30,42,74,.08);overflow:hidden;margin-bottom:6px">
+              <div style="height:100%;width:92%;border-radius:999px;background:{{ statusColorB }};transition:background .3s ease"></div>
+            </div>
+            <div style="font:400 10.5px Prompt,sans-serif;color:rgba(30,42,74,.5)">คะแนนความเหมาะสม 92 · สถานะแยกจากคะแนน</div>
+
+            <button onClick="{{ toggleOpenB }}" style="display:block;margin-top:10px;background:none;border:none;color:#2a78d6;font:500 12px Prompt,sans-serif;cursor:pointer;padding:0;text-decoration:underline">{{ reasonLabelB }}</button>
+
+            <sc-if value="{{ openB }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+                <sc-for list="{{ reasons }}" as="r" hint-placeholder-count="3">
+                  <span class="reason-chip">{{ r }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="font:400 10px Prompt,sans-serif;color:rgba(30,42,74,.4);margin-top:12px">ระบบแนะนำจากข้อมูลที่มี แต่ยังไม่ใช่ผลอนุมัติ</div>
+          </div>
+
+          <div style="display:flex;gap:8px;padding:0 14px 14px">
+            <sc-for list="{{ actionsB }}" as="b" hint-placeholder-count="4">
+              <button style="flex:1;border:none;cursor:pointer;border-radius:999px;padding:10px 6px;font:600 11px Prompt,sans-serif;background:{{ b.bg }};color:{{ b.color }};box-shadow:0 3px 8px rgba(30,42,74,.08)">{{ b.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <p class="dv-next">ตอบกลับได้เลยเช่น "ไปทาง 1a" หรือ "ผสมสีแบบ 1b กับปุ่มแบบ 1a" — เดี๋ยวจะเอาไปสร้างเป็น flow ตัวเต็ม</p>
+</section>
+</helmet>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STATUS_META = {
+  matched:  { th:'แมตช์แล้ว', thSub:'เงื่อนไขครบ',        color:'#1f9d6b', bg:'#e4f8ee' },
+  nearly:   { th:'ใกล้แมตช์', thSub:'ขาดอีก 1 เอกสาร',    color:'#b8860a', bg:'#fff3d6' },
+  review:   { th:'รอตรวจสอบ', thSub:'รอเจ้าหน้าที่ยืนยัน', color:'#6a4fb0', bg:'#efe8fb' },
+  not:      { th:'ยังไม่เข้าเงื่อนไข', thSub:'ไม่ตรงชั้นปี/สาขา', color:'#9a5a3a', bg:'#fdece0' }
+};
+const ORDER = ['matched','nearly','review','not'];
+
+class Component extends DCLogic {
+  state = {
+    statusA: 'matched', openA: false,
+    statusB: 'nearly',  openB: false,
+  };
+
+  pillsFor(statusKey){
+    const current = this.state[statusKey];
+    return ORDER.map(k => {
+      const active = k === current;
+      const m = STATUS_META[k];
+      return {
+        label: m.th,
+        active,
+        bg: active ? m.color : 'rgba(30,42,74,.06)',
+        fg: active ? '#fff' : 'rgba(30,42,74,.55)',
+        onClick: () => this.setState({ [statusKey]: k })
+      };
+    });
+  }
+
+  renderVals(){
+    const sa = STATUS_META[this.state.statusA];
+    const sb = STATUS_META[this.state.statusB];
+    return {
+      pillsA: this.pillsFor('statusA'),
+      pillsB: this.pillsFor('statusB'),
+      statusLabelA: sa.th, statusSubA: sa.thSub, statusColorA: sa.color, statusBgA: sa.bg, meterColorA: sa.color,
+      statusLabelB: sb.th, statusSubB: sb.thSub, statusColorB: sb.color, statusBgB: sb.bg,
+      openA: this.state.openA, openB: this.state.openB,
+      reasonLabelA: this.state.openA ? 'ซ่อนเหตุผล' : 'ดูเหตุผลการแมตช์',
+      reasonLabelB: this.state.openB ? 'ซ่อนเหตุผล' : 'ดูเหตุผลการแมตช์',
+      toggleOpenA: () => this.setState(s => ({ openA: !s.openA })),
+      toggleOpenB: () => this.setState(s => ({ openB: !s.openB })),
+      reasons: ['ความต้องการทางการเงินตรงเกณฑ์', 'ครอบคลุมค่าเทอม', 'ไม่ซ้ำซ้อนกับทุนอื่น'],
+      fabButtons: [
+        {icon:'✕', label:'ไม่เหมาะกับฉัน', color:'#c05a3a', bg:'#fdece4'},
+        {icon:'⏱', label:'ดูทีหลัง', color:'#8a7a3a', bg:'#faf3d8'},
+        {icon:'♥', label:'บันทึกไว้', color:'#3a6ac0', bg:'#e4eefd'},
+        {icon:'✓', label:'สมัครเลย', color:'#1f9d6b', bg:'#e4f8ee'},
+      ],
+      actionsB: [
+        {label:'ไม่เหมาะกับฉัน', color:'#c05a3a', bg:'#fdece4'},
+        {label:'ดูทีหลัง', color:'#8a7a3a', bg:'#faf3d8'},
+        {label:'บันทึก', color:'#3a6ac0', bg:'#e4eefd'},
+        {label:'สมัครเลย', color:'#fff', bg:'#1f9d6b'},
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
