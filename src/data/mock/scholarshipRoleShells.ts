@@ -26,10 +26,10 @@ export interface ScholarshipRoleShellConfig {
 }
 
 const aggregateKpis: ScholarshipShellKpi[] = [
-  { label: 'ระเบียนทุน', value: '513', helper: 'ข้อมูลรวมจากระบบจำลอง', tone: 'cyan' },
-  { label: 'นักศึกษา', value: '229', helper: 'แสดงแบบภาพรวมเท่านั้น', tone: 'violet' },
-  { label: 'ชื่อทุน', value: '45', helper: 'กลุ่มทุนที่เปิดใช้งาน', tone: 'mint' },
-  { label: 'วงเงินรวม', value: '5.45M THB', helper: 'ตัวเลขจำลองเพื่อการวางแผน', tone: 'peach' },
+  { label: 'รายการทุนทั้งหมด', value: '513', helper: 'จำนวน scholarship records จากข้อมูลจำลอง', tone: 'cyan' },
+  { label: 'นักศึกษาที่ได้รับการสนับสนุน', value: '229', helper: 'unique students ในภาพรวมระบบ', tone: 'violet' },
+  { label: 'ชื่อทุนทั้งหมด', value: '45', helper: 'ชื่อทุนหลังจัดกลุ่มและตรวจซ้ำ', tone: 'mint' },
+  { label: 'มูลค่าทุนรวม', value: '5.45M THB', helper: 'รวมเฉพาะรายการที่เป็นตัวเลข', tone: 'peach' },
 ]
 
 export const scholarshipRoleShells: Record<'staff' | 'admin' | 'esq', ScholarshipRoleShellConfig> = {
@@ -37,7 +37,7 @@ export const scholarshipRoleShells: Record<'staff' | 'admin' | 'esq', Scholarshi
     role: 'staff',
     eyebrow: 'Staff Scholarship Operations',
     title: 'ศูนย์ปฏิบัติการทุน',
-    description: 'มุมมองสำหรับเจ้าหน้าที่เพื่อติดตามภาพรวม คิวตรวจข้อมูล และคุณภาพข้อมูลทุนโดยไม่เปิดเผยข้อมูลเกินจำเป็น',
+    description: 'มุมมองสำหรับเจ้าหน้าที่เพื่อติดตามภาพรวม คิวตรวจข้อมูล และคุณภาพข้อมูลทุน โดยไม่เปิดเผยข้อมูลเกินความจำเป็น',
     visibilityNote: 'เห็นเฉพาะข้อมูลที่จำเป็นต่อการปฏิบัติงาน รายละเอียดส่วนบุคคลควรถูกเปิดเมื่อมีเหตุผลในการตรวจสอบเท่านั้น',
     primaryPanelTitle: 'คิวงานวันนี้',
     primaryPanelBody: 'จัดลำดับทุนที่ต้องตรวจเงื่อนไข เอกสาร และสถานะการสมัคร โดยผลแมตช์เป็นข้อมูลประกอบ ไม่ใช่ผลอนุมัติ',
@@ -51,26 +51,26 @@ export const scholarshipRoleShells: Record<'staff' | 'admin' | 'esq', Scholarshi
   admin: {
     role: 'admin',
     eyebrow: 'System Scholarship Governance',
-    title: 'ภาพรวมธรรมาภิบาลทุน',
-    description: 'มุมมองผู้ดูแลระบบสำหรับติดตามโครงสร้างข้อมูล สิทธิ์การมองเห็น และความพร้อมของชุดข้อมูลทุน',
-    visibilityNote: 'ผู้ดูแลระบบเห็นภาพรวมและการตั้งค่า ไม่ควรใช้หน้านี้แทนการพิจารณาทุนรายบุคคล',
+    title: 'ธรรมาภิบาลทุนการศึกษา',
+    description: 'ศูนย์ควบคุมสำหรับทะเบียนนโยบายทุน สิทธิ์การมองเห็นข้อมูล มาตรฐานประเภททุน ประวัติการนำเข้า และสุขภาพข้อมูลระบบ',
+    visibilityNote: 'ผู้ดูแลระบบเห็นภาพรวมและการตั้งค่า ไม่ควรใช้หน้านี้แทนการพิจารณาทุนรายบุคคล ข้อมูลส่วนบุคคลถูกซ่อนตามสิทธิ์',
     primaryPanelTitle: 'สถานะข้อมูลระบบ',
     primaryPanelBody: 'รวมสัญญาณเรื่องจำนวนระเบียน ข้อมูลที่ต้องตรวจ และขอบเขตการมองเห็นตามบทบาท',
     kpis: aggregateKpis,
     workflow: [
       { title: 'สิทธิ์และบทบาท', description: 'ตรวจว่าหน้าใหม่เปิดเฉพาะบทบาทที่เกี่ยวข้อง', status: 'ควบคุมแล้ว' },
       { title: 'ขอบเขตข้อมูล', description: 'เน้นข้อมูลรวมและข้อความเตือน PDPA ในมุมมองข้ามบทบาท', status: 'ต้องทบทวนเสมอ' },
-      { title: 'ความพร้อมต้นแบบ', description: 'เช็คว่าแต่ละ route ใช้ mock data และไม่มี backend ใหม่', status: 'ต้นแบบ' },
+      { title: 'ความพร้อมต้นแบบ', description: 'ทุกส่วนใช้ mock data และไม่มี backend persistence', status: 'ต้นแบบ' },
     ],
   },
   esq: {
     role: 'esq',
-    eyebrow: 'ESQ Scholarship Oversight',
-    title: 'มุมมองกำกับคุณภาพทุน',
-    description: 'มุมมองผู้กำกับคุณภาพสำหรับดูภาพรวมทุน ผลลัพธ์เชิงระบบ และประเด็นที่ต้องขอคำชี้แจงเพิ่มเติม',
-    visibilityNote: 'แสดงข้อมูลรวมเพื่อการกำกับคุณภาพ ไม่แสดงรายละเอียดส่วนบุคคลหรือเอกสารแนบรายคน',
-    primaryPanelTitle: 'สรุปสำหรับการกำกับดูแล',
-    primaryPanelBody: 'ใช้ดูทิศทางการเข้าถึงทุน ความครบถ้วนของข้อมูล และความเสี่ยงเชิงกระบวนการในระดับภาพรวม',
+    eyebrow: 'ESQ Executive Oversight',
+    title: 'ภาพรวมทุนการศึกษา',
+    description: 'แดชบอร์ดเชิงนโยบายสำหรับผู้บริหาร แสดงแนวโน้มและคุณภาพข้อมูลในระดับภาพรวมเท่านั้น ไม่แสดงรายบุคคล',
+    visibilityNote: 'ข้อมูลภาพรวมเท่านั้น ไม่แสดงรายชื่อนักศึกษา รหัสนักศึกษา เอกสารแนบ หรือหลักฐานการทำงานรายคน',
+    primaryPanelTitle: 'สรุปสำหรับการตัดสินใจเชิงนโยบาย',
+    primaryPanelBody: 'ใช้ดูทิศทางการเข้าถึงทุน ความครอบคลุมของประเภททุน คุณภาพข้อมูล และประเด็นที่ควรติดตามในระดับระบบ',
     kpis: aggregateKpis,
     workflow: [
       { title: 'ภาพรวมการเข้าถึง', description: 'ดูจำนวนทุน นักศึกษา และมูลค่ารวมในระดับระบบ', status: 'ภาพรวม' },
